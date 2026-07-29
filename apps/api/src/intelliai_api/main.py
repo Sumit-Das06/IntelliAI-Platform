@@ -5,13 +5,14 @@ Run locally with:
 (or `make api` from the repository root).
 """
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 import structlog
 from fastapi import FastAPI
 
 from intelliai_api import __version__
+from intelliai_api.api.errors import register_error_handlers
 from intelliai_api.api.health import router as health_router
 from intelliai_api.api.middleware import RequestContextMiddleware
 from intelliai_api.core.config import Settings, get_settings
@@ -23,7 +24,7 @@ logger = structlog.get_logger("intelliai_api.lifecycle")
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     """Startup/shutdown lifecycle.
 
     The engine object is built in the factory (lazily, no I/O); its pool
@@ -59,6 +60,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.health = HealthService(default_checks(settings, engine))
 
     app.add_middleware(RequestContextMiddleware)
+    register_error_handlers(app)
 
     app.include_router(health_router)
     # /v1 domain routers mount here as they arrive (api/v1/speech in M2/M3).
