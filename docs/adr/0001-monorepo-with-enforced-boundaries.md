@@ -53,3 +53,12 @@ component is a separately buildable Docker image.
 - **Monolith (single package)** — rejected: inference services must deploy and scale
   independently of the control plane (ADR-0002); a single package makes that
   impossible and couples dependency sets (the gateway must never install torch).
+
+## Future review criteria
+
+- Clone size or CI wall-clock degrading developer experience despite path
+  filtering and weights-out-of-git discipline → evaluate partial clones or
+  splitting *release artifacts* (never the working tree) out.
+- A component acquiring a genuinely independent release cadence and external
+  consumers (e.g. the public SDK) → that component may graduate to its own
+  repository; the platform core stays together.
