@@ -8,22 +8,29 @@ Run locally with:
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+import structlog
 from fastapi import FastAPI
 
 from intelliai_api import __version__
+from intelliai_api.api.middleware import RequestContextMiddleware
 from intelliai_api.core.config import Settings, get_settings
+from intelliai_api.core.logging import configure_logging
+
+logger = structlog.get_logger("intelliai_api.lifecycle")
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     """Startup/shutdown lifecycle.
 
     Resources that must exist before the first request are created before
-    ``yield`` (database engine, shared HTTP clients — M0 steps 5-7) and torn
+    ``yield`` (database engine, shared HTTP clients — M0 steps 6-7) and torn
     down in reverse order after it. A failure here crashes the process before
     it accepts traffic, which is exactly what an orchestrator needs to see.
     """
+    logger.info("app_started")
     yield
+    logger.info("app_stopped")
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -35,6 +42,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             their own ``Settings`` and never touch process globals.
     """
     settings = settings if settings is not None else get_settings()
+    configure_logging(settings)
 
     app = FastAPI(
         title="IntelliAI Platform",
@@ -42,6 +50,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
     app.state.settings = settings
+
+    app.add_middleware(RequestContextMiddleware)
 
     # Routers are mounted here as they arrive: health (M0 step 6), then
     # /v1 domain routers (api/v1/speech in M2/M3, further domains after).
