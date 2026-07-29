@@ -11,35 +11,39 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from intelliai_api import __version__
+from intelliai_api.core.config import Settings, get_settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup/shutdown lifecycle.
 
-    Everything that must exist before the first request is created before
-    ``yield`` (settings validation, database engine, shared HTTP clients —
-    arriving in M0 steps 4-7) and torn down in reverse order after it.
-    A failure here crashes the process before it accepts traffic, which is
-    exactly what an orchestrator needs to see.
+    Resources that must exist before the first request are created before
+    ``yield`` (database engine, shared HTTP clients — M0 steps 5-7) and torn
+    down in reverse order after it. A failure here crashes the process before
+    it accepts traffic, which is exactly what an orchestrator needs to see.
     """
     yield
 
 
-def create_app() -> FastAPI:
+def create_app(settings: Settings | None = None) -> FastAPI:
     """Build a fully configured application instance.
 
-    A factory rather than a module-level ``app``: importing this module has
-    no side effects, and every caller (server, tests, scripts) gets its own
-    isolated, independently configured instance.
+    Args:
+        settings: Configuration for this instance. ``None`` (the production
+            path) loads validated settings from the environment; tests pass
+            their own ``Settings`` and never touch process globals.
     """
+    settings = settings if settings is not None else get_settings()
+
     app = FastAPI(
         title="IntelliAI Platform",
         version=__version__,
         lifespan=lifespan,
     )
+    app.state.settings = settings
 
     # Routers are mounted here as they arrive: health (M0 step 6), then
-    # /v1 domain routers (audio in M2/M3, further domains after).
+    # /v1 domain routers (api/v1/speech in M2/M3, further domains after).
 
     return app
