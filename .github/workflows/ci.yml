@@ -1,0 +1,131 @@
+# IntelliAI CI — answers one question on every push and PR:
+# "Can a completely clean machine build, verify, and test this repository?"
+#
+# Modular jobs (lint / typecheck / test) run in parallel after a cheap
+# change-detection job; docs-only changes skip them all. Future jobs
+# (docker build, security scan, SBOM, license audit, OpenAPI validation,
+# benchmarks) append below without restructuring — each follows the same
+# shape: needs: changes → if: relevant filter → steps.
+# "CI OK" aggregates everything into the single status check that branch
+# protection will require.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true # a newer push supersedes the running check
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'apps/**'
+              - 'packages/**'
+              - 'services/**'
+              - 'ml/**'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - '.github/workflows/**'
+
+  lint:
+    name: Lint
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-packages
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+
+  typecheck:
+    name: Type Check
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-packages
+      - run: uv run mypy
+
+  test:
+    name: Test
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: intelliai
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: intelliai
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U intelliai -d intelliai"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      # Clean-machine configuration: no .env file exists here by design —
+      # the same channel production uses (real environment variables).
+      INTELLIAI_ENV: test
+      INTELLIAI_DATABASE_URL: postgresql+asyncpg://intelliai:ci-only-password@localhost:5432/intelliai
+      INTELLIAI_REDIS_URL: redis://localhost:6379/0
+      INTELLIAI_STORAGE_ENDPOINT_URL: http://localhost:9000
+      INTELLIAI_STORAGE_ACCESS_KEY: ci
+      INTELLIAI_STORAGE_SECRET_KEY: ci-only-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-packages
+      - name: Apply migrations to a pristine database
+        run: uv run --package intelliai-api alembic -c apps/api/alembic.ini upgrade head
+      - name: Run tests
+        run: uv run --package intelliai-api pytest apps/api/tests -q
+
+  ci-ok:
+    # The one status check to rule them all: branch protection requires
+    # THIS job, so adding/removing upstream jobs never breaks merge rules.
+    # skipped upstream (docs-only change) counts as success.
+    name: CI OK
+    needs: [changes, lint, typecheck, test]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify all jobs succeeded or were skipped
+        run: |
+          for result in "${{ needs.lint.result }}" "${{ needs.typecheck.result }}" "${{ needs.test.result }}"; do
+            if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
+              echo "A required job failed: $result"
+              exit 1
+            fi
+          done
+          echo "All green."
