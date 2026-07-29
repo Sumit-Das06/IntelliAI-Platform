@@ -12,8 +12,10 @@ import structlog
 from fastapi import FastAPI
 
 from intelliai_api import __version__
+from intelliai_api.api.health import router as health_router
 from intelliai_api.api.middleware import RequestContextMiddleware
 from intelliai_api.core.config import Settings, get_settings
+from intelliai_api.core.health import HealthService, default_checks
 from intelliai_api.core.logging import configure_logging
 
 logger = structlog.get_logger("intelliai_api.lifecycle")
@@ -50,10 +52,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
     app.state.settings = settings
+    app.state.health = HealthService(default_checks(settings))
 
     app.add_middleware(RequestContextMiddleware)
 
-    # Routers are mounted here as they arrive: health (M0 step 6), then
-    # /v1 domain routers (api/v1/speech in M2/M3, further domains after).
+    app.include_router(health_router)
+    # /v1 domain routers mount here as they arrive (api/v1/speech in M2/M3).
 
     return app

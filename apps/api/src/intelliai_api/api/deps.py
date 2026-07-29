@@ -11,6 +11,7 @@ from typing import Annotated
 from fastapi import Depends, Request
 
 from intelliai_api.core.config import Settings
+from intelliai_api.core.health import HealthService
 
 
 def app_settings(request: Request) -> Settings:
@@ -18,4 +19,10 @@ def app_settings(request: Request) -> Settings:
     return request.app.state.settings
 
 
+def health_service(request: Request) -> HealthService:
+    """Health service of this application instance (factory-injected)."""
+    return request.app.state.health
+
+
 SettingsDep = Annotated[Settings, Depends(app_settings)]
+HealthDep = Annotated[HealthService, Depends(health_service)]

@@ -23,9 +23,7 @@ from typing import Any
 import structlog
 
 from intelliai_api import __version__
-from intelliai_api.core.config import Settings
-
-SERVICE_NAME = "intelliai-api"
+from intelliai_api.core.config import SERVICE_NAME, Settings
 
 REDACTED = "[REDACTED]"
 _SENSITIVE_KEY_MARKERS = (
