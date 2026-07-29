@@ -45,6 +45,25 @@ migration: ## Create a migration: make migration m="add users table"
 downgrade: ## Revert the most recent migration
 	uv run --package intelliai-api alembic -c apps/api/alembic.ini downgrade -1
 
+lint: ## Check lint + formatting (read-only)
+	uv run ruff check .
+	uv run ruff format --check .
+
+format: ## Auto-fix lint violations and reformat
+	uv run ruff check --fix .
+	uv run ruff format .
+
+typecheck: ## Run mypy strict type checking
+	uv run mypy
+
+check: ## The full local gate: lint + types + tests
+	$(MAKE) lint
+	$(MAKE) typecheck
+	$(MAKE) test
+
+hooks: ## Install git hooks (run once per clone)
+	uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
+
 db-ui: ## Open a visual database browser (Adminer) at http://localhost:8081
 	docker compose --profile tools up -d adminer
 

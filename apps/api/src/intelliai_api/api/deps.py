@@ -7,7 +7,7 @@ settings) is what every endpoint sees.
 """
 
 from collections.abc import AsyncIterator
-from typing import Annotated
+from typing import Annotated, cast
 
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -18,12 +18,13 @@ from intelliai_api.core.health import HealthService
 
 def app_settings(request: Request) -> Settings:
     """Settings of this application instance (factory-injected)."""
-    return request.app.state.settings
+    # app.state is untyped by Starlette; the factory guarantees these types.
+    return cast(Settings, request.app.state.settings)
 
 
 def health_service(request: Request) -> HealthService:
     """Health service of this application instance (factory-injected)."""
-    return request.app.state.health
+    return cast(HealthService, request.app.state.health)
 
 
 async def get_session(request: Request) -> AsyncIterator[AsyncSession]:

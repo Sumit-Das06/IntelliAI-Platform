@@ -48,9 +48,7 @@ def test_liveness_is_instant_and_standard_shaped(settings: Settings) -> None:
 
 
 def test_all_dependencies_up_reports_healthy(settings: Settings) -> None:
-    service = HealthService(
-        [_PassingCheck("database", True), _PassingCheck("redis", False)]
-    )
+    service = HealthService([_PassingCheck("database", True), _PassingCheck("redis", False)])
     with _client(settings, service) as client:
         response = client.get("/health/ready")
 
@@ -64,9 +62,7 @@ def test_all_dependencies_up_reports_healthy(settings: Settings) -> None:
 def test_noncritical_failure_reports_degraded_but_serves(
     settings: Settings,
 ) -> None:
-    service = HealthService(
-        [_PassingCheck("database", True), _FailingCheck("redis", False)]
-    )
+    service = HealthService([_PassingCheck("database", True), _FailingCheck("redis", False)])
     with _client(settings, service) as client:
         response = client.get("/health/ready")
 
@@ -78,9 +74,7 @@ def test_noncritical_failure_reports_degraded_but_serves(
 
 
 def test_critical_failure_reports_unhealthy_503(settings: Settings) -> None:
-    service = HealthService(
-        [_FailingCheck("database", True), _PassingCheck("redis", False)]
-    )
+    service = HealthService([_FailingCheck("database", True), _PassingCheck("redis", False)])
     with _client(settings, service) as client:
         response = client.get("/health/ready")
 

@@ -146,13 +146,11 @@ class HealthService:
         )
 
     async def readiness(self) -> HealthReport:
-        reports = await asyncio.gather(
-            *(self._run(check) for check in self._checks)
-        )
-        by_name = {check.name: report for check, report in zip(self._checks, reports)}
+        reports = await asyncio.gather(*(self._run(check) for check in self._checks))
+        by_name = {check.name: report for check, report in zip(self._checks, reports, strict=True)}
 
         status = HealthStatus.HEALTHY
-        for check, report in zip(self._checks, reports):
+        for check, report in zip(self._checks, reports, strict=True):
             if report.status is HealthStatus.HEALTHY:
                 continue
             if check.critical:
@@ -160,9 +158,7 @@ class HealthService:
                 break
             status = HealthStatus.DEGRADED
 
-        return HealthReport(
-            status=status, timestamp=datetime.now(UTC), checks=by_name
-        )
+        return HealthReport(status=status, timestamp=datetime.now(UTC), checks=by_name)
 
     async def _run(self, check: HealthCheck) -> CheckReport:
         start = time.perf_counter()
@@ -175,15 +171,13 @@ class HealthService:
                 latency_ms=self._latency(start),
                 error=f"timed out after {self._timeout_s}s",
             )
-        except Exception as exc:  # noqa: BLE001 — any failure means unhealthy
+        except Exception as exc:
             return CheckReport(
                 status=HealthStatus.UNHEALTHY,
                 latency_ms=self._latency(start),
                 error=f"{type(exc).__name__}: {exc}"[:_MAX_ERROR_LENGTH],
             )
-        return CheckReport(
-            status=HealthStatus.HEALTHY, latency_ms=self._latency(start)
-        )
+        return CheckReport(status=HealthStatus.HEALTHY, latency_ms=self._latency(start))
 
     @staticmethod
     def _latency(start: float) -> float:

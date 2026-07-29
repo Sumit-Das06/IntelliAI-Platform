@@ -11,12 +11,8 @@ from intelliai_api.core.logging import configure_logging
 from intelliai_api.main import create_app
 
 
-def _json_lines(raw: str) -> list[dict]:
-    return [
-        json.loads(line)
-        for line in raw.strip().splitlines()
-        if line.startswith("{")
-    ]
+def _json_lines(raw: str) -> list[dict[str, object]]:
+    return [json.loads(line) for line in raw.strip().splitlines() if line.startswith("{")]
 
 
 def test_response_carries_generated_request_id(settings: Settings) -> None:
@@ -28,9 +24,7 @@ def test_response_carries_generated_request_id(settings: Settings) -> None:
 
 def test_client_supplied_request_id_is_echoed(settings: Settings) -> None:
     with TestClient(create_app(settings)) as client:
-        response = client.get(
-            "/openapi.json", headers={"X-Request-ID": "req_client_supplied"}
-        )
+        response = client.get("/openapi.json", headers={"X-Request-ID": "req_client_supplied"})
 
     assert response.headers["X-Request-ID"] == "req_client_supplied"
 

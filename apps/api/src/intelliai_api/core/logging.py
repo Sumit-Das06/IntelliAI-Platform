@@ -21,6 +21,7 @@ import sys
 from typing import Any
 
 import structlog
+from structlog.types import EventDict
 
 from intelliai_api import __version__
 from intelliai_api.core.config import SERVICE_NAME, Settings
@@ -38,10 +39,8 @@ _SENSITIVE_KEY_MARKERS = (
     "set-cookie",
 )
 
-_EventDict = dict[str, Any]
 
-
-def redact_sensitive(_: Any, __: str, event_dict: _EventDict) -> _EventDict:
+def redact_sensitive(_: Any, __: str, event_dict: EventDict) -> EventDict:
     """Replace the value of any credential-looking key with ``[REDACTED]``.
 
     Matches on key *names* (``password``, ``api_key``, ``authorization`` …),
@@ -57,7 +56,7 @@ def redact_sensitive(_: Any, __: str, event_dict: _EventDict) -> _EventDict:
 
 
 def _service_context(environment: str) -> structlog.types.Processor:
-    def processor(_: Any, __: str, event_dict: _EventDict) -> _EventDict:
+    def processor(_: Any, __: str, event_dict: EventDict) -> EventDict:
         event_dict.setdefault("service", SERVICE_NAME)
         event_dict.setdefault("service_version", __version__)
         event_dict.setdefault("environment", environment)
@@ -97,9 +96,7 @@ def configure_logging(settings: Settings) -> None:
 
     structlog.configure(
         processors=[*shared_processors, *tail],
-        wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(logging, settings.log_level)
-        ),
+        wrapper_class=structlog.make_filtering_bound_logger(getattr(logging, settings.log_level)),
         logger_factory=structlog.PrintLoggerFactory(file=sys.stdout),
         cache_logger_on_first_use=False,
     )

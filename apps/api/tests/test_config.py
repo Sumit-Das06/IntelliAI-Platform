@@ -29,7 +29,7 @@ def test_secret_value_is_explicitly_retrievable(settings: Settings) -> None:
 
 def test_settings_are_immutable(settings: Settings) -> None:
     with pytest.raises(ValidationError):
-        settings.env = Environment.PROD  # type: ignore[misc]
+        settings.env = Environment.PROD
 
 
 def test_factory_uses_injected_settings(settings: Settings) -> None:
@@ -40,4 +40,4 @@ def test_factory_uses_injected_settings(settings: Settings) -> None:
 
 def test_invalid_environment_rejected() -> None:
     with pytest.raises(ValidationError):
-        Settings(_env_file=None, env="staging")  # type: ignore[arg-type]
+        Settings(_env_file=None, env="staging")

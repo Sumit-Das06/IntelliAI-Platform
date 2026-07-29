@@ -1,0 +1,34 @@
+# Local commit gate — installed once per clone with `make hooks`.
+# Philosophy: hooks are FAST checks that stop broken commits at the source;
+# the full gate (mypy + tests) runs in `make check` and CI. A hook slower
+# than ~2s trains people to use --no-verify, which defeats everything.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1024]  # model weights and datasets must never enter git
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks  # secrets never reach a commit, let alone a push
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
