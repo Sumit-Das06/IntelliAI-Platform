@@ -4,13 +4,16 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help up down ps logs clean sync api test migrate migration downgrade
+.PHONY: help up down ps logs clean sync api test migrate migration downgrade build db-ui psql
 
 help: ## List available commands
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
-up: ## Start dev infrastructure (Postgres, Redis, MinIO)
+up: ## Start the full platform (API + Postgres + Redis + MinIO)
 	docker compose up -d
+
+build: ## Rebuild the API image (after dependency changes)
+	docker compose build api
 
 down: ## Stop all services (data volumes preserved)
 	docker compose down

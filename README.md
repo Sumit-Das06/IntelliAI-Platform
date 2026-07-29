@@ -44,11 +44,21 @@ Prerequisites: Docker Desktop (WSL2 backend on Windows), GNU `make`.
 
 ```bash
 cp .env.example .env    # dev defaults work out of the box; edit if you prefer
-make up                 # start Postgres, Redis, MinIO
+make up                 # full platform: API + Postgres + Redis + MinIO
+make migrate            # apply database migrations
 make ps                 # wait until every service reports (healthy)
 ```
 
-The API service joins this stack later in Milestone 0.
+Then: API docs at http://localhost:8000/docs · health at
+http://localhost:8000/health/ready · DB browser via `make db-ui`.
+
+Inner dev loop (hot reload, runs the API natively against the containers):
+
+```bash
+make sync               # once: install Python dependencies
+make api                # uvicorn with --reload on port 8000
+make test               # run the test suite
+```
 
 ## Development rules
 

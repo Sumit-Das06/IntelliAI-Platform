@@ -6,6 +6,40 @@ name: intelliai
 # Stateful ports bind to 127.0.0.1 only — nothing here is reachable from the LAN.
 
 services:
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    environment:
+      INTELLIAI_ENV: ${INTELLIAI_ENV:-dev}
+      INTELLIAI_LOG_LEVEL: ${INTELLIAI_LOG_LEVEL:-INFO}
+      # In-network addresses: containers reach siblings by SERVICE NAME via
+      # Docker DNS — never localhost, which inside a container means itself.
+      INTELLIAI_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-intelliai}:${POSTGRES_PASSWORD:?set in .env}@postgres:5432/${POSTGRES_DB:-intelliai}
+      INTELLIAI_REDIS_URL: redis://redis:6379/0
+      INTELLIAI_STORAGE_ENDPOINT_URL: http://minio:9000
+      INTELLIAI_STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER:-intelliai}
+      INTELLIAI_STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?set in .env}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      # Liveness only: readiness is the router's/monitor's question, and a
+      # down dependency must NOT make Docker restart a healthy api process.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks: [intelliai]
+    restart: unless-stopped
+
   postgres:
     image: postgres:16-alpine
     environment:

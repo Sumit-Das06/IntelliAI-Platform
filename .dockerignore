@@ -1,0 +1,33 @@
+# Anything listed here never enters a build context: smaller uploads,
+# faster builds, and — for .env/.git — a hard guarantee that secrets and
+# history can never leak into an image layer.
+
+.git
+.venv
+.env
+.env.*
+!.env.example
+
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+node_modules/
+.next/
+
+data/
+weights/
+*.ckpt
+*.safetensors
+*.onnx
+
+research/
+docs/
+*.log
+Makefile
+docker-compose.yml
