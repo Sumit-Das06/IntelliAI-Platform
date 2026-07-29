@@ -1,0 +1,73 @@
+name: intelliai
+
+# Base compose file: local development infrastructure.
+# Overlays live in infra/compose/ (gpu, prod) and are applied with
+#   docker compose -f docker-compose.yml -f infra/compose/<overlay>.yml up
+# Stateful ports bind to 127.0.0.1 only — nothing here is reachable from the LAN.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-intelliai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env — copy .env.example to .env}
+      POSTGRES_DB: ${POSTGRES_DB:-intelliai}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-intelliai} -d ${POSTGRES_DB:-intelliai}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks: [intelliai]
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    # AOF persistence so rate-limit/cache state survives dev restarts.
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [intelliai]
+    restart: unless-stopped
+
+  minio:
+    # Dev-only S3 stand-in; production uses a managed S3-compatible store.
+    # Pinned to the FINAL official upstream release (project archived 2026-04);
+    # replaceable behind the S3 API — see ADR-0011.
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-intelliai}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set in .env — copy .env.example to .env}
+    ports:
+      - "127.0.0.1:${MINIO_PORT:-9000}:9000"          # S3 API
+      - "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"  # web console
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks: [intelliai]
+    restart: unless-stopped
+
+networks:
+  intelliai:
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
