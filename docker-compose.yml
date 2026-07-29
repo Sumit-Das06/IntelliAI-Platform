@@ -64,6 +64,21 @@ services:
     networks: [intelliai]
     restart: unless-stopped
 
+  adminer:
+    # Visual database browser, dev convenience only. Not started by default:
+    #   make db-ui   (docker compose --profile tools up -d adminer)
+    image: adminer:5
+    profiles: [tools]
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "127.0.0.1:8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [intelliai]
+    restart: unless-stopped
+
 networks:
   intelliai:
 

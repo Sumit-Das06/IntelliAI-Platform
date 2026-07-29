@@ -41,3 +41,9 @@ migration: ## Create a migration: make migration m="add users table"
 
 downgrade: ## Revert the most recent migration
 	uv run --package intelliai-api alembic -c apps/api/alembic.ini downgrade -1
+
+db-ui: ## Open a visual database browser (Adminer) at http://localhost:8081
+	docker compose --profile tools up -d adminer
+
+psql: ## Open a psql shell inside the Postgres container
+	docker compose exec postgres psql -U intelliai -d intelliai
