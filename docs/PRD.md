@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.1 (Milestone 0) |
+| **Version** | 0.2 (Milestone 0 closed) |
 | **Last updated** | 2026-07-29 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
@@ -87,8 +87,8 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 
 | Version | Capability |
 |---|---|
-| v0.1 | Foundations: infra, gateway skeleton *(current)* |
-| v0.15 | Engineering standards, CI |
+| v0.1 | Foundations: infra, gateway skeleton — ✅ **shipped 2026-07-29** ([review](milestones/0-foundations-review.md)) |
+| v0.15 | Engineering standards, CI *(next)* |
 | v0.2 | Auth: orgs, users, API keys |
 | v0.3 | **STT API** (`/v1/audio/transcriptions`, faster-whisper) |
 | v0.4 | **TTS API** (`/v1/audio/speech`, Piper; voices catalog) |
@@ -199,4 +199,7 @@ public proof that it treats model choice as a feature, not a lock-in.
 ---
 
 *Change log:*
+- *2026-07-29 — v0.2: Milestone 0 closed — full stack boots with one command
+  (api container + Postgres + Redis + MinIO); health, logging, config,
+  persistence foundations shipped as specified. No product-scope changes.*
 - *2026-07-29 — v0.1: initial PRD (Milestone 0).*
