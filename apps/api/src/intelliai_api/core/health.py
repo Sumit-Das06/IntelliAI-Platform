@@ -21,10 +21,11 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Protocol, runtime_checkable
 
-import asyncpg
 import httpx
 import redis.asyncio as aioredis
 from pydantic import BaseModel
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncEngine
 
 from intelliai_api import __version__
 from intelliai_api.core.config import SERVICE_NAME, Settings
@@ -72,21 +73,22 @@ class HealthCheck(Protocol):
 
 
 class DatabaseHealthCheck:
-    """Round-trip ``SELECT 1`` — proves connectivity, auth, and liveness."""
+    """Round-trip ``SELECT 1`` through the application's connection pool.
+
+    Using the pool (not a fresh connection) makes this probe honest: it
+    verifies the exact path real requests will use, and costs milliseconds
+    because the connection is already open.
+    """
 
     name = "database"
     critical = True  # system of record: nothing works without it
 
-    def __init__(self, url: str) -> None:
-        # asyncpg speaks plain libpq DSNs, not SQLAlchemy driver URLs.
-        self._dsn = url.replace("postgresql+asyncpg://", "postgresql://", 1)
+    def __init__(self, engine: AsyncEngine) -> None:
+        self._engine = engine
 
     async def check(self) -> None:
-        conn = await asyncpg.connect(self._dsn)
-        try:
-            await conn.fetchval("SELECT 1")
-        finally:
-            await conn.close()
+        async with self._engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
 
 
 class RedisHealthCheck:
@@ -188,10 +190,10 @@ class HealthService:
         return round((time.perf_counter() - start) * 1000, 2)
 
 
-def default_checks(settings: Settings) -> list[HealthCheck]:
+def default_checks(settings: Settings, engine: AsyncEngine) -> list[HealthCheck]:
     """The gateway's dependency roster. Future inference services register here."""
     return [
-        DatabaseHealthCheck(settings.database.url.get_secret_value()),
+        DatabaseHealthCheck(engine),
         RedisHealthCheck(settings.redis.url.get_secret_value()),
         StorageHealthCheck(settings.storage.endpoint_url),
     ]

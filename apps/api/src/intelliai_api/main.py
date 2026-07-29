@@ -17,21 +17,22 @@ from intelliai_api.api.middleware import RequestContextMiddleware
 from intelliai_api.core.config import Settings, get_settings
 from intelliai_api.core.health import HealthService, default_checks
 from intelliai_api.core.logging import configure_logging
+from intelliai_api.db.engine import create_engine, create_session_factory
 
 logger = structlog.get_logger("intelliai_api.lifecycle")
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup/shutdown lifecycle.
 
-    Resources that must exist before the first request are created before
-    ``yield`` (database engine, shared HTTP clients — M0 steps 6-7) and torn
-    down in reverse order after it. A failure here crashes the process before
-    it accepts traffic, which is exactly what an orchestrator needs to see.
+    The engine object is built in the factory (lazily, no I/O); its pool
+    fills on first use. Shutdown drains and closes every pooled connection
+    so Postgres never accumulates orphans from restarts.
     """
     logger.info("app_started")
     yield
+    await app.state.engine.dispose()
     logger.info("app_stopped")
 
 
@@ -52,7 +53,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
     app.state.settings = settings
-    app.state.health = HealthService(default_checks(settings))
+    engine = create_engine(settings)
+    app.state.engine = engine
+    app.state.session_factory = create_session_factory(engine)
+    app.state.health = HealthService(default_checks(settings, engine))
 
     app.add_middleware(RequestContextMiddleware)
 

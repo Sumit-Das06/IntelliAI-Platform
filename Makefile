@@ -4,7 +4,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help up down ps logs clean sync api test
+.PHONY: help up down ps logs clean sync api test migrate migration downgrade
 
 help: ## List available commands
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
@@ -32,3 +32,12 @@ api: ## Run the API gateway locally with hot reload
 
 test: ## Run the Python test suite
 	uv run --package intelliai-api pytest apps/api/tests -q
+
+migrate: ## Apply database migrations to head
+	uv run --package intelliai-api alembic -c apps/api/alembic.ini upgrade head
+
+migration: ## Create a migration: make migration m="add users table"
+	uv run --package intelliai-api alembic -c apps/api/alembic.ini revision --autogenerate -m "$(m)"
+
+downgrade: ## Revert the most recent migration
+	uv run --package intelliai-api alembic -c apps/api/alembic.ini downgrade -1
