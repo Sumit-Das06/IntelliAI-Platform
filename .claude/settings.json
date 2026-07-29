@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:platform.sarvam.ai)",
+      "WebFetch(domain:docs.sarvam.ai)",
+      "WebSearch"
+    ]
+  }
+}
