@@ -1,0 +1,18 @@
+# Workspace root — not an installable package (tool.uv.package = false).
+# Declares which directories are uv workspace members; all members resolve
+# against the single uv.lock at this root. Members are listed explicitly,
+# not globbed: adding a package to the workspace is a reviewed decision.
+
+[project]
+name = "intelliai"
+version = "0.0.0"
+description = "IntelliAI Platform workspace root"
+requires-python = ">=3.12"
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = [
+    "apps/api",
+]
