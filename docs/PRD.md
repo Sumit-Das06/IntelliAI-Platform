@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.3 (Milestone 0.5 closed) |
-| **Last updated** | 2026-07-30 |
+| **Version** | 0.4 (Milestone 1 closed) |
+| **Last updated** | 2026-07-31 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
 ---
@@ -89,8 +89,8 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 |---|---|
 | v0.1 | Foundations: infra, gateway skeleton — ✅ **shipped 2026-07-29** ([review](milestones/0-foundations-review.md)) |
 | v0.15 | Engineering standards, CI — ✅ **shipped 2026-07-30** ([review](milestones/0.5-engineering-standards-review.md)) |
-| v0.2 | Auth: orgs, users, API keys *(next)* |
-| v0.3 | **STT API** (`/v1/audio/transcriptions`, faster-whisper) |
+| v0.2 | Auth: orgs, users, API keys — ✅ **shipped 2026-07-31** ([review](milestones/1-identity-review.md)) |
+| v0.3 | **STT API** (`/v1/audio/transcriptions`, faster-whisper) *(next)* |
 | v0.4 | **TTS API** (`/v1/audio/speech`, Piper; voices catalog) |
 | v0.5 | Usage metering & rate limiting |
 | v0.6 | Async batch jobs + webhooks |
@@ -199,6 +199,10 @@ public proof that it treats model choice as a feature, not a lock-in.
 ---
 
 *Change log:*
+- *2026-07-31 — v0.4: Milestone 1 closed — organizations/users/memberships/API
+  keys live; HMAC-peppered shown-once credentials; AuthContext pipeline;
+  key management API with tenant-isolation guarantees (ADRs 0012-0014).
+  No product-scope changes.*
 - *2026-07-30 — v0.3: Milestone 0.5 closed — engineering standards enforced by
   tooling (ruff/mypy/pre-commit), CI on clean machines, platform error contract
   (nine types, one envelope), ADRs 0002–0010, six engineering handbooks.

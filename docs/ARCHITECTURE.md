@@ -1,8 +1,8 @@
 # IntelliAI Platform — Architecture
 
-> Current as of **v0.15 (Milestone 0.5 complete)**. Updated at every milestone
+> Current as of **v0.2 (Milestone 1 complete)**. Updated at every milestone
 > close, alongside [PRD.md](PRD.md). Decisions behind this document live in
-> [adr/](adr/) (0001–0011, all with review criteria); working rules live in
+> [adr/](adr/) (0001–0014, all with review criteria); working rules live in
 > [/CONTRIBUTING.md](../CONTRIBUTING.md) and the `docs/` handbooks.
 
 ## The three planes
@@ -39,7 +39,7 @@
 7. **Multi-tenancy from the first table:** organizations own everything;
    API keys belong to organizations; every tenant query is org-scoped.
 
-## What exists today (v0.15)
+## What exists today (v0.2)
 
 | Component | State |
 |---|---|
@@ -51,14 +51,17 @@
 | Containerization | multi-stage uv build · non-root · ~300MB · health-ordered compose startup |
 | Quality gate | pre-commit (ruff, gitleaks, large-file guard, conventional commits) · `make check` (lint+types+tests) · CI on clean machines (path-filtered lint/typecheck/test-with-real-PG behind `CI OK`) |
 | Standards | ADRs 0001–0011 with future review criteria · CONTRIBUTING + five handbooks (principles, patterns, security, testing, documentation) |
-| Tests | 26 passing: config, logging, health (fakes), error contract, DB integration on real Postgres (auto-skip w/o infra) |
+| Identity & auth | organizations/users/memberships/api_keys schema · HMAC-peppered shown-once keys (`core/security.py`) · repositories with org-scoped signatures · `IdentityService` (bootstrap CLI, key lifecycle) · `AuthService` → immutable `AuthContext` · `/v1/organization`, `/v1/api-keys` (create/list/revoke, tenant-isolated 404s) |
+| Tests | 96 passing: config, logging, health, error contract, schema conventions, security lib, repositories, services, auth + key management over real HTTP+Postgres (savepoint-rollback isolation) |
 
 ## Request flow (as of v0.15)
 
 ```
 client ──► uvicorn ──► RequestContextMiddleware (request_id, timing, logs)
-                          └─► router ──► [DI: SettingsDep · SessionDep · HealthDep]
-                                │             └─► (M1+: service ──► repositories ──► PG)
+                          └─► router ──► [DI: CurrentAuth ── AuthService: bearer →
+                                │         HMAC → lookup → revoke/expiry → AuthContext;
+                                │         org_id + key_id bound into every log line]
+                                │             └─► services ──► repositories ──► PG
                                 │             └─► (M2+: registry ──► inference service
                                 │                  via runtime contract, request_id propagated)
                                 └─► any failure ──► error handlers ──► one envelope
@@ -75,7 +78,7 @@ probes) — post-1.0 concern by design.
 
 ## Where things will land (forward map)
 
-~~M0.5 standards/CI~~ ✅ · M1 orgs/users/keys · M2 STT + runtime contract +
+~~M0.5 standards/CI~~ ✅ · ~~M1 orgs/users/keys~~ ✅ · M2 STT + runtime contract +
 registry v1 · M3 TTS + voices · M4 metering/limits (Redis) · M5 batch jobs
 (PG `SKIP LOCKED`) · M6 console · M7 playground · M8 streaming (WebSocket)
 · M9 registry v2 + evaluation harness · M10 observability (`/metrics`,
