@@ -1,8 +1,9 @@
 # IntelliAI Platform — Architecture
 
-> Current as of **v0.1 (Milestone 0 complete)**. Updated at every milestone
+> Current as of **v0.15 (Milestone 0.5 complete)**. Updated at every milestone
 > close, alongside [PRD.md](PRD.md). Decisions behind this document live in
-> [adr/](adr/).
+> [adr/](adr/) (0001–0011, all with review criteria); working rules live in
+> [/CONTRIBUTING.md](../CONTRIBUTING.md) and the `docs/` handbooks.
 
 ## The three planes
 
@@ -38,25 +39,30 @@
 7. **Multi-tenancy from the first table:** organizations own everything;
    API keys belong to organizations; every tenant query is org-scoped.
 
-## What exists today (v0.1)
+## What exists today (v0.15)
 
 | Component | State |
 |---|---|
 | Monorepo + boundaries | `apps/ services/ packages/ ml/ research/ infra/ docs/ tools/` (ADR-0001) |
 | Dev environment | one command: `make up` → api + Postgres 16 + Redis 7 + MinIO (+ Adminer via `make db-ui`) |
 | API gateway skeleton | FastAPI app factory · typed fail-fast Settings (SecretStr, frozen) · structlog JSON/console · `X-Request-ID` correlation middleware · modular health (`/health/live`, `/health/ready`, healthy/degraded/unhealthy) |
+| Error contract | nine-type taxonomy (`core/errors.py`) · one envelope `{error:{type,code,message,param,request_id}}` rendered by four handlers (`api/errors.py`) · `Retry-After` on retryables · 400-not-422 · opaque 500s (ADR-0009) |
 | Persistence | async SQLAlchemy engine (pooled, pre-ping) · session-per-request · naming conventions + TimestampMixin fixed pre-first-table · repositories contract · Alembic (async, settings-driven) |
 | Containerization | multi-stage uv build · non-root · ~300MB · health-ordered compose startup |
-| Tests | 20 passing: config, logging, health (fakes), DB integration on real Postgres (auto-skip w/o infra) |
+| Quality gate | pre-commit (ruff, gitleaks, large-file guard, conventional commits) · `make check` (lint+types+tests) · CI on clean machines (path-filtered lint/typecheck/test-with-real-PG behind `CI OK`) |
+| Standards | ADRs 0001–0011 with future review criteria · CONTRIBUTING + five handbooks (principles, patterns, security, testing, documentation) |
+| Tests | 26 passing: config, logging, health (fakes), error contract, DB integration on real Postgres (auto-skip w/o infra) |
 
-## Request flow (as of v0.1)
+## Request flow (as of v0.15)
 
 ```
 client ──► uvicorn ──► RequestContextMiddleware (request_id, timing, logs)
                           └─► router ──► [DI: SettingsDep · SessionDep · HealthDep]
-                                └─► (M1+: service layer ──► repositories ──► PG)
-                                └─► (M2+: registry ──► inference service via
-                                     runtime contract, request_id propagated)
+                                │             └─► (M1+: service ──► repositories ──► PG)
+                                │             └─► (M2+: registry ──► inference service
+                                │                  via runtime contract, request_id propagated)
+                                └─► any failure ──► error handlers ──► one envelope
+                                     {error: {type, code, message, param, request_id}}
 ```
 
 ## Deployment shape
@@ -69,7 +75,7 @@ probes) — post-1.0 concern by design.
 
 ## Where things will land (forward map)
 
-M0.5 standards/CI · M1 orgs/users/keys · M2 STT + runtime contract +
+~~M0.5 standards/CI~~ ✅ · M1 orgs/users/keys · M2 STT + runtime contract +
 registry v1 · M3 TTS + voices · M4 metering/limits (Redis) · M5 batch jobs
 (PG `SKIP LOCKED`) · M6 console · M7 playground · M8 streaming (WebSocket)
 · M9 registry v2 + evaluation harness · M10 observability (`/metrics`,

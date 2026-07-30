@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.2 (Milestone 0 closed) |
-| **Last updated** | 2026-07-29 |
+| **Version** | 0.3 (Milestone 0.5 closed) |
+| **Last updated** | 2026-07-30 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
 ---
@@ -88,8 +88,8 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | Version | Capability |
 |---|---|
 | v0.1 | Foundations: infra, gateway skeleton — ✅ **shipped 2026-07-29** ([review](milestones/0-foundations-review.md)) |
-| v0.15 | Engineering standards, CI *(next)* |
-| v0.2 | Auth: orgs, users, API keys |
+| v0.15 | Engineering standards, CI — ✅ **shipped 2026-07-30** ([review](milestones/0.5-engineering-standards-review.md)) |
+| v0.2 | Auth: orgs, users, API keys *(next)* |
 | v0.3 | **STT API** (`/v1/audio/transcriptions`, faster-whisper) |
 | v0.4 | **TTS API** (`/v1/audio/speech`, Piper; voices catalog) |
 | v0.5 | Usage metering & rate limiting |
@@ -113,7 +113,7 @@ billing/payments, enterprise features (SSO, audit exports, SLAs).
 - **API stability:** `/v1` contracts are append-only once shipped in a stable
   release; breaking changes require a new version path, deprecation windows ≥6 months.
 - **Multi-tenancy:** every request, record, and metric is organization-scoped from
-  the first schema (ADR-0010, forthcoming).
+  the first schema ([ADR-0010](adr/0010-organizations-first-tenancy.md)).
 - **Auditability:** usage events are immutable, append-only; money-relevant data is
   never mutated in place.
 - **Portability:** runs on any Docker host; no cloud-vendor-proprietary service in
@@ -176,9 +176,9 @@ latency/throughput; TTS = MOS-proxy/latency/generation-speed/memory.
   of the control plane and of each other.
 - **Queue-backed batch:** async jobs absorb spikes; workers scale by queue depth
   (Postgres `SKIP LOCKED` now; graduation criteria to a dedicated queue recorded in
-  ADR-0006, forthcoming).
-- **GPU adoption = deployment config** (ADR-0004, forthcoming): scaling up quality/
-  throughput never requires code changes.
+  [ADR-0006](adr/0006-jobs-in-postgres-skip-locked.md)).
+- **GPU adoption = deployment config** ([ADR-0004](adr/0004-cpu-first-gpu-ready.md)):
+  scaling up quality/throughput never requires code changes.
 - Designed-for ceilings (Phase 1): ~100 req/s sustained on the sync path, thousands
   of queued batch jobs — beyond that, the Kubernetes chapter opens (post-1.0).
 
@@ -199,6 +199,11 @@ public proof that it treats model choice as a feature, not a lock-in.
 ---
 
 *Change log:*
+- *2026-07-30 — v0.3: Milestone 0.5 closed — engineering standards enforced by
+  tooling (ruff/mypy/pre-commit), CI on clean machines, platform error contract
+  (nine types, one envelope), ADRs 0002–0010, six engineering handbooks.
+  No product-scope changes; M1 (auth) scope note: recommendation is API-key
+  auth only, console login deferred.*
 - *2026-07-29 — v0.2: Milestone 0 closed — full stack boots with one command
   (api container + Postgres + Redis + MinIO); health, logging, config,
   persistence foundations shipped as specified. No product-scope changes.*
