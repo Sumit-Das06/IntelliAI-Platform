@@ -1,8 +1,9 @@
 """ApiKey: the credential store — hashes and metadata, never secrets.
 
 The plaintext key exists in exactly two places, ever: the creation response
-and the customer's clipboard. This table stores ``SHA-256(secret + pepper)``
-plus enough metadata for display (prefix, last4), support, and audit.
+and the customer's clipboard. This table stores ``HMAC-SHA256(pepper, key)``
+plus enough metadata for display (prefix, last4), support, and audit
+(ADR-0012).
 Revocation is soft (``revoked_at``): the key stops working instantly, the
 audit trail survives forever.
 
@@ -38,7 +39,7 @@ class ApiKey(TimestampMixin, Base):
     name: Mapped[str] = mapped_column(String(120))  # human label: "prod-server"
     key_prefix: Mapped[str] = mapped_column(String(16))  # "ik_live_a1b2c3d4" — display/support
     key_last4: Mapped[str] = mapped_column(String(4))  # "…x4Kq" — display
-    # SHA-256 hex of (secret + pepper). Unique: it IS the lookup path —
+    # HMAC-SHA256(pepper, key) hex. Unique: it IS the lookup path —
     # deterministic hash → one indexed equality query at auth time.
     key_hash: Mapped[str] = mapped_column(String(64), unique=True)
 
