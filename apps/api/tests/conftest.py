@@ -8,6 +8,7 @@ deterministic on any machine, including CI with no environment at all.
 import pytest
 
 from intelliai_api.core.config import (
+    AuthSettings,
     DatabaseSettings,
     Environment,
     RedisSettings,
@@ -26,6 +27,7 @@ def settings() -> Settings:
     return Settings(
         _env_file=None,
         env=Environment.TEST,
+        auth=AuthSettings(_env_file=None, key_pepper="test-pepper"),
         database=DatabaseSettings(
             _env_file=None,
             url="postgresql+asyncpg://test:test-password@localhost:5432/test",

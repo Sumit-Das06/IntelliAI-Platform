@@ -13,6 +13,7 @@ services:
     environment:
       INTELLIAI_ENV: ${INTELLIAI_ENV:-dev}
       INTELLIAI_LOG_LEVEL: ${INTELLIAI_LOG_LEVEL:-INFO}
+      INTELLIAI_AUTH_KEY_PEPPER: ${INTELLIAI_AUTH_KEY_PEPPER:?set in .env}
       # In-network addresses: containers reach siblings by SERVICE NAME via
       # Docker DNS — never localhost, which inside a container means itself.
       INTELLIAI_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-intelliai}:${POSTGRES_PASSWORD:?set in .env}@postgres:5432/${POSTGRES_DB:-intelliai}

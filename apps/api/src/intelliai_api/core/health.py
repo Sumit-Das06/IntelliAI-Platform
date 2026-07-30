@@ -17,7 +17,7 @@ and the response format never change.
 
 import asyncio
 import time
-from datetime import UTC, datetime
+from datetime import datetime
 from enum import StrEnum
 from typing import Protocol, runtime_checkable
 
@@ -29,6 +29,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 from intelliai_api import __version__
 from intelliai_api.core.config import SERVICE_NAME, Settings
+from intelliai_api.core.time import utc_now
 
 DEFAULT_CHECK_TIMEOUT_S = 2.0
 _MAX_ERROR_LENGTH = 200
@@ -141,7 +142,7 @@ class HealthService:
         """Process-is-alive: instant, no dependency I/O by design."""
         return HealthReport(
             status=HealthStatus.HEALTHY,
-            timestamp=datetime.now(UTC),
+            timestamp=utc_now(),
             checks={},
         )
 
@@ -158,7 +159,7 @@ class HealthService:
                 break
             status = HealthStatus.DEGRADED
 
-        return HealthReport(status=status, timestamp=datetime.now(UTC), checks=by_name)
+        return HealthReport(status=status, timestamp=utc_now(), checks=by_name)
 
     async def _run(self, check: HealthCheck) -> CheckReport:
         start = time.perf_counter()

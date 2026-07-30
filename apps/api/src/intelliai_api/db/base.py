@@ -16,11 +16,23 @@ ever renamed to comply:
   identically everywhere.
 """
 
+import secrets
 from datetime import datetime
 from typing import Any, ClassVar
 
 from sqlalchemy import DateTime, MetaData, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+
+def generate_public_id(prefix: str) -> str:
+    """Client-facing identifier: ``org_…``, ``key_…``, ``job_…``.
+
+    Cryptographically random (not sequential, not enumerable) and
+    prefix-typed so any ID names its own resource in logs and support
+    tickets. Internal integer PKs never cross the API boundary.
+    """
+    return f"{prefix}_{secrets.token_hex(12)}"
+
 
 NAMING_CONVENTION = {
     "ix": "ix_%(table_name)s_%(column_0_N_name)s",

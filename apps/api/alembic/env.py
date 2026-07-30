@@ -14,6 +14,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from intelliai_api.core.config import get_settings
+from intelliai_api.db import models  # noqa: F401 — registers every mapper on Base.metadata
 from intelliai_api.db.base import Base
 
 config = context.config

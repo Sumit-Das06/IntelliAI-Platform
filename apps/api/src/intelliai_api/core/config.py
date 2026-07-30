@@ -58,6 +58,15 @@ class RedisSettings(BaseSettings):
     url: SecretStr  # redis://[:password@]host:port/db
 
 
+class AuthSettings(BaseSettings):
+    model_config = _group("INTELLIAI_AUTH_")
+
+    # Server-side pepper mixed into API-key hashes. A database dump alone is
+    # useless without it. No default: the platform refuses to boot unpeppered.
+    # Rotating it invalidates EVERY issued key (accepted M1 debt, ADR-0012).
+    key_pepper: SecretStr
+
+
 class StorageSettings(BaseSettings):
     model_config = _group("INTELLIAI_STORAGE_")
 
@@ -76,6 +85,7 @@ class Settings(BaseSettings):
     env: Environment = Environment.DEV
     log_level: LogLevel = "INFO"
 
+    auth: AuthSettings = Field(default_factory=AuthSettings)
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
     redis: RedisSettings = Field(default_factory=RedisSettings)
     storage: StorageSettings = Field(default_factory=StorageSettings)
