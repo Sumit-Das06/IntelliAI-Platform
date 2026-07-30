@@ -15,6 +15,7 @@ from intelliai_api import __version__
 from intelliai_api.api.errors import register_error_handlers
 from intelliai_api.api.health import router as health_router
 from intelliai_api.api.middleware import RequestContextMiddleware
+from intelliai_api.api.v1.router import router as v1_router
 from intelliai_api.core.config import Settings, get_settings
 from intelliai_api.core.health import HealthService, default_checks
 from intelliai_api.core.logging import configure_logging
@@ -63,6 +64,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_error_handlers(app)
 
     app.include_router(health_router)
-    # /v1 domain routers mount here as they arrive (api/v1/speech in M2/M3).
+    app.include_router(v1_router)
 
     return app

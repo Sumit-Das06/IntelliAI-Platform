@@ -20,3 +20,4 @@ Write the ADR *before* the decision lands; **supersede rather than edit**
 | [0010](0010-organizations-first-tenancy.md) | Organizations-first tenancy from the first table | Accepted | 2026-07-29 | — | 0006, 0009 |
 | [0011](0011-minio-as-dev-only-s3-standin.md) | MinIO (frozen final release) as dev-only S3 stand-in | Accepted | 2026-07-29 | — | 0005 |
 | [0012](0012-api-key-credential-design.md) | API key credential design: 256-bit secrets, HMAC-SHA256 + pepper, deterministic lookup | Accepted | 2026-07-31 | — | 0009, 0010 |
+| [0014](0014-identity-context.md) | AuthContext: one immutable identity object, constructed only by authentication | Accepted | 2026-07-31 | — | 0010, 0012 |

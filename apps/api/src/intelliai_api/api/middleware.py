@@ -29,6 +29,21 @@ def _request_id(request: Request) -> str:
     return f"req_{uuid.uuid4().hex}"
 
 
+def _auth_fields(request: Request) -> dict[str, str]:
+    """Identity set by the auth dependency, carried via request.state.
+
+    Bound contextvars do not cross the BaseHTTPMiddleware task boundary
+    (the downstream app runs in a child task), so the completion log reads
+    them from request.state instead.
+    """
+    fields: dict[str, str] = {}
+    for name in ("organization_id", "key_id"):
+        value = getattr(request.state, name, None)
+        if value is not None:
+            fields[name] = value
+    return fields
+
+
 class RequestContextMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         request_id = _request_id(request)
@@ -58,6 +73,7 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
             path=request.url.path,
             status_code=response.status_code,
             latency_ms=round((time.perf_counter() - start) * 1000, 2),
+            **_auth_fields(request),
         )
         response.headers[REQUEST_ID_HEADER] = request_id
         return response

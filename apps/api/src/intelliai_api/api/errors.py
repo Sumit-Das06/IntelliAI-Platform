@@ -75,6 +75,9 @@ async def _handle_platform_error(request: Request, exc: Exception) -> JSONRespon
     retry_after = getattr(error, "retry_after", None)
     if retry_after is not None:
         headers["Retry-After"] = str(retry_after)
+    if error.status_code == 401:
+        # RFC 6750: a 401 must tell the client which auth scheme to use.
+        headers["WWW-Authenticate"] = "Bearer"
     return _envelope(
         request,
         error_type=error.error_type,

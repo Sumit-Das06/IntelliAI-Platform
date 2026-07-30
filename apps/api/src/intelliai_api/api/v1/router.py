@@ -1,0 +1,11 @@
+"""The /v1 aggregate router.
+
+Domain packages register here; nothing outside ``api/`` is version-aware.
+"""
+
+from fastapi import APIRouter
+
+from intelliai_api.api.v1.organization import router as organization_router
+
+router = APIRouter(prefix="/v1")
+router.include_router(organization_router)
