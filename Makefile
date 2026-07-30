@@ -64,6 +64,9 @@ check: ## The full local gate: lint + types + tests
 hooks: ## Install git hooks (run once per clone)
 	uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
+bootstrap-org: ## Create org + owner + first API key: make bootstrap-org org="Acme" email="you@x.com" name="You"
+	uv run --package intelliai-api python -m intelliai_api.cli bootstrap-org --org-name "$(org)" --owner-email "$(email)" --owner-name "$(name)"
+
 db-ui: ## Open a visual database browser (Adminer) at http://localhost:8081
 	docker compose --profile tools up -d adminer
 
