@@ -17,6 +17,7 @@ from intelliai_api.core.config import Settings
 from intelliai_api.core.errors import AuthenticationError
 from intelliai_api.core.health import HealthService
 from intelliai_api.services.auth import AuthContext, AuthService
+from intelliai_api.services.identity import IdentityService
 
 
 def app_settings(request: Request) -> Settings:
@@ -94,4 +95,10 @@ async def current_auth(request: Request, session: SessionDep, settings: Settings
     return context
 
 
+def identity_service(session: SessionDep, settings: SettingsDep) -> IdentityService:
+    """Business-capability dependency: routers stay thin, rules stay in services."""
+    return IdentityService(session, pepper=settings.auth.key_pepper.get_secret_value())
+
+
 CurrentAuth = Annotated[AuthContext, Depends(current_auth)]
+IdentityDep = Annotated[IdentityService, Depends(identity_service)]
