@@ -54,7 +54,7 @@
 | Identity & auth | organizations/users/memberships/api_keys schema · HMAC-peppered shown-once keys (`core/security.py`) · repositories with org-scoped signatures · `IdentityService` (bootstrap CLI, key lifecycle) · `AuthService` → immutable `AuthContext` · `/v1/organization`, `/v1/api-keys` (create/list/revoke, tenant-isolated 404s) |
 | Tests | 96 passing: config, logging, health, error contract, schema conventions, security lib, repositories, services, auth + key management over real HTTP+Postgres (savepoint-rollback isolation) |
 
-## Request flow (as of v0.15)
+## Request flow (as of v0.2)
 
 ```
 client ──► uvicorn ──► RequestContextMiddleware (request_id, timing, logs)
