@@ -15,7 +15,13 @@ Contract (enforced in review):
 - Services depend on repositories; routers on services; **nothing above this
   package imports sqlalchemy**.
 
-The first concrete repositories (and their abstract base, if one earns its
-keep) arrive with the first entities in M1 — abstractions get extracted from
-working code, not invented ahead of it.
+There is deliberately no abstract base repository: three concrete classes
+share a constructor and nothing else worth abstracting yet — a base class
+gets extracted when duplication demands it, not before.
 """
+
+from intelliai_api.db.repositories.api_keys import ApiKeyRepository
+from intelliai_api.db.repositories.organizations import OrganizationRepository
+from intelliai_api.db.repositories.users import UserRepository
+
+__all__ = ["ApiKeyRepository", "OrganizationRepository", "UserRepository"]

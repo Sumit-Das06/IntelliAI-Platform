@@ -6,39 +6,25 @@ on. When infrastructure is not running, these tests skip with a clear
 message instead of failing.
 """
 
-from collections.abc import AsyncIterator
-
 import pytest
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from intelliai_api.core.config import Settings
-from intelliai_api.db.engine import create_engine, create_session_factory
+from intelliai_api.db.engine import create_session_factory
 
 pytestmark = pytest.mark.anyio
 
-
-@pytest.fixture()
-async def engine() -> AsyncIterator[AsyncEngine]:
-    settings = Settings()  # real .env → the compose Postgres
-    engine = create_engine(settings)
-    try:
-        async with engine.connect() as conn:
-            await conn.execute(text("SELECT 1"))
-    except Exception:
-        await engine.dispose()
-        pytest.skip("requires running infrastructure (make up)")
-    yield engine
-    await engine.dispose()
+# The shared ``db_engine`` fixture (conftest) provides the real-Postgres
+# engine with clean skip behavior.
 
 
-async def test_pooled_connection_round_trip(engine: AsyncEngine) -> None:
-    async with engine.connect() as conn:
+async def test_pooled_connection_round_trip(db_engine: AsyncEngine) -> None:
+    async with db_engine.connect() as conn:
         assert (await conn.execute(text("SELECT 1"))).scalar_one() == 1
 
 
-async def test_commit_persists_and_rollback_discards(engine: AsyncEngine) -> None:
-    factory = create_session_factory(engine)
+async def test_commit_persists_and_rollback_discards(db_engine: AsyncEngine) -> None:
+    factory = create_session_factory(db_engine)
 
     async with factory() as session:
         await session.execute(text("CREATE TABLE IF NOT EXISTS _step7_tx_probe (id int)"))
@@ -57,9 +43,9 @@ async def test_commit_persists_and_rollback_discards(engine: AsyncEngine) -> Non
     assert count == 0
 
 
-async def test_migration_pipeline_has_run(engine: AsyncEngine) -> None:
+async def test_migration_pipeline_has_run(db_engine: AsyncEngine) -> None:
     """`make migrate` must have stamped the database (alembic_version)."""
-    async with engine.connect() as conn:
+    async with db_engine.connect() as conn:
         version = (
             await conn.execute(text("SELECT version_num FROM alembic_version"))
         ).scalar_one_or_none()
