@@ -380,7 +380,7 @@ wheels = [
 
 [[package]]
 name = "intelliai"
-version = "0.0.0"
+version = "0.2.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]
@@ -401,7 +401,7 @@ dev = [
 
 [[package]]
 name = "intelliai-api"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "apps/api" }
 dependencies = [
     { name = "alembic" },
