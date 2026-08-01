@@ -11,7 +11,7 @@ Write the ADR *before* the decision lands; **supersede rather than edit**
 | [0001](0001-monorepo-with-enforced-boundaries.md) | Monorepo with enforced package boundaries and one-way dependency direction | Accepted | 2026-07-29 | — | 0007 |
 | [0002](0002-control-plane-inference-plane-separation.md) | Inference runs in dedicated services, never in the gateway process | Accepted | 2026-07-29 | — | 0003, 0004 |
 | [0003](0003-internal-runtime-contract.md) | Capability-shaped internal runtime contract; providers are adapters | Accepted | 2026-07-29 | — | 0002, 0005 |
-| [0004](0004-cpu-first-gpu-ready.md) | CPU-first serving; GPU adoption is deployment configuration only | Accepted | 2026-07-29 | — | 0002, 0003 |
+| [0004](0004-cpu-first-gpu-ready.md) | CPU-first serving; GPU adoption is deployment configuration only | Superseded | 2026-07-29 | [0015](0015-hardware-agnostic-architecture-cpu-first-deployment.md) | 0002, 0003 |
 | [0005](0005-permissive-model-licensing-policy.md) | Only commercially-clear model licenses; the registry enforces it | Accepted | 2026-07-29 | — | 0003, 0011 |
 | [0006](0006-jobs-in-postgres-skip-locked.md) | Batch jobs via Postgres `SKIP LOCKED`, not a queue framework | Accepted | 2026-07-29 | — | 0002, 0010 |
 | [0007](0007-uv-workspaces.md) | uv workspaces with a single lockfile for the monorepo | Accepted | 2026-07-29 | — | 0001 |
@@ -22,3 +22,4 @@ Write the ADR *before* the decision lands; **supersede rather than edit**
 | [0012](0012-api-key-credential-design.md) | API key credential design: 256-bit secrets, HMAC-SHA256 + pepper, deterministic lookup | Accepted | 2026-07-31 | — | 0009, 0010 |
 | [0013](0013-authorization-model.md) | Authorization: implicit full org access now; scopes/roles staged later | Accepted | 2026-07-31 | — | 0010, 0012, 0014 |
 | [0014](0014-identity-context.md) | AuthContext: one immutable identity object, constructed only by authentication | Accepted | 2026-07-31 | — | 0010, 0012 |
+| [0015](0015-hardware-agnostic-architecture-cpu-first-deployment.md) | Hardware-agnostic architecture; CPU-first deployment posture | Accepted | 2026-07-31 | — | 0002, 0003, supersedes 0004 |

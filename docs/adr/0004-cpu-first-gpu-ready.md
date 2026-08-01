@@ -1,6 +1,6 @@
 # ADR-0004: CPU-first serving; GPU adoption is deployment configuration only
 
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-0015](0015-hardware-agnostic-architecture-cpu-first-deployment.md) (2026-07-31) — mechanics carried forward; framing revised
 - **Date:** 2026-07-29
 - **Related:** ADR-0002, ADR-0003
 
