@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.4 (Milestone 1 closed) |
+| **Version** | 0.5 (Milestone 1.5 closed) |
 | **Last updated** | 2026-07-31 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
@@ -75,8 +75,9 @@ Indicative published pricing, mid-2026 — re-verify before any pricing decision
 2. **Model-agnostic routing** — customers want "best model for this job", not "the
    only model this vendor sells." Our provider-agnostic architecture makes model
    choice a feature.
-3. **CPU-efficient economics** — CPU-first serving of efficient models (faster-whisper
-   int8, Piper, Kokoro) permits an unusually generous free tier and low floor prices.
+3. **CPU-efficient economics** — CPU-first deployment of efficient models
+   (faster-whisper int8, Kokoro) permits an unusually generous free tier and low
+   floor prices (hardware-agnostic architecture per [ADR-0015](adr/0015-hardware-agnostic-architecture-cpu-first-deployment.md)).
 4. **Regional depth as a later wedge** — Sarvam validates Indic-language demand;
    our fine-tuning phase (Phase 2) can target underserved languages/accents with
    benchmarked, published WER.
@@ -90,8 +91,9 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | v0.1 | Foundations: infra, gateway skeleton — ✅ **shipped 2026-07-29** ([review](milestones/0-foundations-review.md)) |
 | v0.15 | Engineering standards, CI — ✅ **shipped 2026-07-30** ([review](milestones/0.5-engineering-standards-review.md)) |
 | v0.2 | Auth: orgs, users, API keys — ✅ **shipped 2026-07-31** ([review](milestones/1-identity-review.md)) |
+| v0.25 | Foundation model evaluation & AI strategy (research/architecture only) — ✅ **shipped 2026-07-31** ([review](milestones/1.5-strategy-review.md); [index](STRATEGY.md)) |
 | v0.3 | **STT API** (`/v1/audio/transcriptions`, faster-whisper) *(next)* |
-| v0.4 | **TTS API** (`/v1/audio/speech`, Piper; voices catalog) |
+| v0.4 | **TTS API** (`/v1/audio/speech`, Kokoro; voices catalog) |
 | v0.5 | Usage metering & rate limiting |
 | v0.6 | Async batch jobs + webhooks |
 | v0.7 | Developer console (signup → key → usage) |
@@ -101,9 +103,25 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | v0.95 | Observability, load testing, security hardening |
 | v1.0 | Docs site, Python SDK, deployment guide, launch |
 
-Phase 2 (directional): dataset pipeline, fine-tuning (Whisper LoRA), custom-model
-serving, TTS premium tier (Kokoro), voice cloning (license-clean), diarization,
-speech translation, additional providers behind the speech router.
+Phase 2 (directional): dataset pipeline, fine-tuning (Whisper-lineage adapters),
+custom-model serving, TTS voice cloning on the Chatterbox lineage
+(consent-gated, watermark-policied), diarization, speech translation
+(composite-backed), additional providers behind the speech router. Model
+lineage choices: [FOUNDATION_MODELS.md](FOUNDATION_MODELS.md).
+
+**Operating principles adopted at Milestone 1.5** (apply to all future
+milestones):
+
+- **Evaluation seed from M2:** every capability ships with a fixed
+  evaluation set and a measured baseline from its first release; the full
+  harness (v0.9) formalizes what the habit already practices.
+- **Customer discovery is a parallel company activity:** structured
+  developer conversations and demand instruments run alongside every
+  milestone, not after launch; product claims graduate from
+  hypothesis-grade only through them.
+- **Documentation governor:** every strategy document must name the
+  milestone that consumes it, and no two consecutive milestones may both
+  be documentation-only.
 
 Phase 3 (directional): LLM APIs (chat, embeddings), document AI/OCR, translation,
 billing/payments, enterprise features (SSO, audit exports, SLAs).
@@ -160,7 +178,7 @@ Phase 1 targets (CPU-serving; honest, revisited with benchmarks in v0.9):
 | Gateway overhead (auth+route+meter), p95 | < 15 ms |
 | Sync STT (≤60 s audio, `small` int8), p95 | < 1.5× audio duration |
 | Batch STT throughput | ≥ real-time per worker core-set; horizontal scale-out |
-| TTS time-to-first-byte (Piper, short text), p95 | < 1 s |
+| TTS time-to-first-byte (Kokoro, short text), p95 | < 1 s |
 | Streaming STT partial-result latency (v0.85) | < 800 ms |
 | Availability (v1.0 launch target) | 99.9% monthly |
 
@@ -199,6 +217,13 @@ public proof that it treats model choice as a feature, not a lock-in.
 ---
 
 *Change log:*
+- *2026-07-31 — v0.5: Milestone 1.5 closed — AI strategy layer adopted
+  ([STRATEGY.md](STRATEGY.md) + [CONSTITUTION.md](CONSTITUTION.md));
+  TTS engine decision changed Piper → Kokoro (Piper archived upstream,
+  GPL fork; see FOUNDATION_MODELS.md); hardware framing superseded by
+  ADR-0015 (hardware-agnostic architecture, CPU-first deployment);
+  operating principles added (evaluation seed from M2, parallel customer
+  discovery, documentation governor). Roadmap scope otherwise unchanged.*
 - *2026-07-31 — v0.4: Milestone 1 closed — organizations/users/memberships/API
   keys live; HMAC-peppered shown-once credentials; AuthContext pipeline;
   key management API with tenant-isolation guarantees (ADRs 0012-0014).
