@@ -23,3 +23,4 @@ Write the ADR *before* the decision lands; **supersede rather than edit**
 | [0013](0013-authorization-model.md) | Authorization: implicit full org access now; scopes/roles staged later | Accepted | 2026-07-31 | — | 0010, 0012, 0014 |
 | [0014](0014-identity-context.md) | AuthContext: one immutable identity object, constructed only by authentication | Accepted | 2026-07-31 | — | 0010, 0012 |
 | [0015](0015-hardware-agnostic-architecture-cpu-first-deployment.md) | Hardware-agnostic architecture; CPU-first deployment posture | Accepted | 2026-07-31 | — | 0002, 0003, supersedes 0004 |
+| [0016](0016-runtime-contract-language.md) | Runtime contract as a permanent transport-free language: frozen capability enums, operational-only metadata, gateway/runtime ownership boundaries | Accepted | 2026-08-02 | — | 0002, 0003, 0009, 0015 |
