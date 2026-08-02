@@ -15,9 +15,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-# One-step debt (recorded in the module charter): replaced by the frozen
-# capability enum from packages/runtime-contract in M2 step 1.
-Capability = Literal["transcription"]
+from intelliai_runtime_contract import Capability
 
 
 class SyntheticSpec(BaseModel):

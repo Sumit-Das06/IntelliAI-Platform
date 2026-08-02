@@ -6,7 +6,11 @@ requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.10",
     "httpx>=0.28",
+    "intelliai-runtime-contract",
 ]
+
+[tool.uv.sources]
+intelliai-runtime-contract = { workspace = true }
 
 [dependency-groups]
 dev = [

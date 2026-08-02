@@ -13,6 +13,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
+from intelliai_runtime_contract import Capability
+
 
 class ClipResult(BaseModel):
     """Measurement for one clip within a run."""
@@ -58,7 +60,7 @@ class EvalRun(BaseModel):
 
     dataset_name: str
     dataset_version: int
-    capability: str
+    capability: Capability
     run_at: datetime
     artifact: str  # registry model id (e.g. "whisper-small")
     engine: str

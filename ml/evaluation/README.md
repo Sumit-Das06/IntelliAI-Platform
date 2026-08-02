@@ -22,10 +22,9 @@ one recording format — starts here, before the first model is downloaded.
    — MODEL_IDENTITY §11), training data (the dataset registry's future
    concern — eval sets never train, AI_STRATEGY §2).
 4. **What does it depend on?** pydantic (manifest/result schemas), httpx
-   (clip download), stdlib only for metrics and synthesis. Never on
-   engines, never on the gateway. It will consume the frozen capability
-   enum from `packages/runtime-contract` once that exists (M2 step 1 —
-   recorded one-step debt: `Capability` is a local Literal until then).
+   (clip download), `packages/runtime-contract` (the frozen `Capability`
+   enum — the step 0 local-Literal debt was paid at M2 step 1), stdlib
+   only for metrics and synthesis. Never on engines, never on the gateway.
 5. **Who depends on it?** The STT runtime's local real-model test tier
    (step 5), milestone close-out measurements, and eventually the M9
    harness, which grows from this package rather than replacing it.

@@ -11,6 +11,7 @@ members = [
     "intelliai",
     "intelliai-api",
     "intelliai-evaluation",
+    "intelliai-runtime-contract",
 ]
 
 [[package]]
@@ -443,6 +444,7 @@ version = "0.1.0"
 source = { editable = "ml/evaluation" }
 dependencies = [
     { name = "httpx" },
+    { name = "intelliai-runtime-contract" },
     { name = "pydantic" },
 ]
 
@@ -454,8 +456,28 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "httpx", specifier = ">=0.28" },
+    { name = "intelliai-runtime-contract", editable = "packages/runtime-contract" },
     { name = "pydantic", specifier = ">=2.10" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8" }]
+
+[[package]]
+name = "intelliai-runtime-contract"
+version = "0.1.0"
+source = { editable = "packages/runtime-contract" }
+dependencies = [
+    { name = "pydantic" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pydantic", specifier = ">=2.10" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8" }]
