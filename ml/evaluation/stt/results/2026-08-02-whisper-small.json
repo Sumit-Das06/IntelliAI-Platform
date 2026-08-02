@@ -1,0 +1,60 @@
+{
+  "dataset_name": "stt-eval-seed",
+  "dataset_version": 1,
+  "capability": "transcription",
+  "run_at": "2026-08-02T17:43:34.559977Z",
+  "artifact": "whisper-small",
+  "engine": "faster-whisper",
+  "engine_version": "1.2.1",
+  "compute": "cpu-int8",
+  "hardware": "Intel Core i7-14650HX (Windows 11, native)",
+  "notes": "M2 step 5 baseline; runtime HTTP end-to-end (pipeline + VAD + engine); memory not measured this run - revisit with step 7 container measurements",
+  "clips": [
+    {
+      "clip_id": "jfk-flac",
+      "duration_seconds": 11.0,
+      "inference_seconds": 1.2695405999547802,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 22,
+      "hypothesis_words": 22,
+      "hypothesis_text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country."
+    },
+    {
+      "clip_id": "jfk-wav",
+      "duration_seconds": 11.0,
+      "inference_seconds": 1.3187214999925345,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 22,
+      "hypothesis_words": 22,
+      "hypothesis_text": "And so my fellow Americans, ask not what your country can do for you. Ask what you can do for your country."
+    },
+    {
+      "clip_id": "silence-10s",
+      "duration_seconds": 10.0,
+      "inference_seconds": 0.00001550000160932541,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 0,
+      "hypothesis_words": 0,
+      "hypothesis_text": ""
+    },
+    {
+      "clip_id": "tone-440hz-5s",
+      "duration_seconds": 5.0,
+      "inference_seconds": 2.065985900000669,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 0,
+      "hypothesis_words": 0,
+      "hypothesis_text": ""
+    }
+  ],
+  "load_ms": 1130.1,
+  "warmup_ms": 2074.9
+}
