@@ -136,4 +136,8 @@ class TestOperationalSurface:
         assert info["service"] == "stt-runtime"
         assert info["contract_version"] == CONTRACT_VERSION
         assert info["capability"] == "transcription"
-        assert info["models"] == [{"slot": "default", "artifact": "reference"}]
+        (model,) = info["models"]
+        assert model["slot"] == "default"
+        assert model["artifact"] == "reference"
+        assert model["load_ms"] >= 0  # startup economics are measured facts
+        assert model["warmup_ms"] >= 0

@@ -58,7 +58,13 @@ async def info(request: Request) -> dict[str, Any]:
         "contract_version": CONTRACT_VERSION,
         "capability": str(Capability.TRANSCRIPTION),
         "models": [
-            {"slot": loaded.slot, "artifact": loaded.artifact} for loaded in manager.loaded_models()
+            {
+                "slot": loaded.slot,
+                "artifact": loaded.artifact,
+                "load_ms": round(loaded.load_ms, 1),
+                "warmup_ms": round(loaded.warmup_ms, 1),
+            }
+            for loaded in manager.loaded_models()
         ],
     }
 

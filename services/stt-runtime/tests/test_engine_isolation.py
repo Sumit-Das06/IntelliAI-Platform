@@ -93,5 +93,14 @@ def test_service_dependencies_are_provider_independent() -> None:
     for lib in FOUNDATION_MODEL_LIBS:
         assert lib.replace("_", "-") not in dependencies, (
             f"foundation-model library {lib!r} in service dependencies — "
-            "engine libraries are engine-owned extras (step 5)"
+            "engine libraries are engine-owned extras"
         )
+
+
+def test_engine_libraries_live_in_extras_only() -> None:
+    # The whisper engine's library is an OPTIONAL extra: absent from CI,
+    # installed only where that engine actually runs.
+    with (SERVICE_ROOT / "pyproject.toml").open("rb") as handle:
+        pyproject = tomllib.load(handle)
+    extras = pyproject["project"]["optional-dependencies"]
+    assert any("faster-whisper" in dep for dep in extras["whisper"])

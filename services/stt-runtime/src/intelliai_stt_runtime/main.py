@@ -9,6 +9,7 @@ look up what startup created.
 import asyncio
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
+from functools import partial
 
 import structlog
 from fastapi import FastAPI, Request, Response
@@ -17,23 +18,40 @@ from intelliai_stt_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_stt_runtime.api.errors import register_error_handlers
 from intelliai_stt_runtime.api.routes import router
 from intelliai_stt_runtime.config import Settings
-from intelliai_stt_runtime.engines.reference import ARTIFACT_ID, load_reference_engine
+from intelliai_stt_runtime.engines import reference, whisper
 from intelliai_stt_runtime.logging import configure_logging
-from intelliai_stt_runtime.manager import ModelManager, SlotSpec
+from intelliai_stt_runtime.manager import ArtifactStore, ModelManager, SlotSpec
 from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline
 from intelliai_stt_runtime.pool import WorkerPool
 
 
-def build_manager() -> ModelManager:
-    """The service's slot configuration.
+def build_manager(settings: Settings) -> ModelManager:
+    """Settings-driven slot configuration.
 
-    Step 3: the default slot serves the ReferenceEngine. Step 5 makes this
-    settings-driven (whisper artifact, checksum-verified weights) — the
-    ModelManager and everything above it will not change.
+    The default slot binds whichever engine deployment chose; the engines
+    module owns everything model-specific (files, hashes, library import).
+    Adding an engine here = one SlotSpec line, nothing else on the platform.
     """
-    return ModelManager(
-        slots=(SlotSpec(slot="default", artifact=ARTIFACT_ID, load=load_reference_engine),)
-    )
+    if settings.default_engine == "whisper":
+        slots = (
+            SlotSpec(
+                slot="default",
+                artifact=whisper.ARTIFACT_ID,
+                load=partial(
+                    whisper.load_faster_whisper, compute_type=settings.whisper_compute_type
+                ),
+                files=whisper.WHISPER_SMALL_FILES,
+            ),
+        )
+    else:
+        slots = (
+            SlotSpec(
+                slot="default",
+                artifact=reference.ARTIFACT_ID,
+                load=lambda _: reference.load_reference_engine(),
+            ),
+        )
+    return ModelManager(slots=slots, store=ArtifactStore(settings.model_dir))
 
 
 def build_pipeline(settings: Settings) -> MediaPipeline:
@@ -49,7 +67,7 @@ def build_pipeline(settings: Settings) -> MediaPipeline:
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
     configure_logging(settings)
-    manager = build_manager()
+    manager = build_manager(settings)
     pipeline = build_pipeline(settings)
     pool = WorkerPool(max_concurrency=settings.max_concurrency, max_queue=settings.max_queue)
 
