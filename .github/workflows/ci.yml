@@ -110,6 +110,8 @@ jobs:
         run: uv run --package intelliai-api alembic -c apps/api/alembic.ini upgrade head
       - name: Run tests
         run: uv run --package intelliai-api pytest apps/api/tests -q
+      - name: Run evaluation package tests
+        run: uv run --package intelliai-evaluation pytest ml/evaluation/tests -q
 
   ci-ok:
     # The one status check to rule them all: branch protection requires

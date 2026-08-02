@@ -4,7 +4,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help up down ps logs clean sync api test migrate migration downgrade build db-ui psql
+.PHONY: help up down ps logs clean sync api test migrate migration downgrade build db-ui psql eval-fetch
 
 help: ## List available commands
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
@@ -33,8 +33,12 @@ sync: ## Install/sync all Python dependencies (uv workspace)
 api: ## Run the API gateway locally with hot reload
 	uv run --package intelliai-api uvicorn --factory intelliai_api.main:create_app --reload --port 8000
 
-test: ## Run the Python test suite
+test: ## Run the Python test suite (all workspace packages)
 	uv run --package intelliai-api pytest apps/api/tests -q
+	uv run --package intelliai-evaluation pytest ml/evaluation/tests -q
+
+eval-fetch: ## Materialize the STT evaluation dataset into ml/evaluation/data/
+	uv run --package intelliai-evaluation python -m intelliai_evaluation fetch --dataset ml/evaluation/stt/datasets/stt-eval-v1.json
 
 migrate: ## Apply database migrations to head
 	uv run --package intelliai-api alembic -c apps/api/alembic.ini upgrade head

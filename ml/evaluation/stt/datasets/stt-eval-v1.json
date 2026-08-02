@@ -1,0 +1,46 @@
+{
+  "name": "stt-eval-seed",
+  "version": 1,
+  "capability": "transcription",
+  "description": "Seed evaluation set for the transcription capability. Immutable once released: changes create v2. Two public-domain speech clips with exact reference transcripts (pinned to release tags + SHA-256) and two deterministic synthetic probes with empty references (silence hallucination + non-speech audio). v2 (planned, M2 step 5) adds curated real-world clips including user-recorded English and Hindi read speech.",
+  "clips": [
+    {
+      "id": "jfk-flac",
+      "language": "en",
+      "duration_seconds": 11.0,
+      "license": "Public domain (U.S. government speech, 1961); source repository MIT",
+      "url": "https://github.com/openai/whisper/raw/v20250625/tests/jfk.flac",
+      "sha256": "63a4b1e4c1dc655ac70961ffbf518acd249df237e5a0152faae9a4a836949715",
+      "reference_text": "And so, my fellow Americans: ask not what your country can do for you; ask what you can do for your country.",
+      "notes": "Canonical Whisper test clip. Exercises the FLAC decode path."
+    },
+    {
+      "id": "jfk-wav",
+      "language": "en",
+      "duration_seconds": 11.0,
+      "license": "Public domain (U.S. government speech, 1961); source repository MIT",
+      "url": "https://github.com/ggml-org/whisper.cpp/raw/v1.9.1/samples/jfk.wav",
+      "sha256": "59dfb9a4acb36fe2a2affc14bacbee2920ff435cb13cc314a08c13f66ba7860e",
+      "reference_text": "And so, my fellow Americans: ask not what your country can do for you; ask what you can do for your country.",
+      "notes": "Same speech via the WAV decode path — container handling must not change the transcript."
+    },
+    {
+      "id": "silence-10s",
+      "language": "zxx",
+      "duration_seconds": 10.0,
+      "license": "Generated (IntelliAI, deterministic)",
+      "synthetic": { "kind": "silence", "duration_seconds": 10.0, "sample_rate_hz": 16000 },
+      "reference_text": "",
+      "notes": "Hallucination probe: every emitted word is a failure. Targets Whisper's documented silence failure mode; gates the VAD pipeline stage."
+    },
+    {
+      "id": "tone-440hz-5s",
+      "language": "zxx",
+      "duration_seconds": 5.0,
+      "license": "Generated (IntelliAI, deterministic)",
+      "synthetic": { "kind": "tone", "duration_seconds": 5.0, "sample_rate_hz": 16000, "frequency_hz": 440.0 },
+      "reference_text": "",
+      "notes": "Non-speech audio probe (pure tone): correct output is an empty transcript."
+    }
+  ]
+}
