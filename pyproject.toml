@@ -88,3 +88,10 @@ files = [
 # never a bare ignore — enforced by the two flags below.
 warn_unused_ignores = true
 enable_error_code = ["ignore-without-code"]
+
+# Engine libraries are optional extras: absent in CI (import-not-found),
+# installed-but-untyped on inference machines (import-untyped). This scoped
+# override is the one sanctioned exception to strict imports — engines only.
+[[tool.mypy.overrides]]
+module = ["faster_whisper.*", "numpy.*"]
+ignore_missing_imports = true

@@ -132,9 +132,9 @@ def load_faster_whisper(
     if local_dir is None:
         msg = "faster-whisper requires a verified artifact directory"
         raise ValueError(msg)
-    # The ONE import site. Untyped upstream library; the adapter's own
-    # surface stays fully typed (model handled as Any at this boundary).
-    from faster_whisper import WhisperModel  # type: ignore[import-untyped]
+    # The ONE import site (untyped optional extra; mypy override in the
+    # root pyproject — absent in CI, installed where the engine runs).
+    from faster_whisper import WhisperModel
 
     model = WhisperModel(str(local_dir), device="cpu", compute_type=compute_type)
     return FasterWhisperEngine(model)
