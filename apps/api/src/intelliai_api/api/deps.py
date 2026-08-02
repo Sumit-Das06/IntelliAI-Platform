@@ -16,8 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from intelliai_api.core.config import Settings
 from intelliai_api.core.errors import AuthenticationError
 from intelliai_api.core.health import HealthService
+from intelliai_api.registry import Registry
+from intelliai_api.runtimes import RuntimeClient
 from intelliai_api.services.auth import AuthContext, AuthService
 from intelliai_api.services.identity import IdentityService
+from intelliai_api.services.transcription import TranscriptionService
 
 
 def app_settings(request: Request) -> Settings:
@@ -100,5 +103,18 @@ def identity_service(session: SessionDep, settings: SettingsDep) -> IdentityServ
     return IdentityService(session, pepper=settings.auth.key_pepper.get_secret_value())
 
 
+def model_registry(request: Request) -> Registry:
+    """The routing/product catalog of this application instance."""
+    return cast(Registry, request.app.state.registry)
+
+
+def transcription_service(request: Request) -> TranscriptionService:
+    """Transcription flow: registry resolution + runtime clients (factory-built)."""
+    clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
+    return TranscriptionService(cast(Registry, request.app.state.registry), clients)
+
+
 CurrentAuth = Annotated[AuthContext, Depends(current_auth)]
 IdentityDep = Annotated[IdentityService, Depends(identity_service)]
+RegistryDep = Annotated[Registry, Depends(model_registry)]
+TranscriptionDep = Annotated[TranscriptionService, Depends(transcription_service)]

@@ -50,6 +50,7 @@ def model(**overrides: object) -> PublicModelRecord:
         "capability": Capability.TRANSCRIPTION,
         "service": "stt-runtime",
         "artifact_id": "whisper-small",
+        "released": date(2026, 8, 2),
     }
     fields.update(overrides)
     return PublicModelRecord.model_validate(fields)

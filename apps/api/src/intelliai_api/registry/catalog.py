@@ -38,6 +38,7 @@ _MODELS = (
         service="stt-runtime",
         artifact_id="whisper-small",
         description="IntelliAI speech-to-text",
+        released=date(2026, 8, 2),
     ),
 )
 

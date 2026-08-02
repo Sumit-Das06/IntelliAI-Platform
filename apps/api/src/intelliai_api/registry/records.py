@@ -54,6 +54,7 @@ class PublicModelRecord(_Record):
     service: str = Field(min_length=1)  # capability-named runtime, e.g. "stt-runtime"
     artifact_id: str = Field(min_length=1)
     description: str = ""
+    released: date  # public product fact (the /v1/models `created` source)
 
 
 class Resolution(_Record):

@@ -81,3 +81,10 @@ class Registry:
     def list_models(self) -> tuple[PublicModelRecord, ...]:
         """Every public model, catalog order — the `/v1/models` source."""
         return tuple(self._models.values())
+
+    def public_model(self, public_model_id: str) -> PublicModelRecord:
+        """The catalog record itself (product facts, no routing)."""
+        model = self._models.get(public_model_id)
+        if model is None:
+            raise ModelNotFoundError(public_model_id)
+        return model
