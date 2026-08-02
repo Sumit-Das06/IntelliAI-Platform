@@ -17,8 +17,9 @@
 │                    metering · model registry · jobs              │
 ├──────────────────────────────────────────────────────────────────┤
 │ DATA PLANE         /v1/* inference APIs → inference services     │
-│                    (services/stt-whisper M2, services/tts-kokoro │
-│                    M3, external-provider adapters later)         │
+│                    (services/stt-runtime M2, TTS runtime M3,     │
+│                    external-provider adapters later) — services  │
+│                    are named for capabilities, engines swap      │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
