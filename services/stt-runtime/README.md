@@ -9,16 +9,30 @@ named successor lineage; future IntelliAI fine-tunes ride the same runtime.
 Replacing an engine touches one adapter module, never this service's
 identity.
 
-Internal shape (M2 design, approved):
+Three independent responsibilities, three module groups (M2 step 3):
 
 ```
-api/        contract layer — speaks packages/runtime-contract only
-pipeline/   media ingestion: sniff → ffmpeg → 16 kHz mono → VAD (engine-neutral)
-manager/    ModelManager — download, checksum verification, cache, slots
-            (default/premium/experimental), lifecycle, warm-up
-engines/    engine adapters — the ONLY modules allowed to import
-            foundation-model libraries (CI-enforced)
+api/        HTTP binding — the ONLY transport-aware layer; realizes the
+            runtime contract on the wire (multipart in, envelope JSON out)
+pipeline/   media ingestion, engine-neutral: stdlib WAV today; step 4 adds
+            sniff → sandboxed ffmpeg → 16 kHz mono → VAD
+manager/    model lifecycle — the long-lived ModelManager owns long-lived
+            engine instances: loaded at startup, reused by every request,
+            unloaded at shutdown; NO request constructs or destroys an
+            engine. Slots (default/premium/experimental) each serve one
+            artifact. Step 5 adds download/checksum/cache/warm-up.
+engines/    inference execution — thin adapters around one foundation
+            model each; stateless apart from the loaded model; the ONLY
+            modules allowed to import foundation-model libraries
+            (CI-enforced by tests/test_engine_isolation.py)
 ```
+
+Inference runs on a bounded worker pool (`pool.py`): `max_concurrency`
+threads + a small admission queue; beyond that the runtime answers
+`overloaded` immediately. The `ReferenceEngine` (deterministic, weight-free)
+proves the whole architecture and serves the test suite forever — CI never
+loads model weights. Run locally: `make stt` (port 8001).
 
 CPU-first deployment (int8); hardware-agnostic architecture — GPU via
-deployment config only (ADR-0015).
+deployment config only (ADR-0015). Precision/quantization are build
+concerns owned by the ModelManager, never part of artifact identity.

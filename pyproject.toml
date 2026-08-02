@@ -26,6 +26,7 @@ members = [
     "apps/api",
     "ml/evaluation",
     "packages/runtime-contract",
+    "services/stt-runtime",
 ]
 
 # ── Lint & format: ruff (replaces black + isort + flake8 + friends) ─────
@@ -39,6 +40,8 @@ src = [
     "ml/evaluation/tests",
     "packages/runtime-contract/src",
     "packages/runtime-contract/tests",
+    "services/stt-runtime/src",
+    "services/stt-runtime/tests",
 ]
 
 [tool.ruff.lint]
@@ -77,6 +80,8 @@ files = [
     "ml/evaluation/tests",
     "packages/runtime-contract/src",
     "packages/runtime-contract/tests",
+    "services/stt-runtime/src",
+    "services/stt-runtime/tests",
 ]
 # Escape hatch policy: targeted `# type: ignore[code]` with the error code,
 # never a bare ignore — enforced by the two flags below.
