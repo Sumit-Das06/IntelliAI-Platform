@@ -23,7 +23,7 @@ node_modules/
 # ── ML artifacts — weights and datasets never enter git ──────
 data/
 weights/
-models/
+/models/
 *.ckpt
 *.safetensors
 *.onnx
