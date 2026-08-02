@@ -1,0 +1,42 @@
+# Dependabot — automated dependency updates (M2 step 0; debt carried since M0.5).
+# Philosophy: Dependabot owns ROUTINE version churn so humans review diffs,
+# not chase releases. Minor/patch updates arrive grouped weekly; majors arrive
+# individually (they deserve individual review). Security advisories bypass
+# the schedule (GitHub raises them immediately regardless).
+
+version: 2
+updates:
+  # Python workspace — single uv.lock at the root governs every member.
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      python-minor-patch:
+        update-types: ["minor", "patch"]
+
+  # GitHub Actions — pinned versions in workflows (the setup-uv@v9 lesson:
+  # tags move and vanish; Dependabot keeps pins current instead of humans).
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      actions:
+        update-types: ["minor", "patch"]
+
+  # Container base images (api.Dockerfile).
+  - package-ecosystem: "docker"
+    directory: "/infra/docker"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+
+  # Pinned service images in docker-compose.yml (postgres/redis/minio/adminer).
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
