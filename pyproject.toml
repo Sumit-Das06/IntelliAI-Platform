@@ -25,13 +25,21 @@ package = false
 members = [
     "apps/api",
     "ml/evaluation",
+    "packages/runtime-contract",
 ]
 
 # ── Lint & format: ruff (replaces black + isort + flake8 + friends) ─────
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-src = ["apps/api/src", "apps/api/tests", "ml/evaluation/src", "ml/evaluation/tests"]
+src = [
+    "apps/api/src",
+    "apps/api/tests",
+    "ml/evaluation/src",
+    "ml/evaluation/tests",
+    "packages/runtime-contract/src",
+    "packages/runtime-contract/tests",
+]
 
 [tool.ruff.lint]
 select = [
@@ -62,7 +70,14 @@ select = [
 python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
-files = ["apps/api/src", "apps/api/tests", "ml/evaluation/src", "ml/evaluation/tests"]
+files = [
+    "apps/api/src",
+    "apps/api/tests",
+    "ml/evaluation/src",
+    "ml/evaluation/tests",
+    "packages/runtime-contract/src",
+    "packages/runtime-contract/tests",
+]
 # Escape hatch policy: targeted `# type: ignore[code]` with the error code,
 # never a bare ignore — enforced by the two flags below.
 warn_unused_ignores = true

@@ -36,6 +36,7 @@ api: ## Run the API gateway locally with hot reload
 test: ## Run the Python test suite (all workspace packages)
 	uv run --package intelliai-api pytest apps/api/tests -q
 	uv run --package intelliai-evaluation pytest ml/evaluation/tests -q
+	uv run --package intelliai-runtime-contract pytest packages/runtime-contract/tests -q
 
 eval-fetch: ## Materialize the STT evaluation dataset into ml/evaluation/data/
 	uv run --package intelliai-evaluation python -m intelliai_evaluation fetch --dataset ml/evaluation/stt/datasets/stt-eval-v1.json
