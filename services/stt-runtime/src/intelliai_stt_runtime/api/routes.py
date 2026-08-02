@@ -52,7 +52,14 @@ async def ready(request: Request) -> JSONResponse:
 async def info(request: Request) -> dict[str, Any]:
     """Operational identity only — never payload (ADR-0016)."""
     manager: ModelManager = request.app.state.manager
+    pool: WorkerPool = request.app.state.pool
+    settings = request.app.state.settings
     return {
+        "pool": {
+            "admitted": pool.admitted,
+            "max_concurrency": settings.max_concurrency,
+            "max_queue": settings.max_queue,
+        },
         "service": SERVICE_NAME,
         "service_version": __version__,
         "contract_version": CONTRACT_VERSION,

@@ -141,3 +141,4 @@ class TestOperationalSurface:
         assert model["artifact"] == "reference"
         assert model["load_ms"] >= 0  # startup economics are measured facts
         assert model["warmup_ms"] >= 0
+        assert info["pool"] == {"admitted": 0, "max_concurrency": 2, "max_queue": 2}
