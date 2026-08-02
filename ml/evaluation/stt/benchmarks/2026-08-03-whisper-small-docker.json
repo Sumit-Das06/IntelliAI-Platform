@@ -1,0 +1,79 @@
+{
+  "clip": "jfk-wav.wav",
+  "clip_seconds": 11.0,
+  "repetitions_per_worker": 3,
+  "hardware": "Intel Core i7-14650HX, Docker Desktop (WSL2), Windows 11",
+  "notes": "M2 step 7 production baseline; runtime containerized, default pool config (concurrency=2, queue=8); startup lifecycle recorded separately in the baseline doc",
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 3,
+      "succeeded": 3,
+      "overloaded": 0,
+      "other_errors": 0,
+      "wall_seconds": 8.59,
+      "p50_ms": 1749.3,
+      "p95_ms": 1790.1,
+      "throughput_rps": 0.349,
+      "mean_rtf": 0.1554,
+      "max_pool_admitted": 1,
+      "docker_cpu_percent_max": 0.55,
+      "docker_memory_mib_max": 676.7
+    },
+    {
+      "concurrency": 5,
+      "requests": 15,
+      "succeeded": 15,
+      "overloaded": 0,
+      "other_errors": 0,
+      "wall_seconds": 26.98,
+      "p50_ms": 6296.1,
+      "p95_ms": 9563.3,
+      "throughput_rps": 0.556,
+      "mean_rtf": 0.2864,
+      "max_pool_admitted": 5,
+      "docker_cpu_percent_max": 898.95,
+      "docker_memory_mib_max": 795.1
+    },
+    {
+      "concurrency": 10,
+      "requests": 30,
+      "succeeded": 30,
+      "overloaded": 0,
+      "other_errors": 0,
+      "wall_seconds": 52.42,
+      "p50_ms": 15226.7,
+      "p95_ms": 16517.6,
+      "throughput_rps": 0.572,
+      "mean_rtf": 0.3013,
+      "max_pool_admitted": 10,
+      "docker_cpu_percent_max": 909.3,
+      "docker_memory_mib_max": 796.0
+    },
+    {
+      "concurrency": 20,
+      "requests": 60,
+      "succeeded": 25,
+      "overloaded": 35,
+      "other_errors": 0,
+      "wall_seconds": 43.5,
+      "p50_ms": 15560.8,
+      "p95_ms": 16888.0,
+      "throughput_rps": 0.575,
+      "mean_rtf": 0.2975,
+      "max_pool_admitted": 10,
+      "docker_cpu_percent_max": 903.55,
+      "docker_memory_mib_max": 796.7
+    }
+  ],
+  "overhead": {
+    "direct_p50_ms": 1770.0,
+    "via_gateway_p50_ms": 1784.7,
+    "gateway_overhead_ms": 14.7,
+    "inference_p50_ms": 1714.5,
+    "overhead_fraction_of_inference": 0.0086
+  },
+  "prd_p95_target_ms": 16500.0,
+  "prd_p95_actual_ms": 1784.7,
+  "prd_verdict": "PASS"
+}
