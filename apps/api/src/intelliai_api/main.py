@@ -20,6 +20,8 @@ from intelliai_api.core.config import Settings, get_settings
 from intelliai_api.core.health import HealthService, default_checks
 from intelliai_api.core.logging import configure_logging
 from intelliai_api.db.engine import create_engine, create_session_factory
+from intelliai_api.registry import default_registry
+from intelliai_api.runtimes import HTTPRuntimeClient, RuntimeClient
 
 logger = structlog.get_logger("intelliai_api.lifecycle")
 
@@ -30,10 +32,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 
     The engine object is built in the factory (lazily, no I/O); its pool
     fills on first use. Shutdown drains and closes every pooled connection
-    so Postgres never accumulates orphans from restarts.
+    so Postgres never accumulates orphans from restarts — and every
+    runtime client releases its transport pool.
     """
     logger.info("app_started")
     yield
+    for client in app.state.runtime_clients.values():
+        await client.close()
     await app.state.engine.dispose()
     logger.info("app_stopped")
 
@@ -59,6 +64,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.engine = engine
     app.state.session_factory = create_session_factory(engine)
     app.state.health = HealthService(default_checks(settings, engine))
+    # The registry composes (and license-gates) at startup; runtime clients
+    # are keyed by the capability-named service the registry routes to.
+    app.state.registry = default_registry()
+    runtime_clients: dict[str, RuntimeClient] = {
+        "stt-runtime": HTTPRuntimeClient(
+            base_url=settings.runtimes.stt_url,
+            timeout_seconds=settings.runtimes.timeout_seconds,
+        ),
+    }
+    app.state.runtime_clients = runtime_clients
 
     app.add_middleware(RequestContextMiddleware)
     register_error_handlers(app)

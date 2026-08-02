@@ -77,6 +77,17 @@ class StorageSettings(BaseSettings):
     audio_bucket: str = "intelliai-audio"
 
 
+class RuntimeSettings(BaseSettings):
+    """Where the inference runtimes live — deployment topology, per service."""
+
+    model_config = _group("INTELLIAI_RUNTIMES_")
+
+    stt_url: str = "http://localhost:8001"
+    # The gateway's end-to-end patience with a runtime call (it owns the
+    # deadline; the runtime owns per-stage limits — ADR-0016).
+    timeout_seconds: float = 120.0
+
+
 class Settings(BaseSettings):
     """Root settings object; one instance per application instance."""
 
@@ -89,6 +100,7 @@ class Settings(BaseSettings):
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
     redis: RedisSettings = Field(default_factory=RedisSettings)
     storage: StorageSettings = Field(default_factory=StorageSettings)
+    runtimes: RuntimeSettings = Field(default_factory=RuntimeSettings)
 
     @property
     def is_dev(self) -> bool:
