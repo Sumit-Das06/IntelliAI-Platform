@@ -41,14 +41,43 @@ one recording format — starts here, before the first model is downloaded.
   to eval data too) and 2 deterministic synthetic probes (silence, tone)
   with empty references — Whisper's documented silence-hallucination
   failure mode is probed from day one.
-- **v2 (planned, step 5):** curated real-world clips including
-  user-recorded English + Hindi read speech — the first wedge-aligned
-  measurements.
+- **v2 (pending recordings):** v1 plus founder-recorded English + Hindi
+  read speech — the first wedge-aligned measurements and the start of the
+  long-term evaluation corpus. v2 releases when the recordings below
+  exist; manifests are immutable, so it is not created ahead of them.
+
+### Recording protocol for the v2 corpus (founder homework)
+
+Because reference transcripts must be *exact*, the reference is written
+first and read aloud, not transcribed afterwards:
+
+1. **Script first.** Write each passage down (5 English, 5 Hindi;
+   2–4 sentences each; include numbers, names, and one technical term
+   per passage — the things STT gets wrong). The written text IS the
+   reference; read it verbatim.
+2. **Record** one WAV per passage: quiet room, phone or headset mic at a
+   normal distance, 16 kHz or higher, mono preferred. 10–30 s each.
+   Natural pace — this corpus should sound like a real user, not a
+   voice-over.
+3. **Name and place:** `en-read-01.wav` … `hi-read-05.wav` into
+   `ml/evaluation/corpus-inbox/` (gitignored staging dir).
+4. Then the manifests get built: each file is SHA-256-pinned, reference
+   text attached, and `stt-eval-v2.json` released with v1's clips
+   included unchanged. Hosting: private clips stay local-path pinned
+   until object storage lands (MinIO/S3) — the manifest schema gains a
+   `path` source alongside `url`/`synthetic` at that point.
 
 ## Usage
 
 ```bash
 make eval-fetch      # materialize clips into ml/evaluation/data/ (gitignored)
+
+# Measure a LIVE runtime (end-to-end over HTTP — the product's numbers):
+uv run --package intelliai-evaluation python -m intelliai_evaluation run \
+  --dataset ml/evaluation/stt/datasets/stt-eval-v1.json \
+  --url http://localhost:8001 --artifact whisper-small \
+  --engine faster-whisper --engine-version <x.y.z> --compute cpu-int8 \
+  --hardware "<cpu description>" --out ml/evaluation/stt/results/<date>-<artifact>.json
 ```
 
 Results are recorded as JSON conforming to `results.EvalRun`, committed

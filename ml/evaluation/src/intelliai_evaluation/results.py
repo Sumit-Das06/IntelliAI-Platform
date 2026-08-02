@@ -69,6 +69,9 @@ class EvalRun(BaseModel):
     hardware: str  # human description of the machine
     notes: str = ""
     clips: list[ClipResult]
+    # Startup economics (additive, M2 step 5): from the runtime's /info.
+    load_ms: float | None = None
+    warmup_ms: float | None = None
 
     @property
     def overall_wer(self) -> float | None:
