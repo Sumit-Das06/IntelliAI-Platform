@@ -15,7 +15,9 @@ make hooks     # git hooks — not optional
 make check     # lint + types + tests: must be green before you start
 ```
 
-On Windows, work inside WSL2. `make` with no arguments lists every command.
+Windows is a first-class dev environment (native Python validated through
+M1.5); WSL2 is the documented fallback if a native dependency misbehaves —
+see README "Development rules". `make` with no arguments lists every command.
 
 ## Workflow
 

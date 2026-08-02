@@ -62,7 +62,13 @@ make test               # run the test suite
 
 ## Development rules
 
-- On Windows, develop inside **WSL2** — Windows-native Python is unsupported for this repo.
+- **Windows development is supported natively** (amended at M2 step 0 to match
+  validated practice — every milestone through M1.5 ran on native Windows).
+  Containers remain the Linux truth: CI and `make up` run Linux images, so
+  parity is enforced where it matters. If a native dependency (ffmpeg,
+  inference runtimes) misbehaves on Windows, fall back to **WSL2** for that
+  work and record the incident in the relevant milestone review — the rule
+  follows evidence, not aspiration.
 - Trunk-based development: short-lived `feat/`-branches off `main`, squash-merged,
   [Conventional Commits](https://www.conventionalcommits.org/) message format.
 - Significant decisions are recorded as ADRs in [docs/adr/](docs/adr/) — read them
