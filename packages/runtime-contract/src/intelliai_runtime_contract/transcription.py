@@ -19,6 +19,10 @@ class TranscriptionRequest(ContractModel):
     """Capability params. The audio itself travels by transport, not here."""
 
     language: str | None = None  # BCP-47-ish hint; None = runtime auto-detects
+    # The artifact identifier the gateway's registry resolved (never a public
+    # model name, never an engine name). None = the runtime's default slot.
+    # Added additively under contract v1 (ADR-0016 evolution rules).
+    model: str | None = None
 
 
 class TranscriptionSegment(ContractModel):

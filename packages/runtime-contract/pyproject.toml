@@ -1,6 +1,6 @@
 [project]
 name = "intelliai-runtime-contract"
-version = "0.1.0"
+version = "0.2.0"
 description = "The permanent language between the API gateway and every AI runtime"
 requires-python = ">=3.12"
 # The contract's only runtime dependency, by design (ADR-0016). Adding a

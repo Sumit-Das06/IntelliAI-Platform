@@ -13,8 +13,10 @@ from intelliai_runtime_contract import (
 
 
 class TestRequest:
-    def test_defaults_to_auto_detect(self) -> None:
-        assert TranscriptionRequest().language is None
+    def test_defaults_to_auto_detect_on_the_default_slot(self) -> None:
+        request = TranscriptionRequest()
+        assert request.language is None
+        assert request.model is None  # None = the runtime's default slot
 
     def test_tolerates_unknown_params_from_newer_gateway(self) -> None:
         req = TranscriptionRequest.model_validate({"language": "hi", "temperature": 0.2})
