@@ -21,10 +21,13 @@ WORKDIR /app
 # reuse the cache and rebuild in seconds.
 COPY pyproject.toml uv.lock .python-version ./
 COPY apps/api/pyproject.toml apps/api/
+COPY packages/runtime-contract/pyproject.toml packages/runtime-contract/
 RUN uv sync --frozen --no-dev --no-install-workspace --package intelliai-api
 
-# Layer 2: our source, then install the workspace package itself.
+# Layer 2: our source (the gateway and the workspace packages it depends
+# on), then install the workspace packages themselves.
 COPY apps/api/src apps/api/src
+COPY packages/runtime-contract/src packages/runtime-contract/src
 RUN uv sync --frozen --no-dev --package intelliai-api
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────

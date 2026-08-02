@@ -21,6 +21,7 @@ services:
       INTELLIAI_STORAGE_ENDPOINT_URL: http://minio:9000
       INTELLIAI_STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER:-intelliai}
       INTELLIAI_STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?set in .env}
+      INTELLIAI_RUNTIMES_STT_URL: http://stt-runtime:8001
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
@@ -38,6 +39,31 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks: [intelliai]
+    restart: unless-stopped
+
+  stt-runtime:
+    build:
+      context: .
+      dockerfile: infra/docker/stt-runtime.Dockerfile
+    environment:
+      INTELLIAI_STT_DEFAULT_ENGINE: ${INTELLIAI_STT_DEFAULT_ENGINE:-whisper}
+      INTELLIAI_STT_LOG_LEVEL: ${INTELLIAI_STT_LOG_LEVEL:-INFO}
+    ports:
+      - "127.0.0.1:8001:8001"
+    volumes:
+      # Hash-verified model cache: survives restarts and image rebuilds;
+      # first boot downloads (~480 MB), every boot re-verifies.
+      - modelcache:/models
+    healthcheck:
+      # Readiness IS the right probe here: this service has no downstream
+      # dependencies, and ready means "models loaded and warm". The long
+      # start_period covers the first-boot artifact download.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 600s
     networks: [intelliai]
     restart: unless-stopped
 
@@ -121,3 +147,4 @@ volumes:
   pgdata:
   redisdata:
   miniodata:
+  modelcache:
