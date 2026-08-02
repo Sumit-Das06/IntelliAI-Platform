@@ -64,6 +64,7 @@ select = [
 "**/tests/**" = [
     "S101",  # assert is the point of tests
     "S105", "S106",  # hardcoded fake credentials in test fixtures
+    "S603", "S607",  # tests spawn fixture subprocesses (ffmpeg encodes): fixed argv, PATH lookup
 ]
 "**/cli.py" = ["T201"]  # the CLI's job is printing to a human
 "**/alembic/versions/*" = ["F401"]  # template imports kept for future revisions

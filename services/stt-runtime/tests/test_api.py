@@ -57,15 +57,26 @@ class TestTranscribe:
         assert envelope.runtime.contract_version == CONTRACT_VERSION
         (usage,) = envelope.usage
         assert usage.unit is UsageUnit.AUDIO_SECONDS
-        assert abs(usage.amount - 0.5) < 1e-6
-        assert set(envelope.timing.stages) == {"decode", "inference"}
+        assert abs(usage.amount - 0.5) < 0.01
+        assert set(envelope.timing.stages) == {
+            "validate",
+            "detect",
+            "decode",
+            "normalize",
+            "vad",
+            "inference",
+        }
         assert envelope.timing.total_ms >= 0
 
-    def test_silence_yields_an_empty_transcript(self, client: TestClient) -> None:
+    def test_silence_short_circuits_to_an_empty_transcript(self, client: TestClient) -> None:
+        # VAD finds no speech -> no engine runs, yet usage is still billed:
+        # the audio WAS processed, and silence has a correct answer.
         response = post_audio(client, wav_bytes(duration_seconds=1.0, tone_hz=None))
-        output = envelope_of(response).output
-        assert output.text == ""
-        assert output.language == "zxx"
+        envelope = envelope_of(response)
+        assert envelope.output.text == ""
+        assert envelope.output.language == "zxx"
+        (usage,) = envelope.usage
+        assert abs(usage.amount - 1.0) < 0.01
 
     def test_language_param_reaches_the_engine(self, client: TestClient) -> None:
         response = post_audio(client, wav_bytes(), params={"language": "hi"})

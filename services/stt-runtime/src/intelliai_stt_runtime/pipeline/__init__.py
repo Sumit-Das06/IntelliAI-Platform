@@ -1,12 +1,39 @@
-"""Media ingestion — engine-neutral audio in, `DecodedAudio` out.
+"""Media ingestion — a permanent subsystem, independent of every engine.
 
-Step 3 ships the minimal stdlib WAV path so the architecture is provable
-end-to-end without ffmpeg. Step 4 grows this into the full pipeline:
-magic-byte sniffing, sandboxed ffmpeg decode to 16 kHz mono PCM, and VAD.
-The `DecodedAudio` seam is what engines are written against — the pipeline
-can change completely without an engine noticing.
+Any supported container in, canonical audio (16 kHz mono s16le PCM) +
+speech analysis out, with per-stage timing evidence. Engines receive only
+`DecodedAudio`; they never learn what a format, codec, or VAD is. The
+subsystem is capability-agnostic by design — future speech capabilities
+(translation, diarization, keyword spotting, voice agents) reuse it as
+is; it extracts to a shared package when a second speech runtime exists.
 """
 
-from intelliai_stt_runtime.pipeline.decode import DecodedAudio, decode_wav
+from intelliai_stt_runtime.pipeline.audio import (
+    CANONICAL_SAMPLE_RATE_HZ,
+    DecodedAudio,
+    canonical_audio,
+)
+from intelliai_stt_runtime.pipeline.detect import MediaFormat, detect_format
+from intelliai_stt_runtime.pipeline.ffmpeg import FfmpegDecoder
+from intelliai_stt_runtime.pipeline.pipeline import MediaPipeline, PipelineOutput
+from intelliai_stt_runtime.pipeline.vad import (
+    EnergyVad,
+    SpeechAnalysis,
+    SpeechRegion,
+    VoiceActivityDetector,
+)
 
-__all__ = ["DecodedAudio", "decode_wav"]
+__all__ = [
+    "CANONICAL_SAMPLE_RATE_HZ",
+    "DecodedAudio",
+    "EnergyVad",
+    "FfmpegDecoder",
+    "MediaFormat",
+    "MediaPipeline",
+    "PipelineOutput",
+    "SpeechAnalysis",
+    "SpeechRegion",
+    "VoiceActivityDetector",
+    "canonical_audio",
+    "detect_format",
+]

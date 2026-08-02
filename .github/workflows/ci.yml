@@ -109,6 +109,8 @@ jobs:
       INTELLIAI_STORAGE_SECRET_KEY: ci-only-secret
     steps:
       - uses: actions/checkout@v6
+      - name: Install ffmpeg (stt-runtime media pipeline dependency)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
       - uses: astral-sh/setup-uv@v9.0.0
         with:
           enable-cache: true

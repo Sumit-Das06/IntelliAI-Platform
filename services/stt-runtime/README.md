@@ -14,8 +14,18 @@ Three independent responsibilities, three module groups (M2 step 3):
 ```
 api/        HTTP binding — the ONLY transport-aware layer; realizes the
             runtime contract on the wire (multipart in, envelope JSON out)
-pipeline/   media ingestion, engine-neutral: stdlib WAV today; step 4 adds
-            sniff → sandboxed ffmpeg → 16 kHz mono → VAD
+pipeline/   media ingestion — a permanent, engine-independent subsystem.
+            Six single-responsibility stages, each timed: validate (size
+            caps) → detect (magic bytes, whitelist) → decode (sandboxed
+            ffmpeg subprocess: fixed argv, stdin/stdout pipes, hard
+            timeout, startup-verified) → normalize (canonical 16 kHz mono
+            s16le PCM + duration cap) → VAD (Protocol; deterministic
+            energy detector today, model-based slots in behind the same
+            seam) → handoff. No speech after VAD is NOT an error: the
+            engine is skipped and the correct empty transcript returns.
+            Failure philosophy in pipeline/pipeline.py. Reusable as-is by
+            future speech capabilities (translation, diarization, keyword
+            spotting); extracts to a shared package at the second consumer.
 manager/    model lifecycle — the long-lived ModelManager owns long-lived
             engine instances: loaded at startup, reused by every request,
             unloaded at shutdown; NO request constructs or destroys an

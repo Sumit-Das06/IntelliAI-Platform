@@ -22,10 +22,11 @@ from intelliai_runtime_contract import (
 )
 from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, ROUTE_TRANSCRIBE
+from intelliai_stt_runtime.engines import TranscriptionEngine
 from intelliai_stt_runtime.failures import RuntimeServiceError
 from intelliai_stt_runtime.identity import SERVICE_NAME, runtime_metadata
 from intelliai_stt_runtime.manager import ModelManager
-from intelliai_stt_runtime.pipeline import decode_wav
+from intelliai_stt_runtime.pipeline import MediaPipeline, PipelineOutput
 from intelliai_stt_runtime.pool import WorkerPool
 
 logger = structlog.get_logger(__name__)
@@ -62,6 +63,32 @@ async def info(request: Request) -> dict[str, Any]:
     }
 
 
+def _ingest_and_transcribe(
+    pipeline: MediaPipeline,
+    engine: TranscriptionEngine,
+    payload: bytes,
+    request: TranscriptionRequest,
+) -> tuple[PipelineOutput, TranscriptionResult, float]:
+    """Stages 1-5 plus handoff, as one blocking unit on a pool slot.
+
+    The handoff stage's short-circuit: when VAD found no speech, the
+    correct transcript is empty and NO engine runs — silence can never
+    reach a model and come back as hallucinated words.
+    """
+    output = pipeline.process(payload)
+    inference_started = time.perf_counter()
+    if output.speech.has_speech:
+        result = engine.transcribe(output.audio, request)
+    else:
+        result = TranscriptionResult(
+            text="",
+            language=request.language or "zxx",
+            duration_seconds=output.audio.duration_seconds,
+        )
+    inference_ms = (time.perf_counter() - inference_started) * 1000.0
+    return output, result, inference_ms
+
+
 @router.post(ROUTE_TRANSCRIBE)
 async def transcribe(
     request: Request,
@@ -79,31 +106,34 @@ async def transcribe(
         ) from exc
 
     manager: ModelManager = request.app.state.manager
+    pipeline: MediaPipeline = request.app.state.pipeline
     pool: WorkerPool = request.app.state.pool
     loaded = manager.lookup(transcription_request.model)
 
     payload = await file.read()
-    decoded = decode_wav(payload)
-    decode_ms = (time.perf_counter() - started) * 1000.0
-
-    inference_started = time.perf_counter()
-    result = await pool.run(partial(loaded.engine.transcribe, decoded, transcription_request))
-    inference_ms = (time.perf_counter() - inference_started) * 1000.0
+    # Admission happens BEFORE any expensive work: pipeline decode and
+    # inference share one bounded slot, so ffmpeg concurrency is capped
+    # by the same honest limit as the engines.
+    output, result, inference_ms = await pool.run(
+        partial(_ingest_and_transcribe, pipeline, loaded.engine, payload, transcription_request)
+    )
 
     envelope = RuntimeResponse[TranscriptionResult](
         output=result,
         model=loaded.artifact,
-        usage=(Usage(unit=UsageUnit.AUDIO_SECONDS, amount=decoded.duration_seconds),),
+        usage=(Usage(unit=UsageUnit.AUDIO_SECONDS, amount=output.audio.duration_seconds),),
         timing=RuntimeTiming(
             total_ms=(time.perf_counter() - started) * 1000.0,
-            stages={"decode": decode_ms, "inference": inference_ms},
+            stages={**output.timings_ms, "inference": inference_ms},
         ),
         runtime=runtime_metadata(),
     )
     logger.info(
         "transcription_completed",
         artifact=loaded.artifact,
-        audio_seconds=round(decoded.duration_seconds, 3),
+        media_format=str(output.media_format),
+        audio_seconds=round(output.audio.duration_seconds, 3),
+        speech_seconds=round(output.speech.speech_seconds, 3),
         total_ms=round(envelope.timing.total_ms, 1),
     )
     return Response(

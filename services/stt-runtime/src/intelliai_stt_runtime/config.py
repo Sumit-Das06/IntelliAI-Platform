@@ -24,3 +24,9 @@ class Settings(BaseSettings):
     # concurrency + queue, the runtime answers `overloaded` immediately —
     # a fast honest no beats a slow timeout (the gateway owns retries).
     max_queue: int = Field(default=8, ge=0)
+
+    # ── Media pipeline limits (failure philosophy in pipeline/pipeline.py) ──
+    ffmpeg_path: str = "ffmpeg"
+    decode_timeout_seconds: float = Field(default=30.0, gt=0)
+    max_upload_bytes: int = Field(default=25 * 1024 * 1024, gt=0)
+    max_audio_seconds: float = Field(default=600.0, gt=0)
