@@ -1,7 +1,8 @@
 # Speech Evaluation — Philosophy & Methodology
 
-**Status:** IN FORCE (M2.5 D1) · lives beside the code that implements it
-· changes follow the same law as metrics: *a changed methodology is a new
+**Status:** IN FORCE (M2.5 D1) · **Methodology version: 1** (recorded in
+every evaluation record) · lives beside the code that implements it ·
+changes follow the same law as metrics: *a changed methodology is a new
 version, never an edit that silently moves old numbers.*
 
 This document governs how IntelliAI evaluates **speech generation** — TTS
@@ -176,12 +177,38 @@ pipelines will often use. It has two known hazards, managed openly:
   auditable even for in-house text. **Evolution rule: a version cited by
   any recorded result never changes; new coverage always creates the
   next version; old results stay reproducible forever.**
-- **Results:** one append-only record per (corpus version, artifact
-  evaluated, judge, hardware) carrying artifact lineage and runtime
-  identity, an extensible metrics map keyed by registered metric names,
-  and optional human-evaluation fields. Capability-generic: a cloning
-  eval is the same record shape with more metrics and a reference-voice
-  field, not a new schema.
+- **Results are permanent evidence.** An evaluation record is not
+  transient output — it is the auditable artifact that justified a model
+  decision. Three laws follow:
+  1. **Self-contained:** the five-year question — *"if this record is
+     found five years from now, can we completely understand what
+     happened?"* — must answer yes from the record plus the versioned
+     repository (corpora and methodology are committed beside it). If
+     not, the schema is missing information.
+  2. **Immutable once written:** the ledger is append-only. Corrections
+     create a new record; re-running the same evaluation creates a new
+     record; the historical trail is part of the platform.
+  3. **Measured and human evidence never mix:** metrics, timings,
+     hardware, artifact, and judge identity live in measured structures;
+     listening scores, preferences, and observations live in a separate
+     human structure. Objective and subjective evidence are both
+     first-class — and never confused.
+  Every record carries the full reproducibility set (corpus version,
+  evaluated artifact + lineage, judge identity, runtime version,
+  hardware, methodology version) as *required* fields — the data model
+  itself makes an under-specified benchmark impossible to write. Metric
+  names in records validate against the registry exactly as capabilities
+  validate against the `Capability` enum: free-form identifiers never
+  enter the ledger. Optional comparison metadata (`compared_against`,
+  `promotion_candidate`, `benchmark_group`) is reserved for future
+  promotion workflows. Capability-generic: a cloning eval is the same
+  record shape with more metrics and a reference-voice field, not a new
+  schema.
+
+**The evidence principle:** measurements describe reality; promotion
+decisions interpret measurements. The evaluation system records evidence
+— **it never decides whether a model ships.** That remains a platform
+decision, made by people, citing this ledger.
 
 ## 6. Regression & promotion methodology
 
