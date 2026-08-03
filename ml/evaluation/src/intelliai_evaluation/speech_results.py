@@ -95,6 +95,10 @@ class CaseResult(_Record):
     transcript: str  # the judge's transcript, unedited ("" is valid evidence)
     metrics: dict[str, float]
     failure: str | None = None  # e.g. "synthesis: timeout", "judge: unavailable"
+    # Round-trip alignment counts (evidence facts, and the inputs to the
+    # word-weighted round_trip_wer aggregate — SPEECH_EVALUATION.md §5).
+    reference_words: int | None = None
+    word_errors: int | None = None
 
     @field_validator("metrics")
     @classmethod

@@ -11,6 +11,20 @@ models tomorrow. It is engine-agnostic by construction: nothing below
 assumes Kokoro, or any engine. The test of every rule here: *will this
 still be correct when IntelliAI owns its speech models?*
 
+**The framework belongs to IntelliAI, not to TTS.** Its architecture —
+
+    Corpus → Generator → Judge → Metrics → Evidence
+
+— is capability-independent: any future generative capability (voice
+conversion, speech translation, and beyond speech entirely — image or
+document generation) reuses the same shape, swapping only the
+domain-specific implementations: its corpus content, its generator
+adapter, its judges, its metric specs. The pipeline, the evidence laws,
+and the registry discipline survive every capability expansion. And the
+framework **grows by adding evaluators, never by replacing old ones** —
+new judges and new metric families join beside their predecessors, so
+historical evidence remains interpretable forever.
+
 The companion for speech **recognition** is the existing STT seed (WER,
 hallucination probes); both share one discipline: **the ruler exists
 before the model, and the ruler never moves.**
@@ -205,6 +219,21 @@ pipelines will often use. It has two known hazards, managed openly:
   record shape with more metrics and a reference-voice field, not a new
   schema.
 
+**Evidence versus reporting:** a `SpeechEvalRun` is *evidence*; a
+benchmark report, dashboard, or comparison table is *presentation* —
+a **derived artifact**. Reports can always be regenerated from the
+ledger; evidence cannot be regenerated from anything. Evidence is
+immutable; reports are disposable. Nothing presentation-shaped ever
+belongs inside a record, and no report is ever the source of truth.
+
+**Aggregation semantics (declared per metric, never assumed):**
+`round_trip_wer` aggregates **word-weighted** — total word errors over
+total reference words across judged cases — matching the STT ledger's
+convention (short cases must not outvote long ones). All other measured
+metrics aggregate as the **arithmetic mean over the cases that measured
+them** (failed stages contribute fewer samples, never zeros).
+Category- and difficulty-level slices are derived from cases + corpus.
+
 **The evidence principle:** measurements describe reality; promotion
 decisions interpret measurements. The evaluation system records evidence
 — **it never decides whether a model ships.** That remains a platform
@@ -219,6 +248,11 @@ what?"*; the baseline is the answer. It therefore has its own identity —
 a **baseline name** stamped on the run, plus the run's required
 methodology version, corpus version, and judge identity — so documents
 cite *"compared against baseline 2026-09-01-…"*, never filenames.
+Baselines are **company assets**, not just engineering references: every
+model the platform ever serves should be able to answer *"what baseline
+did it beat?"* — which makes benchmark history cumulative, never
+disposable. The chain of beaten baselines *is* the company's model
+history.
 
 **Failures are evidence too.** A partially failed evaluation still
 enters the ledger: synthesis timeouts, judge unavailability, corrupted
