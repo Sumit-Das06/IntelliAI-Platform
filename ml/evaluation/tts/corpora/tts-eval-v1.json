@@ -1,0 +1,185 @@
+{
+  "name": "tts-eval-seed",
+  "version": 1,
+  "description": "Speech-generation evaluation corpus v1: English, Hindi, and mixed text organized by trap category (SPEECH_EVALUATION.md section 5). Immutable once released; new text = version 2. URL/email categories are hard by design - expected low scores, tracked for improvement.",
+  "cases": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "general",
+      "text": "The quick brown fox jumps over the lazy dog near the river bank.",
+      "trap_words": []
+    },
+    {
+      "id": "en-general-02",
+      "language": "en",
+      "category": "general",
+      "text": "Please review the attached document and share your feedback by tomorrow evening.",
+      "trap_words": []
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "numbers",
+      "text": "The invoice total is 1247 dollars for 38 units.",
+      "trap_words": ["1247", "38"],
+      "notes": "Number verbalization; scoring relies on judge inverse text normalization (D3)."
+    },
+    {
+      "id": "en-numbers-02",
+      "language": "en",
+      "category": "numbers",
+      "text": "Flight 204 departs at 9:45 in the morning.",
+      "trap_words": ["204", "9:45"]
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "dates",
+      "text": "The meeting is scheduled for August 3, 2026, at half past ten.",
+      "trap_words": ["August", "2026"]
+    },
+    {
+      "id": "en-dates-02",
+      "language": "en",
+      "category": "dates",
+      "text": "Her passport expires on 15 March 2031.",
+      "trap_words": ["15", "March", "2031"]
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "currency",
+      "text": "The subscription costs $4.99 per month or 399 rupees per year.",
+      "trap_words": ["$4.99", "399"]
+    },
+    {
+      "id": "en-urls-01",
+      "language": "en",
+      "category": "urls",
+      "text": "Check www.example.com for the latest updates.",
+      "trap_words": ["www.example.com"],
+      "notes": "Hard by design: URL verbalization round-trips poorly today."
+    },
+    {
+      "id": "en-emails-01",
+      "language": "en",
+      "category": "emails",
+      "text": "Send your resume to careers@example.com by Monday.",
+      "trap_words": ["careers@example.com"],
+      "notes": "Hard by design."
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "technical",
+      "text": "The API gateway routes requests to the inference runtime over HTTP.",
+      "trap_words": ["API", "HTTP"]
+    },
+    {
+      "id": "en-technical-02",
+      "language": "en",
+      "category": "technical",
+      "text": "Latency dropped after we enabled caching and connection pooling.",
+      "trap_words": ["Latency", "caching"]
+    },
+    {
+      "id": "hi-general-01",
+      "language": "hi",
+      "category": "general",
+      "text": "नमस्ते, आप कैसे हैं? मुझे आज का मौसम बहुत अच्छा लगा।",
+      "trap_words": ["मौसम"]
+    },
+    {
+      "id": "hi-general-02",
+      "language": "hi",
+      "category": "general",
+      "text": "कल हम बाज़ार जाकर सब्ज़ियाँ और फल खरीदेंगे।",
+      "trap_words": ["सब्ज़ियाँ"]
+    },
+    {
+      "id": "hi-conjuncts-01",
+      "language": "hi",
+      "category": "conjuncts",
+      "text": "विद्यार्थी ने प्रश्न का उत्तर स्पष्ट शब्दों में लिखा।",
+      "trap_words": ["विद्यार्थी", "प्रश्न", "स्पष्ट"]
+    },
+    {
+      "id": "hi-conjuncts-02",
+      "language": "hi",
+      "category": "conjuncts",
+      "text": "ज्ञान और अभ्यास से ही उत्कृष्टता प्राप्त होती है।",
+      "trap_words": ["ज्ञान", "उत्कृष्टता", "प्राप्त"]
+    },
+    {
+      "id": "hi-matras-01",
+      "language": "hi",
+      "category": "matras",
+      "text": "चिड़िया पेड़ की ऊँची डाल पर बैठी थी।",
+      "trap_words": ["चिड़िया", "ऊँची"]
+    },
+    {
+      "id": "hi-matras-02",
+      "language": "hi",
+      "category": "matras",
+      "text": "पूजा ने अपनी छोटी बहन को कहानी सुनाई।",
+      "trap_words": ["कहानी", "सुनाई"]
+    },
+    {
+      "id": "hi-numbers-01",
+      "language": "hi",
+      "category": "numbers",
+      "text": "इस किताब की कीमत 250 रुपये है और छूट के बाद 199 रुपये।",
+      "trap_words": ["250", "199"]
+    },
+    {
+      "id": "hi-numbers-02",
+      "language": "hi",
+      "category": "numbers",
+      "text": "ट्रेन संख्या 12951 सुबह 6 बजकर 30 मिनट पर छूटती है।",
+      "trap_words": ["12951"]
+    },
+    {
+      "id": "hi-propernames-01",
+      "language": "hi",
+      "category": "proper_names",
+      "text": "सुमित और प्रिया कल दिल्ली से मुंबई जाएँगे।",
+      "trap_words": ["सुमित", "दिल्ली", "मुंबई"]
+    },
+    {
+      "id": "hi-propernames-02",
+      "language": "hi",
+      "category": "proper_names",
+      "text": "रवीन्द्रनाथ टैगोर की कविताएँ विश्व प्रसिद्ध हैं।",
+      "trap_words": ["रवीन्द्रनाथ", "टैगोर"]
+    },
+    {
+      "id": "mixed-codemix-01",
+      "language": "mixed",
+      "category": "code_mixed",
+      "text": "मैंने कल नया laptop खरीदा और उस पर Python install किया।",
+      "trap_words": ["laptop", "Python"]
+    },
+    {
+      "id": "mixed-codemix-02",
+      "language": "mixed",
+      "category": "code_mixed",
+      "text": "Meeting के बाद मुझे report भेज देना, please।",
+      "trap_words": ["Meeting", "report"]
+    },
+    {
+      "id": "mixed-api-01",
+      "language": "mixed",
+      "category": "api_terms",
+      "text": "API key के बिना request unauthorized हो जाएगी।",
+      "trap_words": ["API", "unauthorized"]
+    },
+    {
+      "id": "mixed-programming-01",
+      "language": "mixed",
+      "category": "programming",
+      "text": "Function call करने से पहले variable initialize करना ज़रूरी है।",
+      "trap_words": ["Function", "variable", "initialize"]
+    }
+  ]
+}

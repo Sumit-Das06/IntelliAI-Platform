@@ -35,6 +35,24 @@ A generated utterance is good to the degree that:
 These five properties have very different measurability — which is the
 whole reason this document exists.
 
+Conceptually they split into two questions, and evaluation discussions
+should always know which one they are asking:
+
+- **Correctness** — *"Did the model produce the requested speech?"*
+  Intelligibility, pronunciation, signal integrity. Objectively checkable.
+- **Quality** — *"Did it sound like high-quality speech?"* Naturalness,
+  prosody, pleasantness. Human territory (today).
+
+A model must be *correct* to ship at all; it must be *good* to win.
+
+**Language independence (architectural statement):** this framework is
+intentionally language-agnostic — every metric, record shape, and
+protocol applies unchanged to any language the platform serves.
+Language-specific *content* lives in corpus categories (Hindi conjuncts,
+code-mixed text), and future language-specific metrics may be appended as
+new specs — the philosophy itself never forks per language. This is the
+evaluation half of IntelliAI's multilingual strategy.
+
 ## 2. The three-way split: measured, judged, deferred
 
 ### Objectively measurable today (automated, CI-able)
@@ -73,6 +91,12 @@ whole reason this document exists.
   cloning capability, not before.
 - **Voice consistency** across utterances/sessions; **emotion/style
   preservation** (S2ST, expressive TTS) — reserved layers.
+- **Robustness** — a reserved *dimension* (not a single metric): how
+  correctness holds up under hostile input — punctuation extremes,
+  long-form text, mixed-language switching mid-sentence, noisy or
+  malformed input, abbreviation expansion. Future robustness metrics
+  join as specs under the correctness layer with their own corpus
+  categories; nothing is implemented today.
 
 **Where automation ends** — stated plainly: automation can prove speech
 is *correct, clean, and fast*. Only humans (today) can prove it is
@@ -82,33 +106,39 @@ therefore requires both.
 
 ## 3. The metric hierarchy
 
-Every metric declares its **layer**, **direction**, and **judge
-dependencies** at definition time. Dashboards and promotion gates never
-infer direction.
+Every metric declares its **layer**, **direction**, **confidence**, and
+**judge dependencies** at definition time. Dashboards and promotion gates
+never infer direction — or how trustworthy a number is.
 
-| Layer | Metric | Direction | Automated | Notes |
+Confidence classes: **high** (objective, deterministic), **medium**
+(objective but approximate — heuristic thresholds, sampling lag, or
+judge-dependence), **human** (structured subjective judgment),
+**reserved** (future capability, not yet implemented).
+
+| Layer | Metric | Direction | Confidence | Notes |
 |---|---|---|---|---|
-| Quality | `round_trip_wer` | **lower** is better | yes | judge: pinned STT artifact |
-| Quality | `pronunciation_accuracy` | **higher** is better | yes | trap-word hit rate, 0–1 |
-| Quality | `clipping_ratio` | **lower** is better | yes | samples at full scale / total |
-| Quality | `silence_ratio` | **lower** is better | yes | non-speech time / duration |
-| Quality | `duration_plausibility` | **higher** is better | yes | 0–1 vs expected speaking rate band |
-| Performance | `time_to_first_audio_ms` | **lower** is better | yes | serving-path measurement |
-| Performance | `synthesis_latency_ms` | **lower** is better | yes | total request wall time |
-| Performance | `rtf` | **lower** is better | yes | synthesis time / audio duration |
-| Performance | `peak_memory_mib` | **lower** is better | yes | container measurement |
-| Performance | `cpu_percent_max` | **lower** is better | yes | saturation indicator |
-| Human | `listening_preference` | **higher** is better | no | anchored A/B win rate |
-| Human | `listening_naturalness` | **higher** is better | no | 1–5 sheet, n recorded |
-| *Future* | `predicted_mos` | higher | (model) | reserved |
-| *Future* | `speaker_similarity` | higher | (model) | reserved — cloning |
-| *Future* | `voice_consistency` | higher | (model) | reserved |
-| *Future* | `emotion_preservation` | higher | (model) | reserved — S2ST |
+| Correctness | `round_trip_wer` | **lower** is better | medium | judge: pinned STT artifact |
+| Correctness | `pronunciation_accuracy` | **higher** is better | medium | trap-word hit rate, 0–1 |
+| Correctness | `clipping_ratio` | **lower** is better | high | samples at full scale / total |
+| Correctness | `silence_ratio` | **lower** is better | medium | energy-threshold heuristic |
+| Correctness | `duration_plausibility` | **higher** is better | medium | 0–1 vs speaking-rate band |
+| Performance | `time_to_first_audio_ms` | **lower** is better | high | serving-path measurement |
+| Performance | `synthesis_latency_ms` | **lower** is better | high | total request wall time |
+| Performance | `rtf` | **lower** is better | high | synthesis time / audio duration |
+| Performance | `peak_memory_mib` | **lower** is better | high | container measurement |
+| Performance | `cpu_percent_max` | **lower** is better | medium | `docker stats` sampling lag |
+| Quality (human) | `listening_preference` | **higher** is better | human | anchored A/B win rate |
+| Quality (human) | `listening_naturalness` | **higher** is better | human | 1–5 sheet, n recorded |
+| *Future* | `predicted_mos` | higher | reserved | model-based naturalness |
+| *Future* | `speaker_similarity` | higher | reserved | cloning |
+| *Future* | `voice_consistency` | higher | reserved | cross-utterance identity |
+| *Future* | `emotion_preservation` | higher | reserved | S2ST / expressive TTS |
+| *Future* | robustness family | (per metric) | reserved | §2 reserved dimension |
 
 Mechanically (D3/D4): every metric is registered as a
-`MetricSpec(name, layer, direction, unit, judge)` and every recorded value
-carries its spec's name — adding a future metric is appending a spec,
-never reshaping results.
+`MetricSpec(name, layer, direction, unit, confidence, judge)` and every
+recorded value carries its spec's name — adding a future metric is
+appending a spec, never reshaping results.
 
 ## 4. The judge discipline (what keeps round-trip honest)
 
@@ -155,6 +185,12 @@ pipelines will often use. It has two known hazards, managed openly:
 - Determinism: synthesis parameters pinned and recorded; judge pinned
   (§4); nearest-rank percentiles for performance (the M2 bench rule);
   category-level scores always reported alongside overall.
+- **Reproducibility (extends the repository's reproducibility
+  philosophy):** every published benchmark must be reproducible from its
+  recorded metadata alone — corpus version, evaluated artifact version,
+  judge version, runtime version, hardware class. If a result cannot be
+  re-derived from what its record states, it is an anecdote, not a
+  benchmark, and does not enter the ledger.
 
 ## 7. Extension recipe (how future capabilities join)
 
