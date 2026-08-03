@@ -39,6 +39,36 @@ meaning whisper-small without any customer noticing. The catalog leak-guard
 test extends to voices: no engine voice token (`af_*`, speaker indices,
 embedding names) may appear in any public response, ever.
 
+**Core Speech Language Policy v1 (founder directive, recorded at Step 7
+close, 2026-08-03).** IntelliAI's speech platform has three first-class
+languages: **English, Hindi, Arabic**. This is a *product* requirement,
+never an engine requirement: the customer-facing APIs must come to
+provide complete support for these three languages across speech
+capabilities over time, and every future decision — engine adoption,
+model replacement, evaluation corpora, benchmarking, fine-tuning, voice
+management, speech translation, speech-to-speech — optimizes toward that
+target. If no single engine can serve all three under IntelliAI's
+licensing and quality standards (as of this writing, none can: Kokoro is
+license-clean for English only, Hindi is GPL-gated, Arabic absent),
+different engines serve different languages internally while the
+customer-facing API stays one and stable. "Complete support" is defined
+measurably: a corpus, a quality baseline, and a production benchmark per
+language — the policy is enforceable by evidence.
+
+**Principle — product capabilities are permanent; individual engines are
+temporary (founder directive, same date).** The platform evolves by
+replacing engines beneath stable products. This is the one sentence the
+whole architecture serves: the **Registry** exists so a capability's
+public identity outlives every artifact that serves it; the **Runtime**
+template + engine Protocol exist so an engine is a plug, not a
+foundation; the **Evaluation plane** exists so each replacement is a
+measured, cited decision rather than a rewrite; and **Registry V2** turns
+replacement itself into governed workflow — promotion records, per-voice
+switching tests, multi-engine routing under one public model. An engine
+is adopted, measured, eventually beaten, and retired; the capability, its
+API, its voices, its baselines, and the knowledge of every replacement
+remain.
+
 ## 2. Speech synthesis runtime architecture
 
 `services/tts-runtime` (renamed from `tts-kokoro` at Step 0) is the second
@@ -411,3 +441,30 @@ change and goes through review, not through the sprint.
 - **Voice marketplace** (third-party or customer-published voices offered
   to other customers) — a marketplace is a governance, licensing, and
   revenue-sharing product; intentionally outside M3 scope.
+
+## 11. Registered platform work (from M3 evidence)
+
+- **Pronunciation Manager** (platform component, NOT an engine fix) —
+  registered from the founder-discovered limitation: the espeak-free
+  English G2P is dictionary-only, so out-of-vocabulary words (brand
+  names, proper nouns — including "IntelliAI" itself) are silently
+  dropped. Pronunciation is a product promise that must survive engine
+  swaps, so the platform owns a versioned lexicon (word → canonical
+  pronunciation) and each engine adapter renders it into its own phoneme
+  scheme — the voice-identity split, applied to words. Lives at the
+  pipeline's reserved normalize/G2P seam; measured by the corpus's
+  proper-noun and technical trap categories; later extends to
+  customer-supplied lexicons (a product feature) and STT vocabulary
+  biasing.
+- **Chunk merging** (tts-runtime) — short multi-sentence utterances pay
+  one model pass per sentence (~500 ms fixed cost each); merging chunks
+  under the phoneme limit puts every short utterance under the PRD TTFB
+  target (measured at Step 7).
+- **Streaming synthesis: GO** — Step 7's measurement (unstreamed TTFB
+  2237 ms for the pinned 122-char sentence vs the 1 s target) is the
+  go/no-go evidence this review deferred; streaming enters M8 with
+  measured justification.
+- **Hindi TTS checkpoint** — decision open per §8: subprocess-isolated
+  phonemization spike vs the IndicF5 (MIT) lineage; now governed by the
+  Language Policy above, which also adds **Arabic** to the engine-research
+  pipeline (no current engine candidate).

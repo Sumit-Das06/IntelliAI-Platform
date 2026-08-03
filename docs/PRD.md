@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.6 (Milestone 2 closed) |
+| **Version** | 0.7 (Milestone 3 closed) |
 | **Last updated** | 2026-08-03 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
@@ -93,7 +93,7 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | v0.2 | Auth: orgs, users, API keys — ✅ **shipped 2026-07-31** ([review](milestones/1-identity-review.md)) |
 | v0.25 | Foundation model evaluation & AI strategy (research/architecture only) — ✅ **shipped 2026-07-31** ([review](milestones/1.5-strategy-review.md); [index](STRATEGY.md)) |
 | v0.3 | **STT API** (`/v1/audio/transcriptions` + `/v1/models`, public model **`intelliai-stt`**) — ✅ **shipped 2026-08-03** ([review](milestones/2-stt-review.md); [performance baseline](../ml/evaluation/stt/benchmarks/2026-08-03-whisper-small-cpu-baseline.md); [quality baseline](../ml/evaluation/stt/results/2026-08-02-whisper-small.json)) |
-| v0.4 | **TTS API** (`/v1/audio/speech`, Kokoro; voices catalog) *(next)* |
+| v0.4 | **TTS API** (`/v1/audio/speech` + `/v1/audio/voices`, public model **`intelliai-tts`**) — ✅ **shipped 2026-08-03** ([review](milestones/3-tts-review.md); [design](milestones/3-tts-design.md); [performance baseline](../ml/evaluation/tts/benchmarks/2026-08-03-kokoro-82m-cpu-baseline.md); [quality baseline](../ml/evaluation/tts/results/2026-08-03-kokoro-82m.json)) |
 | v0.5 | Usage metering & rate limiting |
 | v0.6 | Async batch jobs + webhooks |
 | v0.7 | Developer console (signup → key → usage) |
@@ -102,6 +102,29 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | v0.9 | Model registry v2, evaluation harness, benchmark reports |
 | v0.95 | Observability, load testing, security hardening |
 | v1.0 | Docs site, Python SDK, deployment guide, launch |
+
+**v0.4 release scope and known limitations (honest product statement):**
+English only, two launch voices under placeholder identities
+(`reference-alto`, `reference-bass`) pending the founder naming decision;
+WAV output; sub-second response for single-sentence utterances (longer
+text scales with audio length until streaming — see §10); out-of-vocabulary
+words (brand names, rare proper nouns) are currently dropped by the
+license-clean pronunciation path — registered as platform work
+(**Pronunciation Manager**: a versioned platform-owned lexicon rendered
+per-engine, later extensible to customer lexicons and STT vocabulary
+biasing; [design review §11](milestones/3-tts-design.md)).
+
+**Core Speech Language Policy (v1, adopted 2026-08-03).** IntelliAI's
+speech platform has three first-class languages: **English, Hindi,
+Arabic**. This is a product requirement, not an engine requirement: the
+customer-facing APIs must come to provide complete support for all three
+across speech capabilities, and every engine-adoption, evaluation,
+benchmarking, fine-tuning, voice, translation, and speech-to-speech
+decision optimizes toward that target. Where no single engine meets
+IntelliAI's licensing and quality standards for all three (none does
+today), different engines serve different languages internally behind the
+one stable customer API. Support is *complete* only when measured: a
+corpus, a quality baseline, and a production benchmark per language.
 
 Phase 2 (directional): dataset pipeline, fine-tuning (Whisper-lineage adapters),
 custom-model serving, TTS voice cloning on the Chatterbox lineage
@@ -179,7 +202,7 @@ First measured evidence: the v0.3 [production baseline](../ml/evaluation/stt/ben
 | Gateway overhead (auth+route+meter), p95 | < 15 ms — *measured v0.3: +14.7 ms, 0.86 % of inference (ADR-0002 validated)* |
 | Sync STT (≤60 s audio, `small` int8), p95 | < 1.5× audio duration — *measured v0.3: PASS, ~9× headroom uncontended* |
 | Batch STT throughput | ≥ real-time per worker core-set; horizontal scale-out |
-| TTS time-to-first-byte (Kokoro, short text), p95 | < 1 s |
+| TTS time-to-first-byte (short text), p95 | < 1 s — *measured v0.4: PASS for single-sentence utterances (814 ms via gateway); FAIL for longer text (2237 ms @ 122 chars — TTFB scales with audio length unstreamed). Scope until streaming: the target holds for single-sentence inputs; [streaming verdict: GO for v0.85/M8](../ml/evaluation/tts/benchmarks/2026-08-03-kokoro-82m-cpu-baseline.md), chunk-merging is the nearer runtime lever* |
 | Streaming STT partial-result latency (v0.85) | < 800 ms |
 | Availability (v1.0 launch target) | 99.9% monthly |
 
@@ -218,6 +241,23 @@ public proof that it treats model choice as a feature, not a lock-in.
 ---
 
 *Change log:*
+- *2026-08-03 — v0.7: Milestone 3 closed — TTS shipped as a product:
+  `/v1/audio/speech` + `/v1/audio/voices` live behind API keys; public
+  model **`intelliai-tts`** ratified (kokoro-82m artifact serves it,
+  Apache-2.0 verified, identity hidden; English-only per the license
+  verdict — Hindi gated on a GPL-clean phonemization path). Platform
+  hardening shipped en route: `packages/runtime-core` (shared runtime
+  lifecycle, extracted behavior-frozen), speech-synthesis contract
+  additions (CONTRACT_VERSION still 1), binary audio binding
+  (ADR-0020), GPL-free deployment image (espeak chain absent by
+  construction, build-verified), evaluation wired end-to-end
+  (`speech-eval` CLI; day-one baseline + live reproduction committed).
+  **Core Speech Language Policy v1 adopted (EN/HI/AR first-class,
+  product-level)**; capabilities-permanent principle recorded; TTFB
+  target honestly scoped (single-sentence PASS; streaming = GO for
+  v0.85/M8); Pronunciation Manager registered from the
+  founder-discovered OOV limitation. Voice identities remain
+  placeholders pending the founder listening decision.*
 - *2026-08-03 — v0.6: Milestone 2 closed — first production-capable AI API:
   `/v1/audio/transcriptions` (OpenAI-compatible, json/text/verbose_json) and
   `/v1/models` product catalog live behind API keys; public model id
