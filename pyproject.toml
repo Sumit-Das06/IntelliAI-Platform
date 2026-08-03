@@ -28,6 +28,7 @@ members = [
     "packages/runtime-contract",
     "packages/runtime-core",
     "services/stt-runtime",
+    "services/tts-runtime",
 ]
 
 # ── Lint & format: ruff (replaces black + isort + flake8 + friends) ─────
@@ -45,6 +46,8 @@ src = [
     "packages/runtime-core/tests",
     "services/stt-runtime/src",
     "services/stt-runtime/tests",
+    "services/tts-runtime/src",
+    "services/tts-runtime/tests",
 ]
 
 [tool.ruff.lint]
@@ -88,6 +91,8 @@ files = [
     "packages/runtime-core/tests",
     "services/stt-runtime/src",
     "services/stt-runtime/tests",
+    "services/tts-runtime/src",
+    "services/tts-runtime/tests",
 ]
 # Escape hatch policy: targeted `# type: ignore[code]` with the error code,
 # never a bare ignore — enforced by the two flags below.

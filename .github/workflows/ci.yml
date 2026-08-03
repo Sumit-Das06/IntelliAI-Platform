@@ -127,6 +127,8 @@ jobs:
         run: uv run --package intelliai-runtime-core pytest packages/runtime-core/tests -q
       - name: Run stt-runtime tests (includes engine-isolation enforcement)
         run: uv run --package intelliai-stt-runtime pytest services/stt-runtime/tests -q
+      - name: Run tts-runtime tests (includes engine-isolation and license-boundary enforcement)
+        run: uv run --package intelliai-tts-runtime pytest services/tts-runtime/tests -q
 
   ci-ok:
     # The one status check to rule them all: branch protection requires
