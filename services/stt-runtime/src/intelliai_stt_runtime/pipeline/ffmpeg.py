@@ -1,14 +1,21 @@
 """Sandboxed ffmpeg decoding: one subprocess, fixed argv, hard timeout.
 
 Sandbox posture: no shell, a constant argument vector, untrusted bytes
-enter ONLY via stdin and leave only via stdout, wall-clock bounded, and
-the binary's presence is verified at startup so a misconfigured deploy
-fails before it serves. ffmpeg's stderr goes to logs for operators —
-never onto the wire (the wire gets the taxonomy; the logs get the
-forensics).
+enter via a PRIVATE per-request temp file and leave only via stdout,
+wall-clock bounded, and the binary's presence is verified at startup so a
+misconfigured deploy fails before it serves. ffmpeg's stderr goes to logs
+for operators — never onto the wire (the wire gets the taxonomy; the logs
+get the forensics).
+
+Why a temp file and not stdin: MP4-family containers (m4a — iPhone voice
+memos, Windows Sound Recorder) keep their index (`moov` atom) at the END
+of the file; a non-seekable pipe makes ffmpeg see a "partial file" and
+refuse. Found by the founder's first real-world recording (M2 close).
 """
 
 import subprocess
+import tempfile
+from pathlib import Path
 
 import structlog
 
@@ -50,43 +57,49 @@ class FfmpegDecoder:
         logger.info("ffmpeg_verified", version=first_line[0] if first_line else "unknown")
 
     def decode_to_canonical(self, payload: bytes) -> bytes:
-        """Untrusted container bytes in, canonical 16 kHz mono s16le PCM out."""
-        argv = [
-            self._binary,
-            "-hide_banner",
-            "-loglevel",
-            "error",
-            "-i",
-            "pipe:0",  # untrusted bytes enter here, never via a path or shell
-            "-vn",  # audio only
-            "-ac",
-            "1",
-            "-ar",
-            str(CANONICAL_SAMPLE_RATE_HZ),
-            "-f",
-            "s16le",
-            "pipe:1",
-        ]
-        try:
-            # Fixed argv, shell-free; payload rides stdin only.
-            completed = subprocess.run(  # noqa: S603
-                argv,
-                input=payload,
-                capture_output=True,
-                timeout=self._timeout,
-                check=False,
-            )
-        except subprocess.TimeoutExpired as exc:
-            raise RuntimeServiceError(
-                RuntimeErrorType.INVALID_INPUT,
-                f"audio could not be decoded within {self._timeout:.0f}s",
-                param="file",
-            ) from exc
-        except (FileNotFoundError, OSError) as exc:
-            raise RuntimeServiceError(
-                RuntimeErrorType.INTERNAL,
-                "audio decoder is unavailable",
-            ) from exc
+        """Untrusted container bytes in, canonical 16 kHz mono s16le PCM out.
+
+        The payload is written to a private per-request temp directory so
+        ffmpeg gets a SEEKABLE input (required by MP4-family containers);
+        the directory is removed regardless of outcome."""
+        with tempfile.TemporaryDirectory(prefix="intelliai-decode-") as workdir:
+            input_path = Path(workdir) / "input.bin"
+            input_path.write_bytes(payload)
+            argv = [
+                self._binary,
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-i",
+                str(input_path),  # private temp file: seekable, never a shell
+                "-vn",  # audio only
+                "-ac",
+                "1",
+                "-ar",
+                str(CANONICAL_SAMPLE_RATE_HZ),
+                "-f",
+                "s16le",
+                "pipe:1",
+            ]
+            try:
+                # Fixed argv, shell-free.
+                completed = subprocess.run(  # noqa: S603
+                    argv,
+                    capture_output=True,
+                    timeout=self._timeout,
+                    check=False,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise RuntimeServiceError(
+                    RuntimeErrorType.INVALID_INPUT,
+                    f"audio could not be decoded within {self._timeout:.0f}s",
+                    param="file",
+                ) from exc
+            except (FileNotFoundError, OSError) as exc:
+                raise RuntimeServiceError(
+                    RuntimeErrorType.INTERNAL,
+                    "audio decoder is unavailable",
+                ) from exc
         if completed.returncode != 0 or not completed.stdout:
             stderr_tail = completed.stderr.decode("utf-8", errors="replace")[-500:]
             logger.info("decode_failed", ffmpeg_stderr=stderr_tail)

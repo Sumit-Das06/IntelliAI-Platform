@@ -5,6 +5,7 @@ container normalizes to the same canonical audio as WAV.
 """
 
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -44,6 +45,34 @@ def encode_flac(wav: bytes) -> bytes:
     return completed.stdout
 
 
+def encode_m4a(wav: bytes, tmp_path: Path) -> bytes:
+    """An m4a the way real recorders make them: index (moov) at the END.
+
+    The mp4 muxer needs a seekable output, so this must encode to a real
+    file — which is exactly what gives it the trailing index that broke
+    pipe-based decoding (the founder's Sound Recorder bug, M2 close)."""
+    source = tmp_path / "source.wav"
+    source.write_bytes(wav)
+    target = tmp_path / "clip.m4a"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-i",
+            str(source),
+            "-c:a",
+            "aac",
+            str(target),
+        ],
+        capture_output=True,
+        timeout=30,
+        check=True,
+    )
+    return target.read_bytes()
+
+
 class TestCanonicalization:
     def test_wav_normalizes_to_canonical(self) -> None:
         # 44.1 kHz stereo in -> 16 kHz mono out: normalization is real.
@@ -63,6 +92,15 @@ class TestCanonicalization:
         assert output_flac.media_format is MediaFormat.FLAC
         # FLAC is lossless: identical PCM after normalization.
         assert output_flac.audio.pcm == output_wav.audio.pcm
+
+    def test_m4a_with_trailing_index_decodes(self, tmp_path: Path) -> None:
+        # Regression: MP4-family files (voice memos, Sound Recorder) carry
+        # their moov index at EOF; decoding must survive that.
+        m4a = encode_m4a(wav_bytes(duration_seconds=1.0), tmp_path)
+        output = make_pipeline().process(m4a)
+        assert output.media_format is MediaFormat.MP4
+        assert abs(output.audio.duration_seconds - 1.0) < 0.1  # aac may pad edges
+        assert output.speech.has_speech is True
 
     def test_every_stage_reports_timing(self) -> None:
         output = make_pipeline().process(wav_bytes())
