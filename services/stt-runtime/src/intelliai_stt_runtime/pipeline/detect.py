@@ -9,7 +9,7 @@ tests, one place.
 from enum import StrEnum, unique
 
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
+from intelliai_runtime_core import RuntimeServiceError
 
 
 @unique

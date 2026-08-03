@@ -1,4 +1,8 @@
-"""WorkerPool: bounded admission, honest overload, off-loop execution."""
+"""WorkerPool: bounded admission, honest overload, off-loop execution.
+
+(Moved verbatim from the stt-runtime suite at extraction, M3 step 1 —
+imports only.)
+"""
 
 import asyncio
 import threading
@@ -6,8 +10,12 @@ import threading
 import pytest
 
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
-from intelliai_stt_runtime.pool import WorkerPool
+from intelliai_runtime_core import RuntimeServiceError, WorkerPool
+
+
+@pytest.fixture
+def anyio_backend() -> str:
+    return "asyncio"
 
 
 @pytest.mark.anyio

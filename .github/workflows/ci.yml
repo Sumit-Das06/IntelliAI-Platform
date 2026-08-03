@@ -123,6 +123,8 @@ jobs:
         run: uv run --package intelliai-evaluation pytest ml/evaluation/tests -q
       - name: Run runtime-contract tests
         run: uv run --package intelliai-runtime-contract pytest packages/runtime-contract/tests -q
+      - name: Run runtime-core tests (includes lifecycle-boundary enforcement)
+        run: uv run --package intelliai-runtime-core pytest packages/runtime-core/tests -q
       - name: Run stt-runtime tests (includes engine-isolation enforcement)
         run: uv run --package intelliai-stt-runtime pytest services/stt-runtime/tests -q
 

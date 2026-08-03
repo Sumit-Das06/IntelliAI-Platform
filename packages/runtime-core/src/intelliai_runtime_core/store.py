@@ -21,7 +21,7 @@ import httpx
 import structlog
 
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
+from intelliai_runtime_core.failures import RuntimeServiceError
 
 logger = structlog.get_logger(__name__)
 

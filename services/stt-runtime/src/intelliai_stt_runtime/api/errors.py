@@ -6,8 +6,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from intelliai_runtime_contract import RuntimeErrorResponse, RuntimeErrorType
+from intelliai_runtime_core import RuntimeServiceError
 from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, STATUS_BY_ERROR_TYPE
-from intelliai_stt_runtime.failures import RuntimeServiceError
 from intelliai_stt_runtime.identity import runtime_metadata
 
 logger = structlog.get_logger(__name__)

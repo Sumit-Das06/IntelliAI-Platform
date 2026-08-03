@@ -23,7 +23,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
+from intelliai_runtime_core import RuntimeServiceError
 from intelliai_stt_runtime.pipeline.audio import DecodedAudio, canonical_audio
 from intelliai_stt_runtime.pipeline.detect import MediaFormat, detect_format
 from intelliai_stt_runtime.pipeline.ffmpeg import FfmpegDecoder

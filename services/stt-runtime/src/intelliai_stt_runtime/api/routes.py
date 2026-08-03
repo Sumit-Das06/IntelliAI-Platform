@@ -20,14 +20,12 @@ from intelliai_runtime_contract import (
     Usage,
     UsageUnit,
 )
+from intelliai_runtime_core import ModelManager, RuntimeServiceError, WorkerPool
 from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, ROUTE_TRANSCRIBE
 from intelliai_stt_runtime.engines import TranscriptionEngine
-from intelliai_stt_runtime.failures import RuntimeServiceError
 from intelliai_stt_runtime.identity import SERVICE_NAME, runtime_metadata
-from intelliai_stt_runtime.manager import ModelManager
 from intelliai_stt_runtime.pipeline import MediaPipeline, PipelineOutput
-from intelliai_stt_runtime.pool import WorkerPool
 
 logger = structlog.get_logger(__name__)
 router = APIRouter()
@@ -42,7 +40,7 @@ async def live() -> dict[str, str]:
 
 @router.get("/health/ready")
 async def ready(request: Request) -> JSONResponse:
-    manager: ModelManager = request.app.state.manager
+    manager: ModelManager[TranscriptionEngine] = request.app.state.manager
     if manager.started:
         return JSONResponse({"status": "ready"})
     return JSONResponse({"status": "not_ready"}, status_code=503)
@@ -51,7 +49,7 @@ async def ready(request: Request) -> JSONResponse:
 @router.get("/info")
 async def info(request: Request) -> dict[str, Any]:
     """Operational identity only — never payload (ADR-0016)."""
-    manager: ModelManager = request.app.state.manager
+    manager: ModelManager[TranscriptionEngine] = request.app.state.manager
     pool: WorkerPool = request.app.state.pool
     settings = request.app.state.settings
     return {
@@ -118,7 +116,7 @@ async def transcribe(
             param="params",
         ) from exc
 
-    manager: ModelManager = request.app.state.manager
+    manager: ModelManager[TranscriptionEngine] = request.app.state.manager
     pipeline: MediaPipeline = request.app.state.pipeline
     pool: WorkerPool = request.app.state.pool
     loaded = manager.lookup(transcription_request.model)

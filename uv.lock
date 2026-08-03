@@ -12,6 +12,7 @@ members = [
     "intelliai-api",
     "intelliai-evaluation",
     "intelliai-runtime-contract",
+    "intelliai-runtime-core",
     "intelliai-stt-runtime",
 ]
 
@@ -623,6 +624,31 @@ requires-dist = [{ name = "pydantic", specifier = ">=2.10" }]
 dev = [{ name = "pytest", specifier = ">=8" }]
 
 [[package]]
+name = "intelliai-runtime-core"
+version = "0.1.0"
+source = { editable = "packages/runtime-core" }
+dependencies = [
+    { name = "httpx" },
+    { name = "intelliai-runtime-contract" },
+    { name = "structlog" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.27" },
+    { name = "intelliai-runtime-contract", editable = "packages/runtime-contract" },
+    { name = "structlog", specifier = ">=24" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8" }]
+
+[[package]]
 name = "intelliai-stt-runtime"
 version = "0.1.0"
 source = { editable = "services/stt-runtime" }
@@ -630,6 +656,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "httpx" },
     { name = "intelliai-runtime-contract" },
+    { name = "intelliai-runtime-core" },
     { name = "pydantic-settings" },
     { name = "python-multipart" },
     { name = "structlog" },
@@ -653,6 +680,7 @@ requires-dist = [
     { name = "faster-whisper", marker = "extra == 'whisper'", specifier = ">=1.1" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "intelliai-runtime-contract", editable = "packages/runtime-contract" },
+    { name = "intelliai-runtime-core", editable = "packages/runtime-core" },
     { name = "pydantic-settings", specifier = ">=2.6" },
     { name = "python-multipart", specifier = ">=0.0.18" },
     { name = "structlog", specifier = ">=24" },

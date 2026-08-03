@@ -4,7 +4,7 @@ import pytest
 
 from helpers import wav_bytes
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
+from intelliai_runtime_core import RuntimeServiceError
 from intelliai_stt_runtime.pipeline import MediaFormat, detect_format
 
 

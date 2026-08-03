@@ -26,6 +26,7 @@ members = [
     "apps/api",
     "ml/evaluation",
     "packages/runtime-contract",
+    "packages/runtime-core",
     "services/stt-runtime",
 ]
 
@@ -40,6 +41,8 @@ src = [
     "ml/evaluation/tests",
     "packages/runtime-contract/src",
     "packages/runtime-contract/tests",
+    "packages/runtime-core/src",
+    "packages/runtime-core/tests",
     "services/stt-runtime/src",
     "services/stt-runtime/tests",
 ]
@@ -81,6 +84,8 @@ files = [
     "ml/evaluation/tests",
     "packages/runtime-contract/src",
     "packages/runtime-contract/tests",
+    "packages/runtime-core/src",
+    "packages/runtime-core/tests",
     "services/stt-runtime/src",
     "services/stt-runtime/tests",
 ]

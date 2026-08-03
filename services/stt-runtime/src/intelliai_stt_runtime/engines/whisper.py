@@ -26,7 +26,7 @@ from intelliai_runtime_contract import (
     TranscriptionResult,
     TranscriptionSegment,
 )
-from intelliai_stt_runtime.manager.store import ArtifactFile, ArtifactSpec
+from intelliai_runtime_core import ArtifactFile, ArtifactSpec
 from intelliai_stt_runtime.pipeline import DecodedAudio
 
 if TYPE_CHECKING:

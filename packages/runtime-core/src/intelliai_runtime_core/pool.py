@@ -9,7 +9,7 @@ policy is the gateway's, capacity truth is ours).
 
 Threads, not processes: engines share one loaded model read-only, and the
 libraries that matter release the GIL during inference (validated against
-a real engine in step 5's measurements).
+a real engine in M2 step 5's measurements).
 """
 
 import asyncio
@@ -17,7 +17,7 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
+from intelliai_runtime_core.failures import RuntimeServiceError
 
 
 class WorkerPool:

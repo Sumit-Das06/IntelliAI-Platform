@@ -1,4 +1,8 @@
-"""ArtifactStore: nothing is ever loaded on trust."""
+"""ArtifactStore: nothing is ever loaded on trust.
+
+(Moved verbatim from the stt-runtime suite at extraction, M3 step 1 —
+imports only.)
+"""
 
 import hashlib
 from pathlib import Path
@@ -7,8 +11,7 @@ import httpx
 import pytest
 
 from intelliai_runtime_contract import RuntimeErrorType
-from intelliai_stt_runtime.failures import RuntimeServiceError
-from intelliai_stt_runtime.manager import ArtifactFile, ArtifactSpec, ArtifactStore
+from intelliai_runtime_core import ArtifactFile, ArtifactSpec, ArtifactStore, RuntimeServiceError
 
 PAYLOAD = b"deterministic model weights " * 100
 GOOD_SHA = hashlib.sha256(PAYLOAD).hexdigest()

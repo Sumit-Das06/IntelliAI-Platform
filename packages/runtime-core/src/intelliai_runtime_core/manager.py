@@ -10,6 +10,13 @@ Engines are loaded once, reused across every request, unloaded once. No
 request constructs or destroys an engine. Load and warm-up durations are
 recorded per model and exposed operationally (/info) — startup cost is a
 measured fact, not a feeling.
+
+Lifecycle, never inference (ADR-0019): the manager is generic over the
+runtime's engine type and never knows what an engine does. Its only
+structural requirement is ``close()`` (shutdown is lifecycle), and warm-up
+is a capability-defined deterministic probe injected by the runtime — the
+manager guarantees the probe runs once per engine before serving; the
+runtime decides what probing means for its capability.
 """
 
 import asyncio
@@ -17,57 +24,62 @@ import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Protocol
 
 import structlog
 
-from intelliai_runtime_contract import RuntimeErrorType, TranscriptionRequest
-from intelliai_stt_runtime.engines import TranscriptionEngine
-from intelliai_stt_runtime.failures import RuntimeServiceError
-from intelliai_stt_runtime.manager.store import ArtifactSpec, ArtifactStore
-from intelliai_stt_runtime.pipeline import canonical_audio
+from intelliai_runtime_contract import RuntimeErrorType
+from intelliai_runtime_core.failures import RuntimeServiceError
+from intelliai_runtime_core.store import ArtifactSpec, ArtifactStore
 
 logger = structlog.get_logger(__name__)
 
 DEFAULT_SLOT = "default"
 
-# Half a second of gentle deterministic non-silence: enough to push a real
-# model through its full encode/decode path once, engine-agnostic.
-_WARM_UP_PCM = bytes(
-    byte for i in range(8000) for byte in ((i % 64) * 8).to_bytes(2, "little", signed=True)
-)
+
+class SupportsClose(Protocol):
+    """The manager's ONLY engine requirement: lifecycle can release it."""
+
+    def close(self) -> None: ...
 
 
 @dataclass(frozen=True)
-class SlotSpec:
+class SlotSpec[EngineT: SupportsClose]:
     """One slot's configuration: artifact identity, files, and engine binding.
 
     ``load`` is a callable so the manager never imports an engine library —
     the import happens inside the engines/ module the callable comes from.
     It receives the verified local artifact directory (None for weight-free
-    engines like the ReferenceEngine).
+    engines like a runtime's reference engine).
     """
 
     slot: str  # "default" | "premium" | "experimental"
     artifact: str  # registry artifact identifier this slot serves
-    load: Callable[[Path | None], TranscriptionEngine]
+    load: Callable[[Path | None], EngineT]
     files: ArtifactSpec | None = None  # None = nothing to download or verify
 
 
 @dataclass(frozen=True)
-class LoadedModel:
+class LoadedModel[EngineT: SupportsClose]:
     """A living engine, its artifact identity, and its measured startup cost."""
 
     slot: str
     artifact: str
-    engine: TranscriptionEngine
+    engine: EngineT
     load_ms: float
     warmup_ms: float
 
 
-class ModelManager:
+class ModelManager[EngineT: SupportsClose]:
     """Owns engine instances — and everything before them — for the process."""
 
-    def __init__(self, slots: Sequence[SlotSpec], store: ArtifactStore | None = None) -> None:
+    def __init__(
+        self,
+        slots: Sequence[SlotSpec[EngineT]],
+        store: ArtifactStore | None = None,
+        *,
+        warm_up: Callable[[EngineT], None],
+    ) -> None:
         if not slots:
             msg = "ModelManager requires at least one slot"
             raise ValueError(msg)
@@ -87,8 +99,9 @@ class ModelManager:
             raise ValueError(msg)
         self._specs = tuple(slots)
         self._store = store
-        self._by_artifact: dict[str, LoadedModel] = {}
-        self._by_slot: dict[str, LoadedModel] = {}
+        self._warm_up = warm_up
+        self._by_artifact: dict[str, LoadedModel[EngineT]] = {}
+        self._by_slot: dict[str, LoadedModel[EngineT]] = {}
         self._started = False
 
     @property
@@ -130,13 +143,7 @@ class ModelManager:
         self._started = True
         logger.info("runtime_ready", slots=len(self._specs))
 
-    @staticmethod
-    def _warm_up(engine: TranscriptionEngine) -> None:
-        """One engine-agnostic inference over deterministic audio: lazy
-        initialization is paid at startup, never by the first request."""
-        engine.transcribe(canonical_audio(_WARM_UP_PCM), TranscriptionRequest())
-
-    def lookup(self, artifact: str | None) -> LoadedModel:
+    def lookup(self, artifact: str | None) -> LoadedModel[EngineT]:
         """The per-request question: which loaded engine serves this artifact?"""
         if not self._started:
             raise RuntimeServiceError(
@@ -154,7 +161,7 @@ class ModelManager:
             )
         return loaded
 
-    def loaded_models(self) -> tuple[LoadedModel, ...]:
+    def loaded_models(self) -> tuple[LoadedModel[EngineT], ...]:
         """Operational introspection (the /info source)."""
         return tuple(self._by_slot.values())
 

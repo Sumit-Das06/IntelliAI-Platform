@@ -22,8 +22,8 @@ pytestmark = pytest.mark.skipif(
 def test_whisper_small_transcribes_real_speech() -> None:
     import httpx
 
+    from intelliai_runtime_core import ArtifactStore
     from intelliai_stt_runtime.engines.whisper import WHISPER_SMALL_FILES, load_faster_whisper
-    from intelliai_stt_runtime.manager import ArtifactStore
     from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline
 
     store = ArtifactStore(Path("models"))

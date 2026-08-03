@@ -14,24 +14,41 @@ from functools import partial
 import structlog
 from fastapi import FastAPI, Request, Response
 
+from intelliai_runtime_contract import TranscriptionRequest
+from intelliai_runtime_core import ArtifactStore, ModelManager, SlotSpec, WorkerPool
 from intelliai_stt_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_stt_runtime.api.errors import register_error_handlers
 from intelliai_stt_runtime.api.routes import router
 from intelliai_stt_runtime.config import Settings
-from intelliai_stt_runtime.engines import reference, whisper
+from intelliai_stt_runtime.engines import TranscriptionEngine, reference, whisper
 from intelliai_stt_runtime.logging import configure_logging
-from intelliai_stt_runtime.manager import ArtifactStore, ModelManager, SlotSpec
-from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline
-from intelliai_stt_runtime.pool import WorkerPool
+from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline, canonical_audio
+
+# Half a second of gentle deterministic non-silence: enough to push a real
+# model through its full encode/decode path once, engine-agnostic.
+_WARM_UP_PCM = bytes(
+    byte for i in range(8000) for byte in ((i % 64) * 8).to_bytes(2, "little", signed=True)
+)
 
 
-def build_manager(settings: Settings) -> ModelManager:
+def transcription_warm_up(engine: TranscriptionEngine) -> None:
+    """This runtime's capability-defined warm-up probe (ADR-0019).
+
+    The lifecycle machinery guarantees the probe runs once per engine
+    before serving; what probing MEANS is transcription's business: one
+    engine-agnostic inference over deterministic canonical audio, so lazy
+    initialization is paid at startup, never by the first request."""
+    engine.transcribe(canonical_audio(_WARM_UP_PCM), TranscriptionRequest())
+
+
+def build_manager(settings: Settings) -> ModelManager[TranscriptionEngine]:
     """Settings-driven slot configuration.
 
     The default slot binds whichever engine deployment chose; the engines
     module owns everything model-specific (files, hashes, library import).
     Adding an engine here = one SlotSpec line, nothing else on the platform.
     """
+    slots: tuple[SlotSpec[TranscriptionEngine], ...]
     if settings.default_engine == "whisper":
         slots = (
             SlotSpec(
@@ -51,7 +68,11 @@ def build_manager(settings: Settings) -> ModelManager:
                 load=lambda _: reference.load_reference_engine(),
             ),
         )
-    return ModelManager(slots=slots, store=ArtifactStore(settings.model_dir))
+    return ModelManager(
+        slots=slots,
+        store=ArtifactStore(settings.model_dir),
+        warm_up=transcription_warm_up,
+    )
 
 
 def build_pipeline(settings: Settings) -> MediaPipeline:
