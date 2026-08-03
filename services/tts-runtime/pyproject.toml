@@ -20,15 +20,31 @@ dependencies = [
 [project.optional-dependencies]
 # One extra per engine family; installed where that engine actually runs
 # (dev machines, inference deployments) — never in CI, never implicitly.
-# Pinned exactly: the artifact spec's meaning depends on the inference
-# code that loads it.
+# torch is declared explicitly so the CPU wheel index below can bind to
+# it: on Linux, PyPI's torch is the CUDA build (gigabytes of nvidia
+# wheels) — CPU-first deployment (ADR-0015) means the deployment image
+# carries the CPU build; GPU arrives as a build-arg/overlay, never by
+# default.
 kokoro = [
     "kokoro>=0.9.4",
+    "torch>=2",
+    # misaki's English G2P needs this spaCy model and will otherwise
+    # PIP-INSTALL IT FROM THE INTERNET AT MODEL LOAD (found by production
+    # validation: the hardened image has no installer, so startup failed).
+    # Pinned here as an explicit URL dependency instead — no runtime
+    # fetches, ever; the lockfile records the wheel's hash.
+    "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
 ]
 
 [tool.uv.sources]
 intelliai-runtime-contract = { workspace = true }
 intelliai-runtime-core = { workspace = true }
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [dependency-groups]
 dev = [
@@ -39,6 +55,10 @@ dev = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+# Permits the pinned spaCy-model wheel URL in the kokoro extra.
+allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/intelliai_tts_runtime"]

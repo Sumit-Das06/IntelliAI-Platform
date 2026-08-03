@@ -24,12 +24,14 @@ WORKDIR /app
 COPY pyproject.toml uv.lock .python-version ./
 COPY services/stt-runtime/pyproject.toml services/stt-runtime/
 COPY packages/runtime-contract/pyproject.toml packages/runtime-contract/
+COPY packages/runtime-core/pyproject.toml packages/runtime-core/
 RUN uv sync --frozen --no-dev --no-install-workspace \
     --package intelliai-stt-runtime --extra whisper
 
 # Layer 2: our source, then the workspace packages themselves.
 COPY services/stt-runtime/src services/stt-runtime/src
 COPY packages/runtime-contract/src packages/runtime-contract/src
+COPY packages/runtime-core/src packages/runtime-core/src
 RUN uv sync --frozen --no-dev --package intelliai-stt-runtime --extra whisper
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────

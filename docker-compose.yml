@@ -22,6 +22,7 @@ services:
       INTELLIAI_STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER:-intelliai}
       INTELLIAI_STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?set in .env}
       INTELLIAI_RUNTIMES_STT_URL: http://stt-runtime:8001
+      INTELLIAI_RUNTIMES_TTS_URL: http://tts-runtime:8002
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
@@ -60,6 +61,34 @@ services:
       # dependencies, and ready means "models loaded and warm". The long
       # start_period covers the first-boot artifact download.
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 600s
+    networks: [intelliai]
+    restart: unless-stopped
+
+  tts-runtime:
+    build:
+      context: .
+      dockerfile: infra/docker/tts-runtime.Dockerfile
+    environment:
+      # One env flip swaps the engine ("reference" serves the same API with
+      # no model — the deployment-level engine-independence seam).
+      INTELLIAI_TTS_DEFAULT_ENGINE: ${INTELLIAI_TTS_DEFAULT_ENGINE:-kokoro}
+      INTELLIAI_TTS_LOG_LEVEL: ${INTELLIAI_TTS_LOG_LEVEL:-INFO}
+    ports:
+      - "127.0.0.1:8002:8002"
+    volumes:
+      # Hash-verified model cache, shared with stt (artifacts are
+      # namespaced by id): first boot downloads (~330 MB), every boot
+      # re-verifies.
+      - modelcache:/models
+    healthcheck:
+      # Readiness IS the right probe (no downstream dependencies; ready
+      # means "model loaded and warm"). The long start_period covers the
+      # first-boot artifact download.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8002/health/ready', timeout=3)"]
       interval: 10s
       timeout: 5s
       retries: 5
