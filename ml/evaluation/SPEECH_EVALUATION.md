@@ -212,6 +212,34 @@ decision, made by people, citing this ledger.
 
 ## 6. Regression & promotion methodology
 
+**What a baseline is.** A baseline is not "the first run" — it is the
+**named reference point against which all future decisions are
+justified**. Every future comparison ultimately asks *"better than
+what?"*; the baseline is the answer. It therefore has its own identity —
+a **baseline name** stamped on the run, plus the run's required
+methodology version, corpus version, and judge identity — so documents
+cite *"compared against baseline 2026-09-01-…"*, never filenames.
+
+**Failures are evidence too.** A partially failed evaluation still
+enters the ledger: synthesis timeouts, judge unavailability, corrupted
+output, and invalid audio are recorded per case (with whatever metrics
+*did* measure preserved), never discarded — a failed evaluation often
+explains later engineering decisions.
+
+**Determinism.** Running the same baseline twice must produce equivalent
+evidence whenever the model has not changed: corpus cases run in
+manifest order; synthesis parameters (voice, speed, seed where the
+engine supports one) are pinned and recorded; the judge is pinned (§4);
+score computation is pure and deterministic (frozen thresholds,
+deterministic alignment); wall-clock timings are the only expected
+variance and are labeled as such.
+
+**Multi-judge reservation.** Today every run has exactly one judge; the
+judge is an interface whose identity comes from the judge itself, so
+future evaluation against multiple judges (IntelliAI-STT, an external
+ASR, human transcription) means running the evaluation once per judge —
+more records in the same ledger, no runner redesign.
+
 - Every serving TTS artifact has a **committed baseline** (D5: one
   command → full evaluation → permanent artifact).
 - A candidate replaces an incumbent only by the **switching test**: same

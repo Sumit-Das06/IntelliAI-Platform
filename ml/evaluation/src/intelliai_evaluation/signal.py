@@ -35,13 +35,20 @@ class SignalAnalysis:
 
 
 def analyze_wav(wav_bytes: bytes) -> SignalAnalysis:
-    """Decode a 16-bit PCM WAV and measure its signal-sanity facts."""
-    with wave.open(io.BytesIO(wav_bytes)) as reader:
-        if reader.getsampwidth() != 2:
-            msg = "signal analysis expects 16-bit PCM WAV"
-            raise ValueError(msg)
-        sample_rate = reader.getframerate()
-        frames = reader.readframes(reader.getnframes())
+    """Decode a 16-bit PCM WAV and measure its signal-sanity facts.
+
+    Raises ValueError for anything that is not a decodable 16-bit WAV —
+    one exception type, whatever the underlying parser thought."""
+    try:
+        with wave.open(io.BytesIO(wav_bytes)) as reader:
+            if reader.getsampwidth() != 2:
+                msg = "signal analysis expects 16-bit PCM WAV"
+                raise ValueError(msg)
+            sample_rate = reader.getframerate()
+            frames = reader.readframes(reader.getnframes())
+    except (wave.Error, EOFError) as exc:
+        msg = f"not a decodable WAV: {exc}"
+        raise ValueError(msg) from exc
 
     samples = array("h")
     samples.frombytes(frames[: len(frames) - (len(frames) % 2)])

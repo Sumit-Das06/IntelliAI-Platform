@@ -85,11 +85,16 @@ class RuntimeIdentity(_Record):
 
 class CaseResult(_Record):
     """One corpus case's measured outcome — transcript kept verbatim so
-    the record explains itself years later."""
+    the record explains itself years later.
+
+    Failures are evidence too: when a stage failed, ``failure`` names it
+    and whatever metrics DID measure before the failure are preserved —
+    partial evidence beats discarded evidence."""
 
     case_id: str = Field(min_length=1)
     transcript: str  # the judge's transcript, unedited ("" is valid evidence)
     metrics: dict[str, float]
+    failure: str | None = None  # e.g. "synthesis: timeout", "judge: unavailable"
 
     @field_validator("metrics")
     @classmethod
@@ -144,6 +149,9 @@ class SpeechEvalRun(_Record):
     aggregate_metrics: dict[str, float]
     human: HumanEvaluation | None = None  # subjective evidence, separated
     comparison: ComparisonContext | None = None  # reserved
+    # When set, this run IS a named baseline — the reference future
+    # documents cite ("compared against baseline <name>"), never a filename.
+    baseline_name: str | None = None
     notes: str = ""
 
     @field_validator("aggregate_metrics")
