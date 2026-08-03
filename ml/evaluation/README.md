@@ -6,6 +6,12 @@ the *seed* of the M9 evaluation harness: deliberately small, but the
 discipline — versioned immutable datasets, one metric implementation,
 one recording format — starts here, before the first model is downloaded.
 
+Speech **generation** evaluation (TTS and successors) is governed by
+[SPEECH_EVALUATION.md](SPEECH_EVALUATION.md) (M2.5): the metric
+hierarchy with declared directions, the judge discipline for round-trip
+intelligibility, the structured listening protocol, and the extension
+recipe for future capabilities.
+
 ## Module charter (the six questions)
 
 1. **Why does this module exist?** So that "is this model better?" has an
