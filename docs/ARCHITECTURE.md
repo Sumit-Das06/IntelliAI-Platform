@@ -1,8 +1,8 @@
 # IntelliAI Platform — Architecture
 
-> Current as of **v0.25 (Milestone 1.5 complete)**. Updated at every milestone
+> Current as of **v0.3 (Milestone 2 complete)**. Updated at every milestone
 > close, alongside [PRD.md](PRD.md). Decisions behind this document live in
-> [adr/](adr/) (0001–0015, all with review criteria); company law lives in
+> [adr/](adr/) (0001–0018, all with review criteria); company law lives in
 > [CONSTITUTION.md](CONSTITUTION.md) with the strategy stack indexed at
 > [STRATEGY.md](STRATEGY.md); working rules live in
 > [/CONTRIBUTING.md](../CONTRIBUTING.md) and the `docs/` handbooks.
@@ -46,7 +46,7 @@
 7. **Multi-tenancy from the first table:** organizations own everything;
    API keys belong to organizations; every tenant query is org-scoped.
 
-## What exists today (v0.2)
+## What exists today (v0.3)
 
 | Component | State |
 |---|---|
@@ -60,9 +60,14 @@
 | Standards | ADRs 0001–0015 with future review criteria · CONTRIBUTING + five handbooks (principles, patterns, security, testing, documentation) |
 | Strategy layer (M1.5) | [CONSTITUTION.md](CONSTITUTION.md) (20 principles) over four domain constitutions · nine-document strategy stack indexed at [STRATEGY.md](STRATEGY.md): AI strategy & data constitution, capability map (11 primitives, 3 serving classes), verified foundation-model selections, model identity (two-axis hierarchy, artifacts/builds/deployments), Registry V2 control-plane design, fine-tuning ladder, consolidated research report, founding review |
 | Identity & auth | organizations/users/memberships/api_keys schema · HMAC-peppered shown-once keys (`core/security.py`) · repositories with org-scoped signatures · `IdentityService` (bootstrap CLI, key lifecycle) · `AuthService` → immutable `AuthContext` · `/v1/organization`, `/v1/api-keys` (create/list/revoke, tenant-isolated 404s) |
-| Tests | 96 passing: config, logging, health, error contract, schema conventions, security lib, repositories, services, auth + key management over real HTTP+Postgres (savepoint-rollback isolation) |
+| Runtime contract | `packages/runtime-contract` v1 — the permanent transport-free language (frozen `Capability` enum, envelopes, error taxonomy, operational-only metadata; ADR-0016); HTTP binding cross-pinned by CI test |
+| Model registry v1 | code-declarative resolution + composition-time license gate (per-artifact-version verdicts); public model `intelliai-stt` → `stt-runtime`/`whisper-small` (ADR-0017) |
+| STT runtime | `services/stt-runtime` (ADR-0018): HTTP binding · media pipeline (magic-byte whitelist → sandboxed ffmpeg → 16 kHz mono → energy VAD, per-stage timing, silence short-circuit) · ModelManager (SHA-256-verified artifact cache, measured load/warm-up, slots) · engines behind Protocol (ReferenceEngine in CI; faster-whisper via optional extra, AST-enforced isolation) · bounded worker pool |
+| Public AI API | `/v1/audio/transcriptions` (OpenAI-compatible: json/text/verbose_json) · `/v1/models` product catalog (leak-guard-tested) · transport-agnostic RuntimeClient in the gateway · total runtime→public error translation · `transcription.completed` accounting events |
+| Evaluation | `ml/evaluation`: versioned immutable datasets (audio never in git), stdlib WER, live-runtime eval runner, deterministic benchmark harness · committed baselines: WER 0.000/zero hallucination; [production baseline](../ml/evaluation/stt/benchmarks/2026-08-03-whisper-small-cpu-baseline.md) (gateway overhead 0.86 % of inference — ADR-0002 validated; ~6.3× real-time throughput; ~800 MiB flat) |
+| Tests | 270 passing across 4 workspace packages (gateway over real HTTP+Postgres with savepoint rollback; runtime incl. real-ffmpeg pipeline + engine-isolation AST suite; contract goldens; eval determinism) |
 
-## Request flow (as of v0.2)
+## Request flow (as of v0.3)
 
 ```
 client ──► uvicorn ──► RequestContextMiddleware (request_id, timing, logs)
@@ -70,8 +75,11 @@ client ──► uvicorn ──► RequestContextMiddleware (request_id, timing,
                                 │         HMAC → lookup → revoke/expiry → AuthContext;
                                 │         org_id + key_id bound into every log line]
                                 │             └─► services ──► repositories ──► PG
-                                │             └─► (M2+: registry ──► inference service
-                                │                  via runtime contract, request_id propagated)
+                                │             └─► TranscriptionService ──► registry.resolve
+                                │                  ──► RuntimeClient (HTTP; X-Request-ID
+                                │                  propagated) ──► stt-runtime [pipeline →
+                                │                  VAD → pool → engine] ──► envelope ──►
+                                │                  translate + emit transcription.completed
                                 └─► any failure ──► error handlers ──► one envelope
                                      {error: {type, code, message, param, request_id}}
 ```
@@ -87,9 +95,9 @@ probes) — post-1.0 concern by design.
 ## Where things will land (forward map)
 
 ~~M0.5 standards/CI~~ ✅ · ~~M1 orgs/users/keys~~ ✅ · ~~M1.5 AI strategy
-layer~~ ✅ · M2 STT (faster-whisper) + runtime contract + registry v1 +
-`/v1/models` + **evaluation seed** (fixed eval sets + measured baselines,
-every capability, every release from here on) · M3 TTS (Kokoro) + voices ·
+layer~~ ✅ · ~~M2 STT + runtime contract + registry v1 + `/v1/models` +
+evaluation seed with measured baselines~~ ✅
+([review](milestones/2-stt-review.md)) · M3 TTS (Kokoro) + voices ·
 M4 metering/limits (Redis) · M5 batch jobs (PG `SKIP LOCKED`) · M6 console ·
 M7 playground · M8 streaming (WebSocket, runtime-contract v2) · M9 registry
 v2 (implements [REGISTRY_V2.md](REGISTRY_V2.md) + [MODEL_IDENTITY.md](MODEL_IDENTITY.md))

@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.5 (Milestone 1.5 closed) |
-| **Last updated** | 2026-07-31 |
+| **Version** | 0.6 (Milestone 2 closed) |
+| **Last updated** | 2026-08-03 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
 ---
@@ -92,8 +92,8 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | v0.15 | Engineering standards, CI — ✅ **shipped 2026-07-30** ([review](milestones/0.5-engineering-standards-review.md)) |
 | v0.2 | Auth: orgs, users, API keys — ✅ **shipped 2026-07-31** ([review](milestones/1-identity-review.md)) |
 | v0.25 | Foundation model evaluation & AI strategy (research/architecture only) — ✅ **shipped 2026-07-31** ([review](milestones/1.5-strategy-review.md); [index](STRATEGY.md)) |
-| v0.3 | **STT API** (`/v1/audio/transcriptions`, faster-whisper) *(next)* |
-| v0.4 | **TTS API** (`/v1/audio/speech`, Kokoro; voices catalog) |
+| v0.3 | **STT API** (`/v1/audio/transcriptions` + `/v1/models`, public model **`intelliai-stt`**) — ✅ **shipped 2026-08-03** ([review](milestones/2-stt-review.md); [performance baseline](../ml/evaluation/stt/benchmarks/2026-08-03-whisper-small-cpu-baseline.md); [quality baseline](../ml/evaluation/stt/results/2026-08-02-whisper-small.json)) |
+| v0.4 | **TTS API** (`/v1/audio/speech`, Kokoro; voices catalog) *(next)* |
 | v0.5 | Usage metering & rate limiting |
 | v0.6 | Async batch jobs + webhooks |
 | v0.7 | Developer console (signup → key → usage) |
@@ -171,12 +171,13 @@ billing/payments, enterprise features (SSO, audit exports, SLAs).
 
 ## 10. Performance Goals
 
-Phase 1 targets (CPU-serving; honest, revisited with benchmarks in v0.9):
+Phase 1 targets (CPU-serving; honest, revisited with benchmarks in v0.9).
+First measured evidence: the v0.3 [production baseline](../ml/evaluation/stt/benchmarks/2026-08-03-whisper-small-cpu-baseline.md).
 
 | Metric | Target |
 |---|---|
-| Gateway overhead (auth+route+meter), p95 | < 15 ms |
-| Sync STT (≤60 s audio, `small` int8), p95 | < 1.5× audio duration |
+| Gateway overhead (auth+route+meter), p95 | < 15 ms — *measured v0.3: +14.7 ms, 0.86 % of inference (ADR-0002 validated)* |
+| Sync STT (≤60 s audio, `small` int8), p95 | < 1.5× audio duration — *measured v0.3: PASS, ~9× headroom uncontended* |
 | Batch STT throughput | ≥ real-time per worker core-set; horizontal scale-out |
 | TTS time-to-first-byte (Kokoro, short text), p95 | < 1 s |
 | Streaming STT partial-result latency (v0.85) | < 800 ms |
@@ -217,6 +218,16 @@ public proof that it treats model choice as a feature, not a lock-in.
 ---
 
 *Change log:*
+- *2026-08-03 — v0.6: Milestone 2 closed — first production-capable AI API:
+  `/v1/audio/transcriptions` (OpenAI-compatible, json/text/verbose_json) and
+  `/v1/models` product catalog live behind API keys; public model id
+  **`intelliai-stt`** ratified (whisper-small artifact serves it; identity
+  hidden by design); runtime contract v1 + registry v1 + stt-runtime
+  service shipped (ADRs 0016–0018); measured baselines published (WER
+  0.000/zero hallucination on seed set; gateway overhead 0.86 % of
+  inference; PRD p95 target PASS ~9× headroom; ~800 MiB flat runtime
+  memory). Founder-owed items carried: dataset v2 recordings, customer
+  discovery kickoff ([review §6](milestones/2-stt-review.md)).*
 - *2026-07-31 — v0.5: Milestone 1.5 closed — AI strategy layer adopted
   ([STRATEGY.md](STRATEGY.md) + [CONSTITUTION.md](CONSTITUTION.md));
   TTS engine decision changed Piper → Kokoro (Piper archived upstream,
