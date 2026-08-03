@@ -159,13 +159,23 @@ pipelines will often use. It has two known hazards, managed openly:
 
 ## 5. Corpus and results principles (governing D2 and D4)
 
-- **Corpus:** versioned, immutable, text-first (the input *is* the
-  reference — no recordings needed). Organized by **category within
-  language** (general, numbers, dates, currency, URLs, technical terms;
-  Hindi conjuncts, matras, proper names; code-mixed and API/programming
-  text), because category-level scores localize failures ("numbers
-  regressed") where a single average hides them. New text = new corpus
-  version; released versions never change.
+- **Corpus:** a **permanent product asset** — models improve, corpora
+  accumulate; a corpus is evaluation capital, never a temporary fixture.
+  Versioned, immutable, text-first (the input *is* the reference — no
+  recordings needed). Organized by **category within language** (general,
+  numbers, dates, currency, URLs, technical terms; Hindi conjuncts,
+  matras, proper names; code-mixed and API/programming text), because
+  category-level scores localize failures ("numbers regressed") where a
+  single average hides them. Every case declares a **difficulty**
+  (easy/medium/hard — orthogonal to category), enabling overall/easy/hard
+  report slices without corpus changes, and may carry maintenance
+  **tags** (`expected_failure`, `known_limitation`,
+  `regression_sensitive`) documenting why it exists — never scoring
+  inputs. Every corpus version records **provenance** (author, date,
+  rationale, source, languages, license) — reproducible and legally
+  auditable even for in-house text. **Evolution rule: a version cited by
+  any recorded result never changes; new coverage always creates the
+  next version; old results stay reproducible forever.**
 - **Results:** one append-only record per (corpus version, artifact
   evaluated, judge, hardware) carrying artifact lineage and runtime
   identity, an extensible metrics map keyed by registered metric names,
