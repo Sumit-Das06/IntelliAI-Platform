@@ -14,7 +14,6 @@ from dataclasses import dataclass
 import structlog
 
 from intelliai_api.core.errors import (
-    IntelliAIError,
     InternalError,
     InvalidRequestError,
     ServiceUnavailableError,
@@ -22,9 +21,9 @@ from intelliai_api.core.errors import (
 from intelliai_api.registry import Registry
 from intelliai_api.runtimes import RuntimeCallError, RuntimeClient, RuntimeUnavailableError
 from intelliai_api.services.auth import AuthContext
+from intelliai_api.services.runtime_errors import translate_runtime_error
 from intelliai_runtime_contract import (
     Capability,
-    RuntimeErrorType,
     TranscriptionRequest,
     TranscriptionResult,
     UsageUnit,
@@ -40,26 +39,6 @@ class TranscriptionOutcome:
     result: TranscriptionResult
     public_model_id: str
     audio_seconds: float
-
-
-def _translate(error_type: RuntimeErrorType, message: str, param: str | None) -> IntelliAIError:
-    """Runtime taxonomy -> public taxonomy, totally (every type mapped).
-
-    invalid_input messages are written wire-safe by the runtime and
-    customer-actionable, so they pass through; capacity states collapse to
-    the public service_unavailable with retry guidance; internals stay
-    opaque — details live in runtime logs, correlated by request id."""
-    if error_type is RuntimeErrorType.INVALID_INPUT:
-        return InvalidRequestError(message, param=param)
-    if error_type is RuntimeErrorType.NOT_READY:
-        return ServiceUnavailableError(
-            "The model is starting up. Retry shortly.", code="model_loading", retry_after=2
-        )
-    if error_type is RuntimeErrorType.OVERLOADED:
-        return ServiceUnavailableError(
-            "The service is at capacity. Retry shortly.", code="overloaded", retry_after=1
-        )
-    return InternalError("The service encountered an internal error.")
 
 
 class TranscriptionService:
@@ -95,7 +74,9 @@ class TranscriptionService:
                 TranscriptionRequest(language=language, model=resolution.artifact.id),
             )
         except RuntimeCallError as exc:
-            raise _translate(exc.error.type, exc.error.message, exc.error.param) from exc
+            raise translate_runtime_error(
+                exc.error.type, exc.error.message, exc.error.param
+            ) from exc
         except RuntimeUnavailableError as exc:
             raise ServiceUnavailableError(
                 "Transcription is temporarily unavailable. Retry shortly.",

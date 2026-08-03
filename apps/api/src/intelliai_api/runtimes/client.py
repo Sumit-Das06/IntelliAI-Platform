@@ -13,6 +13,8 @@ from typing import Protocol
 from intelliai_runtime_contract import (
     RuntimeErrorResponse,
     RuntimeResponse,
+    SpeechSynthesisRequest,
+    SpeechSynthesisResult,
     TranscriptionRequest,
     TranscriptionResult,
 )
@@ -47,6 +49,17 @@ class RuntimeClient(Protocol):
 
         Raises RuntimeCallError (runtime said no) or
         RuntimeUnavailableError (no answer at all)."""
+        ...
+
+    async def synthesize(
+        self, request: SpeechSynthesisRequest
+    ) -> tuple[bytes, RuntimeResponse[SpeechSynthesisResult]]:
+        """Send synthesis params, return (audio bytes, contract envelope).
+
+        The audio travels as transport payload and the envelope as
+        operational metadata (ADR-0020) — this seam returns both without
+        knowing how they traveled. Added ADDITIVELY (the module's own
+        evolution rule); same failure vocabulary as `transcribe`."""
         ...
 
     async def close(self) -> None:

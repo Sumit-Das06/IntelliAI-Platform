@@ -72,6 +72,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             base_url=settings.runtimes.stt_url,
             timeout_seconds=settings.runtimes.timeout_seconds,
         ),
+        "tts-runtime": HTTPRuntimeClient(
+            base_url=settings.runtimes.tts_url,
+            timeout_seconds=settings.runtimes.timeout_seconds,
+        ),
     }
     app.state.runtime_clients = runtime_clients
 

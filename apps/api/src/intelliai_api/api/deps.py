@@ -20,6 +20,7 @@ from intelliai_api.registry import Registry
 from intelliai_api.runtimes import RuntimeClient
 from intelliai_api.services.auth import AuthContext, AuthService
 from intelliai_api.services.identity import IdentityService
+from intelliai_api.services.speech import SpeechService
 from intelliai_api.services.transcription import TranscriptionService
 
 
@@ -114,7 +115,14 @@ def transcription_service(request: Request) -> TranscriptionService:
     return TranscriptionService(cast(Registry, request.app.state.registry), clients)
 
 
+def speech_service(request: Request) -> SpeechService:
+    """Synthesis flow: registry + voice catalog + runtime clients (factory-built)."""
+    clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
+    return SpeechService(cast(Registry, request.app.state.registry), clients)
+
+
 CurrentAuth = Annotated[AuthContext, Depends(current_auth)]
 IdentityDep = Annotated[IdentityService, Depends(identity_service)]
 RegistryDep = Annotated[Registry, Depends(model_registry)]
 TranscriptionDep = Annotated[TranscriptionService, Depends(transcription_service)]
+SpeechDep = Annotated[SpeechService, Depends(speech_service)]

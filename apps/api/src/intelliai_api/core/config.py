@@ -83,6 +83,7 @@ class RuntimeSettings(BaseSettings):
     model_config = _group("INTELLIAI_RUNTIMES_")
 
     stt_url: str = "http://localhost:8001"
+    tts_url: str = "http://localhost:8002"
     # The gateway's end-to-end patience with a runtime call (it owns the
     # deadline; the runtime owns per-stage limits — ADR-0016).
     timeout_seconds: float = 120.0

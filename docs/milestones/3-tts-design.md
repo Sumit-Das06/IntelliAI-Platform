@@ -200,6 +200,18 @@ answers "make it." This mirrors the Registry-vs-Runtime separation
 established for models (ADR-0017): identity and promise on the product
 side, mechanics and replaceability on the runtime side.
 
+**Direction (recorded at Step 4 close, 2026-08-03): public voices follow
+the same evolution path as public models.** V1 keeps voice records
+code-declarative in the gateway beside the model catalog. Registry V2
+(M9) will own public voice resolution exactly as it will own model
+resolution — records in the database plane, resolution behind the same
+interface — and the runtime's role converges to consuming
+already-resolved voice assets (hash-pinned artifact files plus a
+deployment binding), never public identity. Future identity work
+(cloning's org-owned voices, per-voice promotion, the switching test
+applied per-voice) hangs off the registry's voice records, not off
+runtime configuration.
+
 **Law — voice metadata is append-only.** Voice metadata evolves exactly
 like the runtime contract (ADR-0016 evolution rules): future additions —
 preview audio, recommended speed, age group, sample rate, tags — arrive as

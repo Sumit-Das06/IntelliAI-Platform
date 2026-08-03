@@ -57,6 +57,23 @@ class PublicModelRecord(_Record):
     released: date  # public product fact (the /v1/models `created` source)
 
 
+class PublicVoiceRecord(_Record):
+    """A voice name customers see — the second public identity axis.
+
+    Same law as public models: never an engine voice token, never an
+    upstream name — the engine binding behind a voice id can change
+    without the id changing (M3 design review §5). V1 keeps these
+    code-declarative beside the model catalog; Registry V2 absorbs public
+    voice resolution exactly as it absorbs model resolution (direction
+    recorded at M3 step 4 close)."""
+
+    id: str = Field(min_length=1)  # e.g. "reference-alto" (placeholder pending naming)
+    model: str = Field(min_length=1)  # the public model that serves it
+    languages: tuple[str, ...] = Field(min_length=1)
+    description: str = ""
+    released: date
+
+
 class Resolution(_Record):
     """The registry's answer: everything routing needs, nothing more."""
 

@@ -15,11 +15,14 @@ PEPPER = "test-pepper"
 # artifacts, engines, upstreams, licenses, precision, topology.
 FORBIDDEN_TERMS = (
     "whisper",
+    "kokoro",
+    "hexgrad",
     "artifact",
     "engine",
     "faster",
     "systran",
     "license",
+    "apache",
     "int8",
     "runtime",
     "ct2",
@@ -48,12 +51,14 @@ async def test_list_is_openai_shaped_product_catalog(
         assert response.status_code == 200
         body = response.json()
         assert body["object"] == "list"
-        (model,) = body["data"]
-        assert model["id"] == "intelliai-stt"
-        assert model["object"] == "model"
-        assert model["owned_by"] == "intelliai"
-        assert isinstance(model["created"], int) and model["created"] > 0
-        assert model["description"] == "IntelliAI speech-to-text"
+        models = {model["id"]: model for model in body["data"]}
+        assert set(models) == {"intelliai-stt", "intelliai-tts"}
+        for model in models.values():
+            assert model["object"] == "model"
+            assert model["owned_by"] == "intelliai"
+            assert isinstance(model["created"], int) and model["created"] > 0
+        assert models["intelliai-stt"]["description"] == "IntelliAI speech-to-text"
+        assert models["intelliai-tts"]["description"] == "IntelliAI text-to-speech"
 
 
 async def test_catalog_never_leaks_implementation(

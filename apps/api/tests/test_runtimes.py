@@ -16,6 +16,8 @@ from intelliai_runtime_contract import (
     RuntimeMetadata,
     RuntimeResponse,
     RuntimeTiming,
+    SpeechSynthesisRequest,
+    SpeechSynthesisResult,
     TranscriptionRequest,
     TranscriptionResult,
     Usage,
@@ -118,11 +120,78 @@ async def test_malformed_bodies_are_unavailable_never_crashes() -> None:
         await client.close()
 
 
+FAKE_WAV = b"RIFF....WAVE-fake"
+
+
+def synthesis_envelope_json(voice: str = "reference-alto") -> str:
+    return RuntimeResponse[SpeechSynthesisResult](
+        output=SpeechSynthesisResult(
+            duration_seconds=2.0, sample_rate_hz=24_000, voice=voice, characters=11
+        ),
+        model="kokoro-82m",
+        usage=(Usage(unit=UsageUnit.CHARACTERS, amount=11),),
+        timing=RuntimeTiming(total_ms=500.0, stages={"synthesis": 450.0}),
+        runtime=META,
+    ).model_dump_json()
+
+
+class SynthesisTransport(httpx.AsyncBaseTransport):
+    """The binary binding's wire shape: audio body + envelope header."""
+
+    def __init__(self, envelope: str | None = synthesis_envelope_json()) -> None:
+        self.requests: list[httpx.Request] = []
+        self._envelope = envelope
+
+    async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+        self.requests.append(request)
+        await request.aread()
+        headers = {"Content-Type": "audio/wav"}
+        if self._envelope is not None:
+            headers[gateway_binding.HEADER_RUNTIME_ENVELOPE] = self._envelope
+        return httpx.Response(200, content=FAKE_WAV, headers=headers)
+
+
+async def test_synthesize_returns_audio_bytes_and_header_envelope() -> None:
+    transport = SynthesisTransport()
+    client = make_client(transport)
+    audio, envelope = await client.synthesize(
+        SpeechSynthesisRequest(text="hello there", voice="reference-alto", model="kokoro-82m")
+    )
+    assert audio == FAKE_WAV  # the body is the audio, untouched
+    assert envelope.output.voice == "reference-alto"
+    assert envelope.usage[0].unit is UsageUnit.CHARACTERS
+    sent = json.loads(transport.requests[0].content)
+    assert sent["text"] == "hello there"
+    assert sent["model"] == "kokoro-82m"
+    await client.close()
+
+
+async def test_synthesize_missing_envelope_header_is_unavailable() -> None:
+    client = make_client(SynthesisTransport(envelope=None))
+    with pytest.raises(RuntimeUnavailableError):
+        await client.synthesize(SpeechSynthesisRequest(text="x"))
+    await client.close()
+
+
+async def test_synthesize_runtime_error_is_typed_json_never_binary() -> None:
+    error_body = RuntimeErrorResponse(
+        type=RuntimeErrorType.INVALID_INPUT,
+        message="voice 'nope' is not served by this runtime",
+        param="voice",
+        runtime=META,
+    ).model_dump_json()
+    client = make_client(RecordingTransport(400, error_body))
+    with pytest.raises(RuntimeCallError) as exc_info:
+        await client.synthesize(SpeechSynthesisRequest(text="x", voice="nope"))
+    assert exc_info.value.error.param == "voice"
+    await client.close()
+
+
 def test_binding_constants_match_the_runtime_exactly() -> None:
     """CI-enforced cross-pin (deferred decision from steps 1/3, resolved):
     each side owns its constants; THIS TEST is the single source of truth
-    for their equality. Test-only import of the runtime service package —
-    production gateway code never imports it."""
+    for their equality. Test-only import of the runtime service packages —
+    production gateway code never imports them."""
     from intelliai_stt_runtime.api import binding as runtime_binding
 
     assert gateway_binding.HEADER_REQUEST_ID == runtime_binding.HEADER_REQUEST_ID
@@ -130,6 +199,15 @@ def test_binding_constants_match_the_runtime_exactly() -> None:
     assert gateway_binding.ROUTE_TRANSCRIBE == runtime_binding.ROUTE_TRANSCRIBE
     assert gateway_binding.PART_FILE == runtime_binding.PART_FILE
     assert gateway_binding.PART_PARAMS == runtime_binding.PART_PARAMS
+
+
+def test_binary_binding_constants_match_the_tts_runtime_exactly() -> None:
+    from intelliai_tts_runtime.api import binding as tts_binding
+
+    assert gateway_binding.HEADER_REQUEST_ID == tts_binding.HEADER_REQUEST_ID
+    assert gateway_binding.HEADER_CONTRACT_VERSION == tts_binding.HEADER_CONTRACT_VERSION
+    assert gateway_binding.ROUTE_SYNTHESIZE == tts_binding.ROUTE_SYNTHESIZE
+    assert gateway_binding.HEADER_RUNTIME_ENVELOPE == tts_binding.HEADER_RUNTIME_ENVELOPE
 
 
 def test_params_part_is_valid_contract_json() -> None:

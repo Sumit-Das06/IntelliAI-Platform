@@ -30,6 +30,7 @@ from intelliai_api.registry.records import (
     ArtifactRecord,
     LicenseVerdict,
     PublicModelRecord,
+    PublicVoiceRecord,
     Resolution,
 )
 from intelliai_api.registry.registry import ModelNotFoundError, Registry
@@ -39,6 +40,7 @@ __all__ = [
     "LicenseVerdict",
     "ModelNotFoundError",
     "PublicModelRecord",
+    "PublicVoiceRecord",
     "Registry",
     "Resolution",
     "default_registry",

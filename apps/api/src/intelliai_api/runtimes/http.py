@@ -17,6 +17,8 @@ from intelliai_api.runtimes.client import RuntimeCallError, RuntimeUnavailableEr
 from intelliai_runtime_contract import (
     RuntimeErrorResponse,
     RuntimeResponse,
+    SpeechSynthesisRequest,
+    SpeechSynthesisResult,
     TranscriptionRequest,
     TranscriptionResult,
 )
@@ -29,6 +31,11 @@ HEADER_CONTRACT_VERSION: Final = "X-Runtime-Contract-Version"
 ROUTE_TRANSCRIBE: Final = "/v1/transcribe"
 PART_FILE: Final = "file"
 PART_PARAMS: Final = "params"
+
+# Binary audio binding (ADR-0020; cross-pinned by test): WAV bytes as the
+# body, the success envelope riding this header. Errors are always JSON.
+ROUTE_SYNTHESIZE: Final = "/v1/synthesize"
+HEADER_RUNTIME_ENVELOPE: Final = "X-Runtime-Envelope"
 
 
 class HTTPRuntimeClient:
@@ -66,6 +73,43 @@ class HTTPRuntimeClient:
             except pydantic.ValidationError as exc:
                 logger.info("runtime_envelope_malformed")
                 raise RuntimeUnavailableError("malformed runtime envelope") from exc
+        try:
+            error = RuntimeErrorResponse.model_validate_json(response.text)
+        except pydantic.ValidationError as exc:
+            logger.info("runtime_error_malformed", status=response.status_code)
+            raise RuntimeUnavailableError("malformed runtime error") from exc
+        raise RuntimeCallError(error)
+
+    async def synthesize(
+        self, request: SpeechSynthesisRequest
+    ) -> tuple[bytes, RuntimeResponse[SpeechSynthesisResult]]:
+        headers = {}
+        request_id = structlog.contextvars.get_contextvars().get("request_id")
+        if isinstance(request_id, str):
+            headers[HEADER_REQUEST_ID] = request_id  # correlation crosses planes
+        try:
+            response = await self._client.post(
+                ROUTE_SYNTHESIZE,
+                json=request.model_dump(mode="json"),
+                headers=headers,
+            )
+        except httpx.HTTPError as exc:
+            logger.info("runtime_unreachable", detail=type(exc).__name__)
+            raise RuntimeUnavailableError(str(exc)) from exc
+
+        if response.status_code == 200:
+            envelope_header = response.headers.get(HEADER_RUNTIME_ENVELOPE)
+            if envelope_header is None:
+                logger.info("runtime_envelope_missing")
+                raise RuntimeUnavailableError("missing runtime envelope")
+            try:
+                envelope = RuntimeResponse[SpeechSynthesisResult].model_validate_json(
+                    envelope_header
+                )
+            except pydantic.ValidationError as exc:
+                logger.info("runtime_envelope_malformed")
+                raise RuntimeUnavailableError("malformed runtime envelope") from exc
+            return response.content, envelope
         try:
             error = RuntimeErrorResponse.model_validate_json(response.text)
         except pydantic.ValidationError as exc:

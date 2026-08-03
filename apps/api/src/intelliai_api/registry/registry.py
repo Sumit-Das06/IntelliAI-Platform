@@ -9,7 +9,12 @@ never at request time (the same fail-fast posture as Settings).
 from collections.abc import Iterable
 
 from intelliai_api.core.errors import ResourceNotFoundError
-from intelliai_api.registry.records import ArtifactRecord, PublicModelRecord, Resolution
+from intelliai_api.registry.records import (
+    ArtifactRecord,
+    PublicModelRecord,
+    PublicVoiceRecord,
+    Resolution,
+)
 
 
 class ModelNotFoundError(ResourceNotFoundError):
@@ -31,6 +36,7 @@ class Registry:
         *,
         artifacts: Iterable[ArtifactRecord],
         models: Iterable[PublicModelRecord],
+        voices: Iterable[PublicVoiceRecord] = (),
     ) -> None:
         self._artifacts: dict[str, ArtifactRecord] = {}
         for artifact in artifacts:
@@ -66,6 +72,16 @@ class Registry:
                 raise ValueError(msg)
             self._models[model.id] = model
 
+        self._voices: dict[str, PublicVoiceRecord] = {}
+        for voice in voices:
+            if voice.id in self._voices:
+                msg = f"duplicate public voice id {voice.id!r}"
+                raise ValueError(msg)
+            if voice.model not in self._models:
+                msg = f"public voice {voice.id!r} belongs to unknown model {voice.model!r}"
+                raise ValueError(msg)
+            self._voices[voice.id] = voice
+
     def resolve(self, public_model_id: str) -> Resolution:
         """Answer routing's one question; raise ModelNotFoundError otherwise."""
         model = self._models.get(public_model_id)
@@ -88,3 +104,11 @@ class Registry:
         if model is None:
             raise ModelNotFoundError(public_model_id)
         return model
+
+    def list_voices(self, public_model_id: str | None = None) -> tuple[PublicVoiceRecord, ...]:
+        """Public voices, catalog order — the `/v1/audio/voices` source."""
+        return tuple(
+            voice
+            for voice in self._voices.values()
+            if public_model_id is None or voice.model == public_model_id
+        )

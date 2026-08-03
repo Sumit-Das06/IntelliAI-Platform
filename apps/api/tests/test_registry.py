@@ -11,6 +11,7 @@ from intelliai_api.registry import (
     LicenseVerdict,
     ModelNotFoundError,
     PublicModelRecord,
+    PublicVoiceRecord,
     Registry,
     Resolution,
     default_registry,
@@ -129,6 +130,37 @@ class TestCatalogIntegrity:
             artifact(precision="int8")  # build concern — never identity (ADR-0015)
 
 
+def voice(**overrides: object) -> PublicVoiceRecord:
+    fields: dict[str, object] = {
+        "id": "reference-alto",
+        "model": "intelliai-stt",
+        "languages": ("en",),
+        "released": date(2026, 8, 3),
+    }
+    fields.update(overrides)
+    return PublicVoiceRecord.model_validate(fields)
+
+
+class TestVoiceCatalog:
+    def test_voices_list_and_filter_by_model(self) -> None:
+        registry = Registry(artifacts=[artifact()], models=[model()], voices=[voice()])
+        assert [v.id for v in registry.list_voices()] == ["reference-alto"]
+        assert registry.list_voices("intelliai-stt")[0].id == "reference-alto"
+        assert registry.list_voices("intelliai-other") == ()
+
+    def test_voice_for_unknown_model_cannot_compose(self) -> None:
+        with pytest.raises(ValueError, match="unknown model"):
+            Registry(
+                artifacts=[artifact()],
+                models=[model()],
+                voices=[voice(model="intelliai-tts-missing")],
+            )
+
+    def test_duplicate_voice_ids_cannot_compose(self) -> None:
+        with pytest.raises(ValueError, match="duplicate public voice"):
+            Registry(artifacts=[artifact()], models=[model()], voices=[voice(), voice()])
+
+
 class TestDefaultCatalog:
     def test_composes_and_serves_intelliai_stt(self) -> None:
         resolution = default_registry().resolve("intelliai-stt")
@@ -144,7 +176,18 @@ class TestDefaultCatalog:
             assert verdict.verified_on <= date(2026, 12, 31)
             assert verdict.source.startswith("https://")
 
+    def test_composes_and_serves_intelliai_tts(self) -> None:
+        resolution = default_registry().resolve("intelliai-tts")
+        assert resolution.capability is Capability.SPEECH_SYNTHESIS
+        assert resolution.service == "tts-runtime"
+        assert resolution.artifact.id == "kokoro-82m"
+        voice_ids = [v.id for v in default_registry().list_voices("intelliai-tts")]
+        assert voice_ids == ["reference-alto", "reference-bass"]
+
     def test_public_ids_never_leak_engine_names(self) -> None:
         # The product boundary: customers see intelliai-*, never engines.
         for public_model in default_registry().list_models():
             assert public_model.id.startswith("intelliai-")
+        # Voice ids follow the same law: never an engine voice token.
+        for public_voice in default_registry().list_voices():
+            assert not public_voice.id.startswith(("af_", "am_", "bf_", "bm_"))
