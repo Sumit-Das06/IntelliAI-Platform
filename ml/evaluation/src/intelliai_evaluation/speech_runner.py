@@ -138,6 +138,39 @@ def run_speech_eval(
     )
 
 
+class HttpTtsSynthesisSource:
+    """The platform's own mouth as the source, over the TTS runtime's
+    binary binding (ADR-0020): JSON request in, WAV bytes as the response
+    body. The first SynthesisSource implementation — the adapter the
+    M2.5 close-out promised M3 would need."""
+
+    def __init__(self, base_url: str, timeout_seconds: float = 300.0) -> None:
+        self._client = httpx.Client(base_url=base_url, timeout=timeout_seconds)
+
+    def synthesize(self, text: str, params: dict[str, str]) -> SynthesisOutcome:
+        import time
+
+        body: dict[str, object] = {"text": text}
+        if "voice" in params:
+            body["voice"] = params["voice"]
+        if "model" in params:
+            body["model"] = params["model"]
+        if "speed" in params:
+            body["speed"] = float(params["speed"])
+        started = time.perf_counter()
+        try:
+            response = self._client.post("/v1/synthesize", json=body)
+        except httpx.HTTPError as exc:
+            raise SynthesisError(f"source unreachable: {type(exc).__name__}") from exc
+        latency_ms = (time.perf_counter() - started) * 1000.0
+        if response.status_code != 200:
+            raise SynthesisError(f"runtime refused: HTTP {response.status_code}")
+        return SynthesisOutcome(wav_bytes=response.content, latency_ms=latency_ms)
+
+    def close(self) -> None:
+        self._client.close()
+
+
 class HttpSttJudge:
     """The platform's own ears as the judge, over the STT runtime's HTTP
     binding. The first (and today only) Judge implementation."""
