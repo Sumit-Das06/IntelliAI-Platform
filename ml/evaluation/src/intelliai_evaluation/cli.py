@@ -9,7 +9,7 @@ from pathlib import Path
 
 import httpx
 
-from intelliai_evaluation import bench
+from intelliai_evaluation import bench, bench_tts
 from intelliai_evaluation.corpus import load_corpus
 from intelliai_evaluation.dataset import load_dataset
 from intelliai_evaluation.fetch import materialize
@@ -97,10 +97,30 @@ def main(argv: list[str] | None = None) -> int:
         "--out", type=Path, required=True, help="result JSON path (append-only results/ dir)"
     )
 
+    bench_tts_parser = subcommands.add_parser(
+        "bench-tts", help="production benchmark for the synthesis runtime: ladder + overhead"
+    )
+    bench_tts_parser.add_argument("--runtime-url", default="http://localhost:8002")
+    bench_tts_parser.add_argument("--gateway-url", default="http://localhost:8000")
+    bench_tts_parser.add_argument("--api-key", default="", help="gateway path key; empty skips it")
+    bench_tts_parser.add_argument("--artifact", default="kokoro-82m")
+    bench_tts_parser.add_argument("--model", default="intelliai-tts", help="public model id")
+    bench_tts_parser.add_argument("--voice", default="reference-alto")
+    bench_tts_parser.add_argument("--levels", default="1,5,10,20")
+    bench_tts_parser.add_argument("--repetitions", type=int, default=3, help="requests per worker")
+    bench_tts_parser.add_argument("--overhead-repetitions", type=int, default=10)
+    bench_tts_parser.add_argument("--hardware", required=True)
+    bench_tts_parser.add_argument("--docker-container", default="")
+    bench_tts_parser.add_argument("--notes", default="")
+    bench_tts_parser.add_argument("--timeout", type=float, default=600.0)
+    bench_tts_parser.add_argument("--out", type=Path, required=True)
+
     args = parser.parse_args(argv)
 
     if args.command == "bench":
         return _run_bench(args)
+    if args.command == "bench-tts":
+        return _run_bench_tts(args)
     if args.command == "speech-eval":
         return _run_speech_eval(args)
 
@@ -189,6 +209,77 @@ def _run_speech_eval(args: argparse.Namespace) -> int:
         print(f"  FAIL {case.case_id}: {case.failure}")
     for name, value in sorted(run.aggregate_metrics.items()):
         print(f"  {name}: {value:.4f}")
+    print(f"recorded: {args.out}")
+    return 0
+
+
+def _run_bench_tts(args: argparse.Namespace) -> int:
+    direct_body: dict[str, object] = {
+        "text": bench_tts.BENCH_TEXT,
+        "voice": args.voice,
+        "model": args.artifact,
+    }
+    levels = [int(level) for level in str(args.levels).split(",")]
+    container = args.docker_container or None
+
+    async def execute() -> bench_tts.TtsBenchReport:
+        level_results = []
+        for concurrency in levels:
+            print(f"level c={concurrency} ...")
+            level_results.append(
+                await bench_tts.run_tts_level(
+                    url=f"{args.runtime_url}/v1/synthesize",
+                    runtime_url=args.runtime_url,
+                    body=direct_body,
+                    concurrency=concurrency,
+                    repetitions=args.repetitions,
+                    docker_container=container,
+                    timeout_seconds=args.timeout,
+                )
+            )
+        overhead = None
+        prd_actual = None
+        if args.api_key:
+            print("gateway overhead ...")
+            overhead = await bench_tts.measure_tts_overhead(
+                gateway_url=args.gateway_url,
+                runtime_url=args.runtime_url,
+                api_key=args.api_key,
+                public_model=args.model,
+                artifact=args.artifact,
+                voice=args.voice,
+                text=bench_tts.BENCH_TEXT,
+                repetitions=args.overhead_repetitions,
+                timeout_seconds=args.timeout,
+            )
+            prd_actual = overhead.via_gateway_p50_ms
+        target_ms = 1000.0  # PRD: TTFB < 1s (unstreamed = full response, conservative)
+        verdict = "not measured"
+        if prd_actual is not None:
+            verdict = "PASS" if prd_actual < target_ms else "FAIL"
+        audio_seconds = None
+        for level in level_results:
+            if level.mean_rtf and level.p50_ms:
+                audio_seconds = round(level.p50_ms / 1000.0 / level.mean_rtf, 3)
+                break
+        return bench_tts.TtsBenchReport(
+            text=bench_tts.BENCH_TEXT,
+            characters=len(bench_tts.BENCH_TEXT),
+            audio_seconds=audio_seconds,
+            repetitions_per_worker=args.repetitions,
+            hardware=args.hardware,
+            notes=args.notes,
+            levels=level_results,
+            overhead=overhead,
+            prd_ttfb_target_ms=target_ms,
+            prd_ttfb_actual_ms=prd_actual,
+            prd_verdict=verdict,
+        )
+
+    report = asyncio.run(execute())
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(report.model_dump_json(indent=2) + "\n", encoding="utf-8")
+    print(report.model_dump_json(indent=2))
     print(f"recorded: {args.out}")
     return 0
 
