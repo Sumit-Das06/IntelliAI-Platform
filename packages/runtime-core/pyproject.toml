@@ -1,6 +1,6 @@
 [project]
 name = "intelliai-runtime-core"
-version = "0.1.0"
+version = "0.2.0"
 description = "Shared lifecycle machinery for every IntelliAI runtime - lifecycle, never inference"
 requires-python = ">=3.12"
 # Lifecycle dependencies only (ADR-0019): httpx is the ArtifactStore's

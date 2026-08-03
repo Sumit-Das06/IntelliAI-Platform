@@ -5,11 +5,10 @@ renderings; automatic service context; key-based redaction), trimmed to
 what a runtime needs. Collectors read stdout; the process never knows
 where logs go.
 
-One rule this runtime adds to the platform standard: request TEXT is
-customer-owned content and never appears in any log event — only its
-length (a measurement) may. Duplicated from stt-runtime for now; two
-consumers make this extraction-eligible for runtime-core (registered
-debt, decided at review, not silently mid-step).
+Extracted at the second consumer (M3 step 4 follow-up): runtimes share
+one implementation and inject their identity — runtime-core never knows
+which service it is logging for, the same injection discipline as the
+warm-up probe (ADR-0019).
 """
 
 import logging
@@ -18,10 +17,6 @@ from typing import Any
 
 import structlog
 from structlog.types import EventDict
-
-from intelliai_tts_runtime import __version__
-from intelliai_tts_runtime.config import Settings
-from intelliai_tts_runtime.identity import SERVICE_NAME
 
 _SENSITIVE_KEY_MARKERS = (
     "password",
@@ -43,22 +38,23 @@ def _redact(_: Any, __: str, event_dict: EventDict) -> EventDict:
     return event_dict
 
 
-def _service_context(_: Any, __: str, event_dict: EventDict) -> EventDict:
-    event_dict.setdefault("service", SERVICE_NAME)
-    event_dict.setdefault("service_version", __version__)
-    return event_dict
+def configure_logging(
+    *, service: str, service_version: str, log_level: str, console_logs: bool
+) -> None:
+    def service_context(_: Any, __: str, event_dict: EventDict) -> EventDict:
+        event_dict.setdefault("service", service)
+        event_dict.setdefault("service_version", service_version)
+        return event_dict
 
-
-def configure_logging(settings: Settings) -> None:
     shared: list[structlog.types.Processor] = [
         structlog.contextvars.merge_contextvars,
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso", utc=True, key="timestamp"),
-        _service_context,
+        service_context,
         _redact,
     ]
     renderer: structlog.types.Processor
-    if settings.console_logs:
+    if console_logs:
         renderer = structlog.dev.ConsoleRenderer()
         tail: list[structlog.types.Processor] = [renderer]
     else:
@@ -67,7 +63,7 @@ def configure_logging(settings: Settings) -> None:
 
     structlog.configure(
         processors=[*shared, *tail],
-        wrapper_class=structlog.make_filtering_bound_logger(getattr(logging, settings.log_level)),
+        wrapper_class=structlog.make_filtering_bound_logger(getattr(logging, log_level)),
         logger_factory=structlog.PrintLoggerFactory(file=sys.stdout),
         cache_logger_on_first_use=False,
     )
@@ -81,7 +77,7 @@ def configure_logging(settings: Settings) -> None:
     root = logging.getLogger()
     root.handlers.clear()
     root.addHandler(handler)
-    root.setLevel(settings.log_level)
+    root.setLevel(log_level)
 
     for name in ("uvicorn", "uvicorn.error"):
         server_logger = logging.getLogger(name)

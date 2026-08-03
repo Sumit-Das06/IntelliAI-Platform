@@ -8,6 +8,7 @@ injected by each runtime. The boundary test suite enforces this in CI.
 """
 
 from intelliai_runtime_core.failures import RuntimeServiceError
+from intelliai_runtime_core.logging import configure_logging
 from intelliai_runtime_core.manager import (
     DEFAULT_SLOT,
     LoadedModel,
@@ -29,5 +30,6 @@ __all__ = [
     "SlotSpec",
     "SupportsClose",
     "WorkerPool",
+    "configure_logging",
     "sha256_file",
 ]

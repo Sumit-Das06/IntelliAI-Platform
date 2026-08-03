@@ -626,7 +626,7 @@ dev = [{ name = "pytest", specifier = ">=8" }]
 
 [[package]]
 name = "intelliai-runtime-core"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "packages/runtime-core" }
 dependencies = [
     { name = "httpx" },

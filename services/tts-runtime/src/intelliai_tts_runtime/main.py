@@ -12,14 +12,14 @@ from contextlib import asynccontextmanager
 import structlog
 from fastapi import FastAPI, Request, Response
 
-from intelliai_runtime_core import ModelManager, SlotSpec, WorkerPool
-from intelliai_tts_runtime import voices
+from intelliai_runtime_core import ModelManager, SlotSpec, WorkerPool, configure_logging
+from intelliai_tts_runtime import __version__, voices
 from intelliai_tts_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_tts_runtime.api.errors import register_error_handlers
 from intelliai_tts_runtime.api.routes import router
 from intelliai_tts_runtime.config import Settings
 from intelliai_tts_runtime.engines import SynthesisEngine, reference
-from intelliai_tts_runtime.logging import configure_logging
+from intelliai_tts_runtime.identity import SERVICE_NAME
 from intelliai_tts_runtime.pipeline import TextPipeline
 
 
@@ -54,7 +54,12 @@ def build_manager(settings: Settings) -> ModelManager[SynthesisEngine]:
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
-    configure_logging(settings)
+    configure_logging(
+        service=SERVICE_NAME,
+        service_version=__version__,
+        log_level=settings.log_level,
+        console_logs=settings.console_logs,
+    )
     manager = build_manager(settings)
     pipeline = TextPipeline(max_text_chars=settings.max_text_chars)
     pool = WorkerPool(max_concurrency=settings.max_concurrency, max_queue=settings.max_queue)

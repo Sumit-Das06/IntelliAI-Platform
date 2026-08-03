@@ -15,13 +15,20 @@ import structlog
 from fastapi import FastAPI, Request, Response
 
 from intelliai_runtime_contract import TranscriptionRequest
-from intelliai_runtime_core import ArtifactStore, ModelManager, SlotSpec, WorkerPool
+from intelliai_runtime_core import (
+    ArtifactStore,
+    ModelManager,
+    SlotSpec,
+    WorkerPool,
+    configure_logging,
+)
+from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_stt_runtime.api.errors import register_error_handlers
 from intelliai_stt_runtime.api.routes import router
 from intelliai_stt_runtime.config import Settings
 from intelliai_stt_runtime.engines import TranscriptionEngine, reference, whisper
-from intelliai_stt_runtime.logging import configure_logging
+from intelliai_stt_runtime.identity import SERVICE_NAME
 from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline, canonical_audio
 
 # Half a second of gentle deterministic non-silence: enough to push a real
@@ -87,7 +94,12 @@ def build_pipeline(settings: Settings) -> MediaPipeline:
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
-    configure_logging(settings)
+    configure_logging(
+        service=SERVICE_NAME,
+        service_version=__version__,
+        log_level=settings.log_level,
+        console_logs=settings.console_logs,
+    )
     manager = build_manager(settings)
     pipeline = build_pipeline(settings)
     pool = WorkerPool(max_concurrency=settings.max_concurrency, max_queue=settings.max_queue)
