@@ -252,6 +252,38 @@ Voice (public)    catalog record → asset → representation
 
 ## 7. Evaluation integration — M2.5 plugs in with zero framework changes
 
+**The three permanent planes (recorded at Step 5 close, 2026-08-03).**
+The platform now consists of three planes, and the boundary between them
+is architectural law:
+
+- **Inference Plane** — serves customer requests (runtimes, engines,
+  artifacts). Optimized for latency, capacity, and honesty under load.
+- **Evaluation Plane** — produces evidence about model behavior (corpus,
+  runner, judges, metrics, the immutable ledger). Optimized for
+  reproducibility and permanence.
+- **Control Plane** — decides what should serve customers (registry,
+  license gate, catalog, routing; the gateway is its enforcement point).
+
+**Evaluation never participates in inference and never makes deployment
+decisions directly.** No inference path invokes evaluation code;
+inference code does not know evaluation exists. No evaluation output
+mutates routing; the ledger records, it never decides. The causal chain
+runs one direction only:
+
+```
+Serving creates evidence.
+Evidence informs promotion.
+Promotion changes registry state.
+Registry changes routing.
+```
+
+Every future arrival — multiple engines behind one public model,
+fine-tuned artifacts climbing the ladder, cloned voices, Registry V2's
+promotion workflows — plugs into this chain at exactly one link: new
+engines create evidence through the evaluation plane's adapters;
+promotion decisions cite that evidence and land as registry record
+changes; routing follows the registry. Nothing ever shortcuts a link.
+
 ```
 run_speech_eval (frozen)
   ├─ SynthesisSource ← HttpTtsSynthesisSource   NEW: ~30 lines. POSTs the binding,

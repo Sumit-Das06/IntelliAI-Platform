@@ -1,0 +1,438 @@
+{
+  "corpus_name": "tts-eval-seed",
+  "corpus_version": 1,
+  "methodology_version": 1,
+  "evaluated": {
+    "artifact": "kokoro-82m",
+    "version": 1,
+    "lineage": "kokoro"
+  },
+  "judge": {
+    "capability": "transcription",
+    "artifact": "whisper-small",
+    "version": 1,
+    "runtime_version": "0.1.0"
+  },
+  "runtime": {
+    "service": "tts-runtime",
+    "service_version": "0.1.0"
+  },
+  "hardware": "Intel Core i7-14650HX (Windows 11, native)",
+  "run_at": "2026-08-03T14:53:30.329224Z",
+  "synthesis_params": {
+    "voice": "reference-alto"
+  },
+  "cases": [
+    {
+      "case_id": "en-general-01",
+      "transcript": "The quick brown fox jumps over the lazy dog near the riverbank.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3783783783783784,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 2892.034800024703,
+        "rtf": 0.6535671864462607,
+        "round_trip_wer": 0.15384615384615385
+      },
+      "failure": null,
+      "reference_words": 13,
+      "word_errors": 2
+    },
+    {
+      "case_id": "en-general-02",
+      "transcript": "Please review the attached document and share your feedback by tomorrow evening.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3619631901840491,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 892.6459000213072,
+        "rtf": 0.18310685128642198,
+        "round_trip_wer": 0.0
+      },
+      "failure": null,
+      "reference_words": 12,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-numbers-01",
+      "transcript": "The invoice total is $1247 for 38 units.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3475609756097561,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 883.9485999778844,
+        "rtf": 0.18039767346487437,
+        "round_trip_wer": 0.1111111111111111,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 1
+    },
+    {
+      "case_id": "en-numbers-02",
+      "transcript": "Flight 204 departs at 9.45 in the morning.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.35555555555555557,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 755.1947999745607,
+        "rtf": 0.18646785184557055,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-dates-01",
+      "transcript": "The meeting is scheduled for August 3, 2026, at half past 10.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.35502958579881655,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 953.0707999947481,
+        "rtf": 0.18872689108806892,
+        "round_trip_wer": 0.08333333333333333,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 12,
+      "word_errors": 1
+    },
+    {
+      "case_id": "en-dates-02",
+      "transcript": "Her passport expires on 15 March, 2031.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.37209302325581395,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 747.8584999917075,
+        "rtf": 0.19424896103680714,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 7,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-currency-01",
+      "transcript": "The subscription costs $4.99 per month or 399 rupees per year.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.30416666666666664,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1250.359199999366,
+        "rtf": 0.17366099999991194,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 12,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-urls-01",
+      "transcript": "Check ExampleCom for the latest updates.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.38461538461538464,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 640.8338000182994,
+        "rtf": 0.2067205806510643,
+        "round_trip_wer": 0.375,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 3
+    },
+    {
+      "case_id": "en-emails-01",
+      "transcript": "Send your resume to careers at example com by Monday",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3308270676691729,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 757.5249000219628,
+        "rtf": 0.1905723018923177,
+        "round_trip_wer": 0.1111111111111111,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 1
+    },
+    {
+      "case_id": "en-technical-01",
+      "transcript": "The API Gateway routes requests to the inference Runtime over HTTP.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.32558139534883723,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 966.0173999727704,
+        "rtf": 0.18757619416946997,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-technical-02",
+      "transcript": "Latency dropped after we enabled caching and connection pooling.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3401360544217687,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 829.5093000051565,
+        "rtf": 0.18852484091026284,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 0
+    },
+    {
+      "case_id": "hi-general-01",
+      "transcript": "स्देर, स्देर",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5510204081632653,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 473.91249996144325,
+        "rtf": 0.32683620686996084,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 11
+    },
+    {
+      "case_id": "hi-general-02",
+      "transcript": "से लेवे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5483870967741935,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 267.03520002774894,
+        "rtf": 0.28868670273270153,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-conjuncts-01",
+      "transcript": "स्देसा है ये",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5277777777777778,
+        "duration_plausibility": 0.0,
+        "synthesis_latency_ms": 328.22640001541004,
+        "rtf": 0.3053268837352652,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 9
+    },
+    {
+      "case_id": "hi-conjuncts-02",
+      "transcript": "स्दिसा है ये",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5277777777777778,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 287.5861000502482,
+        "rtf": 0.2675219535351146,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 9
+    },
+    {
+      "case_id": "hi-matras-01",
+      "transcript": "से लेवे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5161290322580645,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 235.18959997454658,
+        "rtf": 0.2542590269995098,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-matras-02",
+      "transcript": "से लेवे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5483870967741935,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 235.00280000735074,
+        "rtf": 0.2540570810890278,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-numbers-01",
+      "transcript": "250, 199",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3358208955223881,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 760.7254000031389,
+        "rtf": 0.19018135000078473,
+        "round_trip_wer": 0.8461538461538461,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 13,
+      "word_errors": 11
+    },
+    {
+      "case_id": "hi-numbers-02",
+      "transcript": "12,951.630",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.39285714285714285,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 849.0254999487661,
+        "rtf": 0.2033594011853332,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 11
+    },
+    {
+      "case_id": "hi-propernames-01",
+      "transcript": "स्देवे.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5483870967741935,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 251.48099998477846,
+        "rtf": 0.27187135133489565,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-propernames-02",
+      "transcript": "ती आँँँँँँँ",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.46153846153846156,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 2348.774499958381,
+        "rtf": 2.042412608659462,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 7,
+      "word_errors": 7
+    },
+    {
+      "case_id": "mixed-codemix-01",
+      "transcript": "A laptop Python install.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.47368421052631576,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 582.2491000290029,
+        "rtf": 0.2061058761164612,
+        "round_trip_wer": 0.7272727272727273,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 8
+    },
+    {
+      "case_id": "mixed-codemix-02",
+      "transcript": "Meeting a report, please.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.43902439024390244,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 541.4198000216857,
+        "rtf": 0.22098767347823903,
+        "round_trip_wer": 0.625,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 5
+    },
+    {
+      "case_id": "mixed-api-01",
+      "transcript": "API key, request unauthorized.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.4017857142857143,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 701.2951000360772,
+        "rtf": 0.2093418209062917,
+        "round_trip_wer": 0.5,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 4
+    },
+    {
+      "case_id": "mixed-programming-01",
+      "transcript": "Function call variable initialize.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3564356435643564,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 620.1409000204876,
+        "rtf": 0.20500525620511986,
+        "round_trip_wer": 0.6,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 10,
+      "word_errors": 6
+    }
+  ],
+  "aggregate_metrics": {
+    "clipping_ratio": 0.0,
+    "silence_ratio": 0.4193968008936779,
+    "duration_plausibility": 0.96,
+    "synthesis_latency_ms": 802.0424760016613,
+    "rtf": 0.31118094102556787,
+    "pronunciation_accuracy": 0.5217391304347826,
+    "round_trip_wer": 0.5041666666666667
+  },
+  "human": null,
+  "comparison": null,
+  "baseline_name": null,
+  "notes": "Reproducibility exercise (M3 step 6): regenerates the evidence behind baseline 2026-08-03-kokoro-82m-cpu-v1 from committed inputs and recorded metadata via the speech-eval CLI. Judge served by the compose stt-runtime container; the baseline used a local uvicorn judge - same artifact, same version. Latencies are measurements of the moment; transcripts and WER are properties of the artifacts."
+}

@@ -7,10 +7,19 @@ import asyncio
 import json
 from pathlib import Path
 
+import httpx
+
 from intelliai_evaluation import bench
+from intelliai_evaluation.corpus import load_corpus
 from intelliai_evaluation.dataset import load_dataset
 from intelliai_evaluation.fetch import materialize
 from intelliai_evaluation.runner import run_stt_eval
+from intelliai_evaluation.speech_results import EvaluatedArtifact, RuntimeIdentity
+from intelliai_evaluation.speech_runner import (
+    HttpSttJudge,
+    HttpTtsSynthesisSource,
+    run_speech_eval,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,10 +72,37 @@ def main(argv: list[str] | None = None) -> int:
     bench_parser.add_argument("--timeout", type=float, default=600.0)
     bench_parser.add_argument("--out", type=Path, required=True)
 
+    speech_parser = subcommands.add_parser(
+        "speech-eval",
+        help="evaluate a live synthesis runtime against a corpus and record the evidence",
+    )
+    speech_parser.add_argument("--corpus", type=Path, required=True, help="corpus JSON path")
+    speech_parser.add_argument("--tts-url", default="http://localhost:8002")
+    speech_parser.add_argument("--stt-url", default="http://localhost:8001", help="judge runtime")
+    speech_parser.add_argument(
+        "--artifact", required=True, help="evaluated artifact id, e.g. kokoro-82m"
+    )
+    speech_parser.add_argument("--artifact-version", type=int, default=1)
+    speech_parser.add_argument("--lineage", required=True, help="model family, e.g. kokoro")
+    speech_parser.add_argument("--judge-artifact", default="whisper-small")
+    speech_parser.add_argument("--judge-version", type=int, default=1)
+    speech_parser.add_argument("--voice", default=None, help="public voice id (synthesis param)")
+    speech_parser.add_argument("--speed", type=float, default=None)
+    speech_parser.add_argument("--hardware", required=True, help="human description of the machine")
+    speech_parser.add_argument(
+        "--baseline-name", default=None, help="set ONLY when this run IS a named baseline"
+    )
+    speech_parser.add_argument("--notes", default="")
+    speech_parser.add_argument(
+        "--out", type=Path, required=True, help="result JSON path (append-only results/ dir)"
+    )
+
     args = parser.parse_args(argv)
 
     if args.command == "bench":
         return _run_bench(args)
+    if args.command == "speech-eval":
+        return _run_speech_eval(args)
 
     dataset = load_dataset(args.dataset)
 
@@ -97,6 +133,62 @@ def main(argv: list[str] | None = None) -> int:
             f"  {clip.clip_id:<16} wer={wer:<6} rtf={clip.rtf:.3f} "
             f"hallucinated={clip.hallucinated_words}"
         )
+    print(f"recorded: {args.out}")
+    return 0
+
+
+def _run_speech_eval(args: argparse.Namespace) -> int:
+    """Corpus + two live runtimes -> one immutable evidence record.
+
+    Reproducibility metadata is taken from LIVE facts, never operator
+    claims: both runtimes' /info supply service identity, and the run
+    refuses to start if the synthesis runtime is not actually serving the
+    artifact being evaluated — a record that misnames its subject would
+    poison the ledger."""
+    corpus = load_corpus(args.corpus)
+
+    tts_info = httpx.get(f"{args.tts_url}/info", timeout=30).json()
+    served = {model["artifact"] for model in tts_info["models"]}
+    if args.artifact not in served:
+        print(f"refusing: runtime at {args.tts_url} serves {sorted(served)}, not {args.artifact!r}")
+        return 2
+    stt_info = httpx.get(f"{args.stt_url}/info", timeout=30).json()
+
+    synthesis_params: dict[str, str] = {}
+    if args.voice is not None:
+        synthesis_params["voice"] = args.voice
+    if args.speed is not None:
+        synthesis_params["speed"] = str(args.speed)
+
+    run = run_speech_eval(
+        corpus=corpus,
+        source=HttpTtsSynthesisSource(args.tts_url),
+        judge=HttpSttJudge(
+            args.stt_url,
+            judge_artifact=args.judge_artifact,
+            judge_artifact_version=args.judge_version,
+            runtime_version=stt_info["service_version"],
+        ),
+        evaluated=EvaluatedArtifact(
+            artifact=args.artifact, version=args.artifact_version, lineage=args.lineage
+        ),
+        runtime=RuntimeIdentity(
+            service=tts_info["service"], service_version=tts_info["service_version"]
+        ),
+        hardware=args.hardware,
+        synthesis_params=synthesis_params,
+        baseline_name=args.baseline_name,
+        notes=args.notes,
+    )
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(run.model_dump_json(indent=2) + "\n", encoding="utf-8")
+
+    failures = [case for case in run.cases if case.failure]
+    print(f"{corpus.name}@v{corpus.version}: {len(run.cases)} cases, {len(failures)} failed")
+    for case in failures:
+        print(f"  FAIL {case.case_id}: {case.failure}")
+    for name, value in sorted(run.aggregate_metrics.items()):
+        print(f"  {name}: {value:.4f}")
     print(f"recorded: {args.out}")
     return 0
 

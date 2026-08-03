@@ -91,3 +91,29 @@ under `stt/results/` (small, text, append-only): one file per run,
 named `YYYY-MM-DD-<artifact>.json`. Aggregates: word-weighted overall
 WER across non-empty-reference clips; mean RTF; total hallucinated words
 on empty-reference clips.
+
+### Speech synthesis evaluation (the reproducible workflow)
+
+One command turns a committed corpus plus two live runtimes into one
+immutable `SpeechEvalRun`. Reproducibility metadata is taken from live
+facts (`/info` of both runtimes), and the run refuses to start if the
+synthesis runtime is not serving the artifact named — a record that
+misnames its subject would poison the ledger.
+
+```bash
+# Runtimes: tts-runtime with the evaluated engine, stt-runtime (whisper)
+# as the judge. This exact command regenerates the kokoro-82m baseline
+# evidence (latencies are measurements of the moment; transcripts and
+# WER are properties of the artifacts and should reproduce):
+uv run --package intelliai-evaluation python -m intelliai_evaluation speech-eval \
+  --corpus ml/evaluation/tts/corpora/tts-eval-v1.json \
+  --tts-url http://localhost:8002 --stt-url http://localhost:8001 \
+  --artifact kokoro-82m --lineage kokoro --voice reference-alto \
+  --hardware "<cpu description>" \
+  --out ml/evaluation/tts/results/<date>-<artifact>.json
+```
+
+Ledger law (SPEECH_EVALUATION.md §5): `tts/results/` is append-only —
+re-runs and corrections are NEW records citing the old (`--notes`,
+`--baseline-name` only when a run is christened a named baseline);
+comparisons are valid only within one judge identity.
