@@ -22,6 +22,7 @@ class UsageUnit(StrEnum):
     that bills in them."""
 
     AUDIO_SECONDS = "audio_seconds"
+    CHARACTERS = "characters"
 
 
 class Usage(ContractModel):

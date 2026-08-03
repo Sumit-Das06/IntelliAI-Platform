@@ -14,3 +14,4 @@ class Capability(StrEnum):
     """Primitive capabilities the platform serves (CAPABILITIES.md)."""
 
     TRANSCRIPTION = "transcription"
+    SPEECH_SYNTHESIS = "speech_synthesis"

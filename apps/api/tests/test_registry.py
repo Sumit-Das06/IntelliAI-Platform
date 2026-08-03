@@ -107,10 +107,13 @@ class TestCatalogIntegrity:
         with pytest.raises(ValueError, match="unknown artifact"):
             Registry(artifacts=[artifact()], models=[model(artifact_id="missing")])
 
-    # NOTE: the Registry also rejects a public model whose capability differs
-    # from its artifact's. With a single Capability member the mismatch is
-    # unconstructible, so that branch becomes testable when M3 adds the second
-    # member — add the test in the same change.
+    def test_route_to_wrong_capability_artifact_cannot_compose(self) -> None:
+        # Promised at M2 step 2: with a single Capability member this
+        # mismatch was unconstructible; SPEECH_SYNTHESIS makes the guard
+        # finally provable.
+        tts_artifact = artifact(id="synthesis-model", capability=Capability.SPEECH_SYNTHESIS)
+        with pytest.raises(ValueError, match="different capability"):
+            Registry(artifacts=[tts_artifact], models=[model(artifact_id="synthesis-model")])
 
     def test_duplicate_ids_cannot_compose(self) -> None:
         with pytest.raises(ValueError, match="duplicate artifact"):

@@ -19,6 +19,7 @@ class TestUsage:
     def test_unit_vocabulary_is_exactly_this(self) -> None:
         assert {member.name: member.value for member in UsageUnit} == {
             "AUDIO_SECONDS": "audio_seconds",
+            "CHARACTERS": "characters",
         }
 
     def test_amount_never_negative(self) -> None:

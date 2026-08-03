@@ -16,6 +16,7 @@ class TestCapabilityGolden:
     def test_complete_vocabulary_is_exactly_this(self) -> None:
         assert {member.name: member.value for member in Capability} == {
             "TRANSCRIPTION": "transcription",
+            "SPEECH_SYNTHESIS": "speech_synthesis",
         }
 
     def test_values_are_lowercase_snake_case(self) -> None:

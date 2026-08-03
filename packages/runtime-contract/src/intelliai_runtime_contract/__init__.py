@@ -15,6 +15,11 @@ from intelliai_runtime_contract.envelopes import (
 )
 from intelliai_runtime_contract.errors import RuntimeErrorResponse, RuntimeErrorType
 from intelliai_runtime_contract.metadata import RuntimeMetadata
+from intelliai_runtime_contract.speech_synthesis import (
+    SpeechSynthesisRequest,
+    SpeechSynthesisResponse,
+    SpeechSynthesisResult,
+)
 from intelliai_runtime_contract.transcription import (
     TranscriptionRequest,
     TranscriptionResponse,
@@ -23,7 +28,7 @@ from intelliai_runtime_contract.transcription import (
 )
 from intelliai_runtime_contract.version import CONTRACT_VERSION
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "CONTRACT_VERSION",
@@ -34,6 +39,9 @@ __all__ = [
     "RuntimeMetadata",
     "RuntimeResponse",
     "RuntimeTiming",
+    "SpeechSynthesisRequest",
+    "SpeechSynthesisResponse",
+    "SpeechSynthesisResult",
     "TranscriptionRequest",
     "TranscriptionResponse",
     "TranscriptionResult",
