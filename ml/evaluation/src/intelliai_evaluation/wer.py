@@ -51,13 +51,22 @@ class WerBreakdown:
 def word_error_rate(reference: str, hypothesis: str) -> WerBreakdown:
     """Align normalized word sequences (Levenshtein) and count operations.
 
+    Behavior frozen since M2 step 0 (English-oriented normalization).
+    The alignment core is shared via ``align_words``; other metrics (e.g.
+    speech round-trip, which needs Unicode-aware normalization) reuse the
+    SAME alignment with their OWN normalization — a new metric name, never
+    a change to this one.
+    """
+    return align_words(normalize_words(reference), normalize_words(hypothesis))
+
+
+def align_words(ref: list[str], hyp: list[str]) -> WerBreakdown:
+    """The pure alignment core: pre-normalized tokens in, counts out.
+
     Tie-breaking is deterministic (substitution over deletion over
     insertion at equal cost) so identical inputs always produce identical
     breakdowns across runs and machines.
     """
-    ref = normalize_words(reference)
-    hyp = normalize_words(hypothesis)
-
     # dp rows of (cost, substitutions, insertions, deletions)
     previous: list[tuple[int, int, int, int]] = [(j, 0, j, 0) for j in range(len(hyp) + 1)]
 
