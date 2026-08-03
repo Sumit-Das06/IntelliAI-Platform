@@ -116,7 +116,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     # AOF persistence so rate-limit/cache state survives dev restarts.
     command: ["redis-server", "--appendonly", "yes"]
     ports:
