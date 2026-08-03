@@ -25,3 +25,4 @@ Write the ADR *before* the decision lands; **supersede rather than edit**
 | [0015](0015-hardware-agnostic-architecture-cpu-first-deployment.md) | Hardware-agnostic architecture; CPU-first deployment posture | Accepted | 2026-07-31 | — | 0002, 0003, supersedes 0004 |
 | [0016](0016-runtime-contract-language.md) | Runtime contract as a permanent transport-free language: frozen capability enums, operational-only metadata, gateway/runtime ownership boundaries | Accepted | 2026-08-02 | — | 0002, 0003, 0009, 0015 |
 | [0017](0017-registry-v1-code-declarative-resolution.md) | Registry V1: code-declarative, resolution-only model registry in the gateway; license gate at composition | Accepted | 2026-08-02 | — | 0003, 0005, 0016 |
+| [0018](0018-runtime-serving-architecture.md) | Runtime serving architecture: managed lifecycle, bounded admission, weights as verified cache (measured evidence attached) | Accepted | 2026-08-03 | — | 0002, 0015, 0016, 0017 |
