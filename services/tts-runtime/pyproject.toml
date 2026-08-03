@@ -17,6 +17,15 @@ dependencies = [
     "intelliai-runtime-core",
 ]
 
+[project.optional-dependencies]
+# One extra per engine family; installed where that engine actually runs
+# (dev machines, inference deployments) — never in CI, never implicitly.
+# Pinned exactly: the artifact spec's meaning depends on the inference
+# code that loads it.
+kokoro = [
+    "kokoro>=0.9.4",
+]
+
 [tool.uv.sources]
 intelliai-runtime-contract = { workspace = true }
 intelliai-runtime-core = { workspace = true }

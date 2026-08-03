@@ -25,7 +25,7 @@ from intelliai_runtime_contract import (
     UsageUnit,
 )
 from intelliai_runtime_core import ModelManager, WorkerPool
-from intelliai_tts_runtime import __version__, voices
+from intelliai_tts_runtime import __version__
 from intelliai_tts_runtime.api.binding import (
     HEADER_CONTRACT_VERSION,
     HEADER_RUNTIME_ENVELOPE,
@@ -36,6 +36,7 @@ from intelliai_tts_runtime.api.wav import encode_wav
 from intelliai_tts_runtime.engines import SynthesisEngine, SynthesizedAudio
 from intelliai_tts_runtime.identity import SERVICE_NAME, runtime_metadata
 from intelliai_tts_runtime.pipeline import TextPipeline
+from intelliai_tts_runtime.voices import VoiceMap
 
 logger = structlog.get_logger(__name__)
 router = APIRouter()
@@ -62,6 +63,7 @@ async def info(request: Request) -> dict[str, Any]:
     manager: ModelManager[SynthesisEngine] = request.app.state.manager
     pool: WorkerPool = request.app.state.pool
     settings = request.app.state.settings
+    voice_map: VoiceMap = request.app.state.voices
     return {
         "pool": {
             "admitted": pool.admitted,
@@ -72,7 +74,7 @@ async def info(request: Request) -> dict[str, Any]:
         "service_version": __version__,
         "contract_version": CONTRACT_VERSION,
         "capability": str(Capability.SPEECH_SYNTHESIS),
-        "voices": list(voices.voice_ids()),
+        "voices": list(voice_map.voice_ids()),
         "models": [
             {
                 "slot": loaded.slot,
@@ -114,11 +116,12 @@ async def synthesize(request: Request, synthesis_request: SpeechSynthesisRequest
     manager: ModelManager[SynthesisEngine] = request.app.state.manager
     pipeline: TextPipeline = request.app.state.pipeline
     pool: WorkerPool = request.app.state.pool
+    voice_map: VoiceMap = request.app.state.voices
 
     loaded = manager.lookup(synthesis_request.model)
 
     resolution_started = time.perf_counter()
-    public_voice, engine_voice = voices.resolve(synthesis_request.voice)
+    public_voice, engine_voice = voice_map.resolve(synthesis_request.voice)
     resolution_ms = (time.perf_counter() - resolution_started) * 1000.0
 
     # Admission happens BEFORE any expensive work: validation, synthesis,

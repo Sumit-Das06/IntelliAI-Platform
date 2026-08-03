@@ -12,44 +12,66 @@ from contextlib import asynccontextmanager
 import structlog
 from fastapi import FastAPI, Request, Response
 
-from intelliai_runtime_core import ModelManager, SlotSpec, WorkerPool, configure_logging
+from intelliai_runtime_core import (
+    ArtifactStore,
+    ModelManager,
+    SlotSpec,
+    WorkerPool,
+    configure_logging,
+)
 from intelliai_tts_runtime import __version__, voices
 from intelliai_tts_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_tts_runtime.api.errors import register_error_handlers
 from intelliai_tts_runtime.api.routes import router
 from intelliai_tts_runtime.config import Settings
-from intelliai_tts_runtime.engines import SynthesisEngine, reference
+from intelliai_tts_runtime.engines import SynthesisEngine, kokoro, reference
 from intelliai_tts_runtime.identity import SERVICE_NAME
 from intelliai_tts_runtime.pipeline import TextPipeline
+from intelliai_tts_runtime.voices import VoiceMap
 
 
-def synthesis_warm_up(engine: SynthesisEngine) -> None:
+def make_synthesis_warm_up(voice_map: VoiceMap) -> Callable[[SynthesisEngine], None]:
     """This runtime's capability-defined warm-up probe (ADR-0019).
 
     The lifecycle machinery guarantees the probe runs once per engine
     before serving; what probing MEANS is synthesis's business: one
     inference of a short fixed sentence through the default voice, so
     lazy initialization is paid at startup, never by the first request."""
-    _, engine_voice = voices.resolve(None)
-    engine.synthesize("Warm-up.", engine_voice, None)
+
+    def synthesis_warm_up(engine: SynthesisEngine) -> None:
+        _, engine_voice = voice_map.resolve(None)
+        engine.synthesize("Warm-up.", engine_voice, None)
+
+    return synthesis_warm_up
 
 
 def build_manager(settings: Settings) -> ModelManager[SynthesisEngine]:
     """Settings-driven slot configuration.
 
     The default slot binds whichever engine deployment chose; the engines
-    module owns everything model-specific. The reference engine needs no
-    weights, so no ArtifactStore is wired yet — the Kokoro engine (step 4)
-    brings its hash-pinned artifact spec and the store with it.
+    module owns everything model-specific (files, hashes, library import).
+    Adding an engine here = one SlotSpec line, nothing else on the platform.
     """
-    slots: tuple[SlotSpec[SynthesisEngine], ...] = (
+    warm_up = make_synthesis_warm_up(voices.for_engine(settings.default_engine))
+    slots: tuple[SlotSpec[SynthesisEngine], ...]
+    if settings.default_engine == "kokoro":
+        slots = (
+            SlotSpec(
+                slot="default",
+                artifact=kokoro.ARTIFACT_ID,
+                load=kokoro.load_kokoro,
+                files=kokoro.KOKORO_FILES,
+            ),
+        )
+        return ModelManager(slots=slots, store=ArtifactStore(settings.model_dir), warm_up=warm_up)
+    slots = (
         SlotSpec(
             slot="default",
             artifact=reference.ARTIFACT_ID,
             load=lambda _: reference.load_reference_synthesis_engine(),
         ),
     )
-    return ModelManager(slots=slots, warm_up=synthesis_warm_up)
+    return ModelManager(slots=slots, warm_up=warm_up)
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -63,6 +85,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     manager = build_manager(settings)
     pipeline = TextPipeline(max_text_chars=settings.max_text_chars)
     pool = WorkerPool(max_concurrency=settings.max_concurrency, max_queue=settings.max_queue)
+    voice_map = voices.for_engine(settings.default_engine)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -76,6 +99,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.manager = manager
     app.state.pipeline = pipeline
     app.state.pool = pool
+    app.state.voices = voice_map
 
     @app.middleware("http")
     async def request_context(

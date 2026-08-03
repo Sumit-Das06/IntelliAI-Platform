@@ -7,6 +7,7 @@ contract requires non-empty text; how MUCH text one request may carry is
 deployment policy.
 """
 
+from pathlib import Path
 from typing import Literal
 
 from pydantic import Field
@@ -33,6 +34,7 @@ class Settings(BaseSettings):
 
     # ── Model serving ───────────────────────────────────────────────────
     # Which engine the default slot binds. "reference" needs no weights
-    # (CI, tests); the Kokoro engine arrives as the next Literal member
-    # with its own optional extra and artifact spec (M3 step 4).
-    default_engine: Literal["reference"] = "reference"
+    # (CI, tests); "kokoro" requires the `kokoro` extra and downloads the
+    # hash-pinned artifact (weights + voice packs) on first startup.
+    default_engine: Literal["reference", "kokoro"] = "reference"
+    model_dir: Path = Path("models")  # ArtifactStore root (gitignored)

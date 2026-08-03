@@ -119,9 +119,15 @@ def test_service_dependencies_are_provider_independent() -> None:
             f"library {lib!r} in service dependencies — engine libraries "
             "are engine-owned extras; phonemizers are banned outright"
         )
-    # The skeleton declares NO extras at all: the kokoro extra arrives
-    # with the Kokoro engine (step 4), never speculatively.
-    assert "optional-dependencies" not in pyproject["project"]
+    # Engine libraries live in engine-owned extras ONLY, and no extra may
+    # name a GPL phonemizer directly (the transitive presence on disk is
+    # neutralized by the engine's license firewall — see engines/kokoro.py).
+    extras = pyproject["project"]["optional-dependencies"]
+    assert set(extras) == {"kokoro"}
+    assert any(dep.startswith("kokoro") for dep in extras["kokoro"])
+    extra_deps = " ".join(dep for deps in extras.values() for dep in deps).lower()
+    for lib in GPL_PHONEMIZER_LIBS:
+        assert lib.replace("_", "-") not in extra_deps
 
 
 def test_no_voice_or_model_assets_in_the_repo() -> None:

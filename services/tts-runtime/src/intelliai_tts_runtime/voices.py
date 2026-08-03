@@ -6,13 +6,16 @@ this module owns how a public voice id becomes something an engine can
 render. Engine references never cross this boundary outward; public ids
 never cross it inward past this point.
 
-The skeleton's voices are deliberately NON-product placeholder names
-("reference-*"): launch voice naming is a founder decision that binds
-with the first real engine, and nothing here may pre-empt it. When the
-Kokoro engine arrives, this map becomes deployment configuration keyed
-by the same resolve() seam.
+Public ids are deliberately NON-product placeholders (founder decision
+2026-08-03: placeholders until the launch voices have been listened to —
+engineering does not wait on branding). The voice-rebinding law, live:
+**every engine serves the SAME public ids** — switching the engine
+rebinds voices, never renames them, so the API surface is identical
+whether the reference engine or Kokoro is deployed.
 """
 
+from collections.abc import Mapping
+from dataclasses import dataclass
 from typing import Final
 
 from intelliai_runtime_contract import RuntimeErrorType
@@ -20,27 +23,49 @@ from intelliai_runtime_core import RuntimeServiceError
 
 DEFAULT_VOICE: Final = "reference-alto"
 
-# public voice id -> engine voice reference. The reference engine renders
-# "tone:<base-hz>" references; real engines get their own reference forms.
-_VOICES: Final[dict[str, str]] = {
-    "reference-alto": "tone:440",
-    "reference-bass": "tone:220",
+
+@dataclass(frozen=True)
+class VoiceMap:
+    """One engine's bindings: public voice id -> engine voice reference."""
+
+    default_voice: str
+    bindings: Mapping[str, str]
+
+    def resolve(self, voice: str | None) -> tuple[str, str]:
+        """None -> the default voice, made visible: (public_id, engine_ref)."""
+        public_id = voice if voice is not None else self.default_voice
+        engine_ref = self.bindings.get(public_id)
+        if engine_ref is None:
+            raise RuntimeServiceError(
+                RuntimeErrorType.INVALID_INPUT,
+                f"voice {public_id!r} is not served by this runtime",
+                param="voice",
+            )
+        return public_id, engine_ref
+
+    def voice_ids(self) -> tuple[str, ...]:
+        """Public identifiers this runtime serves (operational introspection)."""
+        return tuple(self.bindings)
+
+
+REFERENCE_VOICES: Final = VoiceMap(
+    default_voice=DEFAULT_VOICE,
+    bindings={"reference-alto": "tone:440", "reference-bass": "tone:220"},
+)
+
+# The same PUBLIC identities, served by Kokoro voice packs (the engine
+# references name hash-pinned artifact files, never anything customers see).
+KOKORO_VOICES: Final = VoiceMap(
+    default_voice=DEFAULT_VOICE,
+    bindings={"reference-alto": "af_heart", "reference-bass": "am_michael"},
+)
+
+_BY_ENGINE: Final[dict[str, VoiceMap]] = {
+    "reference": REFERENCE_VOICES,
+    "kokoro": KOKORO_VOICES,
 }
 
 
-def resolve(voice: str | None) -> tuple[str, str]:
-    """None -> the default voice, made visible: returns (public_id, engine_ref)."""
-    public_id = voice if voice is not None else DEFAULT_VOICE
-    engine_ref = _VOICES.get(public_id)
-    if engine_ref is None:
-        raise RuntimeServiceError(
-            RuntimeErrorType.INVALID_INPUT,
-            f"voice {public_id!r} is not served by this runtime",
-            param="voice",
-        )
-    return public_id, engine_ref
-
-
-def voice_ids() -> tuple[str, ...]:
-    """Public identifiers this runtime serves (operational introspection)."""
-    return tuple(_VOICES)
+def for_engine(engine: str) -> VoiceMap:
+    """Deployment wiring: which bindings the configured engine serves."""
+    return _BY_ENGINE[engine]
