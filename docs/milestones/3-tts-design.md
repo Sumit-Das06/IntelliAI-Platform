@@ -284,6 +284,35 @@ engines create evidence through the evaluation plane's adapters;
 promotion decisions cite that evidence and land as registry record
 changes; routing follows the registry. Nothing ever shortcuts a link.
 
+**The permanent asset (recorded at Step 6 close, 2026-08-03).** The
+company's permanent asset is not models. It is accumulated knowledge
+about models:
+
+- **Models are replaceable.** Every foundation model this platform
+  serves will one day be retired — that is the plan, not a risk.
+- **Artifacts are replaceable.** A registry row edit, invisible to
+  customers; the whole architecture exists to make this cheap.
+- **Evaluation evidence is permanent.** The ledger is append-only and
+  self-contained; a record outlives the artifact it measured.
+- **Promotion history is permanent.** Every "what replaced what, and on
+  what evidence" is a fact the company keeps forever.
+- **Benchmark history is permanent.** Production measurements are
+  company memory: what this hardware could do, proven, dated.
+- **Customer-visible baselines are permanent.** "What baseline did it
+  beat?" must be answerable for every model the company ever ships.
+
+**Models depreciate. Knowledge compounds.**
+
+This is why Registry V2, the evaluation plane, promotion workflows, and
+future research systems exist at all: they are the institutions that
+preserve knowledge after individual models disappear. A model's weights
+stop mattering the day something beats it; the *evidence that it was
+beaten, by how much, on which corpus, judged by whom* is what makes the
+next decision faster and safer than the last. Companies that keep only
+models start over with every generation; companies that keep knowledge
+get faster with every generation. Every plane of this platform is built
+to be the second kind.
+
 ```
 run_speech_eval (frozen)
   ├─ SynthesisSource ← HttpTtsSynthesisSource   NEW: ~30 lines. POSTs the binding,

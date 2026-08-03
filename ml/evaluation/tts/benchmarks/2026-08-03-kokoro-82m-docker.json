@@ -1,0 +1,80 @@
+{
+  "text": "IntelliAI turns text into natural speech. This fixed benchmark sentence measures synthesis latency and real time factor.",
+  "characters": 120,
+  "audio_seconds": 8.547,
+  "repetitions_per_worker": 3,
+  "hardware": "Intel Core i7-14650HX (Windows 11, Docker Desktop/WSL2)",
+  "notes": "M3 step 7 production baseline: kokoro-82m v1 in the GPL-free container, full compose topology, defaults (pool 2+8). TTFB = full unstreamed response (conservative).",
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 3,
+      "succeeded": 3,
+      "overloaded": 0,
+      "other_errors": 0,
+      "wall_seconds": 10.68,
+      "p50_ms": 2162.5,
+      "p95_ms": 2264.3,
+      "throughput_rps": 0.281,
+      "mean_rtf": 0.253,
+      "max_pool_admitted": 1,
+      "docker_cpu_percent_max": 0.61,
+      "docker_memory_mib_max": 1969.152
+    },
+    {
+      "concurrency": 5,
+      "requests": 15,
+      "succeeded": 15,
+      "overloaded": 0,
+      "other_errors": 0,
+      "wall_seconds": 23.41,
+      "p50_ms": 5578.3,
+      "p95_ms": 8418.1,
+      "throughput_rps": 0.641,
+      "mean_rtf": 0.3279,
+      "max_pool_admitted": 5,
+      "docker_cpu_percent_max": 793.11,
+      "docker_memory_mib_max": 2031.616
+    },
+    {
+      "concurrency": 10,
+      "requests": 30,
+      "succeeded": 30,
+      "overloaded": 0,
+      "other_errors": 0,
+      "wall_seconds": 47.02,
+      "p50_ms": 13291.7,
+      "p95_ms": 14517.8,
+      "throughput_rps": 0.638,
+      "mean_rtf": 0.3478,
+      "max_pool_admitted": 10,
+      "docker_cpu_percent_max": 795.76,
+      "docker_memory_mib_max": 2045.952
+    },
+    {
+      "concurrency": 20,
+      "requests": 60,
+      "succeeded": 22,
+      "overloaded": 38,
+      "other_errors": 0,
+      "wall_seconds": 37.45,
+      "p50_ms": 15119.5,
+      "p95_ms": 16026.1,
+      "throughput_rps": 0.587,
+      "mean_rtf": 0.3736,
+      "max_pool_admitted": 10,
+      "docker_cpu_percent_max": 1027.7,
+      "docker_memory_mib_max": 2036.736
+    }
+  ],
+  "overhead": {
+    "direct_p50_ms": 2194.7,
+    "via_gateway_p50_ms": 2237.4,
+    "gateway_overhead_ms": 42.6,
+    "inference_p50_ms": 2103.3,
+    "overhead_fraction_of_inference": 0.0203
+  },
+  "prd_ttfb_target_ms": 1000.0,
+  "prd_ttfb_actual_ms": 2237.4,
+  "prd_verdict": "FAIL"
+}
