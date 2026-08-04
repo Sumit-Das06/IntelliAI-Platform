@@ -146,9 +146,12 @@ Three rows are opinions, not physics:
   retry budget for our own failure is indefensible. Small code, large
   trust.
 - **Client disconnect after successful inference is billable** — we
-  consumed the compute; socket handling is not our cost centre. Founder
-  decision F1 (§18); the customer-friendly alternative costs nothing at
-  current volume.
+  consumed the compute; socket handling is not our cost centre. **Founder
+  decision F1, ruled 2026-08-04**, with a permanent clarification that
+  outlives this milestone: **successful generation, not socket
+  completion, defines billability.** The rule must still hold after
+  streaming lands (§8.3) — a stream that produced its output is billable
+  even if the connection died before the last byte was acknowledged.
 
 ### 3.3 What is discarded
 
@@ -446,8 +449,33 @@ input to rating (§9) — pricing must remain unable to see engines.
 
 ## 8. Identity continuity — the law that survives every model change
 
-Founder refinements 1, 2, and 5. These are the same law stated against
-three different futures.
+### 8.0 The Commercial Identity Invariant
+
+Ratified by the founder at Step 0 close, 2026-08-04:
+
+> **Customers buy capabilities, not foundation models.**
+>
+> Usage, pricing, quotas, invoices, subscriptions, and analytics
+> permanently attach to public capabilities (`intelliai-stt`,
+> `intelliai-tts`). Foundation models, artifacts, routing decisions,
+> quantization, fine-tunes, adapters, merged models, and future engine
+> replacements are implementation details and must never alter commercial
+> identity.
+
+This is the commercial twin of the M3 engineering law — *product
+capabilities are permanent; individual engines are temporary*. One
+governs how the platform is built, the other governs how it is sold, and
+together they say the same thing from both sides of the boundary:
+
+| | Engineering invariant (M3) | Commercial invariant (M4) |
+|---|---|---|
+| Statement | Product capabilities are permanent; individual engines are temporary | Customers buy capabilities, not foundation models |
+| Governs | runtimes, registry, contract, evaluation | ledger, pricing, quotas, invoices, analytics |
+| Violated by | an engine name reaching a customer response | an engine choice reaching a customer's bill |
+| Guarded by | leak-guard and engine-replacement tests | the Step 6 continuity proof (identical event shape, identical rated amount) |
+
+Sections 8.1–8.3 are that invariant stated against three specific
+futures. The operational form throughout:
 
 > **Usage, metering, pricing, and billing always follow the public
 > product capability — `intelliai-stt`, `intelliai-tts` — never the
@@ -503,8 +531,11 @@ now so the ledger is not redesigned then:
 Consequences that follow, and that streaming must honor rather than
 renegotiate:
 
-- The usage event is written when the stream **completes successfully**,
-  with the total measured quantity — not per chunk.
+- The usage event is written when the generation **completes
+  successfully**, with the total measured quantity — not per chunk, and
+  not conditional on the socket. Per F1, successful generation defines
+  billability; a completed generation whose delivery was interrupted is
+  billable with `outcome = disconnected`.
 - A stream that fails mid-flight follows the 5xx row of §3.2: a
   non-billable event recording what was produced, for cost analysis.
 - Partial delivery is a **product** decision about whether partial output
@@ -927,8 +958,8 @@ while pricing has no customer waiting on it.
 | **1 Ledger** | Usage event + quantity schema, origin, lineage, immutability enforced structurally; repository with no UPDATE path | Migration + repository + tests; append-only proven by test, not convention; capability-agnostic schema proven by a fake third capability |
 | **2 Metering** | Services write the event in the request's unit of work; failure degrades loud; reconciliation invariant query | `speech.completed` / `transcription.completed` become records; failure-path test asserts 200 + alarm; R2 measured |
 | **3 Admission — protection** | Redis token bucket + org concurrency, plan-derived limits, 429 contract and headers; fail-open proven by killing Redis | Limits enforced at both seams; atomicity proven under concurrent load; Redis-down test serves traffic |
-| **4 Admission — entitlement** | Quota and spend limit from the ledger; overshoot bound asserted; reserve/settle seam named but unbuilt | Quota exhaustion returns the right code with the right retry semantics; overshoot measured against the predicted bound |
-| **5 Pricing** | Versioned code-declarative price book; rating as a pure function; rollups as rebuildable cache | Rating reproducible from (event, version); rollup rebuild produces identical totals; internal origins excluded by rating, not by measurement |
+| **4 Admission — entitlement** | Quota and spend limit from the ledger; **free tier shipped from day one (F5)** so accrual, reset, and refusal all execute in production; overshoot bound asserted; reserve/settle seam named but unbuilt | Quota exhaustion returns the right code with the right retry semantics; period reset proven across a calendar-month boundary (F6); overshoot measured against the predicted bound |
+| **5 Pricing** | Versioned code-declarative price book; rating as a pure function; rollups as rebuildable cache; units per F2, period per F6, billable origins per F7 | Rating reproducible from (event, version); rollup rebuild produces identical totals; **only `origin = customer` rated**, excluded by rating and never by measurement; prices remain internal (F3) |
 | **6 Continuity proof** | The §8 law made testable: artifact swap and simulated multi-model routing produce identical usage events and identical rated amounts | Engine-replacement test extended to the commercial plane |
 | **7 Production validation** | Overhead ladder vs the R1 ceiling; anomaly and language analytics queries; reconciliation run against real traffic | Benchmark doc published beside the STT and TTS baselines |
 | **8 Close** | ADR review-criteria ledger, PRD v0.8, ARCHITECTURE v0.5 (identity-continuity invariant promoted), milestone review, version 0.5.0 | Review doc; founder decision ledger fully resolved |
@@ -956,21 +987,27 @@ the sprint.
   speculatively is the ADR-0013 mistake.
 - **Any change to `runtime-contract`, `runtime-core`, or either runtime.**
 
-## 18. Founder decision ledger
+## 18. Founder decision ledger — resolved 2026-08-04
 
-Open commercial and product decisions. None blocks Step 0; each is tagged
-with the step it gates and carries a recommended default so engineering
-is never idle waiting.
+All seven commercial decisions were ruled at Step 0 close. They are
+recorded here as settled inputs, not open questions.
 
-| # | Decision | Recommendation | Gates |
+| # | Decision | Ruling | Gates |
 |---|---|---|---|
-| **F1** | Client disconnect after successful inference — billable? | **Yes** (we did the work); the customer-friendly alternative costs nothing at current volume | Step 2 |
-| **F2** | Billable unit per capability at launch | STT `audio_seconds`; TTS `characters` (already what the runtimes report) | Step 5 |
-| **F3** | Are prices published in v0.5, or internal-only? | **Internal-only** — build the machinery and measure margin, but a published price wants customer evidence first | Step 5 |
-| **F4** | Launch limit values | Deliberately generous; the mechanism is the v0.5 deliverable, the numbers are tuned on real traffic | Step 3 |
-| **F5** | Does a free tier exist at launch, and at what quota? | Decide before Step 4 — without it, quota enforcement ships as dormant, therefore untested, code | Step 4 |
-| **F6** | Billing period anchor | **Calendar month, UTC** — far simpler to aggregate and reconcile; nothing yet requires anniversary billing | Step 5 |
-| **F7** | Which usage origins are non-billable at launch | All non-`customer` origins | Step 5 |
+| **F1** | Client disconnect after successful inference | **Billable.** The platform completed the work. **Successful generation, not socket completion, defines billability** — and this survives streaming | Step 2 |
+| **F2** | Launch billing units | **STT → `audio_seconds`; TTS → `characters`** | Step 5 |
+| **F3** | Published pricing in v0.5 | **Internal only.** Measure cost-to-serve and customer behavior before publishing | Step 5 |
+| **F4** | Launch limit values | **Intentionally generous.** M4 validates the mechanism, not production numbers | Step 3 |
+| **F5** | Free tier at launch | **Ship one from day one**, with generous default quotas — so quota logic, reset behavior, enforcement, analytics, and rating are exercised in production instead of lying dormant until the first customer | Step 4 |
+| **F6** | Billing period anchor | **Calendar month, UTC** | Step 5 |
+| **F7** | Billable origins | **Only `origin = customer`.** All other origins remain fully metered and are excluded during rating | Step 5 |
+
+F5 is the ruling with the largest engineering consequence and it is worth
+stating as a principle: **enforcement code that never runs is untested
+code.** A free tier at launch means quota accrual, period reset, refusal
+semantics, and rating exclusion all execute against real traffic from
+day one rather than being exercised for the first time on the day a
+paying customer hits a limit.
 
 ## 19. Registered platform work (from M4 design)
 
