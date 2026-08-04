@@ -36,7 +36,7 @@ from intelliai_tts_runtime.api.wav import encode_wav
 from intelliai_tts_runtime.engines import SynthesisEngine, SynthesizedAudio
 from intelliai_tts_runtime.identity import SERVICE_NAME, runtime_metadata
 from intelliai_tts_runtime.pipeline import TextPipeline
-from intelliai_tts_runtime.voices import VoiceMap
+from intelliai_tts_runtime.voices import VoiceCatalog
 
 logger = structlog.get_logger(__name__)
 router = APIRouter()
@@ -59,11 +59,32 @@ async def ready(request: Request) -> JSONResponse:
 
 @router.get("/info")
 async def info(request: Request) -> dict[str, Any]:
-    """Operational identity only — never payload (ADR-0016)."""
+    """Operational identity only — never payload (ADR-0016).
+
+    ``models`` is the deployment's catalog: every hosted artifact, with
+    the voices that artifact can render. The top-level ``voices`` list is
+    the union across slots — what this deployment can render at all,
+    regardless of which artifact does it.
+    """
     manager: ModelManager[SynthesisEngine] = request.app.state.manager
     pool: WorkerPool = request.app.state.pool
     settings = request.app.state.settings
-    voice_map: VoiceMap = request.app.state.voices
+    catalog: VoiceCatalog = request.app.state.voices
+
+    models: list[dict[str, Any]] = []
+    served: list[str] = []
+    for loaded in manager.loaded_models():
+        voice_ids = catalog.voices_for(loaded.engine).voice_ids()
+        served.extend(voice for voice in voice_ids if voice not in served)
+        models.append(
+            {
+                "slot": loaded.slot,
+                "artifact": loaded.artifact,
+                "load_ms": round(loaded.load_ms, 1),
+                "warmup_ms": round(loaded.warmup_ms, 1),
+                "voices": list(voice_ids),
+            }
+        )
     return {
         "pool": {
             "admitted": pool.admitted,
@@ -74,16 +95,8 @@ async def info(request: Request) -> dict[str, Any]:
         "service_version": __version__,
         "contract_version": CONTRACT_VERSION,
         "capability": str(Capability.SPEECH_SYNTHESIS),
-        "voices": list(voice_map.voice_ids()),
-        "models": [
-            {
-                "slot": loaded.slot,
-                "artifact": loaded.artifact,
-                "load_ms": round(loaded.load_ms, 1),
-                "warmup_ms": round(loaded.warmup_ms, 1),
-            }
-            for loaded in manager.loaded_models()
-        ],
+        "voices": served,
+        "models": models,
     }
 
 
@@ -116,12 +129,16 @@ async def synthesize(request: Request, synthesis_request: SpeechSynthesisRequest
     manager: ModelManager[SynthesisEngine] = request.app.state.manager
     pipeline: TextPipeline = request.app.state.pipeline
     pool: WorkerPool = request.app.state.pool
-    voice_map: VoiceMap = request.app.state.voices
+    catalog: VoiceCatalog = request.app.state.voices
 
+    # Slot selection first, voice resolution second — and unbypassably so,
+    # because the selected engine is the catalog's key. A voice is an
+    # artifact-specific asset; asking "which voice?" before "which
+    # artifact?" is a question with no answer in a multi-slot runtime.
     loaded = manager.lookup(synthesis_request.model)
 
     resolution_started = time.perf_counter()
-    public_voice, engine_voice = voice_map.resolve(synthesis_request.voice)
+    public_voice, engine_voice = catalog.voices_for(loaded.engine).resolve(synthesis_request.voice)
     resolution_ms = (time.perf_counter() - resolution_started) * 1000.0
 
     # Admission happens BEFORE any expensive work: validation, synthesis,

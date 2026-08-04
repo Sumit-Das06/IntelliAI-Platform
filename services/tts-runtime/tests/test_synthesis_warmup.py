@@ -3,12 +3,13 @@
 The lifecycle machinery (runtime-core) guarantees the probe runs exactly
 once per engine before serving; those guarantees are pinned in the
 runtime-core suite. THIS test pins what probing MEANS for synthesis: one
-short fixed sentence through the default voice at natural pace.
+short fixed sentence through the default voice — of the engine's OWN
+bindings, which is what makes the probe correct in a multi-slot runtime.
 """
 
 from intelliai_tts_runtime.engines import SynthesizedAudio
 from intelliai_tts_runtime.main import make_synthesis_warm_up
-from intelliai_tts_runtime.voices import KOKORO_VOICES, REFERENCE_VOICES
+from intelliai_tts_runtime.voices import KOKORO_VOICES, REFERENCE_VOICES, VoiceCatalog
 
 
 class RecordingEngine:
@@ -25,7 +26,9 @@ class RecordingEngine:
 
 def test_probe_is_one_fixed_sentence_through_the_default_voice() -> None:
     engine = RecordingEngine()
-    make_synthesis_warm_up(REFERENCE_VOICES)(engine)
+    catalog = VoiceCatalog()
+    catalog.bind(engine, REFERENCE_VOICES)
+    make_synthesis_warm_up(catalog)(engine)
     assert len(engine.calls) == 1
     text, voice, speed = engine.calls[0]
     assert text  # a real sentence pushes the engine through its full path
@@ -33,9 +36,18 @@ def test_probe_is_one_fixed_sentence_through_the_default_voice() -> None:
     assert speed is None  # natural pace
 
 
-def test_probe_follows_the_engine_bound_voice_map() -> None:
-    # The probe is capability-defined AND deployment-aware: a kokoro
-    # deployment warms through kokoro's default binding.
-    engine = RecordingEngine()
-    make_synthesis_warm_up(KOKORO_VOICES)(engine)
-    assert engine.calls[0][1] == "af_heart"
+def test_each_engine_is_warmed_through_its_own_bindings() -> None:
+    # The probe is capability-defined AND slot-aware: two engines hosted
+    # in one process warm through their own voice maps, never a global
+    # one. A shared map would warm one engine with the other's tokens.
+    reference_engine, kokoro_engine = RecordingEngine(), RecordingEngine()
+    catalog = VoiceCatalog()
+    catalog.bind(reference_engine, REFERENCE_VOICES)
+    catalog.bind(kokoro_engine, KOKORO_VOICES)
+
+    warm_up = make_synthesis_warm_up(catalog)
+    warm_up(reference_engine)
+    warm_up(kokoro_engine)
+
+    assert reference_engine.calls[0][1] == "tone:440"
+    assert kokoro_engine.calls[0][1] == "af_heart"

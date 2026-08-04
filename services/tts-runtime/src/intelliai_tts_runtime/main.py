@@ -15,63 +15,52 @@ from fastapi import FastAPI, Request, Response
 from intelliai_runtime_core import (
     ArtifactStore,
     ModelManager,
-    SlotSpec,
     WorkerPool,
     configure_logging,
 )
-from intelliai_tts_runtime import __version__, voices
+from intelliai_tts_runtime import __version__
 from intelliai_tts_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_tts_runtime.api.errors import register_error_handlers
 from intelliai_tts_runtime.api.routes import router
 from intelliai_tts_runtime.config import Settings
-from intelliai_tts_runtime.engines import SynthesisEngine, kokoro, reference
+from intelliai_tts_runtime.engines import SynthesisEngine
 from intelliai_tts_runtime.identity import SERVICE_NAME
 from intelliai_tts_runtime.pipeline import TextPipeline
-from intelliai_tts_runtime.voices import VoiceMap
+from intelliai_tts_runtime.slots import build_slot_specs
+from intelliai_tts_runtime.voices import VoiceCatalog
 
 
-def make_synthesis_warm_up(voice_map: VoiceMap) -> Callable[[SynthesisEngine], None]:
+def make_synthesis_warm_up(catalog: VoiceCatalog) -> Callable[[SynthesisEngine], None]:
     """This runtime's capability-defined warm-up probe (ADR-0019).
 
     The lifecycle machinery guarantees the probe runs once per engine
     before serving; what probing MEANS is synthesis's business: one
     inference of a short fixed sentence through the default voice, so
-    lazy initialization is paid at startup, never by the first request."""
+    lazy initialization is paid at startup, never by the first request.
+
+    With several slots the probe must warm each engine through *its own*
+    bindings — the catalog is keyed by engine because the probe is handed
+    nothing else."""
 
     def synthesis_warm_up(engine: SynthesisEngine) -> None:
-        _, engine_voice = voice_map.resolve(None)
+        _, engine_voice = catalog.voices_for(engine).resolve(None)
         engine.synthesize("Warm-up.", engine_voice, None)
 
     return synthesis_warm_up
 
 
-def build_manager(settings: Settings) -> ModelManager[SynthesisEngine]:
+def build_manager(settings: Settings, catalog: VoiceCatalog) -> ModelManager[SynthesisEngine]:
     """Settings-driven slot configuration.
 
-    The default slot binds whichever engine deployment chose; the engines
-    module owns everything model-specific (files, hashes, library import).
-    Adding an engine here = one SlotSpec line, nothing else on the platform.
+    The deployment declares the artifacts it hosts (``slots.py`` owns the
+    engine catalog and the declaration rules); the manager hosts them.
+    One artifact or five is a configuration difference, not a code one.
     """
-    warm_up = make_synthesis_warm_up(voices.for_engine(settings.default_engine))
-    slots: tuple[SlotSpec[SynthesisEngine], ...]
-    if settings.default_engine == "kokoro":
-        slots = (
-            SlotSpec(
-                slot="default",
-                artifact=kokoro.ARTIFACT_ID,
-                load=kokoro.load_kokoro,
-                files=kokoro.KOKORO_FILES,
-            ),
-        )
-        return ModelManager(slots=slots, store=ArtifactStore(settings.model_dir), warm_up=warm_up)
-    slots = (
-        SlotSpec(
-            slot="default",
-            artifact=reference.ARTIFACT_ID,
-            load=lambda _: reference.load_reference_synthesis_engine(),
-        ),
+    return ModelManager(
+        slots=build_slot_specs(settings, catalog),
+        store=ArtifactStore(settings.model_dir),
+        warm_up=make_synthesis_warm_up(catalog),
     )
-    return ModelManager(slots=slots, warm_up=warm_up)
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -82,10 +71,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         log_level=settings.log_level,
         console_logs=settings.console_logs,
     )
-    manager = build_manager(settings)
+    # The catalog is filled as each slot's engine loads, so it is the
+    # runtime's record of which engine renders which voices.
+    voice_catalog = VoiceCatalog()
+    manager = build_manager(settings, voice_catalog)
     pipeline = TextPipeline(max_text_chars=settings.max_text_chars)
     pool = WorkerPool(max_concurrency=settings.max_concurrency, max_queue=settings.max_queue)
-    voice_map = voices.for_engine(settings.default_engine)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -99,7 +90,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.manager = manager
     app.state.pipeline = pipeline
     app.state.pool = pool
-    app.state.voices = voice_map
+    app.state.voices = voice_catalog
 
     @app.middleware("http")
     async def request_context(

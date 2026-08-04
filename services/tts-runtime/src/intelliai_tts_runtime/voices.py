@@ -69,3 +69,36 @@ _BY_ENGINE: Final[dict[str, VoiceMap]] = {
 def for_engine(engine: str) -> VoiceMap:
     """Deployment wiring: which bindings the configured engine serves."""
     return _BY_ENGINE[engine]
+
+
+class VoiceCatalog:
+    """Which voice bindings each LOADED engine serves — the per-slot map.
+
+    Keyed by the **engine instance**, which is the one thing both callers
+    hold: the request path, after slot selection, and the warm-up probe,
+    which runtime-core hands nothing else (and runtime-core is not
+    changing for this). Keying by engine also makes the ownership law
+    unbypassable rather than merely documented: a voice cannot be
+    resolved before a slot has been selected, because the selected
+    engine IS the key.
+
+    Multi-slot hosting is why this exists. With one engine a global map
+    was indistinguishable from a per-slot one; with several, a voice
+    belongs to the artifact that can actually render it.
+    """
+
+    def __init__(self) -> None:
+        self._by_engine: dict[object, VoiceMap] = {}
+
+    def bind(self, engine: object, voice_map: VoiceMap) -> None:
+        """Record a loaded engine's bindings — called by the slot loader,
+        so binding happens exactly where the engine is constructed."""
+        self._by_engine[engine] = voice_map
+
+    def voices_for(self, engine: object) -> VoiceMap:
+        """This engine's bindings; a miss is a wiring defect, not input."""
+        voice_map = self._by_engine.get(engine)
+        if voice_map is None:  # pragma: no cover — unreachable by construction
+            msg = "engine was loaded without voice bindings"
+            raise RuntimeError(msg)
+        return voice_map

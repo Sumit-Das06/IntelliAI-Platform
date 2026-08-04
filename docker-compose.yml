@@ -76,9 +76,11 @@ services:
       context: .
       dockerfile: infra/docker/tts-runtime.Dockerfile
     environment:
-      # One env flip swaps the engine ("reference" serves the same API with
-      # no model — the deployment-level engine-independence seam).
-      INTELLIAI_TTS_DEFAULT_ENGINE: ${INTELLIAI_TTS_DEFAULT_ENGINE:-kokoro}
+      # The artifacts this deployment hosts, in order; the first takes the
+      # `default` slot. One env flip swaps the engine ("reference" serves
+      # the same API with no model — the deployment-level
+      # engine-independence seam) or adds a second hosted artifact.
+      INTELLIAI_TTS_SLOTS: ${INTELLIAI_TTS_SLOTS:-kokoro}
       INTELLIAI_TTS_LOG_LEVEL: ${INTELLIAI_TTS_LOG_LEVEL:-INFO}
     ports:
       - "127.0.0.1:8002:8002"
