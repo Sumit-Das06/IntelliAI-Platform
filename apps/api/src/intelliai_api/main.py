@@ -68,18 +68,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.engine = engine
     app.state.session_factory = create_session_factory(engine)
     app.state.health = HealthService(default_checks(settings, engine))
-    # The registry composes (and license-gates) at startup; runtime clients
-    # are keyed by the capability-named service the registry routes to.
+    # The registry composes (and license-gates) at startup.
     app.state.registry = default_registry()
+    # Keyed by DEPLOYMENT (ADR-0026): one capability service is a set of
+    # deployments, and resolution names which one hosts the artifact it
+    # chose. The default deployment of each capability carries the
+    # service's own name, so today's single-deployment topology needs no
+    # configuration at all.
     runtime_clients: dict[str, RuntimeClient] = {
-        "stt-runtime": HTTPRuntimeClient(
-            base_url=settings.runtimes.stt_url,
-            timeout_seconds=settings.runtimes.timeout_seconds,
-        ),
-        "tts-runtime": HTTPRuntimeClient(
-            base_url=settings.runtimes.tts_url,
-            timeout_seconds=settings.runtimes.timeout_seconds,
-        ),
+        name: HTTPRuntimeClient(base_url=url, timeout_seconds=settings.runtimes.timeout_seconds)
+        for name, url in settings.runtimes.deployment_urls().items()
     }
     app.state.runtime_clients = runtime_clients
     app.state.limits = build_admission_controller(settings)

@@ -17,7 +17,7 @@ into one immutable ``Settings`` object.
 
 from enum import StrEnum
 from functools import lru_cache
-from typing import Literal
+from typing import Final, Literal
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -84,16 +84,83 @@ class StorageSettings(BaseSettings):
     audio_bucket: str = "intelliai-audio"
 
 
+#: Deployment names draw only from PERMANENT vocabulary — capabilities and
+#: languages — and may never reference an engine (ADR-0026's naming law).
+#: A language-named deployment is safe because languages are promises kept
+#: regardless of what serves them; an engine-named one breaks precisely
+#: when the engine changes, which is the moment nothing should have to.
+#: This denylist grows with each adopted engine, exactly as the runtimes'
+#: isolation denylist does.
+ENGINE_VOCABULARY: Final = (
+    "whisper",
+    "kokoro",
+    "ctranslate",
+    "espeak",
+    "hexgrad",
+    "piper",
+    "deepgram",
+    "elevenlabs",
+    "azure",
+    "openai",
+)
+
+
 class RuntimeSettings(BaseSettings):
-    """Where the inference runtimes live — deployment topology, per service."""
+    """Where the inference runtimes live — deployment topology.
+
+    One capability service is a *set of deployments* (ADR-0026). The two
+    URLs below name the default deployment of each capability, which
+    carries the service's own name — today's topology is the degenerate
+    case of one deployment per capability. ``deployments`` adds the
+    others, so growing a capability to several deployments is
+    configuration rather than code.
+    """
 
     model_config = _group("INTELLIAI_RUNTIMES_")
 
     stt_url: str = "http://localhost:8001"
     tts_url: str = "http://localhost:8002"
+    #: Additional deployments as ``name=url`` pairs, comma-separated:
+    #: ``"stt-runtime-indic=http://stt-indic:8001"``. Names must be
+    #: resolvable by the registry's routes; a route naming a deployment
+    #: this gateway has no URL for is an operations error, loudly.
+    deployments: str = ""
     # The gateway's end-to-end patience with a runtime call (it owns the
     # deadline; the runtime owns per-stage limits — ADR-0016).
     timeout_seconds: float = 120.0
+
+    def deployment_urls(self) -> dict[str, str]:
+        """The deployment → URL map the gateway keys its clients by.
+
+        Fail-fast, like every other setting: a malformed entry, a
+        duplicate, or an engine-named deployment aborts startup rather
+        than surfacing as a 500 on the one route that needed it.
+        """
+        urls = {"stt-runtime": self.stt_url, "tts-runtime": self.tts_url}
+        for raw in self.deployments.split(","):
+            entry = raw.strip()
+            if not entry:
+                continue
+            name, separator, url = entry.partition("=")
+            name, url = name.strip(), url.strip()
+            if not (separator and name and url):
+                msg = f"deployment entry {entry!r} is not 'name=url'"
+                raise ValueError(msg)
+            if not url.startswith(("http://", "https://")):
+                msg = f"deployment {name!r} URL {url!r} is not an HTTP(S) URL"
+                raise ValueError(msg)
+            if name in urls:
+                msg = f"deployment {name!r} declared twice"
+                raise ValueError(msg)
+            leaked = [word for word in ENGINE_VOCABULARY if word in name.lower()]
+            if leaked:
+                msg = (
+                    f"deployment name {name!r} references an engine ({', '.join(leaked)}); "
+                    "deployment names may use capabilities and languages only (ADR-0026)"
+                )
+                raise ValueError(msg)
+            urls[name] = url
+        return urls
 
 
 class LimitsSettings(BaseSettings):
