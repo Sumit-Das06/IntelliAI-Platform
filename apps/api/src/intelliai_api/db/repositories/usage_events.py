@@ -1,0 +1,194 @@
+"""Usage ledger persistence — append-only by construction.
+
+This module has no update path and no delete path, and that absence is
+tested (``test_usage_ledger.py`` parses this file and fails if a mutating
+statement ever appears). The database enforces the same rule with
+triggers, so the guarantee survives code that never goes through here:
+two independent mechanisms, because a ledger is worth two.
+
+Corrections are ``reverse()`` — a compensating event carrying negated
+quantities. Netting a period is therefore ``SUM(amount)``, and the
+original row is still there to explain what happened.
+
+Every read is organization-scoped, without the ``get_by_hash`` style
+exception that authentication needs: metering always knows its tenant.
+"""
+
+from collections.abc import Collection, Mapping, Sequence
+from datetime import datetime
+from decimal import Decimal
+from typing import Any
+
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from intelliai_api.db.models import UsageEvent, UsageOrigin, UsageOutcome, UsageQuantity
+
+
+class UsageEventRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def record(
+        self,
+        *,
+        organization_id: int,
+        capability: str,
+        public_model_id: str,
+        origin: UsageOrigin,
+        outcome: UsageOutcome,
+        billable: bool,
+        occurred_at: datetime,
+        quantities: Mapping[str, Decimal],
+        request_id: str | None = None,
+        api_key_id: int | None = None,
+        idempotency_key: str | None = None,
+        lineage: Mapping[str, Any] | None = None,
+    ) -> UsageEvent:
+        """Append one measured fact.
+
+        ``quantities`` maps unit → amount exactly as the runtime reported
+        it: no rounding, no unit conversion, no pricing. A billable event
+        must carry at least one quantity — billing something we did not
+        measure is the failure this ledger exists to prevent.
+        """
+        if billable and not quantities:
+            raise ValueError("a billable event must carry at least one measured quantity")
+        for unit, amount in quantities.items():
+            if amount <= 0:
+                raise ValueError(
+                    f"measured amounts are positive; {unit}={amount} — "
+                    "negative amounts belong to compensating events (reverse())"
+                )
+
+        event = UsageEvent(
+            organization_id=organization_id,
+            api_key_id=api_key_id,
+            request_id=request_id,
+            idempotency_key=idempotency_key,
+            capability=capability,
+            public_model_id=public_model_id,
+            origin=origin,
+            outcome=outcome,
+            billable=billable,
+            occurred_at=occurred_at,
+            lineage=dict(lineage or {}),
+            quantities=[
+                UsageQuantity(unit=unit, amount=amount) for unit, amount in quantities.items()
+            ],
+        )
+        self._session.add(event)
+        await self._session.flush()
+        return event
+
+    async def reverse(self, event: UsageEvent, *, reason: str, at: datetime) -> UsageEvent:
+        """Correct a recorded fact without editing it.
+
+        The compensating event copies the original's commercial identity
+        (organization, capability, public model, origin, billability) and
+        negates its quantities, so any ``SUM`` over the period nets to
+        the corrected total while both rows survive for audit.
+
+        ``at`` is the reversal's own timestamp, not the original's: a
+        reversal belongs to the period in which it was **issued**. A
+        correction must never reach backwards and silently restate a
+        period that has already been reported.
+        """
+        if not reason.strip():
+            raise ValueError("a reversal must state its reason — that is the whole point")
+
+        reversal = UsageEvent(
+            organization_id=event.organization_id,
+            api_key_id=event.api_key_id,
+            request_id=None,  # answers to no HTTP request
+            idempotency_key=None,  # the original owns the key
+            capability=event.capability,
+            public_model_id=event.public_model_id,
+            origin=event.origin,
+            outcome=event.outcome,
+            billable=event.billable,
+            occurred_at=at,
+            lineage=dict(event.lineage),
+            reverses_usage_event_id=event.id,
+            reversal_reason=reason,
+            quantities=[
+                UsageQuantity(unit=quantity.unit, amount=-quantity.amount)
+                for quantity in event.quantities
+            ],
+        )
+        self._session.add(reversal)
+        await self._session.flush()
+        return reversal
+
+    async def get_for_organization(self, organization_id: int, public_id: str) -> UsageEvent | None:
+        result = await self._session.execute(
+            select(UsageEvent).where(
+                UsageEvent.organization_id == organization_id,
+                UsageEvent.public_id == public_id,
+            )
+        )
+        return result.scalar_one_or_none()
+
+    async def get_by_request_id(self, organization_id: int, request_id: str) -> UsageEvent | None:
+        """The support path: a customer quotes their ``X-Request-ID``."""
+        result = await self._session.execute(
+            select(UsageEvent).where(
+                UsageEvent.organization_id == organization_id,
+                UsageEvent.request_id == request_id,
+            )
+        )
+        return result.scalar_one_or_none()
+
+    async def list_for_organization(
+        self,
+        organization_id: int,
+        *,
+        since: datetime,
+        until: datetime,
+    ) -> Sequence[UsageEvent]:
+        """Events in ``[since, until)`` — half-open, so consecutive periods
+        neither double-count nor drop the boundary instant."""
+        result = await self._session.scalars(
+            select(UsageEvent)
+            .where(
+                UsageEvent.organization_id == organization_id,
+                UsageEvent.occurred_at >= since,
+                UsageEvent.occurred_at < until,
+            )
+            .order_by(UsageEvent.occurred_at, UsageEvent.id)
+        )
+        return result.all()
+
+    async def totals_for_organization(
+        self,
+        organization_id: int,
+        *,
+        since: datetime,
+        until: datetime,
+        billable_only: bool = True,
+        origins: Collection[UsageOrigin] | None = None,
+    ) -> dict[str, Decimal]:
+        """Netted consumption per unit for ``[since, until)``.
+
+        Compensating events carry negated amounts, so a plain ``SUM``
+        *is* the netting. ``origins`` exists so rating can select what it
+        charges for without the ledger ever deciding: measurement is
+        unconditional, billability is a filter applied here and above.
+        """
+        statement = (
+            select(UsageQuantity.unit, func.sum(UsageQuantity.amount))
+            .join(UsageEvent, UsageEvent.id == UsageQuantity.usage_event_id)
+            .where(
+                UsageEvent.organization_id == organization_id,
+                UsageEvent.occurred_at >= since,
+                UsageEvent.occurred_at < until,
+            )
+            .group_by(UsageQuantity.unit)
+        )
+        if billable_only:
+            statement = statement.where(UsageEvent.billable.is_(True))
+        if origins is not None:
+            statement = statement.where(UsageEvent.origin.in_(list(origins)))
+
+        result = await self._session.execute(statement)
+        return {unit: total for unit, total in result.all() if total}

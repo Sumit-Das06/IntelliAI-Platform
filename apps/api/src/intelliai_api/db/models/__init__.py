@@ -10,6 +10,22 @@ new model module MUST be imported here.
 from intelliai_api.db.models.api_key import ApiKey
 from intelliai_api.db.models.membership import Membership, MembershipRole
 from intelliai_api.db.models.organization import Organization
+from intelliai_api.db.models.usage_event import (
+    UsageEvent,
+    UsageOrigin,
+    UsageOutcome,
+    UsageQuantity,
+)
 from intelliai_api.db.models.user import User
 
-__all__ = ["ApiKey", "Membership", "MembershipRole", "Organization", "User"]
+__all__ = [
+    "ApiKey",
+    "Membership",
+    "MembershipRole",
+    "Organization",
+    "UsageEvent",
+    "UsageOrigin",
+    "UsageOutcome",
+    "UsageQuantity",
+    "User",
+]
