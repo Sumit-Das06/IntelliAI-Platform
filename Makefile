@@ -37,7 +37,9 @@ test: ## Run the Python test suite (all workspace packages)
 	uv run --package intelliai-api pytest apps/api/tests -q
 	uv run --package intelliai-evaluation pytest ml/evaluation/tests -q
 	uv run --package intelliai-runtime-contract pytest packages/runtime-contract/tests -q
+	uv run --package intelliai-runtime-core pytest packages/runtime-core/tests -q
 	uv run --package intelliai-stt-runtime pytest services/stt-runtime/tests -q
+	uv run --package intelliai-tts-runtime pytest services/tts-runtime/tests -q
 
 stt: ## Run the STT runtime locally with hot reload (port 8001)
 	uv run --package intelliai-stt-runtime uvicorn --factory intelliai_stt_runtime.main:create_app --reload --port 8001
