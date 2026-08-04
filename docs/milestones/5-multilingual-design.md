@@ -320,18 +320,23 @@ level deeper.
 Remaining case: a genuinely **multilingual voice** (one voice,
 `languages=("hi","en")`, one artifact). The voice still routes
 unambiguously, but the engine may need the effective language and the
-ledger needs the fact. This design originally proposed one additive
-optional contract field (`SpeechSynthesisRequest.language`) for that
-case.
+ledger needs the fact.
 
-**F-M5-7 rules otherwise for M5** (§16.1): no public language field, so
-nothing could populate a contract field that the voice does not already
-determine, and no engine would read it. The contract therefore gains
-**zero** fields in M5, and M4's ledger gap closes anyway — the gateway
-derives the recorded language from the voice's own declared language,
-a fact it already holds. When a multilingual voice actually exists, the
-field returns as the additive change it always was, alongside the engine
-that needs it.
+**Correction, found at Step 3 implementation:** this design proposed
+adding `SpeechSynthesisRequest.language` as an additive contract field.
+It was already there — added in M3 (commit `2ccc346`) as a "BCP-47-ish
+hint for multilingual voices", optional and defaulted to `None`, and
+never populated by anything since. The contract therefore needs no
+change at all, and the "one additive field" figure quoted throughout
+this document was wrong from the start.
+
+**F-M5-7 leaves it unpopulated** (§16.1): with no public language field,
+nothing can put a value there that the voice does not already determine,
+and no engine reads it. The gateway sends `None` and M4's ledger gap
+closes from the other side — the recorded language is the **voice's**
+declared language, a fact the gateway already holds. When a multilingual
+voice and an engine that needs the hint both exist, populating the
+existing field is a gateway change and nothing more.
 
 ## 5. Registry evolution — V1.5, on the road to V2
 
@@ -527,8 +532,9 @@ Small by design, because the heavy lifting was done in M2/M3:
    premature partitioning of measured-scarce CPU.
 
 **What does not change (the constraint the milestone is held to):**
-`runtime-core` gains **zero** code; the runtime contract gains **zero
-fields** (§4.3, after F-M5-7); the engine
+`runtime-core` gains **zero** code; the runtime contract is **untouched**
+— the field §4.3 planned to add has existed since M3, and F-M5-7 leaves
+it unpopulated; the engine
 `Protocol`s, license firewall, and isolation AST suites are untouched.
 Every future engine still enters by the M3 permanent rule — satisfy the
 Protocol before a single weight is downloaded.
@@ -732,7 +738,7 @@ or pricing (Operational Measurement Independence).
 
 | Law | M5 posture |
 |---|---|
-| Runtime contract | **Zero fields** (F-M5-7 withdrew the planned `SpeechSynthesisRequest.language`); `CONTRACT_VERSION` stays 1 |
+| Runtime contract | **Untouched** — `SpeechSynthesisRequest.language` has existed since M3 and F-M5-7 leaves it unpopulated; `CONTRACT_VERSION` stays 1 |
 | Runtime-core | **Zero changes** — multi-slot already exists |
 | Public API stability | Routes and shapes unchanged; no TTS language field (F-M5-7); additions are additive only (new error codes; ladder documentation) |
 | Engine invisibility / leak-guard | Deployment names and route records use permanent vocabulary only; leak-guard extends to `/info`-derived surfaces and error messages |
@@ -842,17 +848,22 @@ speech synthesis. Throughout M5, language is expressed through **voice
 selection**; the field is reconsidered when Registry V2 owns voice
 resolution and multilingual voice routing.
 
-Two consequences for the design as ratified. First, §4.3's planned
-additive contract field (`SpeechSynthesisRequest.language`) is **not
-added in M5**: with no public source, nothing could populate it that the
-voice does not already determine, and no engine would read it — an
-unused field on the platform's most permanent artifact. The runtime
-contract therefore gains **zero** fields in M5 rather than one, and
-`CONTRACT_VERSION` stays 1 for a fourth milestone by a wider margin than
-planned. Second, M4's TTS-language ledger gap closes anyway: the gateway
-derives the recorded language from the **voice's** declared language,
-which is a fact it already holds. Adding the field later stays additive;
-that door is not closed, only unopened.
+Two consequences for the design as ratified. First, the runtime contract
+is **untouched in M5**. §4.3 planned to add
+`SpeechSynthesisRequest.language`; implementation found it already
+present since M3 (see the correction in §4.3), optional and never
+populated. F-M5-7 leaves it that way — with no public source, nothing
+can put a value there that the voice does not already determine, and no
+engine reads it. `CONTRACT_VERSION` stays 1 for a fourth milestone with
+no contract change at all. Second, M4's TTS-language ledger gap closes
+anyway: the gateway derives the recorded language from the **voice's**
+declared language, which is a fact it already holds.
+
+One hazard worth naming: the public synthesis schema is a tolerant
+reader by decision (SDKs send extras), so a client sending `language`
+today has it silently ignored. If the field is ever introduced publicly,
+that previously-inert key becomes live for those clients — so it lands
+with an announcement, not quietly.
 
 ### 16.2 Open
 

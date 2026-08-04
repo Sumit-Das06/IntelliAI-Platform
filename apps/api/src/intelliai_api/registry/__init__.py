@@ -52,6 +52,7 @@ from intelliai_api.registry.registry import (
     LanguageNotSupportedError,
     ModelNotFoundError,
     Registry,
+    VoiceNotFoundError,
 )
 
 __all__ = [
@@ -69,6 +70,7 @@ __all__ = [
     "RouteSelector",
     "RouteStage",
     "ServingRoute",
+    "VoiceNotFoundError",
     "default_registry",
     "normalize_language",
 ]

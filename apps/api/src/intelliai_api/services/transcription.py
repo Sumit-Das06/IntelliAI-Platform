@@ -22,9 +22,10 @@ from intelliai_api.core.errors import (
 from intelliai_api.entitlements import EntitlementService
 from intelliai_api.limits import CapabilityAdmission
 from intelliai_api.metering import UsageRecorder, runtime_lineage
-from intelliai_api.registry import Registry, Resolution
+from intelliai_api.registry import LanguageNotSupportedError, Registry, Resolution
 from intelliai_api.runtimes import RuntimeCallError, RuntimeClient, RuntimeUnavailableError
 from intelliai_api.services.auth import AuthContext
+from intelliai_api.services.demand import record_language_demand
 from intelliai_api.services.runtime_errors import translate_runtime_error
 from intelliai_runtime_contract import (
     Capability,
@@ -70,13 +71,28 @@ class TranscriptionService:
         language: str | None,
         idempotency_key: str | None = None,
     ) -> TranscriptionOutcome:
-        resolution = self._registry.resolve(public_model_id)  # unknown -> 404 model_not_found
-        if resolution.capability is not Capability.TRANSCRIPTION:
+        # Capability BEFORE routing: asking a synthesis model to transcribe
+        # is the more fundamental mistake, and the caller should hear about
+        # that rather than about a language the wrong model does not serve.
+        model = self._registry.public_model(public_model_id)  # unknown -> 404 model_not_found
+        if model.capability is not Capability.TRANSCRIPTION:
             raise InvalidRequestError(
                 f"The model {public_model_id!r} does not support audio transcription.",
                 param="model",
                 code="capability_mismatch",
             )
+        # Routing is resolution: the registry maps (public model, declared
+        # language) to an artifact. The gateway supplies the customer's
+        # declaration and accepts whatever comes back — it never chooses.
+        try:
+            resolution = self._registry.resolve(public_model_id, language=language)
+        except LanguageNotSupportedError as refusal:
+            record_language_demand(
+                auth=auth,
+                capability=Capability.TRANSCRIPTION,
+                refusal=refusal,
+            )
+            raise
         # Capability-scoped admission: only knowable HERE, after the
         # registry says what this request actually is. STT and TTS have
         # capacity profiles an order of magnitude apart, so they get
@@ -98,11 +114,19 @@ class TranscriptionService:
                 spend_limit=auth.organization.spend_limit,
             )
 
-        client = self._clients.get(resolution.service)
+        # Keyed by DEPLOYMENT, not by service: one capability service is a
+        # set of deployments (ADR-0026), and resolution says which one
+        # hosts the artifact it chose. Today's topology is the degenerate
+        # case — one deployment per capability, named for the service.
+        client = self._clients.get(resolution.deployment)
         if client is None:
-            # Registry routes to a service this deployment never configured:
+            # Registry routes to a deployment this gateway never configured:
             # an operations problem, never the customer's.
-            logger.error("runtime_client_missing", service=resolution.service)
+            logger.error(
+                "runtime_client_missing",
+                deployment=resolution.deployment,
+                service=resolution.service,
+            )
             raise InternalError("The service is misconfigured.")
 
         try:

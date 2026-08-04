@@ -20,7 +20,7 @@ from intelliai_api.core.errors import InternalError, InvalidRequestError, Servic
 from intelliai_api.entitlements import EntitlementService
 from intelliai_api.limits import CapabilityAdmission
 from intelliai_api.metering import UsageRecorder, runtime_lineage
-from intelliai_api.registry import Registry, Resolution
+from intelliai_api.registry import Registry, Resolution, VoiceNotFoundError
 from intelliai_api.runtimes import RuntimeCallError, RuntimeClient, RuntimeUnavailableError
 from intelliai_api.services.auth import AuthContext
 from intelliai_api.services.runtime_errors import translate_runtime_error
@@ -46,6 +46,29 @@ class SpeechOutcome:
     audio_seconds: float
 
 
+def _voice_language(registry: Registry, public_model_id: str, voice: str | None) -> str | None:
+    """The language a voice declares, when it declares exactly one.
+
+    The synthesis half of the Ledger Fact Invariant. Transcription records
+    the language the engine *observed*; synthesis has nothing to observe,
+    so the fact available is the one the catalog states about the voice
+    that rendered the audio. A multilingual voice states no single
+    language, and with no public language input (F-M5-7) there is nothing
+    to fall back on — the honest record is then no record at all.
+    """
+    if voice is None:
+        return None
+    try:
+        record = registry.voice(public_model_id, voice)
+    except VoiceNotFoundError:
+        # The runtime named a voice the catalog does not have: a real
+        # defect, but never one that fails a request the customer already
+        # paid for. Loud in the logs, absent from the ledger.
+        logger.warning("voice_not_in_catalog", model=public_model_id, voice=voice)
+        return None
+    return record.languages[0] if len(record.languages) == 1 else None
+
+
 class SpeechService:
     def __init__(
         self,
@@ -69,27 +92,24 @@ class SpeechService:
         text: str,
         voice: str | None,
         speed: float | None,
-        language: str | None = None,
         idempotency_key: str | None = None,
     ) -> SpeechOutcome:
-        resolution = self._registry.resolve(public_model_id)  # unknown -> 404 model_not_found
-        if resolution.capability is not Capability.SPEECH_SYNTHESIS:
+        # Capability BEFORE routing, so the caller hears about the more
+        # fundamental mistake first.
+        model = self._registry.public_model(public_model_id)  # unknown -> 404 model_not_found
+        if model.capability is not Capability.SPEECH_SYNTHESIS:
             raise InvalidRequestError(
                 f"The model {public_model_id!r} does not support speech synthesis.",
                 param="model",
                 code="capability_mismatch",
             )
-        # Voice validation is PRODUCT-plane business: the catalog says what
-        # exists; the runtime only ever renders catalog-blessed identities.
-        if voice is not None:
-            known = {record.id for record in self._registry.list_voices(public_model_id)}
-            if voice not in known:
-                raise InvalidRequestError(
-                    f"The voice {voice!r} does not exist for this model. "
-                    "List available voices at GET /v1/audio/voices.",
-                    param="voice",
-                    code="voice_not_found",
-                )
+        # Routing is resolution, and for synthesis the VOICE is the routing
+        # key: a voice's sound is an artifact-specific asset, so the voice
+        # determines which artifact renders it (M5 design §4.3). An unknown
+        # voice is refused here, by the registry, before any plane is
+        # crossed — the catalog says what exists, and the runtime only ever
+        # renders catalog-blessed identities.
+        resolution = self._registry.resolve_voice(public_model_id, voice)
         # Capability-scoped admission: only knowable HERE, after the
         # registry says what this request actually is. Capacity is
         # capability-specific (M3 measured TTS plateauing at 0.64 rps),
@@ -112,11 +132,20 @@ class SpeechService:
                 spend_limit=auth.organization.spend_limit,
             )
 
-        client = self._clients.get(resolution.service)
+        # Keyed by DEPLOYMENT, not by service: one capability service is a
+        # set of deployments (ADR-0026), and resolution says which one
+        # hosts the artifact it chose. Today's topology is the degenerate
+        # case — one deployment per capability, named for the service.
+        client = self._clients.get(resolution.deployment)
         if client is None:
-            logger.error("runtime_client_missing", service=resolution.service)
+            logger.error(
+                "runtime_client_missing",
+                deployment=resolution.deployment,
+                service=resolution.service,
+            )
             raise InternalError("The service is misconfigured.")
 
+        requested_language = _voice_language(self._registry, public_model_id, voice)
         try:
             audio, envelope = await client.synthesize(
                 SpeechSynthesisRequest(
@@ -124,12 +153,12 @@ class SpeechService:
                 )
             )
         except RuntimeCallError as exc:
-            await self._record_failure(auth, resolution, language, exc.error.type)
+            await self._record_failure(auth, resolution, requested_language, exc.error.type)
             raise translate_runtime_error(
                 exc.error.type, exc.error.message, exc.error.param
             ) from exc
         except RuntimeUnavailableError as exc:
-            await self._record_failure(auth, resolution, language, None)
+            await self._record_failure(auth, resolution, requested_language, None)
             raise ServiceUnavailableError(
                 "Speech synthesis is temporarily unavailable. Retry shortly.",
                 code="runtime_unavailable",
@@ -139,6 +168,10 @@ class SpeechService:
         characters = sum(
             usage.amount for usage in envelope.usage if usage.unit is UsageUnit.CHARACTERS
         )
+        # Closes M4's TTS-language gap. The voice that ACTUALLY rendered is
+        # the one the runtime reports back — which also covers the request
+        # that named no voice and took the runtime's default.
+        served_language = _voice_language(self._registry, public_model_id, envelope.output.voice)
         # The permanent commercial fact (ADR-0021), written before the
         # response is serialized, inside this request's own transaction.
         if self._usage is not None:
@@ -154,7 +187,7 @@ class SpeechService:
                         str(round(envelope.output.duration_seconds, 6))
                     ),
                 },
-                language=language,
+                language=served_language,
                 lineage=runtime_lineage(
                     resolution,
                     served_artifact=envelope.model,
@@ -169,6 +202,7 @@ class SpeechService:
             organization_id=auth.organization_public_id,
             model=public_model_id,
             voice=envelope.output.voice,
+            language=served_language,
             characters=characters,
             audio_seconds=round(envelope.output.duration_seconds, 3),
         )

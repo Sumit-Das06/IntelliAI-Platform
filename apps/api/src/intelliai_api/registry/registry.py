@@ -31,6 +31,25 @@ class ModelNotFoundError(ResourceNotFoundError):
         )
 
 
+class VoiceNotFoundError(InvalidRequestError):
+    """Public voice identifier this model does not serve.
+
+    Lives here, beside model resolution, because the same authority that
+    answers "which artifact serves this voice?" must be the one that
+    answers "does this voice exist?" — a voice the registry cannot
+    resolve is a voice the platform does not have.
+    """
+
+    def __init__(self, voice_id: str) -> None:
+        super().__init__(
+            f"The voice {voice_id!r} does not exist for this model. "
+            "List available voices at GET /v1/audio/voices.",
+            code="voice_not_found",
+            param="voice",
+        )
+        self.voice_id = voice_id
+
+
 class LanguageNotSupportedError(InvalidRequestError):
     """A language the platform refuses to serve for this model.
 
@@ -265,6 +284,55 @@ class Registry:
             artifact=self._artifacts[route.artifact_id],
             deployment=route.deployment or model.service,
         )
+
+    def resolve_voice(self, public_model_id: str, voice_id: str | None = None) -> Resolution:
+        """Synthesis resolution: **the voice is the routing key**.
+
+        A voice's sound is an artifact-specific asset, so the voice —
+        not a separate language input — determines which artifact serves
+        it. Three cases, in order: an explicitly bound voice resolves to
+        its artifact; an unbound voice resolves through its own language
+        when it declares exactly one; anything else takes the default
+        route. All three go through registry state, so the gateway never
+        chooses.
+        """
+        model = self._models.get(public_model_id)
+        if model is None:
+            raise ModelNotFoundError(public_model_id)
+        if voice_id is None:
+            # No voice declared: the runtime's own default renders it, and
+            # the default route is what serves that.
+            return self.resolve(public_model_id)
+        voice = self._voices.get(voice_id)
+        if voice is None or voice.model != public_model_id:
+            raise VoiceNotFoundError(voice_id)
+        if voice.artifact_id is not None:
+            return Resolution(
+                public_model_id=model.id,
+                capability=model.capability,
+                service=model.service,
+                artifact=self._artifacts[voice.artifact_id],
+                deployment=self._deployment_for(model, voice.artifact_id),
+            )
+        if len(voice.languages) == 1:
+            return self.resolve(public_model_id, language=voice.languages[0])
+        return self.resolve(public_model_id)
+
+    def _deployment_for(self, model: PublicModelRecord, artifact_id: str) -> str:
+        """Which deployment hosts an artifact for this model — the route's
+        if a route names it, the capability service otherwise (ADR-0026's
+        degenerate case: one deployment per capability)."""
+        for route in self._routes.get(model.id, ()):
+            if route.artifact_id == artifact_id and route.deployment is not None:
+                return route.deployment
+        return model.service
+
+    def voice(self, public_model_id: str, voice_id: str) -> PublicVoiceRecord:
+        """The catalog record for one of a model's voices (product facts)."""
+        record = self._voices.get(voice_id)
+        if record is None or record.model != public_model_id:
+            raise VoiceNotFoundError(voice_id)
+        return record
 
     def language_status(self, public_model_id: str, language: str) -> LanguageStatus | None:
         """This model's ladder rung for a language, or ``None`` if the
