@@ -190,6 +190,22 @@ class RouteSelector(_Record):
         )
 
 
+@unique
+class CorpusOwnership(StrEnum):
+    """How the platform came by the corpus a promise rests on.
+
+    Recorded rather than assumed, because the two carry different
+    obligations forever: an **adopted** third-party corpus brings its
+    licence into every promotion that ever cites it, while an **owned**
+    corpus is ours to version, extend, and republish. A promise built on
+    a corpus we neither own nor adopted is a promise built on someone
+    else's continued goodwill.
+    """
+
+    OWNED = "owned"  # authored in-house; ours to version and extend
+    ADOPTED = "adopted"  # third-party, formally reviewed and taken on
+
+
 class LanguageEvidence(_Record):
     """The references that justify a ``supported`` rung (F-M5-1).
 
@@ -198,17 +214,41 @@ class LanguageEvidence(_Record):
     expressed in the platform's existing evidence vocabulary, plus the
     corpus version that the Dataset Thread requires beneath any evidence.
 
+    **The corpus precondition** (ADR-0027 Amendment 3): a language cannot
+    pass `available` without a versioned evaluation dataset the platform
+    owns or has formally adopted *for that language*. Evidence quality is
+    bounded by dataset quality — a benchmark runs against anything, and
+    the corpus is what makes its number mean something. The declaration
+    lives here; that the cited corpus actually contains speech in the
+    promoted language is checked where the corpora are (CI), because the
+    gateway must not read the evaluation tree at startup.
+
     References are citation strings in V1.5, exactly as dataset versions
     are: M5 step 4 gives baselines their (artifact, build, language,
     corpus version) identity and makes these strings resolvable. What is
     structural *now* is that a promise cannot exist without them.
     """
 
-    corpus: str = Field(min_length=1)  # versioned corpus, e.g. "stt-eval-seed@v1"
+    corpus: str = Field(min_length=1)  # versioned corpus, e.g. "stt-eval-seed@v2"
+    corpus_ownership: CorpusOwnership
     quality_baseline: str = Field(min_length=1)  # the committed evaluation evidence
     production_benchmark: str = Field(min_length=1)  # the completed benchmark
     approval: str = Field(min_length=1)  # the founder decision that promoted it
     approved_on: date
+
+    @model_validator(mode="after")
+    def _corpus_is_versioned(self) -> "LanguageEvidence":
+        # `name@vN`, never a bare name: two runs on different corpus
+        # versions are different evidence, and a citation that cannot say
+        # which one it means cannot be checked by anybody, ever.
+        name, separator, version = self.corpus.partition("@v")
+        if not (name and separator and version.isdigit()):
+            msg = (
+                f"corpus citation {self.corpus!r} is not versioned; "
+                "cite a released dataset as 'name@vN'"
+            )
+            raise ValueError(msg)
+        return self
 
 
 class ServingRoute(_Record):

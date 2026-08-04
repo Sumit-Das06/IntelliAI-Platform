@@ -9,6 +9,7 @@ from intelliai_api.core.errors import ErrorType
 from intelliai_api.registry import (
     ADMITTED_SELECTOR_DIMENSIONS,
     ArtifactRecord,
+    CorpusOwnership,
     LanguageEvidence,
     LanguageNotSupportedError,
     LanguageStatus,
@@ -216,6 +217,7 @@ class TestDefaultCatalog:
 
 EVIDENCE = LanguageEvidence(
     corpus="stt-eval-seed@v1",
+    corpus_ownership=CorpusOwnership.OWNED,
     quality_baseline="test-baseline",
     production_benchmark="test-benchmark",
     approval="test approval",
@@ -338,12 +340,59 @@ class TestLadderObligations:
         assert "approval" in LanguageEvidence.model_fields
         with pytest.raises(ValidationError):
             LanguageEvidence(
-                corpus="c",
+                corpus="stt-eval-seed@v2",
+                corpus_ownership=CorpusOwnership.OWNED,
                 quality_baseline="q",
                 production_benchmark="",  # the rung that proves service happened
                 approval="a",
                 approved_on=date(2026, 8, 4),
             )
+
+
+class TestCorpusPrecondition:
+    """ADR-0027 Amendment 3: evidence quality is bounded by dataset quality."""
+
+    def test_a_promise_must_declare_how_we_came_by_its_corpus(self) -> None:
+        # An adopted corpus carries its licence into every promotion that
+        # cites it; an owned one does not. Which applies is recorded.
+        assert "corpus_ownership" in LanguageEvidence.model_fields
+        with pytest.raises(ValidationError):
+            LanguageEvidence.model_validate(
+                {
+                    "corpus": "stt-eval-seed@v2",
+                    "quality_baseline": "q",
+                    "production_benchmark": "b",
+                    "approval": "a",
+                    "approved_on": date(2026, 8, 5),
+                }
+            )
+
+    @pytest.mark.parametrize("citation", ["stt-eval-seed", "stt-eval-seed@2", "@v2", "seed@vX"])
+    def test_an_unversioned_corpus_citation_cannot_be_checked_by_anyone(
+        self, citation: str
+    ) -> None:
+        with pytest.raises(ValidationError, match="not versioned"):
+            LanguageEvidence(
+                corpus=citation,
+                corpus_ownership=CorpusOwnership.OWNED,
+                quality_baseline="q",
+                production_benchmark="b",
+                approval="a",
+                approved_on=date(2026, 8, 5),
+            )
+
+    def test_both_ownership_stances_exist_and_only_those(self) -> None:
+        assert {member.value for member in CorpusOwnership} == {"owned", "adopted"}
+
+    def test_the_shipped_promises_declare_owned_corpora(self) -> None:
+        registry = default_registry()
+        for model_id in ("intelliai-stt", "intelliai-tts"):
+            for serving_route in registry.list_languages(model_id):
+                if serving_route.status is LanguageStatus.SUPPORTED:
+                    evidence = serving_route.evidence
+                    assert evidence is not None
+                    assert evidence.corpus_ownership is CorpusOwnership.OWNED
+                    assert "@v" in evidence.corpus
 
 
 class TestSpecificityLaw:

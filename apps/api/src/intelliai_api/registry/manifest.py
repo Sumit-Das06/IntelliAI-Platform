@@ -56,6 +56,18 @@ def serving_manifest(registry: Registry) -> dict[str, Any]:
             }
             if route.status is not LanguageStatus.UNAVAILABLE:
                 entry.update(_serving(registry, model.id, route.selector.language))
+            if route.evidence is not None:
+                # The Evidential Chain, exported: a promise carries its
+                # citations, so the side of the boundary that owns the
+                # corpora and the records can check that they resolve.
+                entry["evidence"] = {
+                    "corpus": route.evidence.corpus,
+                    "corpus_ownership": route.evidence.corpus_ownership.value,
+                    "quality_baseline": route.evidence.quality_baseline,
+                    "production_benchmark": route.evidence.production_benchmark,
+                    "approval": route.evidence.approval,
+                    "approved_on": route.evidence.approved_on.isoformat(),
+                }
             routes.append(entry)
 
         voices: list[dict[str, Any]] = []

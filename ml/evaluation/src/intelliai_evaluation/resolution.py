@@ -28,6 +28,30 @@ class UnservedError(LookupError):
     """The registry does not serve this — so there is nothing to evaluate."""
 
 
+class ExportedEvidence(BaseModel):
+    """The citations a promise rests on, as the registry exported them.
+
+    Strings here; the records they name live on this side of the
+    boundary, which is exactly why the chain is checkable here and not
+    there (the gateway must not read the evaluation tree).
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    corpus: str
+    corpus_ownership: str
+    quality_baseline: str
+    production_benchmark: str
+    approval: str
+    approved_on: str
+
+    @property
+    def corpus_identity(self) -> tuple[str, int]:
+        """``"stt-eval-seed@v2"`` -> ``("stt-eval-seed", 2)``."""
+        name, _, version = self.corpus.partition("@v")
+        return name, int(version)
+
+
 class ResolvedServing(BaseModel):
     """One resolved route: the registry's answer, as a record."""
 
@@ -38,6 +62,7 @@ class ResolvedServing(BaseModel):
     artifact: str | None = None
     artifact_version: int | None = None
     deployment: str | None = None
+    evidence: ExportedEvidence | None = None
 
     @property
     def is_served(self) -> bool:

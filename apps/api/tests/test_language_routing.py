@@ -30,6 +30,7 @@ from intelliai_api.entitlements import period_for
 from intelliai_api.pricing import INTERNAL_V1, PriceBookCatalog, rate_events
 from intelliai_api.registry import (
     ArtifactRecord,
+    CorpusOwnership,
     LanguageEvidence,
     LanguageStatus,
     LicenseVerdict,
@@ -61,6 +62,7 @@ MIT = LicenseVerdict(
 
 EVIDENCE = LanguageEvidence(
     corpus="stt-eval-seed@v1",
+    corpus_ownership=CorpusOwnership.OWNED,
     quality_baseline="test-baseline",
     production_benchmark="test-benchmark",
     approval="test approval",

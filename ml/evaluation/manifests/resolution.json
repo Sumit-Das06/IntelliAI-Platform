@@ -18,7 +18,15 @@
           "status": "supported",
           "artifact": "whisper-small",
           "artifact_version": 1,
-          "deployment": "stt-runtime"
+          "deployment": "stt-runtime",
+          "evidence": {
+            "corpus": "stt-eval-seed@v2",
+            "corpus_ownership": "owned",
+            "quality_baseline": "2026-08-05-intelliai-stt-en-whisper-small-cpu-v1",
+            "production_benchmark": "2026-08-03-whisper-small-cpu-baseline",
+            "approval": "F-M5-2 — Core Speech Language Policy ladder",
+            "approved_on": "2026-08-04"
+          }
         },
         {
           "language": "hi",
@@ -54,7 +62,15 @@
           "status": "supported",
           "artifact": "kokoro-82m",
           "artifact_version": 1,
-          "deployment": "tts-runtime"
+          "deployment": "tts-runtime",
+          "evidence": {
+            "corpus": "tts-eval-seed@v1",
+            "corpus_ownership": "owned",
+            "quality_baseline": "2026-08-03-kokoro-82m-cpu-v1",
+            "production_benchmark": "2026-08-03-kokoro-82m-cpu-baseline",
+            "approval": "F-M5-2 — Core Speech Language Policy ladder",
+            "approved_on": "2026-08-04"
+          }
         },
         {
           "language": "hi",

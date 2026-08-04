@@ -37,6 +37,7 @@ from intelliai_api.registry.catalog import default_registry
 from intelliai_api.registry.records import (
     ADMITTED_SELECTOR_DIMENSIONS,
     ArtifactRecord,
+    CorpusOwnership,
     LanguageEvidence,
     LanguageStatus,
     LicenseVerdict,
@@ -58,6 +59,7 @@ from intelliai_api.registry.registry import (
 __all__ = [
     "ADMITTED_SELECTOR_DIMENSIONS",
     "ArtifactRecord",
+    "CorpusOwnership",
     "LanguageEvidence",
     "LanguageNotSupportedError",
     "LanguageStatus",

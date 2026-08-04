@@ -11,6 +11,7 @@ from functools import lru_cache
 
 from intelliai_api.registry.records import (
     ArtifactRecord,
+    CorpusOwnership,
     LanguageEvidence,
     LanguageStatus,
     LicenseVerdict,
@@ -93,15 +94,16 @@ _MODELS = (
 # product promises what it has measured.
 
 #: English STT was promoted by F-M5-2 on the evidence that already
-#: existed when the ladder was ratified. Citations are strings in V1.5,
-#: exactly as dataset versions are; M5 step 4 gives baselines their
-#: (artifact, build, language, corpus version) identity and makes them
-#: resolvable. The STT citation is a record path rather than a christened
-#: baseline name because the M2 quality run predates the naming
-#: discipline — an asymmetry step 4 closes, recorded honestly meanwhile.
+#: existed when the ladder was ratified, and re-cited at M5 step 4 to the
+#: language-sliced baseline that replaced it: `stt-eval-seed@v2`'s `en`
+#: slice, which carries v1's clips byte-identical and reproduces its
+#: WER 0.000 exactly. The corpus is authored in-house, so it is OWNED —
+#: ours to version and extend, with no third-party licence riding along
+#: (ADR-0027 Amendment 3).
 _STT_EN_EVIDENCE = LanguageEvidence(
-    corpus="stt-eval-seed@v1",
-    quality_baseline="stt/results/2026-08-02-whisper-small",
+    corpus="stt-eval-seed@v2",
+    corpus_ownership=CorpusOwnership.OWNED,
+    quality_baseline="2026-08-05-intelliai-stt-en-whisper-small-cpu-v1",
     production_benchmark="2026-08-03-whisper-small-cpu-baseline",
     approval="F-M5-2 — Core Speech Language Policy ladder",
     approved_on=date(2026, 8, 4),
@@ -109,6 +111,7 @@ _STT_EN_EVIDENCE = LanguageEvidence(
 
 _TTS_EN_EVIDENCE = LanguageEvidence(
     corpus="tts-eval-seed@v1",
+    corpus_ownership=CorpusOwnership.OWNED,
     quality_baseline="2026-08-03-kokoro-82m-cpu-v1",
     production_benchmark="2026-08-03-kokoro-82m-cpu-baseline",
     approval="F-M5-2 — Core Speech Language Policy ladder",
