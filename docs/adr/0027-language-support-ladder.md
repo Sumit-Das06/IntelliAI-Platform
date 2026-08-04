@@ -36,9 +36,9 @@ orthogonal to the other two state machines.**
    evidence triple (corpus, committed quality baseline, production
    benchmark) for that (artifact, build, language), a license verdict
    covering the language-specific serving path, and a promotion record.
-   `available` — served best-effort and honestly labeled: measured at
-   least once, explicitly not promised; this is the customer-preview
-   state. `unavailable` — refused with a clear error naming what is
+   `available` — served best-effort and honestly labeled, explicitly not
+   promised; this is the customer-preview state **and the entry rung
+   (Amendment 1)**. `unavailable` — refused with a clear error naming what is
    supported, and the refusal recorded as demand evidence; never
    silently served badly.
 2. **Exhaustive by construction.** The ladder is a vocabulary of stances
@@ -114,6 +114,35 @@ orthogonal to the other two state machines.**
   represented as `available`-at-best until its corpus exists (F-M5-6).
 - Registry V2 activates the reserved stage machine without touching the
   ladder or the artifact lifecycle.
+
+## Amendments
+
+**Amendment 1 — the ladder is a lifecycle (2026-08-04, founder decision
+F-M5-1).** Amends Decision 1 and extends Decision 4; the ADR's core
+decision — three rungs, three orthogonal machines — is unchanged, so
+this is an amendment rather than a supersession.
+
+> A new language always enters the platform as `available`. Promotion to
+> `supported` requires a completed benchmark, evaluation evidence, a
+> production baseline, and explicit founder approval. No language may
+> skip this lifecycle.
+
+Two consequences. First, `available` requires **no** evidence: the
+original wording ("measured at least once") is withdrawn, because at
+entry nothing has been measured yet and requiring evidence to begin
+measuring is circular. Second, the prohibition on skipping needs no
+state machine — a production baseline is unobtainable without having
+served, so the top rung's bar structurally forbids the jump. Demotion
+and withdrawal remain ungated: honesty may always be increased.
+
+**Amendment 2 — the initial ladder (2026-08-04, founder decision
+F-M5-2).** STT: English `supported`, Hindi `available`, Arabic
+`available`. TTS: English `supported`, Hindi and Arabic `unavailable`.
+The accompanying rule — *the ladder reflects measured product evidence,
+not theoretical engine capability; a model claiming support does not
+automatically promote the product* — restates Decision 1's rejection of
+model-card inference as a standing policy rather than a one-time
+alternative considered.
 
 ## Future review criteria
 

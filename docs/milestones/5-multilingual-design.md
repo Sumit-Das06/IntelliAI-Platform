@@ -130,8 +130,26 @@ the registry, from a three-rung ladder:**
 | Status | Meaning | Evidence required | Customer experience |
 |---|---|---|---|
 | **`supported`** | First-class product promise under the Language Policy | Corpus + committed quality baseline + production benchmark + license-clean serving path + promotion record | Served, documented, quality-guaranteed |
-| **`available`** | Served best-effort — honestly, without a promise | Measured at least once; explicitly *not* baselined to the promise bar | Served, documented as preview/best-effort, no quality claim |
+| **`available`** | Served best-effort — honestly, without a promise | **None** — this is the entry rung (F-M5-1); the requirement is honest labelling, and evidence is what *leaves* this rung | Served, documented as preview/best-effort, no quality claim |
 | **`unavailable`** | Not served | — | Refused with a clear, honest error — never silently served badly |
+
+**The ladder is a lifecycle, not three loose labels** (F-M5-1, ratified
+2026-08-04):
+
+> **A new language always enters the platform as `available`. Promotion
+> to `supported` requires a completed benchmark, evaluation evidence, a
+> production baseline, and explicit founder approval. No language may
+> skip this lifecycle.**
+
+The prohibition needs no state machine, because the bar itself forbids
+the jump: a **production baseline is unobtainable without having
+served**, and serving requires the middle rung. This is the same shape
+as M4's quota — computed from the ledger rather than trusted to a
+counter — and it is why the design's original "measured at least once"
+wording for `available` was superseded: at entry, nothing has been
+measured yet, and demanding evidence to *begin* measuring is circular.
+Demotion (`supported` → `available`) and withdrawal are never gated:
+honesty may always be increased.
 
 **Why a ladder and not a boolean.** A boolean forces one of two lies.
 `supported=true` for Arabic claims a bar nobody measured.
@@ -312,7 +330,7 @@ This also closes M4's ledger gap: TTS events finally record language.
 
 Whether the *public* API surfaces a `language` field, or customers
 express language purely through voice choice, is founder decision
-F-M5-1; the internal architecture is identical either way — which is
+F-M5-7; the internal architecture is identical either way — which is
 what makes it safe to decide on product grounds.
 
 ## 5. Registry evolution — V1.5, on the road to V2
@@ -701,7 +719,7 @@ or pricing (Operational Measurement Independence).
 |---|---|
 | Runtime contract | **One additive optional field** (`SpeechSynthesisRequest.language`); `CONTRACT_VERSION` stays 1 |
 | Runtime-core | **Zero changes** — multi-slot already exists |
-| Public API stability | Routes, shapes, errors unchanged; additions additive (optional language input per F-M5-1; new error codes; ladder documentation) |
+| Public API stability | Routes, shapes, errors unchanged; additions additive (optional language input per F-M5-7; new error codes; ladder documentation) |
 | Engine invisibility / leak-guard | Deployment names and route records use permanent vocabulary only; leak-guard extends to `/info`-derived surfaces and error messages |
 | Two Vocabularies placement rule | Customer surfaces, deployment names, and ledger facts draw from the permanent column only — enforced by the existing leak-guard and naming tests, now cited to one law |
 | Route/Strategy Boundary | Routes accrete no coordination fields; asserted structurally (record shape tested; one binding per selector is a composition-time error) |
@@ -768,19 +786,53 @@ or pricing (Operational Measurement Independence).
   Framework gates. The milestone's own DoD — provable with incumbents
   and reference engines only — is the structural defense.
 
-## 16. Founder decisions required
+## 16. Founder decisions
 
-None blocks Step 0; each is tagged with the step it gates and carries a
-recommendation so engineering is never idle waiting.
+### 16.1 Ruled
+
+**F-M5-1 — The language lifecycle** *(ratified 2026-08-04, before M5
+Step 1)*. A new language always enters the platform as `available`.
+Promotion from `available` to `supported` requires a completed
+benchmark, evaluation evidence, a production baseline, and explicit
+founder approval. **No language may skip this lifecycle.** Recorded as
+law in §2; enforced structurally by `LanguageEvidence`, whose four
+required references are the four requirements.
+
+**F-M5-2 — The initial Core Speech Language Policy ladder** *(ratified
+2026-08-04, before M5 Step 1)*:
+
+| | English | Hindi | Arabic |
+|---|---|---|---|
+| **Speech-to-Text** | `supported` | `available` | `available` |
+| **Text-to-Speech** | `supported` | `unavailable` | `unavailable` |
+
+> **The ladder reflects measured product evidence, not theoretical
+> engine capability. A model claiming support does not automatically
+> promote the product.**
+
+This ruling is *narrower* than the recommendation it answers: Hindi STT
+was proposed as "supported pending its formal baseline commit" and was
+ruled `available`, which F-M5-1 then makes the only lawful entry point.
+Hindi STT's formal baseline (Step 4) becomes the evidence for a *future*
+promotion, not a retroactive justification for a present one.
+
+English's `supported` rung is not an exception to F-M5-1: the four
+requirements were met before the law existed (M2.5 evaluation evidence,
+the committed quality baselines, the M3 production benchmarks, and
+F-M5-2 itself as the explicit approval), and the catalog cites all four.
+
+### 16.2 Open
+
+Each is tagged with the step it gates and carries a recommendation so
+engineering is never idle waiting.
 
 | # | Decision | Recommendation | Gates |
 |---|---|---|---|
-| **F-M5-1** | TTS language surface: public `language` field, or language expressed purely through voice choice? | **Voice-only at the public surface for now**; the internal field exists either way. Adding a public field later is additive; removing one is impossible | Step 3 |
-| **F-M5-2** | Does the `available` rung exist publicly, and where does today's de-facto behavior land? | **Yes, publicly, honestly labeled.** Proposed initial ladder: STT `en` supported; STT `hi` supported pending its formal baseline commit; STT `ar` available; other incumbent-served languages per founder call; TTS `en` supported; TTS `hi`/`ar` unavailable | Step 1 |
-| **F-M5-3** | Absolute quality bars for `supported`, per language | Set per language at promotion time from corpus evidence, recorded in the promotion diff — not guessed now | First language enablement |
+| **F-M5-3** | Absolute quality bars for `supported`, per language | Set per language at promotion time from corpus evidence, recorded in the promotion diff — not guessed now. F-M5-1 fixed the *process*; this fixes the *numbers* | First language enablement |
 | **F-M5-4** | Voice rebinding evidence bar | Listening protocol (M2.5 discipline) mandatory; `speaker_similarity` implementation before the *second* rebinding | First rebinding |
 | **F-M5-5** | Deployment packing posture | One-artifact-per-deployment default on CPU; packing only with measured residency headroom | Step 6 |
-| **F-M5-6** | Arabic corpus commissioning — the prerequisite for *any* Arabic progress | Approve as an evaluation-track work item now; it gates all Arabic decisions and takes calendar time | Research/evaluation track |
+| **F-M5-6** | Arabic corpus commissioning — the prerequisite for *any* Arabic progress | Approve as an evaluation-track work item now; it gates all Arabic decisions and takes calendar time. Arabic STT is now publicly `available` (F-M5-2), which raises the urgency: we are serving it honestly-labelled and unmeasured | Research/evaluation track |
+| **F-M5-7** | TTS language surface: public `language` field, or language expressed purely through voice choice? *(the question originally numbered F-M5-1; renumbered because the founder's F-M5-1 ruling addressed the lifecycle instead, and decision numbers are permanent once ruled)* | **Voice-only at the public surface for now**; the internal field exists either way. Adding a public field later is additive; removing one is impossible | Step 3 |
 
 ## 17. Implementation roadmap — review-gated steps
 
