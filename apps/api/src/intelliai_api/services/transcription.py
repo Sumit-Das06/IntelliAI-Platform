@@ -19,6 +19,7 @@ from intelliai_api.core.errors import (
     InvalidRequestError,
     ServiceUnavailableError,
 )
+from intelliai_api.limits import CapabilityAdmission
 from intelliai_api.metering import UsageRecorder, runtime_lineage
 from intelliai_api.registry import Registry, Resolution
 from intelliai_api.runtimes import RuntimeCallError, RuntimeClient, RuntimeUnavailableError
@@ -50,10 +51,12 @@ class TranscriptionService:
         registry: Registry,
         clients: Mapping[str, RuntimeClient],
         usage: UsageRecorder | None = None,
+        admission: CapabilityAdmission | None = None,
     ) -> None:
         self._registry = registry
         self._clients = clients
         self._usage = usage
+        self._admission = admission
 
     async def transcribe(
         self,
@@ -71,6 +74,17 @@ class TranscriptionService:
                 param="model",
                 code="capability_mismatch",
             )
+        # Capability-scoped admission: only knowable HERE, after the
+        # registry says what this request actually is. STT and TTS have
+        # capacity profiles an order of magnitude apart, so they get
+        # separate budgets rather than one shared request count.
+        if self._admission is not None:
+            await self._admission.check_capability(
+                organization_id=auth.organization_public_id,
+                plan_id=auth.organization.plan,
+                capability=Capability.TRANSCRIPTION.value,
+            )
+
         client = self._clients.get(resolution.service)
         if client is None:
             # Registry routes to a service this deployment never configured:

@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from intelliai_api.db.base import Base, TimestampMixin, generate_public_id
 from intelliai_api.db.models.usage_event import UsageOrigin
+from intelliai_api.limits.plans import FREE
 
 if TYPE_CHECKING:
     from intelliai_api.db.models.api_key import ApiKey
@@ -35,7 +36,14 @@ class Organization(TimestampMixin, Base):
         server_default=UsageOrigin.CUSTOMER.value,
     )
 
-    # Deliberately minimal: plan/quota/billing columns arrive with the
+    # The commercial tier this tenant is on. Limits are never hardcoded
+    # per organization: an org has a plan, a plan carries limits
+    # (limits/plans.py), and overrides land here later as additive
+    # columns. Text rather than an enum because the plan catalog is
+    # code-declarative and adding a tier must not require a migration.
+    plan: Mapped[str] = mapped_column(String(32), default=FREE, server_default=FREE)
+
+    # Deliberately minimal: quota/billing columns arrive with the
     # milestones that give them meaning (M4+), as additive migrations.
 
     memberships: Mapped[list["Membership"]] = relationship(back_populates="organization")

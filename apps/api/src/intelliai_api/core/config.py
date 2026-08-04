@@ -47,7 +47,14 @@ class DatabaseSettings(BaseSettings):
     model_config = _group("INTELLIAI_DATABASE_")
 
     url: SecretStr  # postgresql+asyncpg://user:password@host:port/dbname
-    pool_size: int = 5
+    # Raised from 5 at M4 step 3 (founder decision F8). A request holds
+    # its pooled connection across the whole inference call, so
+    # pool_size + overflow is a hard ceiling on in-flight requests —
+    # measured at M4 step 2 as the binding constraint, capping inference
+    # concurrency at 15 regardless of runtime capacity. Tuning the cheap
+    # knob first, deliberately, rather than trading away the durability
+    # guarantee that transaction ownership provides.
+    pool_size: int = 20
     pool_max_overflow: int = 10
     echo: bool = False
 
@@ -89,6 +96,39 @@ class RuntimeSettings(BaseSettings):
     timeout_seconds: float = 120.0
 
 
+class LimitsSettings(BaseSettings):
+    """Admission control knobs (ADR-0022).
+
+    ``socket_timeout_seconds`` is the one that matters: failing open is
+    only survivable if it also fails *fast*. A limiter that blocks for
+    the default connection timeout has taken the platform down more
+    effectively than one that refuses requests.
+
+    **Operational hazard, found by measurement at M4 step 3.** This
+    budget interacts with hostname resolution. Point ``INTELLIAI_REDIS_URL``
+    at an address, or at a name that resolves to the family the server
+    actually listens on — a dual-stack name (``localhost`` → ``::1``
+    first) in front of an IPv4-only Redis spends the whole budget on a
+    failover, and the platform then runs unlimited while looking
+    perfectly healthy. The alarm fires, which is the point of failing
+    loudly; but the cause is configuration, not Redis.
+    """
+
+    model_config = _group("INTELLIAI_LIMITS_")
+
+    enabled: bool = True
+    # Key prefix for every bucket and lease. Lets several deployments (or
+    # several test runs) share one Redis without silently sharing each
+    # other's allowances — a shared bucket is an outage that looks like a
+    # rate limit.
+    namespace: str = ""
+    socket_timeout_seconds: float = 0.25
+    # How long an in-flight slot is held if the process never releases it.
+    # Generously above the gateway's own runtime deadline, so a slow
+    # request is never evicted while it is still legitimately running.
+    lease_seconds: int = 180
+
+
 class MeteringSettings(BaseSettings):
     """The ledger's degrade-loud path (ADR-0021).
 
@@ -118,6 +158,7 @@ class Settings(BaseSettings):
     storage: StorageSettings = Field(default_factory=StorageSettings)
     runtimes: RuntimeSettings = Field(default_factory=RuntimeSettings)
     metering: MeteringSettings = Field(default_factory=MeteringSettings)
+    limits: LimitsSettings = Field(default_factory=LimitsSettings)
 
     @property
     def is_dev(self) -> bool:

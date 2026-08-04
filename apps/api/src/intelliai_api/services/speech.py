@@ -17,6 +17,7 @@ from decimal import Decimal
 import structlog
 
 from intelliai_api.core.errors import InternalError, InvalidRequestError, ServiceUnavailableError
+from intelliai_api.limits import CapabilityAdmission
 from intelliai_api.metering import UsageRecorder, runtime_lineage
 from intelliai_api.registry import Registry, Resolution
 from intelliai_api.runtimes import RuntimeCallError, RuntimeClient, RuntimeUnavailableError
@@ -50,10 +51,12 @@ class SpeechService:
         registry: Registry,
         clients: Mapping[str, RuntimeClient],
         usage: UsageRecorder | None = None,
+        admission: CapabilityAdmission | None = None,
     ) -> None:
         self._registry = registry
         self._clients = clients
         self._usage = usage
+        self._admission = admission
 
     async def synthesize(
         self,
@@ -84,6 +87,18 @@ class SpeechService:
                     param="voice",
                     code="voice_not_found",
                 )
+        # Capability-scoped admission: only knowable HERE, after the
+        # registry says what this request actually is. Capacity is
+        # capability-specific (M3 measured TTS plateauing at 0.64 rps),
+        # so a shared request-per-second budget across capabilities would
+        # be meaningless — a request is not a unit of cost.
+        if self._admission is not None:
+            await self._admission.check_capability(
+                organization_id=auth.organization_public_id,
+                plan_id=auth.organization.plan,
+                capability=Capability.SPEECH_SYNTHESIS.value,
+            )
+
         client = self._clients.get(resolution.service)
         if client is None:
             logger.error("runtime_client_missing", service=resolution.service)

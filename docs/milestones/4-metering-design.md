@@ -328,6 +328,41 @@ capability, per day.* Any nonzero delta is an alarm with a precise blast
 radius. This is the difference between believing we bill correctly and
 knowing it.
 
+### 6.1 The Ledger Completeness Invariant
+
+Ratified by the founder at Step 2 close, 2026-08-04:
+
+> **Every successful customer response must correspond to exactly one
+> successful ledger record, or exactly one durable reconciliation record
+> explaining why the ledger record could not be written.**
+>
+> **There must never be silent commercial loss.**
+
+This is the law that option E of §6 exists to satisfy, stated as an
+obligation rather than as a mechanism. Its force is in the word *or*:
+degrading open is permitted, degrading **silently** is not. Every
+serving path therefore has exactly two acceptable end states, and no
+third:
+
+| End state | Acceptable | Produces |
+|---|---|---|
+| Response delivered, ledger row written | ✅ | one ledger record |
+| Response delivered, ledger write refused | ✅ | one alarm + one durable fallback record |
+| Response delivered, nothing recorded anywhere | ❌ **forbidden** | silent commercial loss |
+| Response not delivered, ledger row written | ❌ forbidden | a charge for nothing |
+
+Consequences that follow, and that every later step inherits:
+
+- The fallback sink is not an optimisation; it is what makes the second
+  row of the table legal. Removing it converts a permitted degradation
+  into a forbidden one.
+- The alarm is not decoration either: an unnoticed fallback record is
+  indistinguishable from silence.
+- The daily reconciliation query is the invariant's **auditor** — the
+  thing that turns "we believe both counts match" into a measured fact.
+- Any future serving path (streaming, batch jobs, webhooks) must declare
+  which of the two acceptable end states it produces, before it ships.
+
 ## 7. The event model
 
 ### 7.1 Two families, never merged
@@ -516,6 +551,43 @@ internally, the ledger still stays at one row.
 Structurally this rests on the `request_id` uniqueness constraint
 (§7.2): the platform mints exactly one request id per customer request,
 and the ledger will refuse a second event carrying it.
+
+### 7.8 The Commercial Completeness Invariant
+
+Ratified by the founder at Step 2 close, 2026-08-04:
+
+> **Every billable ledger record must correspond to exactly one customer
+> request. Commercial facts are always derived from customer work, never
+> created independently.**
+
+The Request Identity Invariant (§7.7) forbids *many rows for one
+request*. This one forbids the mirror error: *a row with no request
+behind it*. Together they make the mapping a bijection, and each closes
+a failure the other cannot see.
+
+| Forbidden by §7.7 | Forbidden by §7.8 |
+|---|---|
+| per-chunk billing | a billable row invented by a script |
+| per-retry billing | a "correction" that adds charges rather than reversing them |
+| per-engine-consulted billing | a migration or backfill that manufactures usage |
+| per-cascade-stage billing | an internal job billing a customer for work they did not request |
+
+The practical consequence is a rule about who may write a **billable**
+row: only the serving path, only from a request the platform actually
+received and served. Nothing else — not an admin action, not a support
+tool, not a data backfill — may create one. The two legitimate
+non-serving writers are constrained accordingly:
+
+- **compensating events** (§7.3) only ever *reverse* an existing
+  billable row, and carry its identity — they subtract, never add;
+- **non-billable rows** (failed work) are permitted from the serving
+  path's failure handler, because they document work the platform
+  actually performed and never become money.
+
+Structurally this rests on the check constraint requiring a
+`request_id` on every non-compensating event (§7.2): a billable row
+manufactured without a customer request has nothing to put in that
+column, and the database refuses it.
 
 ## 8. Identity continuity — the law that survives every model change
 
@@ -714,8 +786,25 @@ nothing.
 Atomicity is not academic: a read-then-write from Python is a race that
 fails precisely under the concurrent load the limiter exists to handle.
 
-> **Redis-backed protection fails open, loudly. Postgres-backed
-> entitlement shares fate with authentication.**
+> **Redis-backed protection fails open, loudly — and cheaply.**
+> **Postgres-backed entitlement shares fate with authentication.**
+
+The third word was added at Step 3, on measurement. Failing open is not
+sufficient on its own: with Redis unreachable, each of a request's five
+limiter calls burned the full socket budget, adding **~1.2 s per
+request** — a limiter outage becoming a platform degradation by another
+route, which is exactly what the posture exists to prevent. A **circuit
+breaker** closes it: after three consecutive failures the limiter stops
+calling Redis for a cooldown and requests pay nothing, with one alarm
+per trip rather than one per request.
+
+| Redis state | p50 at c=10, before | after |
+|---|---|---|
+| reachable | ~600 ms | ~600 ms |
+| unreachable | **1891 ms** | **575 ms** |
+
+With the breaker open, a Redis outage is no longer measurable in
+customer latency at all.
 
 A limiter outage becoming a platform outage is a worse failure than a few
 minutes of unbounded traffic. If Postgres is down we cannot authenticate
@@ -1013,14 +1102,26 @@ stays a pass-through**, which is the outcome that ADR predicted.
   noise) and **~12 ms at c=25** (795 vs 783), where the write competes
   for the same saturated pool. Well inside the R1 budget.
 
-  **The fix is a founder decision, not a Step 2 edit**, because the
+  **The fix was a founder decision, not a Step 2 edit**, because the
   obvious remedy — release the connection before the runtime call and
   reacquire it for the ledger write — removes metering from the request's
-  transaction and therefore weakens §6's durability guarantee. Options,
-  in increasing order of cost: raise `pool_size` (cheap, bounded by
-  Postgres `max_connections`); split the session lifecycle and re-verify
-  §6; or move to a dedicated metering connection pool. Registered as
-  **open decision F8** (§18).
+  transaction and therefore weakens §6's durability guarantee.
+
+  ✅ **RESOLVED at Step 3 (F8): `pool_size` raised 5 → 20.** Re-measured
+  on the same ladder:
+
+  | Concurrency | Pool checked out (before → after) | Peak concurrent in runtime (before → after) |
+  |---|---|---|
+  | 25 | 15 → **25** | 15 → **25** |
+  | 40 | 15 → **30** | 15 → **30** |
+
+  The ceiling moved from 15 to exactly `pool_size + overflow = 30`, and
+  p50 at c=40 fell from 1248 ms to 1161 ms — **without touching
+  transaction ownership and therefore without re-earning §6's argument.**
+  Tune the cheap knob before weakening a guarantee. The session-lifecycle
+  question reopens only if measurement shows 30 is again the binding
+  constraint, and the next ceiling is Postgres `max_connections`, not
+  this design.
 - **R3 — Silent revenue loss.** Mitigated by the write-failure alarm, the
   durable fallback sink, and the daily reconciliation invariant. Without
   all three, correct billing is a belief rather than a fact.
@@ -1102,7 +1203,13 @@ recorded here as settled inputs, not open questions.
 | **F5** | Free tier at launch | **Ship one from day one**, with generous default quotas — so quota logic, reset behavior, enforcement, analytics, and rating are exercised in production instead of lying dormant until the first customer | Step 4 |
 | **F6** | Billing period anchor | **Calendar month, UTC** | Step 5 |
 | **F7** | Billable origins | **Only `origin = customer`.** All other origins remain fully metered and are excluded during rating | Step 5 |
-| **F8** | How to lift the measured 15-request connection ceiling (R2) | **Open.** Raise `pool_size` (cheap, no durability consequence) / split the session lifecycle and re-verify §6 / dedicated metering pool. Recommendation: raise `pool_size` now, revisit the lifecycle only if measurement says it is still the binding constraint | Step 3 |
+| **F8** | How to lift the measured 15-request connection ceiling (R2) | **Raise `pool_size` first. Do NOT redesign transaction ownership.** The bottleneck is accepted as real, but durability guarantees are not traded for throughput; a session-lifecycle redesign happens only after measurement proves pool tuning insufficient | Step 3 |
+
+F8 states a priority the platform should keep past this milestone:
+**tune the cheap knob before weakening a guarantee.** Pool size is
+reversible configuration; transaction ownership is a durability
+contract, and §6's argument would have to be re-earned rather than
+re-stated.
 
 F5 is the ruling with the largest engineering consequence and it is worth
 stating as a principle: **enforcement code that never runs is untested

@@ -76,4 +76,11 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
             **_auth_fields(request),
         )
         response.headers[REQUEST_ID_HEADER] = request_id
+        # Rate-limit headers ride out here rather than from each route, so
+        # they appear on successes AND on the 429 the error handler
+        # rendered — a client tuning its backoff needs them most on the
+        # response that refused it.
+        decision = getattr(request.state, "rate_limit", None)
+        if decision is not None and not decision.degraded:
+            response.headers.update(decision.headers)
         return response

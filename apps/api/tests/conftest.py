@@ -12,6 +12,7 @@ Two worlds, deliberately separate:
   code, and the database is bit-for-bit untouched between tests.
 """
 
+import uuid
 from collections.abc import AsyncIterator
 
 import pytest
@@ -22,6 +23,7 @@ from intelliai_api.core.config import (
     AuthSettings,
     DatabaseSettings,
     Environment,
+    LimitsSettings,
     RedisSettings,
     Settings,
     StorageSettings,
@@ -36,15 +38,25 @@ def anyio_backend() -> str:
 
 @pytest.fixture()
 def settings() -> Settings:
+    # A fresh limits namespace per test: buckets and leases are shared
+    # state in Redis, and without isolation one test's traffic would
+    # consume another's allowance — a suite that fails by ORDER rather
+    # than by defect.
     return Settings(
         _env_file=None,
         env=Environment.TEST,
         auth=AuthSettings(_env_file=None, key_pepper="test-pepper"),
+        limits=LimitsSettings(_env_file=None, namespace=f"test-{uuid.uuid4().hex}"),
         database=DatabaseSettings(
             _env_file=None,
             url="postgresql+asyncpg://test:test-password@localhost:5432/test",
         ),
-        redis=RedisSettings(_env_file=None, url="redis://localhost:6379/9"),
+        # 127.0.0.1, never "localhost": on a dual-stack host "localhost"
+        # resolves to ::1 first, and a service listening only on IPv4
+        # costs a failover that can exceed the limiter's deliberately
+        # short fail-fast budget — silently turning every test into a
+        # fail-open test.
+        redis=RedisSettings(_env_file=None, url="redis://127.0.0.1:6379/9"),
         storage=StorageSettings(
             _env_file=None,
             endpoint_url="http://localhost:9000",
