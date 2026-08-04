@@ -290,6 +290,46 @@ mismatch is written to the ledger as evidence — precisely the data that
 would one day justify a detection-routing stage, or prove it not worth
 building. The seam is named; nothing forecloses it.
 
+#### Three languages, and only one of them routes
+
+The word "language" names three different things in one request. They
+are produced at different moments by different parties, and confusing
+any two of them is how content-dependent routing gets built by accident:
+
+```
+   ┌────────────────────┐
+   │ REQUESTED LANGUAGE │   what the customer DECLARED  ("hi-IN")
+   └─────────┬──────────┘   · an input, supplied by the caller
+             │              · normalized to its base subtag FOR ROUTING ONLY
+             │              · recorded in full as a ledger fact
+             ▼
+   ┌────────────────────┐
+   │   RESOLVED ROUTE   │   what the REGISTRY chose   (hi → future-hi-v1
+   └─────────┬──────────┘                              @ stt-runtime-indic)
+             │              · a pure function of (request, registry state)
+             │              · decided BEFORE any inference runs
+             │              · the artifact the runtime is then told to use
+             ▼
+   ┌────────────────────┐
+   │ OBSERVED LANGUAGE  │   what the ENGINE reported  ("en")
+   └────────────────────┘   · an OUTPUT of serving, produced by inference
+                            · recorded as a ledger fact
+                            · feeds analytics and future evidence
+                            · ────► never flows back upward ◄────
+```
+
+> **Permanent law: observed language is an output fact produced by
+> serving. It is never routing input.**
+
+The arrow only ever points down. The moment an observed language is
+allowed to influence a route, resolution stops being a pure function of
+(request, registry state): identical request bytes could route
+differently as the detector changes, evaluation can no longer attribute
+a result to an artifact, and a served response is no longer explicable
+from records alone. A requested/observed mismatch is *evidence about*
+routing rules — read by humans, weighed in a promotion — never an input
+to them.
+
 ### 4.3 TTS: the voice *is* the routing key
 
 TTS has no language parameter — M4 flagged this as the open product
