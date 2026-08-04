@@ -31,6 +31,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from intelliai_api.api.deps import enforce_limits
 from intelliai_api.core.config import Settings
+from intelliai_api.core.errors import RateLimitError
 from intelliai_api.limits import (
     AdmissionController,
     CapabilityAdmission,
@@ -523,12 +524,17 @@ async def test_capabilities_that_do_not_exist_are_limited_correctly(
     """
     monkeypatch.setitem(PLANS, FREE, _tight_plan(burst=2))
     admission = CapabilityAdmission(await _controller(settings))
-    kwargs = {"organization_id": f"org_future_{capability}", "plan_id": FREE}
+    organization = f"org_future_{capability}"
 
-    await admission.check_capability(**kwargs, capability=capability)  # type: ignore[arg-type]
-    await admission.check_capability(**kwargs, capability=capability)  # type: ignore[arg-type]
-    with pytest.raises(Exception, match="Retry after"):
-        await admission.check_capability(**kwargs, capability=capability)  # type: ignore[arg-type]
+    async def ask() -> None:
+        await admission.check_capability(
+            organization_id=organization, plan_id=FREE, capability=capability
+        )
+
+    await ask()
+    await ask()
+    with pytest.raises(RateLimitError, match="Retry after"):
+        await ask()
 
 
 async def test_one_capability_cannot_exhaust_another(
@@ -544,7 +550,7 @@ async def test_one_capability_cannot_exhaust_another(
         await admission.check_capability(
             organization_id=org, plan_id=FREE, capability="transcription"
         )
-    with pytest.raises(Exception, match="Retry after"):
+    with pytest.raises(RateLimitError, match="Retry after"):
         await admission.check_capability(
             organization_id=org, plan_id=FREE, capability="transcription"
         )
