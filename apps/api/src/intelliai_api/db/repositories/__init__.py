@@ -23,11 +23,13 @@ gets extracted when duplication demands it, not before.
 from intelliai_api.db.repositories.api_keys import ApiKeyRepository
 from intelliai_api.db.repositories.organizations import OrganizationRepository
 from intelliai_api.db.repositories.usage_events import UsageEventRepository
+from intelliai_api.db.repositories.usage_rollups import UsageRollupRepository
 from intelliai_api.db.repositories.users import UserRepository
 
 __all__ = [
     "ApiKeyRepository",
     "OrganizationRepository",
     "UsageEventRepository",
+    "UsageRollupRepository",
     "UserRepository",
 ]

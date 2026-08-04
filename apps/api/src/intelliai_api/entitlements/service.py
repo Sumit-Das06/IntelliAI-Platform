@@ -45,8 +45,8 @@ from intelliai_api.core.time import utc_now
 from intelliai_api.db.models import UsageOrigin
 from intelliai_api.db.repositories import UsageEventRepository
 from intelliai_api.entitlements.period import BillingPeriod, period_for
-from intelliai_api.entitlements.pricing import CURRENT, PriceBook, rate
 from intelliai_api.limits.plans import Plan, plan_for
+from intelliai_api.pricing import CATALOG, PriceBookCatalog, rate_totals
 
 logger = structlog.get_logger(__name__)
 
@@ -56,10 +56,10 @@ class EntitlementService:
         self,
         usage: UsageEventRepository,
         *,
-        price_book: PriceBook = CURRENT,
+        catalog: PriceBookCatalog = CATALOG,
     ) -> None:
         self._usage = usage
-        self._price_book = price_book
+        self._catalog = catalog
 
     async def check(
         self,
@@ -146,7 +146,11 @@ class EntitlementService:
             return
         ceiling = min(ceilings)
 
-        spent = rate(totals, self._price_book)
+        # Rated at the book in effect during the period being enforced,
+        # not at today's — a price change must not retroactively push a
+        # past period over its ceiling.
+        book = self._catalog.book_for(period.start)
+        spent = rate_totals(totals, at=period.start, catalog=self._catalog)
         if spent < ceiling:
             return
 
@@ -155,7 +159,7 @@ class EntitlementService:
             organization_id=organization_public_id,
             spent=str(spent),
             ceiling=str(ceiling),
-            price_book=self._price_book.version,
+            price_book=book.version,
             period=period.label,
         )
         raise QuotaExceededError(

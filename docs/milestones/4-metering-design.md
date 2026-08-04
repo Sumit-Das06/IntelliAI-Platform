@@ -685,6 +685,86 @@ renegotiate:
   fractional billing unit to describe a broken connection.
 - Time-to-first-byte remains a latency metric, never a usage quantity.
 
+## 8.4 The Commercial Interpretation Invariant
+
+Ratified by the founder at Step 4 close, 2026-08-04:
+
+> **Commercial policy is always computed from immutable facts.**
+>
+> Plans, discounts, subscriptions, regional pricing, enterprise
+> contracts, and promotions may change over time. Ledger facts never
+> change.
+>
+> **Commercial interpretation evolves. Commercial evidence does not.**
+
+This is the generalisation the milestone has been circling since §3.4,
+and it settles a question that recurs with every new commercial feature:
+*where does this belong?* The test is one question — **would a change to
+this rewrite the past?**
+
+| Evidence (immutable) | Interpretation (evolves) |
+|---|---|
+| quantities, units, language | plans and tiers |
+| origin, outcome, timestamps | discounts and promotions |
+| public capability | regional pricing |
+| lineage, request identity | enterprise contracts |
+| whether value was delivered | subscriptions and commitments |
+| — | what any of it costs |
+
+Every entry in the right column is a *lens* applied to the left, at read
+time, recorded by version. A discount is not a fact about a request; it
+is a fact about an agreement, applied to requests. The moment a
+promotion writes into a usage row, last quarter's invoices become
+unreproducible — and unreproducible invoices are the failure this whole
+plane is built to prevent.
+
+The practical consequence for every later milestone: **new commercial
+features add interpretation, never columns to the ledger.**
+
+## 8.5 The Rollup Invariant
+
+Ratified by the founder at Step 4 close, 2026-08-04:
+
+> **Rollups are caches, never sources of truth. Every rollup must be
+> exactly reproducible from the immutable ledger. If a rollup and the
+> ledger disagree, the ledger is authoritative.**
+
+Rollups are the standard answer to aggregate cost and the standard way
+to lose a ledger's authority: once something reads faster than the
+truth, it quietly becomes the truth. Three rules keep that from
+happening:
+
+1. **Rebuildable at any time**, by deletion and recomputation — a rollup
+   that cannot be dropped and regenerated is not a cache.
+2. **Never money.** A rollup stores measured usage; money is computed
+   from it at read time under a stated price book version, so a price
+   change never requires touching stored aggregates.
+3. **Disagreement is a defect in the rollup, and is repaired by
+   rebuilding it** — never by adjusting the ledger to match.
+
+The corollary is a permission the ledger does not have: rollup rows may
+be updated and deleted freely. That asymmetry — an append-only table
+beside a truncatable one — is the design working, not an inconsistency.
+
+**Measured at Step 5**, because a cache that is not much faster than the
+truth is complexity with no payoff and should be deleted rather than
+defended:
+
+| Events in the period | Ledger aggregate | Rollup read | Speed-up | Rebuild |
+|---|---|---|---|---|
+| 5 000 | 6.94 ms | 0.94 ms | **7.4×** | 14.89 ms |
+| 20 000 | 22.30 ms | 0.86 ms | **25.9×** | 30.76 ms |
+
+The shape matters more than the numbers: **the cache read is constant
+time while the truth grows linearly.** That is the property that earns a
+rollup its place, and it is also why the ledger stays authoritative —
+rebuilding 20 000 events costs 31 ms, so re-deriving the cache is always
+affordable and disagreement never has to be tolerated.
+
+Quota deliberately still reads the ledger (§10.4): at present volumes the
+aggregate is 1–3 ms and correctness is worth more than 2 ms. The rollup
+serves rating and analysis, and takes over quota at the measured trigger.
+
 ## 9. Pricing — evolution without touching runtimes
 
 ```

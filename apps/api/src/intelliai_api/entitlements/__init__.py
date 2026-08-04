@@ -8,18 +8,16 @@ A separate package rather than a module inside ``limits/`` because the
 two must not become one system by convenience — and because this one
 imports the database and the ledger, which ``limits/`` deliberately never
 may (Protection Independence Invariant, design §10.1a).
+
+Pricing moved out to ``intelliai_api.pricing`` at Step 5: entitlement is
+one of its consumers, not its owner.
 """
 
 from intelliai_api.entitlements.period import BillingPeriod, period_for
-from intelliai_api.entitlements.pricing import CURRENT, INTERNAL_V1, PriceBook, rate
 from intelliai_api.entitlements.service import EntitlementService
 
 __all__ = [
-    "CURRENT",
-    "INTERNAL_V1",
     "BillingPeriod",
     "EntitlementService",
-    "PriceBook",
     "period_for",
-    "rate",
 ]

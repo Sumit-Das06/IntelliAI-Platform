@@ -16,6 +16,7 @@ from intelliai_api.db.models.usage_event import (
     UsageOutcome,
     UsageQuantity,
 )
+from intelliai_api.db.models.usage_rollup import UsageRollup
 from intelliai_api.db.models.user import User
 
 __all__ = [
@@ -27,5 +28,6 @@ __all__ = [
     "UsageOrigin",
     "UsageOutcome",
     "UsageQuantity",
+    "UsageRollup",
     "User",
 ]

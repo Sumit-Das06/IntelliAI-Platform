@@ -33,10 +33,10 @@ from intelliai_api.core.config import Settings
 from intelliai_api.core.errors import QuotaExceededError
 from intelliai_api.db.models import UsageOrigin, UsageOutcome
 from intelliai_api.db.repositories import UsageEventRepository
-from intelliai_api.entitlements import EntitlementService, period_for, rate
-from intelliai_api.entitlements.pricing import INTERNAL_V1, PriceBook
+from intelliai_api.entitlements import EntitlementService, period_for
 from intelliai_api.limits import plans as plans_module
 from intelliai_api.limits.plans import FREE, PLANS, Plan
+from intelliai_api.pricing import INTERNAL_V1, PriceBook, PriceBookCatalog, rate_totals
 from intelliai_api.services.identity import BootstrapResult, IdentityService
 from intelliai_runtime_contract import (
     CONTRACT_VERSION,
@@ -55,6 +55,15 @@ pytestmark = pytest.mark.anyio
 PEPPER = "test-pepper"
 FAKE_WAV = b"RIFF\x24\x00\x00\x00WAVEfake"
 NOW = datetime(2026, 8, 15, 12, 0, tzinfo=UTC)
+
+
+def rate(totals: dict[str, Decimal], book: PriceBook = INTERNAL_V1) -> Decimal:
+    """Single-book rating, as this file's tests mean it.
+
+    Step 5 gave rating a catalog and per-event book selection; these
+    tests are about entitlement, not price history, so they pin one book.
+    """
+    return rate_totals(totals, at=book.effective_from_utc, catalog=PriceBookCatalog(books=(book,)))
 
 
 def _plan(**over: Any) -> Plan:
