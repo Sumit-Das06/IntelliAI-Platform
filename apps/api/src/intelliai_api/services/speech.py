@@ -17,6 +17,7 @@ from decimal import Decimal
 import structlog
 
 from intelliai_api.core.errors import InternalError, InvalidRequestError, ServiceUnavailableError
+from intelliai_api.entitlements import EntitlementService
 from intelliai_api.limits import CapabilityAdmission
 from intelliai_api.metering import UsageRecorder, runtime_lineage
 from intelliai_api.registry import Registry, Resolution
@@ -52,11 +53,13 @@ class SpeechService:
         clients: Mapping[str, RuntimeClient],
         usage: UsageRecorder | None = None,
         admission: CapabilityAdmission | None = None,
+        entitlements: EntitlementService | None = None,
     ) -> None:
         self._registry = registry
         self._clients = clients
         self._usage = usage
         self._admission = admission
+        self._entitlements = entitlements
 
     async def synthesize(
         self,
@@ -97,6 +100,16 @@ class SpeechService:
                 organization_id=auth.organization_public_id,
                 plan_id=auth.organization.plan,
                 capability=Capability.SPEECH_SYNTHESIS.value,
+            )
+        # Entitlement AFTER protection: a caller who is over their plan
+        # allowance is also usually going too fast, and the cheaper
+        # Redis check should reject them before we aggregate the ledger.
+        if self._entitlements is not None:
+            await self._entitlements.check(
+                organization_id=auth.organization_id,
+                organization_public_id=auth.organization_public_id,
+                plan_id=auth.organization.plan,
+                spend_limit=auth.organization.spend_limit,
             )
 
         client = self._clients.get(resolution.service)

@@ -18,6 +18,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from intelliai_api.core.config import Settings
 from intelliai_api.core.errors import AuthenticationError, RateLimitError
 from intelliai_api.core.health import HealthService
+from intelliai_api.db.repositories import UsageEventRepository
+from intelliai_api.entitlements import EntitlementService
 from intelliai_api.limits import (
     AdmissionController,
     CapabilityAdmission,
@@ -265,22 +267,38 @@ def capability_admission(
 CapabilityAdmissionDep = Annotated[CapabilityAdmission, Depends(capability_admission)]
 
 
+def entitlement_service(session: SessionDep) -> EntitlementService:
+    """Entitlement seam: quota and spend, read from the ledger itself."""
+    return EntitlementService(UsageEventRepository(session))
+
+
+EntitlementDep = Annotated[EntitlementService, Depends(entitlement_service)]
+
+
 def transcription_service(
-    request: Request, usage: UsageDep, admission: CapabilityAdmissionDep
+    request: Request,
+    usage: UsageDep,
+    admission: CapabilityAdmissionDep,
+    entitlements: EntitlementDep,
 ) -> TranscriptionService:
-    """Transcription flow: registry + runtime clients + metering + admission."""
+    """Transcription flow: registry + runtimes + metering + admission + entitlement."""
     clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
     return TranscriptionService(
-        cast(Registry, request.app.state.registry), clients, usage, admission
+        cast(Registry, request.app.state.registry), clients, usage, admission, entitlements
     )
 
 
 def speech_service(
-    request: Request, usage: UsageDep, admission: CapabilityAdmissionDep
+    request: Request,
+    usage: UsageDep,
+    admission: CapabilityAdmissionDep,
+    entitlements: EntitlementDep,
 ) -> SpeechService:
-    """Synthesis flow: registry + voices + runtime clients + metering + admission."""
+    """Synthesis flow: registry + voices + runtimes + metering + admission + entitlement."""
     clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
-    return SpeechService(cast(Registry, request.app.state.registry), clients, usage, admission)
+    return SpeechService(
+        cast(Registry, request.app.state.registry), clients, usage, admission, entitlements
+    )
 
 
 CurrentAuth = Annotated[AuthContext, Depends(current_auth)]

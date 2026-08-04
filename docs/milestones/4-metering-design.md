@@ -744,6 +744,70 @@ worker for its whole duration regardless of request rate. Concurrency
 limiting is a leased counter with a TTL — cheap, and the only thing that
 stops one organization consuming the measured pool.
 
+### 10.1a The Protection Independence Invariant
+
+Ratified by the founder at Step 3 close, 2026-08-04:
+
+> **Admission control protects platform resources. It never makes
+> decisions based on foundation models, artifacts, quantization, LoRAs,
+> routing choices, providers, GPUs, or future multilingual engine
+> selection.**
+>
+> **Commercial identity remains attached only to public capabilities.**
+
+This is the Commercial Identity Invariant (§8.0) stated for the
+protection plane, and it closes a hole the earlier law does not reach.
+§8.0 keeps the *engine* out of the customer's bill; this keeps it out of
+the customer's *access*. Without it, a plausible-sounding optimisation —
+"GPU-served requests are expensive, limit them harder" — would make a
+customer's throughput depend on an internal routing decision they cannot
+see, predict, or appeal.
+
+| Legitimate limiting dimension | Forbidden dimension |
+|---|---|
+| organization, API key | artifact or foundation model |
+| public capability | quantization or precision |
+| endpoint class (control plane) | LoRA / adapter / merge identity |
+| IP, pre-authentication only | routing decision or provider |
+| plan | GPU vs CPU placement |
+| — | which engine serves a language |
+
+The practical rule: **a limit rule's identity may contain only values a
+customer could read off their own request.** Internal cost differences
+between engines are a *pricing* question (ADR-0023) and a *capacity*
+question (the runtime's own 503) — never an admission question.
+
+Structurally, `limits/` imports nothing that knows what an engine is: a
+rule is a scope, an identity, and a rate, and lineage is not available to
+it even by accident.
+
+### 10.1b The Operational Honesty Principle
+
+Ratified by the founder at Step 3 close, 2026-08-04:
+
+> **When entitlement cannot be determined with confidence, the platform
+> must either fail honestly or explicitly declare that enforcement is
+> unavailable. It must never publish incorrect quota or rate-limit
+> information.**
+
+Three states, and the third is the one most systems get wrong:
+
+| State | Behaviour |
+|---|---|
+| Enforced | act on the decision, publish the numbers |
+| Refused | refuse with the true reason and the true retry semantics |
+| **Cannot determine** | **serve, alarm, and publish nothing** |
+
+The failure this forbids is a *plausible* number: a cached, stale, or
+default-valued limit presented as though it were measured. A client
+tuning its backoff against a fabricated `X-RateLimit-Remaining` is worse
+off than one given no header at all, because it will trust the fiction.
+
+Already binding on the code as shipped: a degraded limiter returns
+`ALLOWED_UNMEASURED`, the middleware publishes no rate-limit headers for
+it, and an alarm fires. Silence is the honest answer, and it is
+deliberately distinguishable from "you have plenty left".
+
 ### 10.2 The hierarchy
 
 | Level | Dimension | Purpose | Verdict |
@@ -843,6 +907,30 @@ and maximum single-request cost is already bounded by the input limits
 built for safety (`max_text_chars = 2000`, upload ceiling). Those limits
 turn out to be what makes quota enforcement tractable — so **nobody may
 raise an input limit without also raising the quota overshoot bound.**
+
+**Quota is computed from the ledger, not from a counter** — the usage
+events are already the exact, durable record invoices will be built
+from, and a parallel counter is a second source of truth that can drift
+from the first. Measured at Step 4 (grouped SUM over one indexed range,
+20 samples per row):
+
+| Events in the period | p50 | max |
+|---|---|---|
+| 100 | 1.31 ms | 6.52 ms |
+| 1 000 | 2.58 ms | 8.17 ms |
+| 5 000 | 8.36 ms | 13.79 ms |
+
+On the serving path the difference is inside run-to-run noise at current
+volumes (353 ms with entitlement vs 338 ms bypassed at c=1; at c=25 the
+entitled run was *faster* than the bypassed one, which is the honest way
+of saying the effect is not measurable there).
+
+Cost grows roughly **1.6 ms per thousand events in the period**, so the
+graduation trigger is concrete rather than a feeling: **when a single
+tenant's monthly event count approaches ~25 000, the aggregate reaches
+~40 ms and a rollup is warranted** — one *derived from* the ledger and
+rebuildable from it, never a replacement for it (ADR-0023's rollups are
+cache).
 
 **Reservations are deliberately rejected for M4.** Reserve-then-settle is
 correct in general and wrong for this milestone: it introduces

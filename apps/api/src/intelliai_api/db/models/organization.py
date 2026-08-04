@@ -1,9 +1,10 @@
 """Organization: the tenant — the unit of ownership, quota, and billing."""
 
+from decimal import Decimal
 from functools import partial
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger, Enum, Identity, String
+from sqlalchemy import BigInteger, Enum, Identity, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from intelliai_api.db.base import Base, TimestampMixin, generate_public_id
@@ -42,6 +43,13 @@ class Organization(TimestampMixin, Base):
     # columns. Text rather than an enum because the plan catalog is
     # code-declarative and adding a tier must not require a migration.
     plan: Mapped[str] = mapped_column(String(32), default=FREE, server_default=FREE)
+
+    # A ceiling the CUSTOMER sets on their own spend for a period; None
+    # means "whatever the plan allows". The effective ceiling is the
+    # stricter of this and the plan's, because both parties need to be
+    # able to protect themselves. NUMERIC, never float: sub-cent drift is
+    # a real number at volume and an embarrassing one in an audit.
+    spend_limit: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
 
     # Deliberately minimal: quota/billing columns arrive with the
     # milestones that give them meaning (M4+), as additive migrations.
