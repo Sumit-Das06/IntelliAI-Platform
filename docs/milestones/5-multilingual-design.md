@@ -255,12 +255,52 @@ reference engines**. Language-named deployments are safe because
 languages are promises kept regardless of what serves them; engine-named
 deployments would break exactly when nothing should have to change.
 
+### Three identities that are never interchangeable
+
+```
+   ┌─────────────────┐
+   │    ARTIFACT     │   a concrete set of trained weights — an IDENTITY
+   └────────┬────────┘   permanent as a record, immutable, retained forever
+            │            (whisper-small v1)
+            │  is hosted by
+            ▼
+   ┌─────────────────┐
+   │   DEPLOYMENT    │   a named place that hosts one or more artifacts
+   └────────┬────────┘   a CONFIGURATION, part of the temporary vocabulary
+            │            (stt-runtime-indic)
+            │  is realized by
+            ▼
+   ┌─────────────────┐
+   │ RUNTIME PROCESS │   one running instance of that configuration
+   └─────────────────┘   ephemeral: restarted, scaled, replaced at will
+```
+
+> **Permanent law: a deployment hosts an artifact. A runtime process
+> realizes a deployment. These identities are related but never
+> interchangeable.**
+
+Each relation is many-to-one downward and one-to-many upward, and every
+confusion between the layers is a real failure mode. An *artifact* can be
+hosted by several deployments at once, so "the artifact" is never a
+place. A *deployment* can be realized by several processes — that is what
+scaling out is — so a deployment is never a process, and a process
+restart is never a change of what is hosted (§6: a slot's binding is
+fixed for the life of the process; replacing an artifact is a deployment
+operation). And a process holds no identity of its own: nothing may name
+one, route to one, or record one as the thing that served, because it
+will not exist tomorrow.
+
 **Packing is a deployment decision, not an architectural one.** Whether
 two artifacts share a process (two slots, one deployment) or split
 (memory isolation, independent scaling) is decided per adoption by
 measured residency — MODEL_IDENTITY separates deployments from artifacts
-for exactly this reason. Default posture on CPU: one artifact per
-deployment until measurement justifies packing (F-M5-5).
+for exactly this reason.
+
+> **Ruled (F-M5-5, 2026-08-05): one artifact per deployment is the CPU
+> default.** The measured ~54 MiB interpreter overhead is accepted in
+> exchange for simpler operations, independent scaling, a cleaner blast
+> radius, cleaner rollback, and cleaner promotion. Packing remains
+> supported by the architecture and is not the default posture.
 
 **Gateway consequence:** `runtime_clients` today is keyed by service
 (one URL each). It becomes keyed by **deployment name**, and
@@ -923,6 +963,14 @@ requirements were met before the law existed (M2.5 evaluation evidence,
 the committed quality baselines, the M3 production benchmarks, and
 F-M5-2 itself as the explicit approval), and the catalog cites all four.
 
+**F-M5-5 — One artifact per deployment on CPU** *(ratified 2026-08-05,
+after M5 Step 6)*. The measured ~54 MiB interpreter overhead is accepted
+in exchange for simpler operations, independent scaling, a cleaner blast
+radius, cleaner rollback, and cleaner promotion. **Packing remains
+supported by the architecture but is not the default deployment
+posture** — the mechanism stays, the habit does not. Recorded as law in
+§3 beside the three-identity diagram, and as ADR-0026 Amendment 2.
+
 **F-M5-7 — No TTS language field in M5** *(ratified 2026-08-05, before
 M5 Step 3)*. The public API introduces **no** `language` field for
 speech synthesis. Throughout M5, language is expressed through **voice
@@ -955,7 +1003,6 @@ engineering is never idle waiting.
 |---|---|---|---|
 | **F-M5-3** | Absolute quality bars for `supported`, per language | Set per language at promotion time from corpus evidence, recorded in the promotion diff — not guessed now. F-M5-1 fixed the *process*; this fixes the *numbers* | First language enablement |
 | **F-M5-4** | Voice rebinding evidence bar | Listening protocol (M2.5 discipline) mandatory; `speaker_similarity` implementation before the *second* rebinding | First rebinding |
-| **F-M5-5** | Deployment packing posture | One-artifact-per-deployment default on CPU; packing only with measured residency headroom. **Measured at Step 6:** isolation costs ~54.5 MiB — one interpreter — which is ~13% on top of a whisper-small deployment and ~4% of that engine's 1.4 GiB container residency. Packing buys back one interpreter and spends a shared worker pool and a shared blast radius | Step 6 (mechanism shipped; the posture is still yours) |
 | **F-M5-6** | Arabic corpus commissioning — the prerequisite for *any* Arabic progress | Approve as an evaluation-track work item now; it gates all Arabic decisions and takes calendar time. Arabic STT is now publicly `available` (F-M5-2), which raises the urgency: we are serving it honestly-labelled and unmeasured | Research/evaluation track |
 | **F-M5-8** | **Hindi speech corpus** — audio with committed reference transcripts. Found at Step 4: this design assumed Hindi had a corpus because the M2.5 *synthesis* corpus contains Hindi text. Transcription needs Hindi **audio**, which is a different asset and does not exist | Commission or select one, as an evaluation-track work item. Pinning a third-party dataset into the permanent evidence chain carries its licence into every future Hindi promotion, so the choice is a founder decision, not an engineering one. Until it exists, Hindi's honest rung is `available` — where F-M5-2 already put it — and no Hindi run can be a quality claim | Hindi promotion to `supported` |
 

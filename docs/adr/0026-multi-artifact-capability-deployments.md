@@ -99,6 +99,27 @@ deployment names draw only from permanent vocabulary.**
 
 ## Amendments
 
+**Amendment 2 — three identities, and the CPU packing posture
+(2026-08-05, founder decision F-M5-5).** Names what Decision 4 assumed
+and rules the default it left open.
+
+> A deployment hosts an artifact. A runtime process realizes a
+> deployment. These identities are related but never interchangeable.
+
+Each relation is many-to-one downward and one-to-many upward. An artifact
+can be hosted by several deployments, so it is never a place. A
+deployment can be realized by several processes — that is scaling out —
+so it is never a process, and a restart is never a change of what is
+hosted. A process holds no identity at all: nothing may name one, route
+to one, or record one as the thing that served, because it will not exist
+tomorrow.
+
+**On CPU, one artifact per deployment is the default.** The measured
+~54 MiB interpreter overhead (Step 6) is accepted in exchange for simpler
+operations, independent scaling, a cleaner blast radius, cleaner
+rollback, and cleaner promotion. Packing remains supported by the
+architecture and is no longer a posture anyone has to argue against.
+
 **Amendment 1 — a slot hosts exactly one artifact at a point in time
 (2026-08-05, founder clarification at M5 step 2 review).** Clarifies
 Decision 1; nothing in the decision is reversed.
