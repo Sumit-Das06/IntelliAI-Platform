@@ -15,7 +15,7 @@ from fastapi import APIRouter
 from fastapi.responses import Response
 from pydantic import BaseModel, ConfigDict, Field
 
-from intelliai_api.api.deps import CurrentAuth, SpeechDep
+from intelliai_api.api.deps import CurrentAuth, IdempotencyKey, SpeechDep
 
 router = APIRouter(prefix="/audio", tags=["audio"])
 
@@ -35,12 +35,18 @@ class SpeechRequest(BaseModel):
 
 
 @router.post("/speech")
-async def create_speech(auth: CurrentAuth, service: SpeechDep, request: SpeechRequest) -> Response:
+async def create_speech(
+    auth: CurrentAuth,
+    service: SpeechDep,
+    request: SpeechRequest,
+    idempotency_key: IdempotencyKey,
+) -> Response:
     outcome = await service.synthesize(
         auth=auth,
         public_model_id=request.model,
         text=request.input,
         voice=request.voice,
         speed=request.speed,
+        idempotency_key=idempotency_key,
     )
     return Response(content=outcome.audio, media_type=outcome.media_type)

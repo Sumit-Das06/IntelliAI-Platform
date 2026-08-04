@@ -24,7 +24,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from intelliai_api.core.errors import AuthenticationError
 from intelliai_api.core.security import hash_api_key, is_well_formed, verify_api_key
 from intelliai_api.core.time import utc_now
-from intelliai_api.db.models import ApiKey, Organization
+from intelliai_api.db.models import ApiKey, Organization, UsageOrigin
 from intelliai_api.db.repositories import ApiKeyRepository
 
 # Policy: how often the usage stamp is worth a write (ADR-0012, stage 1).
@@ -60,6 +60,18 @@ class AuthContext:
     @property
     def key_public_id(self) -> str:
         return self.api_key.public_id
+
+    @property
+    def usage_origin(self) -> UsageOrigin:
+        """Why this caller's traffic exists — stamped onto every usage event.
+
+        A commercial classification carried by the tenant, resolved here
+        because authentication is the one place the tenant is identified.
+        It is deliberately NOT a scope: it says nothing about what the
+        caller may do, only about how their consumption is later
+        interpreted. Measurement is unconditional; rating reads this.
+        """
+        return self.organization.usage_origin
 
 
 class AuthService:

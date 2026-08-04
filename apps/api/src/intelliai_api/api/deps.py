@@ -7,15 +7,22 @@ settings) is what every endpoint sees.
 """
 
 from collections.abc import AsyncIterator
+from pathlib import Path
 from typing import Annotated, cast
 
 import structlog
-from fastapi import Depends, Request
+from fastapi import Depends, Header, Request
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from intelliai_api.core.config import Settings
 from intelliai_api.core.errors import AuthenticationError
 from intelliai_api.core.health import HealthService
+from intelliai_api.metering import (
+    FileUsageFallback,
+    NullUsageFallback,
+    UsageFallback,
+    UsageRecorder,
+)
 from intelliai_api.registry import Registry
 from intelliai_api.runtimes import RuntimeClient
 from intelliai_api.services.auth import AuthContext, AuthService
@@ -109,16 +116,52 @@ def model_registry(request: Request) -> Registry:
     return cast(Registry, request.app.state.registry)
 
 
-def transcription_service(request: Request) -> TranscriptionService:
-    """Transcription flow: registry resolution + runtime clients (factory-built)."""
-    clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
-    return TranscriptionService(cast(Registry, request.app.state.registry), clients)
+def usage_recorder(request: Request, session: SessionDep, settings: SettingsDep) -> UsageRecorder:
+    """The metering seam, wired to this request's own transaction.
+
+    Successful events therefore commit with the response (§6 of the M4
+    design). The session factory is handed over as well, because failure
+    events must be written OUTSIDE this transaction — the request is
+    about to roll it back, and the fact that we spent capacity is exactly
+    what must survive that.
+    """
+    path = settings.metering.fallback_path
+    fallback: UsageFallback = FileUsageFallback(Path(path)) if path else NullUsageFallback()
+    return UsageRecorder(
+        session,
+        session_factory=cast("async_sessionmaker[AsyncSession]", request.app.state.session_factory),
+        fallback=fallback,
+    )
 
 
-def speech_service(request: Request) -> SpeechService:
-    """Synthesis flow: registry + voice catalog + runtime clients (factory-built)."""
+UsageDep = Annotated[UsageRecorder, Depends(usage_recorder)]
+
+
+def idempotency_key(
+    key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
+) -> str | None:
+    """Optional client-supplied retry identity (ADR-0024).
+
+    Additive and optional: callers that never send it are unaffected, and
+    callers that do get at-most-once billing enforced by the ledger's
+    uniqueness constraint.
+    """
+    return key
+
+
+IdempotencyKey = Annotated[str | None, Depends(idempotency_key)]
+
+
+def transcription_service(request: Request, usage: UsageDep) -> TranscriptionService:
+    """Transcription flow: registry resolution + runtime clients + metering."""
     clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
-    return SpeechService(cast(Registry, request.app.state.registry), clients)
+    return TranscriptionService(cast(Registry, request.app.state.registry), clients, usage)
+
+
+def speech_service(request: Request, usage: UsageDep) -> SpeechService:
+    """Synthesis flow: registry + voice catalog + runtime clients + metering."""
+    clients = cast(dict[str, RuntimeClient], request.app.state.runtime_clients)
+    return SpeechService(cast(Registry, request.app.state.registry), clients, usage)
 
 
 CurrentAuth = Annotated[AuthContext, Depends(current_auth)]

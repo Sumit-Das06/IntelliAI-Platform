@@ -43,6 +43,7 @@ class UsageEventRepository:
         request_id: str | None = None,
         api_key_id: int | None = None,
         idempotency_key: str | None = None,
+        language: str | None = None,
         lineage: Mapping[str, Any] | None = None,
     ) -> UsageEvent:
         """Append one measured fact.
@@ -68,6 +69,7 @@ class UsageEventRepository:
             idempotency_key=idempotency_key,
             capability=capability,
             public_model_id=public_model_id,
+            language=language,
             origin=origin,
             outcome=outcome,
             billable=billable,
@@ -104,6 +106,7 @@ class UsageEventRepository:
             idempotency_key=None,  # the original owns the key
             capability=event.capability,
             public_model_id=event.public_model_id,
+            language=event.language,
             origin=event.origin,
             outcome=event.outcome,
             billable=event.billable,

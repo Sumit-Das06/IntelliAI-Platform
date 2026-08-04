@@ -173,6 +173,12 @@ class UsageEvent(Base):
     capability: Mapped[str] = mapped_column(String(64))
     public_model_id: Mapped[str] = mapped_column(String(64))
 
+    # An observed property of the request, not an interpretation of it
+    # (Ledger Fact Invariant): a column rather than lineage because the
+    # Core Speech Language Policy needs it grouped and counted, and
+    # unlike lineage it is not internal. It never affects billing.
+    language: Mapped[str | None] = mapped_column(String(16))
+
     origin: Mapped[UsageOrigin] = mapped_column(
         Enum(UsageOrigin, name="usage_origin", values_callable=lambda e: [m.value for m in e])
     )

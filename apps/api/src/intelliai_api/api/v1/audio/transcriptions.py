@@ -10,7 +10,7 @@ from typing import Annotated, Any, Literal
 from fastapi import APIRouter, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
 
-from intelliai_api.api.deps import CurrentAuth, TranscriptionDep
+from intelliai_api.api.deps import CurrentAuth, IdempotencyKey, TranscriptionDep
 
 router = APIRouter(prefix="/audio", tags=["audio"])
 
@@ -23,6 +23,7 @@ async def create_transcription(
     service: TranscriptionDep,
     file: Annotated[UploadFile, File()],
     model: Annotated[str, Form()],
+    idempotency_key: IdempotencyKey,
     language: Annotated[str | None, Form()] = None,
     response_format: Annotated[ResponseFormat, Form()] = "json",
 ) -> Response:
@@ -32,6 +33,7 @@ async def create_transcription(
         public_model_id=model,
         audio=audio,
         language=language,
+        idempotency_key=idempotency_key,
     )
     result = outcome.result
     if response_format == "text":

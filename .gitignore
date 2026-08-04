@@ -37,3 +37,8 @@ Thumbs.db
 
 # ── Logs ──────────────────────────────────────────────────────
 *.log
+
+# The metering sink of last resort: rejected ledger writes land here for a
+# human to replay. It holds real customer usage — it must never be
+# committed, and it must never be deleted without being reconciled first.
+usage-fallback.jsonl

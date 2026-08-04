@@ -89,6 +89,21 @@ class RuntimeSettings(BaseSettings):
     timeout_seconds: float = 120.0
 
 
+class MeteringSettings(BaseSettings):
+    """The ledger's degrade-loud path (ADR-0021).
+
+    When the ledger refuses a write, the customer still receives their
+    response — which is only defensible if the fact survives somewhere the
+    database is not. ``fallback_path`` is that local sink; the CRITICAL
+    log line is always emitted regardless. Set the path empty to rely on
+    logs alone (correct where the filesystem is not durable anyway).
+    """
+
+    model_config = _group("INTELLIAI_METERING_")
+
+    fallback_path: str = "usage-fallback.jsonl"
+
+
 class Settings(BaseSettings):
     """Root settings object; one instance per application instance."""
 
@@ -102,6 +117,7 @@ class Settings(BaseSettings):
     redis: RedisSettings = Field(default_factory=RedisSettings)
     storage: StorageSettings = Field(default_factory=StorageSettings)
     runtimes: RuntimeSettings = Field(default_factory=RuntimeSettings)
+    metering: MeteringSettings = Field(default_factory=MeteringSettings)
 
     @property
     def is_dev(self) -> bool:
