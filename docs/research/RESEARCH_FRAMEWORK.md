@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| **Status** | PROPOSED (research program, 2026-08-04) — becomes IN FORCE on founder approval |
-| **Version** | 0.1 |
+| **Status** | IN FORCE — founder-approved 2026-08-04 |
+| **Version** | 0.2 |
 | **Last updated** | 2026-08-04 |
-| **Nature** | PERMANENT process. This document never names a model; every model lives in [MODEL_LEDGER.md](MODEL_LEDGER.md) with dated evidence. |
-| **Role of this document** | The governing research process for every foundation model IntelliAI considers. It connects instruments that are already in force — the scoring framework ([FOUNDATION_MODELS.md §1](../FOUNDATION_MODELS.md)), the licensing policy ([ADR-0005](../adr/0005-permissive-model-licensing-policy.md)), the evaluation methodology ([SPEECH_EVALUATION.md](../../ml/evaluation/SPEECH_EVALUATION.md)), and the fine-tuning framework ([FINE_TUNING_STRATEGY.md](../FINE_TUNING_STRATEGY.md)) — into one stage-gated pipeline with a status lifecycle and an append-only decision ledger. It defines the process; it deliberately redefines none of the instruments. |
+| **Nature** | PERMANENT process. This document never names a model; every model lives in [MODEL_LEDGER.md](MODEL_LEDGER.md) with dated evidence. §16 (research priorities) is the one deliberately LIVING section — it evolves through evidence, every change dated in the change log. |
+| **Role of this document** | The governing research process for the two asset classes IntelliAI permanently researches: foundation models and, from v0.2, datasets (§12). It connects instruments that are already in force — the scoring framework ([FOUNDATION_MODELS.md §1](../FOUNDATION_MODELS.md)), the licensing policy ([ADR-0005](../adr/0005-permissive-model-licensing-policy.md)), the evaluation methodology ([SPEECH_EVALUATION.md](../../ml/evaluation/SPEECH_EVALUATION.md)), and the fine-tuning framework ([FINE_TUNING_STRATEGY.md](../FINE_TUNING_STRATEGY.md)) — into one stage-gated pipeline with a status lifecycle and an append-only decision ledger. It defines the process; it deliberately redefines none of the instruments. |
 | **Consumed by** | every engine research thread; every capability opening (per the [STRATEGY.md](../STRATEGY.md) review cadence); the IntelliAI-STT v2 and IntelliAI-TTS v2 programs |
 
 ---
@@ -17,10 +17,16 @@ The research program is IntelliAI's standing model laboratory. Customers
 buy `intelliai-stt` and `intelliai-tts`; foundation models are replaceable
 implementation details behind them. The laboratory's job is to know, at
 all times and with evidence, which replaceable detail should be serving.
+It researches two permanent asset classes: **foundation models** (§§3–11)
+and **datasets** (§12) — the second because the long-term strategy (§14)
+is built on data the way the first is built on evidence.
 
 **The research program owns:**
 
 - candidate discovery, dossiers, and license screening;
+- dataset research: discovery, screening, and provenance of candidate
+  datasets (§12);
+- the technology watch (§13) and the living research priorities (§16);
 - the model status ledger and its complete decision history;
 - benchmark *plans* (what to measure, against which baseline, with which
   corpus and judge);
@@ -333,26 +339,31 @@ every Promising candidate, which rung of this tree it competes with.
 
 ## 11. Research record formats
 
-**The dossier** — one document per candidate under `docs/research/models/`
-(created when a candidate reaches Gate 2), named `<model>-dossier.md`:
+**The dossier** — one document per candidate under `docs/research/models/`,
+named `<model>-dossier.md`. Drafting begins at Gate 2 (desk research);
+**from Promising status onward a formal dossier is mandatory** (v0.2,
+founder directive) — no candidate may hold Promising or any later status
+without one. The division of labor is fixed: **the ledger stays concise**
+(status, reason, evidence links); **the dossier carries the detailed
+analysis**, and the ledger entry that grants Promising links to it.
 
-| # | Attribute | Notes |
+Every dossier contains these thirteen sections (each claim labeled per §2):
+
+| # | Section | Contents |
 |---|---|---|
-| 1 | Identity | Name, org, capability, artifact versions considered |
-| 2 | Trigger | Why it entered Gate 0 |
-| 3 | License verdict | Per version; weights/code/transitive; source URLs; date (§5) |
-| 4 | Languages | EN/HI/AR + code-mixed, per §7 — claims vs evidence, incl. language-path licensing |
-| 5 | Quality claims | Paper/leaderboard numbers, labeled as claims with sources |
-| 6 | Robustness | Hallucination behavior, noise, long-form, accents |
-| 7 | Deployment profile | Params, memory, CPU viability, quantization, container/offline fit |
-| 8 | Streaming | Native support or engineering path |
-| 9 | Fine-tuning path | Official support, LoRA/QLoRA/adapters, community precedent |
-| 10 | Ecosystem | Maintenance, community, docs, production adoption |
-| 11 | Serving stack | Engines/runtimes we would operate |
-| 12 | Score | FOUNDATION_MODELS §1 weighted score, per-criterion |
-| 13 | Hypothesis | What it would beat, on which metrics, and why it matters (Gate 3) |
-| 14 | Risks | License trajectory, concentration, org viability |
-| 15 | Open questions | Labeled per §2, resolved or carried explicitly |
+| 1 | Identity | Name, org, capability, artifact versions considered, Gate 0 trigger |
+| 2 | Architecture | Model family and approach, parameter count, context/window limits, streaming properties (native or engineering path) |
+| 3 | Languages | EN/HI/AR + code-mixed per §7 — claims vs evidence, incl. licensing of each language-specific serving path |
+| 4 | Licensing | Per-version verdict: weights, code, transitive dependencies; source URLs; dates (§5) |
+| 5 | Deployment profile | CPU viability, quantization support, container/offline fit, serving stack we would operate |
+| 6 | Quality evidence | Our evaluation records (evidence) and external numbers (claims, with sources); robustness and hallucination behavior |
+| 7 | Latency | TTFB / RTF / streaming latency — measured where we have records, labeled claims otherwise |
+| 8 | Memory | Load and steady-state footprint at the target precision |
+| 9 | Fine-tuning support | LoRA/QLoRA/adapters, official recipes, community precedent |
+| 10 | Training support | Released training pipeline and data recipes — can the lineage be continued, not just adapted? (feeds §15) |
+| 11 | Ecosystem | Maintenance activity, community, documentation, production adoption |
+| 12 | Risks | License trajectory, concentration, org viability, named watch triggers; open questions carried explicitly |
+| 13 | Recommendation | FOUNDATION_MODELS §1 weighted score (per-criterion), the Gate 3 hypothesis (what it would beat and why it matters), and the proposed next status |
 
 **The ledger entry** — in [MODEL_LEDGER.md](MODEL_LEDGER.md), append-only:
 
@@ -365,9 +376,158 @@ evidence: <links/facts with their own dates>
 documents under `docs/research/`, referenced from the ledger entries that
 cite them.
 
+## 12. Dataset research — the second asset class *(v0.2)*
+
+The program permanently researches **datasets** alongside foundation
+models, and for the same strategic reason the evaluation corpora exist:
+*models depreciate; knowledge compounds.* Evaluation corpora are already
+permanent company assets by law ("models improve, corpora accumulate");
+training and benchmark datasets join that same asset class. In the
+long-term strategy (§14), datasets are the moat — every model in this
+framework is replaceable, but data collected from our own consented
+usage is something no upstream vendor has.
+
+**What dataset research owns now** (research only — no collection or
+tooling implementation until a future milestone opens it):
+
+- discovery and screening of candidate datasets: public corpora,
+  purchasable data, and collection strategies;
+- license, consent, and PII screening — the §5 discipline applies
+  unchanged, because dataset licenses trap exactly like model licenses
+  (NC clauses, share-alike, field-of-use limits, consent provenance;
+  consent-collected data is explicitly rewarded, per the data
+  constitution);
+- provenance documentation: source, date, license, collection method —
+  recorded at intake, because provenance cannot be reconstructed later.
+
+**Future dataset lifecycle** — placeholder stages, adopted now so future
+milestones land in a named frame; definitions bind when the first
+dataset milestone opens:
+
+```
+Collected → Verified → Annotated → Training Ready → Benchmark Ready → Production Dataset
+```
+
+- **Collected** — raw data acquired; provenance, license, and consent
+  basis recorded at intake.
+- **Verified** — integrity checked, deduplicated, license/consent
+  verified, PII policy applied.
+- **Annotated** — labels, transcripts, or alignments produced;
+  annotation method and provenance recorded.
+- **Training Ready** — split discipline enforced (training data never
+  contaminates evaluation), format pinned, versioned immutable manifest.
+- **Benchmark Ready** — eligible to become or extend an evaluation
+  corpus (thereafter immutable once cited, per the corpus law in
+  [SPEECH_EVALUATION.md](../../ml/evaluation/SPEECH_EVALUATION.md)).
+- **Production Dataset** — a versioned company asset cited by training
+  runs and lineage records.
+
+Dataset statuses and history will live under the same append-only ledger
+law as models (§3); a dataset ledger is created alongside the first
+*Collected* entry, not before.
+
+## 13. Technology Watch *(v0.2 — permanent)*
+
+Every review cycle (milestone close, per the [STRATEGY.md](../STRATEGY.md)
+standing cadence) the program monitors:
+
+- new foundation model releases;
+- important research papers;
+- license changes on watched lineages and incumbents;
+- inference frameworks (vLLM/ONNX/GGUF/CT2-class);
+- quantization methods;
+- serving infrastructure;
+- hardware changes (CPU/GPU economics at our serving classes).
+
+**The law: watching never creates work by itself.** Technology Watch
+feeds Gate 0 and nothing else. An observation becomes research only when
+it carries a named trigger worth an intake entry, and every status
+change still passes the full gates. This institutionalizes §2's rule —
+"newer is a fact, never an argument": the watch exists so nothing
+surprises us, not so novelty sets the agenda.
+
+An observation that justifies intake becomes a Gate 0 ledger entry
+citing it; an observation that doesn't is noted at the review and costs
+nothing further.
+
+## 14. The data flywheel *(v0.2 — permanent)*
+
+IntelliAI's long-term improvement loop, stated as a cycle:
+
+```
+Research → Benchmark → Adoption → Serving → Real Usage
+    ↑                                          ↓
+Promotion ← Fine-tuning ← Dataset ← Data Collection
+```
+
+**This loop is the long-term ownership strategy of IntelliAI.** Serving
+is not the end of the pipeline — it is the instrument that generates
+real usage, and (under the data/consent constitution in
+[AI_STRATEGY.md](../AI_STRATEGY.md)) the data that no foundation model
+vendor has. Each pass around the loop shifts dependency from "the
+upstream's future" to "our lineage's future" — the concentration hedge
+of FOUNDATION_MODELS §14, generalized into the operating strategy.
+Research sits at both ends of the loop: it selects what enters
+(Gates 0–5) and evaluates what the loop produces (§15). The flywheel
+runs on consented data, or it does not run.
+
+## 15. Connection to the training program *(v0.2)*
+
+This framework and [FINE_TUNING_STRATEGY.md](../FINE_TUNING_STRATEGY.md)
+are two views of one pipeline. The intended end-to-end evolution:
+
+```
+Foundation Models → Evaluation → Serving → Data Collection
+  → Dataset Cleaning → Training Dataset → LoRA → Fine-tune
+  → Merge → Promotion → Production
+```
+
+**This framework eventually governs both model adoption and model
+improvement.** An IntelliAI fine-tune is a candidate like any other: its
+identity is base lineage + dataset version + recipe; it gets a dossier
+(§11), a benchmark plan against the named baseline — the *tuned or
+stock incumbent*, per the switching test — and the same founder gates
+before promotion. The ladder (FINE_TUNING_STRATEGY Part 2, Stages 0–5)
+decides *when to climb*; this framework decides *how any rung's
+artifact earns production*. Promotion mechanics (registry lifecycle,
+FINE_TUNING_STRATEGY Part 5) remain engineering's, per §1. Nothing on
+this chain is implemented today; the connection is stated now so the
+first adapter, when the ladder calls for it, already knows its gates.
+
+## 16. Research priorities *(v0.2 — LIVING list)*
+
+Priorities order research attention; they never skip gates or lower the
+evidence bar. Changes to this list are appended to the change log with
+reasons — priorities evolve through evidence, like everything else here.
+
+Initial list (founder-set, 2026-08-04):
+
+| # | Priority | Anchor (see [MODEL_LEDGER.md](MODEL_LEDGER.md)) |
+|---|---|---|
+| 1 | English STT improvement | Incumbent adopted; production baseline 2026-08-03 |
+| 2 | Hindi STT | Wedge gap anecdotally observed, unmeasured — open thread |
+| 3 | Arabic STT | Open slot: no corpus, no candidate |
+| 4 | English TTS | Incumbent adopted (EN); streaming verdict GO (M8) |
+| 5 | Hindi TTS | License-gated; two candidate paths tracked |
+| 6 | Arabic TTS | Open slot: no candidate |
+| 7 | Translation | Capability not opened; verdicts dated 2026-07-31 |
+| 8 | Speech-to-Speech | Composite capability; no commercial open native S2ST as of 2026-07-31 |
+| 9 | Voice Cloning | Ownership lineage pre-assigned (P2 roadmap); consent-gated |
+| 10 | IntelliAI native models | Parked at §9 rung 6: requires measured ceilings + data moat |
+
 ---
 
 *Change log:*
+- *0.2 (2026-08-04): Founder approval — status IN FORCE. Refinements
+  folded, additive only: dataset research as the second permanent asset
+  class with placeholder lifecycle (§12); Technology Watch (§13); the
+  data flywheel stated as the long-term ownership strategy (§14);
+  training-program connection — the framework eventually governs
+  adoption and improvement (§15); living research priorities (§16);
+  dossier mandatory from Promising, thirteen-section structure (§11).
+  Status lifecycle, stage gates, append-only ledger law, founder gates,
+  licensing process, multilingual strategy, adoption/rejection criteria,
+  and the fine-tuning decision tree are unchanged — approved as-is.*
 - *0.1 (2026-08-04): Initial framework — status lifecycle with append-only
   history law, six stage gates, licensing/benchmarking/multilingual
   processes, adoption/rejection criteria, fine-tune-vs-adopt-vs-pretrain

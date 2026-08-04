@@ -11,6 +11,13 @@ Statuses: `Researching` · `Promising` · `Approved for Benchmark` ·
 `Approved for Adoption` · `Rejected` · `Deprecated`
 (definitions and legal transitions: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)).
 
+From framework v0.2: no model may hold `Promising` or any later status
+without a formal dossier under `models/`
+([RESEARCH_FRAMEWORK.md §11](RESEARCH_FRAMEWORK.md)) — the ledger stays
+concise; the dossier carries the analysis. Research attention across
+entries is ordered by the living priorities
+([RESEARCH_FRAMEWORK.md §16](RESEARCH_FRAMEWORK.md)).
+
 ---
 
 ## Current status (derived view)
@@ -95,6 +102,9 @@ statuses have the same provenance discipline as future ones.
 ---
 
 ## Open research threads (no candidate or no measurement yet)
+
+Thread order below is historical; attention across threads follows the
+living research priorities ([RESEARCH_FRAMEWORK.md §16](RESEARCH_FRAMEWORK.md)).
 
 | Thread | Standing question | State (2026-08-04) |
 |---|---|---|

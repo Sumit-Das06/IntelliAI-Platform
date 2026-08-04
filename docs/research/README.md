@@ -1,19 +1,22 @@
 # docs/research/ — The Foundation Model Research Lab
 
-The permanent knowledge base of IntelliAI's model research program:
-which foundation models we have examined, what we concluded, and the
-evidence behind every conclusion. Customers see `intelliai-stt` and
-`intelliai-tts`; this directory is where their replaceable engines are
-researched before engineering ever touches them.
+The permanent knowledge base of IntelliAI's research program: the two
+asset classes we permanently research — **foundation models** and
+**datasets** — what we concluded about each, and the evidence behind
+every conclusion. Customers see `intelliai-stt` and `intelliai-tts`;
+this directory is where their replaceable engines (and the data assets
+that will eventually outlast them) are researched before engineering
+ever touches them.
 
-- [RESEARCH_FRAMEWORK.md](RESEARCH_FRAMEWORK.md) — the governing process:
-  status lifecycle, stage gates, licensing review, benchmarking rules,
-  multilingual strategy, adoption/rejection criteria, fine-tune-vs-adopt
-  decision tree.
+- [RESEARCH_FRAMEWORK.md](RESEARCH_FRAMEWORK.md) — the governing process
+  (IN FORCE, v0.2): status lifecycle, stage gates, licensing review,
+  benchmarking rules, multilingual strategy, adoption/rejection criteria,
+  fine-tune-vs-adopt decision tree, dataset research, technology watch,
+  the data flywheel, and the living research priorities.
 - [MODEL_LEDGER.md](MODEL_LEDGER.md) — the status of record for every
   researched model, with an **append-only** dated decision history.
-- `models/` — per-candidate dossiers (created when a candidate reaches
-  Gate 2 of the framework).
+- `models/` — per-candidate dossiers (drafted at Gate 2; mandatory for
+  any model holding Promising status or later).
 - Benchmark plans and adoption recommendations land here as standalone
   documents, cited from ledger entries.
 
