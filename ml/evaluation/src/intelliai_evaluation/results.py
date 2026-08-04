@@ -1,10 +1,13 @@
 """Benchmark result records — the format every model measurement is kept in.
 
-One EvalRun per (dataset version, artifact, build) measurement, serialized
-to JSON and committed under the capability's results/ directory
-(append-only, never edited — Constitution P13). The schema is
-additive-only: consumers written today must parse results written in five
-years.
+One EvalRun per measured slice — (public model, language, artifact,
+build, dataset version) — serialized to JSON and committed under the
+capability's results/ directory (append-only, never edited —
+Constitution P13). The schema is additive-only: consumers written today
+must parse results written in five years, and readers written in five
+years must parse the records written today. That is why ``identity`` is
+optional on the model and mandatory in the runner: records that predate
+it must still load, and every record written from now on carries it.
 """
 
 from __future__ import annotations
@@ -13,6 +16,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
+from intelliai_evaluation.identity import EvaluationIdentity, SliceCoverage
 from intelliai_runtime_contract import Capability
 
 
@@ -72,6 +76,12 @@ class EvalRun(BaseModel):
     # Startup economics (additive, M2 step 5): from the runtime's /info.
     load_ms: float | None = None
     warmup_ms: float | None = None
+    # Evaluation identity (additive, M5 step 4). Optional on the schema so
+    # the M2 records still parse; mandatory in the runner, so every record
+    # written from now on says which promise, language, build, and
+    # deployment it measured.
+    identity: EvaluationIdentity | None = None
+    coverage: SliceCoverage | None = None
 
     @property
     def overall_wer(self) -> float | None:
@@ -94,7 +104,7 @@ class EvalRun(BaseModel):
 
     def summary(self) -> dict[str, object]:
         """Compact aggregate view for logs and review tables."""
-        return {
+        view: dict[str, object] = {
             "dataset": f"{self.dataset_name}@v{self.dataset_version}",
             "artifact": self.artifact,
             "engine": f"{self.engine} {self.engine_version}",
@@ -104,3 +114,14 @@ class EvalRun(BaseModel):
             "hallucinated_words_total": self.hallucinated_words_total,
             "clips": len(self.clips),
         }
+        if self.identity is not None:
+            view["slice"] = self.identity.slug
+            view["public_model"] = self.identity.public_model
+            view["language"] = self.identity.language
+            view["deployment"] = self.identity.deployment
+        if self.coverage is not None:
+            view["natural_speech_clips"] = self.coverage.natural_speech_clips
+            # Stated rather than implied: a slice with no natural speech
+            # measures hallucination, and is not a quality claim.
+            view["is_quality_claim"] = self.coverage.is_quality_claim
+        return view

@@ -1,0 +1,79 @@
+{
+  "dataset_name": "stt-eval-seed",
+  "dataset_version": 2,
+  "capability": "transcription",
+  "run_at": "2026-08-04T20:42:41.428453Z",
+  "artifact": "whisper-small",
+  "engine": "faster-whisper",
+  "engine_version": "1.2.1",
+  "compute": "cpu-int8",
+  "hardware": "Intel Core i7-14650HX (Windows 11, native)",
+  "notes": "M5 step 4: the English baseline re-recorded as a language slice with full evaluation identity. Same clips and pins as the M2 baseline (stt-eval-seed v1 carried forward byte-identical), now naming the public model, language, build, and deployment it measured.",
+  "clips": [
+    {
+      "clip_id": "jfk-flac",
+      "duration_seconds": 11.0,
+      "inference_seconds": 1.8847548000048846,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 22,
+      "hypothesis_words": 22,
+      "hypothesis_text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country."
+    },
+    {
+      "clip_id": "jfk-wav",
+      "duration_seconds": 11.0,
+      "inference_seconds": 1.6553361999685876,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 22,
+      "hypothesis_words": 22,
+      "hypothesis_text": "And so my fellow Americans, ask not what your country can do for you. Ask what you can do for your country."
+    },
+    {
+      "clip_id": "en-silence-10s",
+      "duration_seconds": 10.0,
+      "inference_seconds": 0.000015900004655122757,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 0,
+      "hypothesis_words": 0,
+      "hypothesis_text": ""
+    },
+    {
+      "clip_id": "en-tone-440hz-5s",
+      "duration_seconds": 5.0,
+      "inference_seconds": 1.3913955999887548,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 0,
+      "hypothesis_words": 0,
+      "hypothesis_text": ""
+    }
+  ],
+  "load_ms": 5500.2,
+  "warmup_ms": 2638.9,
+  "identity": {
+    "public_model": "intelliai-stt",
+    "language": "en",
+    "artifact": "whisper-small",
+    "artifact_version": 1,
+    "build": "cpu-int8",
+    "deployment": "stt-runtime",
+    "dataset": "stt-eval-seed",
+    "dataset_version": 2,
+    "benchmark": "2026-08-05-intelliai-stt-en-whisper-small-cpu-v1",
+    "judge": null,
+    "run_at": "2026-08-04T20:42:41.428453Z"
+  },
+  "coverage": {
+    "clips": 4,
+    "natural_speech_clips": 2,
+    "probe_clips": 2,
+    "reference_words": 44
+  }
+}

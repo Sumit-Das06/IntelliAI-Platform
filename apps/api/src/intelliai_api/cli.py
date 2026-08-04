@@ -10,6 +10,7 @@ Usage (via Makefile):
 
 import argparse
 import asyncio
+import json
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -32,6 +33,8 @@ from intelliai_api.core.logging import configure_logging
 from intelliai_api.core.time import utc_now
 from intelliai_api.db.engine import create_engine, create_session_factory
 from intelliai_api.entitlements import BillingPeriod, period_for
+from intelliai_api.registry import default_registry
+from intelliai_api.registry.manifest import serving_manifest
 from intelliai_api.services.identity import BootstrapResult, IdentityService
 
 
@@ -161,6 +164,21 @@ def _print_commercial_report(
     print("=" * 72)
 
 
+def _registry_manifest(out: Path) -> int:
+    """Export resolved registry state — the evaluation plane's only view.
+
+    Composition runs first (the catalog is validated on import), so a
+    manifest can only be written from a registry that would actually
+    serve. Deterministic by construction: same catalog, same bytes.
+    """
+    document = serving_manifest(default_registry())
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(document, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    routes = sum(len(model["routes"]) for model in document["models"])
+    print(f"resolved {len(document['models'])} public models, {routes} routes -> {out}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="intelliai", description=__doc__)
     subcommands = parser.add_subparsers(dest="command", required=True)
@@ -178,9 +196,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     report.add_argument("--month", help="billing period as YYYY-MM (default: current)")
 
+    manifest = subcommands.add_parser(
+        "registry-manifest",
+        help="Export resolved registry state for readers outside the gateway",
+    )
+    manifest.add_argument("--out", type=Path, required=True, help="manifest JSON path")
+
     args = parser.parse_args(argv)
 
     try:
+        if args.command == "registry-manifest":
+            return _registry_manifest(args.out)
         if args.command == "commercial-report":
             return asyncio.run(_commercial_report(args.month))
         asyncio.run(_bootstrap_org(args.org_name, args.owner_email, args.owner_name))

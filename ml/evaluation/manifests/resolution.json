@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "public_model": "intelliai-stt",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "whisper-small",
+          "artifact_version": 1,
+          "deployment": "stt-runtime"
+        },
+        {
+          "language": "en",
+          "status": "supported",
+          "artifact": "whisper-small",
+          "artifact_version": 1,
+          "deployment": "stt-runtime"
+        },
+        {
+          "language": "hi",
+          "status": "available",
+          "artifact": "whisper-small",
+          "artifact_version": 1,
+          "deployment": "stt-runtime"
+        },
+        {
+          "language": "ar",
+          "status": "available",
+          "artifact": "whisper-small",
+          "artifact_version": 1,
+          "deployment": "stt-runtime"
+        }
+      ],
+      "voices": []
+    },
+    {
+      "public_model": "intelliai-tts",
+      "capability": "speech_synthesis",
+      "service": "tts-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
+          "language": "en",
+          "status": "supported",
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
+          "language": "hi",
+          "status": "unavailable"
+        },
+        {
+          "language": "ar",
+          "status": "unavailable"
+        }
+      ],
+      "voices": [
+        {
+          "voice": "reference-alto",
+          "languages": [
+            "en"
+          ],
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
+          "voice": "reference-bass",
+          "languages": [
+            "en"
+          ],
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        }
+      ]
+    }
+  ]
+}

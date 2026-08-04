@@ -13,6 +13,7 @@ from intelliai_evaluation import bench, bench_tts
 from intelliai_evaluation.corpus import load_corpus
 from intelliai_evaluation.dataset import load_dataset
 from intelliai_evaluation.fetch import materialize
+from intelliai_evaluation.resolution import UnservedError, load_manifest
 from intelliai_evaluation.runner import run_stt_eval
 from intelliai_evaluation.speech_results import EvaluatedArtifact, RuntimeIdentity
 from intelliai_evaluation.speech_runner import (
@@ -44,11 +45,24 @@ def main(argv: list[str] | None = None) -> int:
     run_parser.add_argument("--dataset", type=Path, required=True, help="manifest JSON path")
     run_parser.add_argument("--data-dir", type=Path, default=Path("ml/evaluation/data"))
     run_parser.add_argument("--url", default="http://localhost:8001", help="runtime base URL")
-    run_parser.add_argument("--artifact", required=True, help="artifact id, e.g. whisper-small")
+    # The artifact is NOT an argument: it is resolved from registry state,
+    # because a benchmark against an operator-named artifact records a
+    # claim rather than what the product actually serves.
+    run_parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=Path("ml/evaluation/manifests/resolution.json"),
+        help="exported registry state (intelliai registry-manifest)",
+    )
+    run_parser.add_argument("--model", required=True, help="public model id, e.g. intelliai-stt")
+    run_parser.add_argument("--language", required=True, help="the slice to measure, e.g. hi")
     run_parser.add_argument("--engine", required=True, help="engine name, e.g. faster-whisper")
     run_parser.add_argument("--engine-version", required=True)
-    run_parser.add_argument("--compute", required=True, help="e.g. cpu-int8")
+    run_parser.add_argument("--compute", required=True, help="the build, e.g. cpu-int8")
     run_parser.add_argument("--hardware", required=True, help="human description of the machine")
+    run_parser.add_argument(
+        "--benchmark", default=None, help="set ONLY when this run IS a named baseline"
+    )
     run_parser.add_argument("--notes", default="")
     run_parser.add_argument(
         "--out", type=Path, required=True, help="result JSON path (append-only results/ dir)"
@@ -133,15 +147,27 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  {clip_id:<16} {path}")
         return 0
 
+    # Registry state decides what is measured; the operator supplies only
+    # facts about the machine it runs on.
+    manifest = load_manifest(args.manifest)
+    try:
+        serving = manifest.resolve(args.model, args.language)
+    except UnservedError as exc:
+        print(f"refusing: {exc}")
+        return 2
+
     run = run_stt_eval(
         dataset,
         base_url=args.url,
         data_dir=args.data_dir,
-        artifact=args.artifact,
+        public_model=args.model,
+        language=args.language,
+        serving=serving,
+        build=args.compute,
         engine=args.engine,
         engine_version=args.engine_version,
-        compute=args.compute,
         hardware=args.hardware,
+        benchmark=args.benchmark,
         notes=args.notes,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)

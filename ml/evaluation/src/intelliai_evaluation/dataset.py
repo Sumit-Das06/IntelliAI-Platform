@@ -85,3 +85,20 @@ class EvalDataset(BaseModel):
 def load_dataset(path: Path) -> EvalDataset:
     """Load and validate a dataset manifest from JSON."""
     return EvalDataset.model_validate(json.loads(path.read_text(encoding="utf-8")))
+
+
+def find_dataset(directory: Path, name: str, version: int) -> EvalDataset:
+    """Locate a dataset by its IDENTITY, never by its filename.
+
+    Evidence records cite ``name@vN`` — the same discipline that makes
+    baselines cite names rather than paths. A file can be renamed or
+    moved; a released (name, version) pair cannot change, so reproducing
+    a years-old measurement must not depend on where someone put the
+    file. Every manifest in the directory is read and matched.
+    """
+    for path in sorted(directory.glob("*.json")):
+        candidate = load_dataset(path)
+        if candidate.name == name and candidate.version == version:
+            return candidate
+    msg = f"no dataset {name}@v{version} under {directory}"
+    raise FileNotFoundError(msg)
