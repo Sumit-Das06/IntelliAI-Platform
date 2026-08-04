@@ -48,7 +48,10 @@ services:
       context: .
       dockerfile: infra/docker/stt-runtime.Dockerfile
     environment:
-      INTELLIAI_STT_DEFAULT_ENGINE: ${INTELLIAI_STT_DEFAULT_ENGINE:-whisper}
+      # The artifacts this deployment hosts, in order; the first takes the
+      # `default` slot. One entry today — the degenerate case of a plural
+      # topology (ADR-0026).
+      INTELLIAI_STT_SLOTS: ${INTELLIAI_STT_SLOTS:-whisper}
       INTELLIAI_STT_LOG_LEVEL: ${INTELLIAI_STT_LOG_LEVEL:-INFO}
     ports:
       - "127.0.0.1:8001:8001"

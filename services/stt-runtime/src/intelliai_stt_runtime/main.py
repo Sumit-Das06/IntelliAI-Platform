@@ -9,7 +9,6 @@ look up what startup created.
 import asyncio
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
-from functools import partial
 
 import structlog
 from fastapi import FastAPI, Request, Response
@@ -18,7 +17,6 @@ from intelliai_runtime_contract import TranscriptionRequest
 from intelliai_runtime_core import (
     ArtifactStore,
     ModelManager,
-    SlotSpec,
     WorkerPool,
     configure_logging,
 )
@@ -27,9 +25,10 @@ from intelliai_stt_runtime.api.binding import HEADER_REQUEST_ID
 from intelliai_stt_runtime.api.errors import register_error_handlers
 from intelliai_stt_runtime.api.routes import router
 from intelliai_stt_runtime.config import Settings
-from intelliai_stt_runtime.engines import TranscriptionEngine, reference, whisper
+from intelliai_stt_runtime.engines import TranscriptionEngine
 from intelliai_stt_runtime.identity import SERVICE_NAME
 from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline, canonical_audio
+from intelliai_stt_runtime.slots import build_slot_specs
 
 # Half a second of gentle deterministic non-silence: enough to push a real
 # model through its full encode/decode path once, engine-agnostic.
@@ -51,32 +50,12 @@ def transcription_warm_up(engine: TranscriptionEngine) -> None:
 def build_manager(settings: Settings) -> ModelManager[TranscriptionEngine]:
     """Settings-driven slot configuration.
 
-    The default slot binds whichever engine deployment chose; the engines
-    module owns everything model-specific (files, hashes, library import).
-    Adding an engine here = one SlotSpec line, nothing else on the platform.
+    The deployment declares the artifacts it hosts (``slots.py`` owns the
+    engine catalog and the declaration rules); the manager hosts them.
+    One artifact or five is a configuration difference, not a code one.
     """
-    slots: tuple[SlotSpec[TranscriptionEngine], ...]
-    if settings.default_engine == "whisper":
-        slots = (
-            SlotSpec(
-                slot="default",
-                artifact=whisper.ARTIFACT_ID,
-                load=partial(
-                    whisper.load_faster_whisper, compute_type=settings.whisper_compute_type
-                ),
-                files=whisper.WHISPER_SMALL_FILES,
-            ),
-        )
-    else:
-        slots = (
-            SlotSpec(
-                slot="default",
-                artifact=reference.ARTIFACT_ID,
-                load=lambda _: reference.load_reference_engine(),
-            ),
-        )
     return ModelManager(
-        slots=slots,
+        slots=build_slot_specs(settings),
         store=ArtifactStore(settings.model_dir),
         warm_up=transcription_warm_up,
     )
