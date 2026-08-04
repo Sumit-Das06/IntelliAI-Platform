@@ -97,6 +97,25 @@ deployment names draw only from permanent vocabulary.**
 - Kubernetes mapping stays 1:1 (deployment → Deployment); compose
   overlays express the same topology in dev.
 
+## Amendments
+
+**Amendment 1 — a slot hosts exactly one artifact at a point in time
+(2026-08-05, founder clarification at M5 step 2 review).** Clarifies
+Decision 1; nothing in the decision is reversed.
+
+> A slot's artifact binding is fixed for the life of the process: slots
+> are created at startup, loaded once, and released once. **Replacing
+> the artifact behind a slot is a deployment operation — a new process
+> with a new declaration — never a mutation of a running slot.** Nothing
+> in the runtime may rebind, hot-swap, or reload a slot in place.
+
+The reason is attribution, not simplicity. For the whole life of a
+process, `(slot → artifact)` is constant, so every evaluation record,
+ledger lineage entry, and benchmark names what actually served it
+without needing a timestamp. An in-place swap would make artifact
+identity a function of *when* you asked, and both the evaluation and
+commercial planes assume it is not.
+
 ## Future review criteria
 
 - Measured residency headroom on target hardware → revisit the

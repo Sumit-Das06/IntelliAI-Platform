@@ -320,18 +320,18 @@ level deeper.
 Remaining case: a genuinely **multilingual voice** (one voice,
 `languages=("hi","en")`, one artifact). The voice still routes
 unambiguously, but the engine may need the effective language and the
-ledger needs the fact. Hence **one additive optional contract field,
-`SpeechSynthesisRequest.language`** — mirroring
-`TranscriptionRequest.language`, validated by the gateway against the
-voice's declared languages (a mismatch is a 400 with an additive error
-code), defaulted from the voice when it has one language. Additive and
-optional → **`CONTRACT_VERSION` stays 1 through a fourth milestone.**
-This also closes M4's ledger gap: TTS events finally record language.
+ledger needs the fact. This design originally proposed one additive
+optional contract field (`SpeechSynthesisRequest.language`) for that
+case.
 
-Whether the *public* API surfaces a `language` field, or customers
-express language purely through voice choice, is founder decision
-F-M5-7; the internal architecture is identical either way — which is
-what makes it safe to decide on product grounds.
+**F-M5-7 rules otherwise for M5** (§16.1): no public language field, so
+nothing could populate a contract field that the voice does not already
+determine, and no engine would read it. The contract therefore gains
+**zero** fields in M5, and M4's ledger gap closes anyway — the gateway
+derives the recorded language from the voice's own declared language,
+a fact it already holds. When a multilingual voice actually exists, the
+field returns as the additive change it always was, alongside the engine
+that needs it.
 
 ## 5. Registry evolution — V1.5, on the road to V2
 
@@ -505,6 +505,21 @@ Small by design, because the heavy lifting was done in M2/M3:
 2. **Slot selection by the request's `model` field.** Today:
    validate-or-refuse. Tomorrow: select-or-refuse. Unknown artifact
    remains `INVALID_INPUT` — the M3 behavior, unchanged in meaning.
+
+   > **A slot hosts exactly one artifact at a point in time.** The
+   > binding is fixed for the life of the process: slots are created at
+   > startup, loaded once, and released once. **Replacing the artifact
+   > behind a slot is a deployment operation — a new process with a new
+   > declaration — never a mutation of a running slot.** Nothing in the
+   > runtime may rebind, hot-swap, or reload a slot in place.
+   >
+   > This is what keeps a served response attributable: for the whole
+   > life of a process, `(slot → artifact)` is constant, so every
+   > evaluation record, ledger lineage entry, and benchmark can name what
+   > actually served it without a timestamp. An in-place swap would make
+   > artifact identity a function of *when* you asked — and the
+   > evaluation and commercial planes both assume it is not.
+
 3. **Per-engine voice maps become per-slot voice maps** (TTS).
 4. **Worker-pool posture per deployment.** Admission capacity is a
    deployment property; artifacts sharing a deployment share its pool —
@@ -512,8 +527,8 @@ Small by design, because the heavy lifting was done in M2/M3:
    premature partitioning of measured-scarce CPU.
 
 **What does not change (the constraint the milestone is held to):**
-`runtime-core` gains **zero** code; the runtime contract gains **one
-additive optional field** (§4.3) and nothing else; the engine
+`runtime-core` gains **zero** code; the runtime contract gains **zero
+fields** (§4.3, after F-M5-7); the engine
 `Protocol`s, license firewall, and isolation AST suites are untouched.
 Every future engine still enters by the M3 permanent rule — satisfy the
 Protocol before a single weight is downloaded.
@@ -717,9 +732,9 @@ or pricing (Operational Measurement Independence).
 
 | Law | M5 posture |
 |---|---|
-| Runtime contract | **One additive optional field** (`SpeechSynthesisRequest.language`); `CONTRACT_VERSION` stays 1 |
+| Runtime contract | **Zero fields** (F-M5-7 withdrew the planned `SpeechSynthesisRequest.language`); `CONTRACT_VERSION` stays 1 |
 | Runtime-core | **Zero changes** — multi-slot already exists |
-| Public API stability | Routes, shapes, errors unchanged; additions additive (optional language input per F-M5-7; new error codes; ladder documentation) |
+| Public API stability | Routes and shapes unchanged; no TTS language field (F-M5-7); additions are additive only (new error codes; ladder documentation) |
 | Engine invisibility / leak-guard | Deployment names and route records use permanent vocabulary only; leak-guard extends to `/info`-derived surfaces and error messages |
 | Two Vocabularies placement rule | Customer surfaces, deployment names, and ledger facts draw from the permanent column only — enforced by the existing leak-guard and naming tests, now cited to one law |
 | Route/Strategy Boundary | Routes accrete no coordination fields; asserted structurally (record shape tested; one binding per selector is a composition-time error) |
@@ -821,6 +836,24 @@ requirements were met before the law existed (M2.5 evaluation evidence,
 the committed quality baselines, the M3 production benchmarks, and
 F-M5-2 itself as the explicit approval), and the catalog cites all four.
 
+**F-M5-7 — No TTS language field in M5** *(ratified 2026-08-05, before
+M5 Step 3)*. The public API introduces **no** `language` field for
+speech synthesis. Throughout M5, language is expressed through **voice
+selection**; the field is reconsidered when Registry V2 owns voice
+resolution and multilingual voice routing.
+
+Two consequences for the design as ratified. First, §4.3's planned
+additive contract field (`SpeechSynthesisRequest.language`) is **not
+added in M5**: with no public source, nothing could populate it that the
+voice does not already determine, and no engine would read it — an
+unused field on the platform's most permanent artifact. The runtime
+contract therefore gains **zero** fields in M5 rather than one, and
+`CONTRACT_VERSION` stays 1 for a fourth milestone by a wider margin than
+planned. Second, M4's TTS-language ledger gap closes anyway: the gateway
+derives the recorded language from the **voice's** declared language,
+which is a fact it already holds. Adding the field later stays additive;
+that door is not closed, only unopened.
+
 ### 16.2 Open
 
 Each is tagged with the step it gates and carries a recommendation so
@@ -832,7 +865,6 @@ engineering is never idle waiting.
 | **F-M5-4** | Voice rebinding evidence bar | Listening protocol (M2.5 discipline) mandatory; `speaker_similarity` implementation before the *second* rebinding | First rebinding |
 | **F-M5-5** | Deployment packing posture | One-artifact-per-deployment default on CPU; packing only with measured residency headroom | Step 6 |
 | **F-M5-6** | Arabic corpus commissioning — the prerequisite for *any* Arabic progress | Approve as an evaluation-track work item now; it gates all Arabic decisions and takes calendar time. Arabic STT is now publicly `available` (F-M5-2), which raises the urgency: we are serving it honestly-labelled and unmeasured | Research/evaluation track |
-| **F-M5-7** | TTS language surface: public `language` field, or language expressed purely through voice choice? *(the question originally numbered F-M5-1; renumbered because the founder's F-M5-1 ruling addressed the lifecycle instead, and decision numbers are permanent once ruled)* | **Voice-only at the public surface for now**; the internal field exists either way. Adding a public field later is additive; removing one is impossible | Step 3 |
 
 ## 17. Implementation roadmap — review-gated steps
 
@@ -847,7 +879,7 @@ promotions consume evidence.
 | **0 Governance** | This document committed; ADR-0025/0026/0027; founder decisions recorded as open items with gates | Docs committed and indexed; CI green |
 | **1 Registry V1.5 — serving routes** | `ServingRoute` + `RouteSelector`, ladder status, voice→artifact binding, `resolve(model, language/voice)`, composition-time validation incl. route-path license coverage — **behavior-frozen**: today's catalog expressed as default routes, zero resolution changes for existing traffic | Existing tests pass unedited; selector admission test, specificity law, and one-binding-per-selector asserted by composition-time tests; fake future languages prove capability-agnosticism |
 | **2 Runtime multi-slot** | Slot catalogs from deployment config; slot selection by pinned artifact; per-slot voice maps; `/info` lists all slots — proven in CI with **two reference engines in one process** | Both runtimes serve two artifacts concurrently in CI; refusal semantics unchanged; isolation suites pass |
-| **3 Gateway routing + language plumbing** | Resolution with language/voice inputs; deployment-keyed clients; additive contract field; TTS ledger language (closes the M4 gap); `language_not_supported` refusal + demand recording | E2E: one public model, two artifacts, language-routed, over real HTTP; leak-guard extended; continuity fingerprint green per route |
+| **3 Gateway routing + language plumbing** | Resolution with language/voice inputs; deployment-keyed clients; ~~additive contract field~~ (withdrawn by F-M5-7 — the contract is untouched); TTS ledger language derived from the voice (closes the M4 gap); `language_not_supported` refusal + demand recording | E2E: one public model, two artifacts, language-routed, over real HTTP; leak-guard extended; continuity fingerprint green per route |
 | **4 Evaluation identity** | Baselines gain (artifact, build, language, **corpus version**); per-language slices incl. code-mixed; existing baselines re-recorded as `en` instances; **the Hindi STT baseline formally committed** (the first real per-language baseline, from the incumbent — no new model) | Baseline records committed; speech-eval verifies per-language identity against live `/info` |
 | **5 Promotion workflow + ladder enforcement** | The three promotion classes as procedure; evidence-reference validation at composition; per-route switching-test harness (C3 per-language); rollback-as-revert demonstrated | A full promotion and rollback executed end-to-end on reference artifacts, with the diff-as-record |
 | **6 Deployment topology** | Compose overlays for multi-deployment; deployment→URL map; cold-start and residency measured per slot | Two deployments of one capability serving side by side; measurements recorded |
