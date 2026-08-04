@@ -22,6 +22,8 @@ from intelliai_api.pricing.books import (
 from intelliai_api.pricing.rating import (
     NO_AGREEMENT,
     RATEABLE_ORIGINS,
+    RATING_ALGORITHM_VERSION,
+    SUPPORTED_RATING_ALGORITHMS,
     Agreement,
     RatedLine,
     RatedPeriod,
@@ -37,6 +39,8 @@ __all__ = [
     "INTERNAL_V1",
     "NO_AGREEMENT",
     "RATEABLE_ORIGINS",
+    "RATING_ALGORITHM_VERSION",
+    "SUPPORTED_RATING_ALGORITHMS",
     "Agreement",
     "PriceBook",
     "PriceBookCatalog",

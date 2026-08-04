@@ -35,6 +35,22 @@ from intelliai_api.pricing.books import CATALOG, PriceBookCatalog
 
 CENTS = Decimal("0.01")
 
+# The Rating Reproducibility Invariant (design §8.6). Money is a function
+# of THREE immutable inputs — events, price book version, and this — and
+# the third is the one systems forget until they need it.
+#
+# Version 1 is the only implementation, and that is exactly why the field
+# is reserved now: introduced alongside version 2 it would be useless,
+# because every invoice already produced would have no version recorded
+# and no way to acquire one.
+#
+# A new version is required for any change to how money is derived from
+# the SAME facts and prices — rounding, tiering, minimum billable units,
+# proration, discount composition order. Adding a unit or changing a
+# price is not an algorithm change; the price book already versions those.
+RATING_ALGORITHM_VERSION = 1
+SUPPORTED_RATING_ALGORITHMS = frozenset({1})
+
 # Founder decision F7: only customer traffic is rated. Benchmark,
 # evaluation, research, and demo usage is metered exactly like a
 # customer's and excluded HERE — measurement is unconditional,
@@ -61,6 +77,20 @@ class Agreement:
 
 
 NO_AGREEMENT = Agreement(id="standard")
+
+
+def _require_supported(algorithm_version: int) -> None:
+    """Refuse an arithmetic we cannot perform, rather than substituting one.
+
+    The failure this prevents is the quiet one: a caller asking for
+    version 1 in 2029, silently receiving version 3, and reporting a
+    number the customer never paid.
+    """
+    if algorithm_version not in SUPPORTED_RATING_ALGORITHMS:
+        raise ValueError(
+            f"rating algorithm version {algorithm_version} is not implemented; "
+            f"supported: {sorted(SUPPORTED_RATING_ALGORITHMS)}"
+        )
 
 
 @dataclass(frozen=True)
@@ -93,6 +123,10 @@ class RatedPeriod:
     total: Decimal
     agreement_id: str
     price_book_versions: tuple[str, ...]
+    # The third leg of the reproducible triple. An invoice that records
+    # events and prices but not the arithmetic can be re-derived to a
+    # different number by a future release.
+    rating_algorithm_version: int
     rated_events: int
     unrated_events: int  # recorded, but not this agreement's to bill
 
@@ -126,14 +160,20 @@ def rate_events(
     period_label: str,
     catalog: PriceBookCatalog = CATALOG,
     agreement: Agreement = NO_AGREEMENT,
+    algorithm_version: int = RATING_ALGORITHM_VERSION,
 ) -> RatedPeriod:
     """Rate a period's ledger events into invoice-shaped lines.
 
-    Pure and total: the same events, catalog, and agreement produce the
-    same money forever. Reversals participate naturally — they carry
-    negated quantities (ADR-0021), so a corrected period rates to the
-    corrected number without anything being edited.
+    Pure and total: the same events, catalog, agreement, and algorithm
+    version produce the same money forever. Reversals participate
+    naturally — they carry negated quantities (ADR-0021), so a corrected
+    period rates to the corrected number without anything being edited.
+
+    ``algorithm_version`` is how a 2029 caller regenerates a 2026
+    invoice: it asks for the arithmetic that produced it, and gets an
+    error rather than today's if that version is gone.
     """
+    _require_supported(algorithm_version)
     # (unit, book version) -> quantity. Grouping by book version is what
     # keeps a period that spans a price change honest.
     grouped: dict[tuple[str, str], Decimal] = {}
@@ -182,6 +222,7 @@ def rate_events(
         total=subtotal - discount_amount,
         agreement_id=agreement.id,
         price_book_versions=versions,
+        rating_algorithm_version=algorithm_version,
         rated_events=rated,
         unrated_events=unrated,
     )
@@ -195,6 +236,7 @@ def rate_rollup(
     at: datetime,
     catalog: PriceBookCatalog = CATALOG,
     agreement: Agreement = NO_AGREEMENT,
+    algorithm_version: int = RATING_ALGORITHM_VERSION,
 ) -> RatedPeriod:
     """Rate pre-aggregated totals — the fast path, from the rollup cache.
 
@@ -204,6 +246,7 @@ def rate_rollup(
     authoritative: when a period spans a price change, rating falls back
     to ``rate_events`` rather than guessing (Rollup Invariant, §8.5).
     """
+    _require_supported(algorithm_version)
     book = catalog.book_for(at)
     lines = tuple(
         RatedLine(
@@ -230,6 +273,7 @@ def rate_rollup(
         total=subtotal - discount_amount,
         agreement_id=agreement.id,
         price_book_versions=(book.version,) if lines else (),
+        rating_algorithm_version=algorithm_version,
         rated_events=0,  # a rollup does not remember how many events it came from
         unrated_events=0,
     )

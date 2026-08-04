@@ -765,6 +765,62 @@ Quota deliberately still reads the ledger (§10.4): at present volumes the
 aggregate is 1–3 ms and correctness is worth more than 2 ms. The rollup
 serves rating and analysis, and takes over quota at the measured trigger.
 
+## 8.6 The Rating Reproducibility Invariant
+
+Ratified by the founder at Step 5 close, 2026-08-04:
+
+> **Given an immutable ledger, an immutable price book version, and a
+> specific rating algorithm version, the commercial result must always be
+> reproducible.**
+
+§8.4 fixed the *inputs* — facts never change, interpretation does. This
+fixes the *function*. Both are needed, because a reproducible input to a
+mutable algorithm reproduces nothing: the day rating learns tiered
+pricing, minimum billable durations, or proration, every past invoice
+would silently re-derive to a different number under the same events and
+the same prices.
+
+So the money-producing triple is **(events, price book version, rating
+algorithm version)**, and all three are recorded on every rated result:
+
+```
+RatedPeriod
+  ├─ price_book_versions        which prices applied
+  ├─ rating_algorithm_version   which arithmetic applied
+  └─ lines                      what it produced
+```
+
+`rating_algorithm_version` is reserved now, at 1, with only one
+implementation — deliberately, because the field is worthless if it is
+introduced at the same moment as version 2. Rating refuses an unknown
+version rather than silently using the current one, so the placeholder
+has teeth from the day it lands: a future v2 coexists with v1, and
+regenerating a 2026 invoice asks for v1 explicitly and gets 2026's
+arithmetic.
+
+**Where it will be persisted:** on the invoice document, when invoices
+exist (post-v1.0, §17). Until then a rated result is computed on demand
+and the version travels with it.
+
+**What counts as a new algorithm version:** any change to how money is
+derived from the same facts and prices — rounding, tiering, minimums,
+proration, discount composition order. Adding a *unit* or changing a
+*price* is not an algorithm change; those are already versioned by the
+price book.
+
+**Measured at Step 6**, over a ledger whose events were served by seven
+different internal realities:
+
+| Events in the period | Repetitions | Distinct results | p50 per rating |
+|---|---|---|---|
+| 1 000 | 200 | **1** | 2.30 ms |
+| 5 000 | 50 | **1** | 12.49 ms |
+
+`distinct == 1` at every scale is the invariant itself. The cost matters
+too: regenerating a 5 000-event period costs ~12 ms, so reproducing an
+invoice is always cheap enough to *actually do* — and a guarantee nobody
+can afford to exercise is a guarantee in name only.
+
 ## 9. Pricing — evolution without touching runtimes
 
 ```
