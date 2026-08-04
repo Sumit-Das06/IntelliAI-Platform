@@ -33,5 +33,9 @@ def runtime_lineage(
         "artifact_version": resolution.artifact.version,
         "provenance": resolution.artifact.provenance,
         "service": resolution.service,
+        # Which deployment of that service answered. Capacity and residency
+        # are deployment properties (ADR-0026), so cost-to-serve cannot be
+        # attributed without it once a capability has more than one.
+        "deployment": resolution.deployment,
         "service_version": service_version,
     }
