@@ -97,13 +97,26 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
+      # Admission control is Redis-backed, and its guarantee IS the
+      # atomicity of Lua scripts — a fake would prove only that the
+      # Python around them reads well. Without this service the limiter
+      # correctly fails open, and every limit test silently passes
+      # nothing.
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
     env:
       # Clean-machine configuration: no .env file exists here by design —
       # the same channel production uses (real environment variables).
       INTELLIAI_ENV: test
       INTELLIAI_AUTH_KEY_PEPPER: ci-only-pepper
       INTELLIAI_DATABASE_URL: postgresql+asyncpg://intelliai:ci-only-password@localhost:5432/intelliai
-      INTELLIAI_REDIS_URL: redis://localhost:6379/0
+      INTELLIAI_REDIS_URL: redis://127.0.0.1:6379/0
       INTELLIAI_STORAGE_ENDPOINT_URL: http://localhost:9000
       INTELLIAI_STORAGE_ACCESS_KEY: ci
       INTELLIAI_STORAGE_SECRET_KEY: ci-only-secret

@@ -20,8 +20,10 @@ Four claims this file exists to prove:
 """
 
 import asyncio
+import socket
 import time
 from typing import Any
+from urllib.parse import urlparse
 
 import pytest
 import redis.asyncio as aioredis
@@ -132,6 +134,27 @@ def _tight_plan(**over: int) -> Plan:
         "control_plane_requests_per_minute": 6,
     }
     return Plan(**{**base, **over})  # type: ignore[arg-type]
+
+
+@pytest.fixture(autouse=True)
+def _requires_redis(settings: Settings) -> None:
+    """Skip cleanly without infrastructure, like ``db_engine`` does.
+
+    Without this the limiter would correctly fail open and every test in
+    this file would pass while proving nothing — the worst possible
+    outcome for a suite whose whole job is to show that limits ARE
+    enforced.
+
+    Synchronous on purpose: this file has both sync tests (structural
+    checks that need no event loop) and async ones, and an autouse async
+    fixture would break the former.
+    """
+    url = urlparse(settings.redis.url.get_secret_value())
+    try:
+        with socket.create_connection((url.hostname or "127.0.0.1", url.port or 6379), timeout=1):
+            return
+    except OSError:
+        pytest.skip("requires running infrastructure (make up)")
 
 
 async def _controller(settings: Settings) -> AdmissionController:
