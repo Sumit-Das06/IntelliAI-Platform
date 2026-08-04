@@ -4,8 +4,43 @@ Promotion is where every plane meets. The one-way causal chain becomes an
 operating procedure here:
 
 ```
-serving ──► evidence ──► promotion ──► registry state ──► routing
+                    ┌──────────────────┐
+                    │    EVALUATION    │   measures a slice against the
+                    └────────┬─────────┘   artifact the registry resolved
+                             │             → an immutable evidence record
+                             ▼
+                    ┌──────────────────┐
+                    │  SWITCHING TEST  │   compares two records
+                    └────────┬─────────┘   → BLOCKED | REFUSED | TRADE | PASSED
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │ PROMOTION VERDICT│   a computed opinion, with findings
+                    └────────┬─────────┘   ── it changes NOTHING ──
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │   HUMAN REVIEW   │   reads the findings, weighs a trade,
+                    └────────┬─────────┘   approves — or does not
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │  REGISTRY DIFF   │   one reviewed change, citing its
+                    └────────┬─────────┘   evidence — the diff IS the record
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │ SERVING CHANGES  │   the next request resolves differently
+                    └──────────────────┘
 ```
+
+**Read the third box carefully. The switching test never promotes
+anything.** It ends at a verdict; every arrow below it is a human act or
+a consequence of one. There is no path from a passing verdict to a
+serving change that does not go through a person and a diff — which is
+also why there is no arrow pointing back up: an evaluation cannot cause
+its own adoption, and serving state cannot alter the record of what was
+measured.
 
 Nothing in this document reverses that arrow. The evaluation plane
 produces evidence and computes verdicts; a human decides; the decision

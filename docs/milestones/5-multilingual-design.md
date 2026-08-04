@@ -756,6 +756,19 @@ different questions:
 | **Replacement within a route** (artifact A → B behind `hi`) | Is B *at least as good as* A? — a **relative** bar | Per-language switching test incl. code-mixed; production bench comparison; **commercial continuity fingerprint** (the M4 Step 6 test, per route) |
 | **Voice rebinding** (§7) | Does it still *sound like* the voice? | Replacement bar + listening evidence |
 
+**The chain, and where it does not run** (the operational form lives in
+[PROMOTION.md](../../ml/evaluation/PROMOTION.md)):
+
+```
+  Evaluation ─► Switching Test ─► Promotion Verdict ─► Human Review ─► Registry Diff ─► Serving Changes
+                                  └── changes nothing ──┘
+```
+
+The switching test **never performs promotion**. It ends at a verdict;
+every arrow after it is a human act or a consequence of one, and no arrow
+points back — an evaluation cannot cause its own adoption, and serving
+state cannot alter the record of what was measured.
+
 **The procedure** (V1.5, code-declarative): proposal cites evidence in
 MODEL_LEDGER → founder approval → *[reserved insertion point: shadow →
 canary, Registry V2]* → **one reviewed diff** changing route/status
