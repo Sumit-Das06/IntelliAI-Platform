@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Status** | Living document — single source of truth for product decisions |
-| **Version** | 0.7 (Milestone 3 closed) |
-| **Last updated** | 2026-08-03 |
+| **Version** | 0.8 (Milestone 4 closed) |
+| **Last updated** | 2026-08-04 |
 | **Update policy** | Reviewed and updated at the close of every milestone, in the same PR that closes the milestone. Material product decisions made between milestones are added when made. |
 
 ---
@@ -94,14 +94,44 @@ Phase 1 (approved, in progress) — versions map to milestones M0–M12:
 | v0.25 | Foundation model evaluation & AI strategy (research/architecture only) — ✅ **shipped 2026-07-31** ([review](milestones/1.5-strategy-review.md); [index](STRATEGY.md)) |
 | v0.3 | **STT API** (`/v1/audio/transcriptions` + `/v1/models`, public model **`intelliai-stt`**) — ✅ **shipped 2026-08-03** ([review](milestones/2-stt-review.md); [performance baseline](../ml/evaluation/stt/benchmarks/2026-08-03-whisper-small-cpu-baseline.md); [quality baseline](../ml/evaluation/stt/results/2026-08-02-whisper-small.json)) |
 | v0.4 | **TTS API** (`/v1/audio/speech` + `/v1/audio/voices`, public model **`intelliai-tts`**) — ✅ **shipped 2026-08-03** ([review](milestones/3-tts-review.md); [design](milestones/3-tts-design.md); [performance baseline](../ml/evaluation/tts/benchmarks/2026-08-03-kokoro-82m-cpu-baseline.md); [quality baseline](../ml/evaluation/tts/results/2026-08-03-kokoro-82m.json)) |
-| v0.5 | Usage metering & rate limiting |
-| v0.6 | Async batch jobs + webhooks |
+| v0.5 | **Usage metering & rate limiting** (append-only usage ledger, admission control, quotas & spend limits, versioned pricing) — ✅ **shipped 2026-08-04** ([review](milestones/4-metering-review.md); [design](milestones/4-metering-design.md); [commercial baseline](benchmarks/2026-08-04-commercial-plane-baseline.md)) |
+| v0.6 | Multilingual foundation (M5) — Hindi and Arabic engine adoption under the Core Speech Language Policy |
+| v0.65 | Async batch jobs + webhooks |
 | v0.7 | Developer console (signup → key → usage) |
 | v0.8 | Playground |
 | v0.85 | Streaming STT (WebSocket) |
 | v0.9 | Model registry v2, evaluation harness, benchmark reports |
 | v0.95 | Observability, load testing, security hardening |
 | v1.0 | Docs site, Python SDK, deployment guide, launch |
+
+**v0.5 release scope and known limitations (honest product statement).**
+The platform can now *charge for what it serves*: every request is
+metered into an append-only ledger, admitted against plan-derived rate,
+concurrency, quota and spend limits, and priced by a versioned book with
+reproducible rating. A **free tier ships from day one** so enforcement is
+exercised rather than dormant.
+
+What v0.5 deliberately does **not** include: invoices, payments, credits,
+plan self-service, tax, and per-customer negotiated pricing. **Prices are
+internal only** — the machinery exists so cost-to-serve and spend
+ceilings are computable while customer evidence is gathered; nothing is
+published. Rate-limit values are set generously: v0.5 validates the
+mechanism, not the numbers.
+
+Two known gaps, stated rather than implied:
+
+- **Language analytics are complete for STT and blank for TTS.** The
+  public synthesis API has no `language` parameter (v0.5 preserved all
+  public APIs unchanged), so synthesis usage records no language. The
+  Core Speech Language Policy is therefore currently tracked on half the
+  evidence. Whether a customer states a language or it is inferred from
+  the chosen voice is an M5 product decision.
+- **A charge is explainable but not yet self-contained.** Every rated
+  line carries its quantity, unit price, price book version and rating
+  algorithm version, but that explanation is recomputed rather than
+  stored. The invoice document closes it (post-v1.0) — see the
+  Historical Explainability Invariant in the
+  [design review §8.7](milestones/4-metering-design.md).
 
 **v0.4 release scope and known limitations (honest product statement):**
 English only, two launch voices under placeholder identities

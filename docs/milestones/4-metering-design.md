@@ -821,6 +821,63 @@ too: regenerating a 5 000-event period costs ~12 ms, so reproducing an
 invoice is always cheap enough to *actually do* — and a guarantee nobody
 can afford to exercise is a guarantee in name only.
 
+## 8.7 The Historical Explainability Invariant
+
+Ratified by the founder at Step 7 close, 2026-08-04:
+
+> **Years later, every commercial decision must remain explainable from
+> immutable commercial evidence alone. A commercial record must explain
+> why a customer was charged exactly what they were charged, without
+> requiring historical logs, source code, or operational memory.**
+
+The strictest law in the milestone, and the one that judges all the
+others. §8.4 made the facts immutable, §8.6 made the function
+reproducible — this asks the harder question: **can the charge be
+*explained*, by someone who has only the record?**
+
+The three things it forbids are the three places explanations usually
+hide:
+
+| Forbidden dependency | Why it fails |
+|---|---|
+| **historical logs** | retained for months, not years; lossy by design |
+| **source code** | requires the right commit, a working toolchain, and someone who can read it |
+| **operational memory** | the person who knew has left |
+
+### Where M4 stands against it
+
+Honestly: **partially satisfied, with the closing move identified.**
+
+| Requirement | Status |
+|---|---|
+| The facts are immutable and complete | ✅ ADR-0021 |
+| Each charge traces to a customer-visible request id | ✅ §5.5 |
+| The prices applied are named by version | ✅ ADR-0023 |
+| The arithmetic applied is named by version | ✅ §8.6 |
+| A rated line carries quantity **and unit price** | ✅ `RatedLine` |
+| That explanation is **persisted** | ❌ **not yet** |
+
+The gap is precise. A `RatedPeriod` already contains everything an
+explanation needs — for each line: the unit, the quantity, the unit
+price, the amount, and the versions that produced them — so nobody has
+to read code to understand *why* the number is the number. But nothing
+persists it: today the explanation is *recomputed* from the ledger plus
+the price book, and the price book lives in code. Regeneration therefore
+depends on the repository, which the invariant explicitly disallows.
+
+**The closing move is the invoice document** (post-v1.0, §17): it embeds
+its own lines, unit prices, price book version, rating algorithm
+version, and the event ids it was built from. Once that exists, an
+explanation requires nothing but the document.
+
+The useful consequence for whoever builds it: **this is assembly, not
+design.** Every field such a document needs already exists on
+`RatedLine` and `RatedPeriod`, because ADR-0023 committed to carrying
+them before there was anything to carry them for. The invariant is
+therefore recorded now as a **forward requirement on the invoice**, not
+as a retrofit of the ledger — and it is the reason an invoice must be a
+frozen document rather than a query.
+
 ## 9. Pricing — evolution without touching runtimes
 
 ```

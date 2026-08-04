@@ -1,8 +1,8 @@
 # IntelliAI Platform — Architecture
 
-> Current as of **v0.4 (Milestone 3 complete)**. Updated at every milestone
+> Current as of **v0.5 (Milestone 4 complete)**. Updated at every milestone
 > close, alongside [PRD.md](PRD.md). Decisions behind this document live in
-> [adr/](adr/) (0001–0020, all with review criteria); company law lives in
+> [adr/](adr/) (0001–0024, all with review criteria); company law lives in
 > [CONSTITUTION.md](CONSTITUTION.md) with the strategy stack indexed at
 > [STRATEGY.md](STRATEGY.md); working rules live in
 > [/CONTRIBUTING.md](../CONTRIBUTING.md) and the `docs/` handbooks.
@@ -61,8 +61,33 @@ promotion → promotion changes registry state → registry changes routing.
    (PRD §6): English, Hindi, and Arabic are first-class product
    languages; if no single engine serves all three under the licensing
    and quality gates, multiple engines serve one stable API.
+9. **Customers buy capabilities, not foundation models** (the *Commercial
+   Identity Invariant*, M4). Usage, pricing, quotas, invoices,
+   subscriptions, and analytics attach permanently to public capabilities
+   (`intelliai-stt`, `intelliai-tts`). Artifacts, routing decisions,
+   quantization, fine-tunes, adapters, merges, and engine replacements are
+   implementation details that may never alter commercial identity — the
+   commercial twin of invariant 8, proven by an eight-reality continuity
+   test with a pricing-policy negative control.
+10. **Commercial evidence is immutable; commercial interpretation
+    evolves.** The platform keeps two permanent append-only ledgers —
+    evaluation evidence (what models did) and customer usage (what
+    customers consumed). Neither is ever edited; corrections are
+    compensating entries. Plans, discounts, and prices are *lenses*
+    applied at read time and recorded by version. **New commercial
+    features add interpretation, never columns to the ledger.**
+11. **Operational measurement never becomes commercial measurement.**
+    Latency, memory, GPU, queue depth, topology, and routing decisions may
+    not influence ledger facts, quotas, pricing, rating, or invoices —
+    no surge pricing by load, no cost-recovery pricing by placement, no
+    quota consumption by latency. The only route from an observation to a
+    charge is a published price book version.
+12. **Rollups are caches; the ledger is authoritative.** Every derived
+    aggregate must be exactly reproducible from the ledger, and any
+    disagreement is repaired by rebuilding the cache — never by adjusting
+    the facts.
 
-## What exists today (v0.4)
+## What exists today (v0.5)
 
 | Component | State |
 |---|---|
@@ -83,7 +108,13 @@ promotion → promotion changes registry state → registry changes routing.
 | TTS runtime | `services/tts-runtime` (ADR-0018 template #2 + ADR-0020 binary binding): JSON in → WAV body + bounded operational-only `X-Runtime-Envelope` (errors always JSON) · text pipeline (validate → normalize seam → voice resolution) · VoiceMap (same public voice ids per engine — the rebinding law) · engines behind Protocol (ReferenceSynthesisEngine in CI; Kokoro-82M via optional extra, **espeak-free by license firewall**; English-only per verdict, Hindi gated) · GPL-free deployment image (build fails if the espeak chain is importable) |
 | Public AI API | `/v1/audio/transcriptions` (OpenAI-compatible: json/text/verbose_json) · `/v1/audio/speech` (raw WAV out, zero internal headers) · `/v1/audio/voices` + `/v1/models` product catalogs (leak-guard-tested) · transport-agnostic RuntimeClient (transcribe + synthesize) · total runtime→public error translation (shared) · `transcription.completed`/`speech.completed` accounting events |
 | Evaluation | `ml/evaluation`: versioned immutable datasets/corpora (audio never in git), stdlib metrics + registry with declared directions, live-runtime eval runners (`run`, `speech-eval` — reproducibility metadata from live /info), deterministic benchmark harnesses (`bench`, `bench-tts`) · committed baselines: STT WER 0.000; TTS EN round-trip WER 0.072 (+ live reproduction); [STT](../ml/evaluation/stt/benchmarks/2026-08-03-whisper-small-cpu-baseline.md) & [TTS](../ml/evaluation/tts/benchmarks/2026-08-03-kokoro-82m-cpu-baseline.md) production baselines (gateway overhead 0.86 %/2.0 % of inference — ADR-0002 validated both shapes) |
-| Tests | 430 passing across 6 workspace packages (gateway over real HTTP+Postgres; both runtimes incl. isolation AST suites and license-boundary enforcement; contract goldens; runtime-core lifecycle + capability-independence proofs; eval determinism + CLI integration) |
+| Usage ledger (M4) | `usage_events` + `usage_quantities` — append-only by database trigger (UPDATE/DELETE/TRUNCATE refused) *and* by an AST test forbidding a mutating statement in the repository; money-free; capability-agnostic `(unit, amount)` rows; usage **origin** taxonomy (customer/benchmark/evaluation/research/fine_tuning/demo/internal_qa); internal **lineage** stored and never projected; corrections are compensating events (ADR-0021) |
+| Admission control (M4) | `limits/` — Redis token buckets and concurrency leases, each a single atomic Lua script clocked by `redis TIME`; guard attached to the **/v1 router** so no endpoint can forget it; hierarchy IP(pre-auth) → org → key(surface-namespaced) → capability → control-plane; plan-derived limits; fails open **loudly and cheaply** via a circuit breaker (ADR-0022) |
+| Entitlements (M4) | `entitlements/` — quota computed from the **ledger** (never a counter), spend limits from rated usage, calendar-month UTC half-open periods, free tier live from day one; overshoot bounded by input limits; reserve/settle seam named and unbuilt |
+| Pricing (M4) | `pricing/` — versioned immutable price books selected **per event** by `occurred_at` (a price cut never re-prices the past), pure rating carrying `price_book_versions` + `rating_algorithm_version`, discounts as read-time agreements, rounding once at the line; `usage_rollups` as a rebuildable cache the ledger always outranks (ADR-0023) |
+| Idempotency (M4) | optional `Idempotency-Key`; at-most-once **billing** (not compute) enforced by database uniqueness — held even with Redis stopped, in production (ADR-0024) |
+| Commercial analytics (M4) | `analytics/` — reconciliation across gateway → ledger → rollups → rating (8 checks), anomaly queries against each tenant's own baseline, language adoption for the Core Speech Language Policy; `intelliai commercial-report` exits non-zero on disagreement; [commercial baseline](benchmarks/2026-08-04-commercial-plane-baseline.md) (+18 ms p50, 2.1 % of a served request) |
+| Tests | 576 passing across 6 workspace packages (gateway over real HTTP+Postgres+Redis; both runtimes incl. isolation AST suites and license-boundary enforcement; contract goldens; runtime-core lifecycle + capability-independence proofs; eval determinism + CLI integration; commercial continuity proof with pricing negative control) |
 
 ## Request flow (as of v0.4)
 
@@ -123,7 +154,13 @@ evaluation seed with measured baselines~~ ✅
 ([review](milestones/2-stt-review.md)) · ~~M3 TTS + voices + runtime-core
 + speech evaluation wiring + GPL-free deployment~~ ✅
 ([review](milestones/3-tts-review.md); [design](milestones/3-tts-design.md)) ·
-M4 metering/limits (Redis) · M5 batch jobs (PG `SKIP LOCKED`) · M6 console ·
+~~M4 metering, admission control, entitlements, pricing + commercial
+production baseline~~ ✅ ([review](milestones/4-metering-review.md);
+[design](milestones/4-metering-design.md)) ·
+**M5 multilingual foundation** (Hindi + Arabic engines under the Core
+Speech Language Policy — requires *no* commercial redesign; see
+[M4 review §6](milestones/4-metering-review.md)) · M5.5 batch jobs
+(PG `SKIP LOCKED`, and the trigger for reserve/settle quota) · M6 console ·
 M7 playground · M8 streaming (WebSocket, runtime-contract v2) · M9 registry
 v2 (implements [REGISTRY_V2.md](REGISTRY_V2.md) + [MODEL_IDENTITY.md](MODEL_IDENTITY.md))
 + evaluation harness (formalizing the seed into the first-class evaluation

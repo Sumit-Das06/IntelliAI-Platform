@@ -42,7 +42,7 @@ def test_liveness_is_instant_and_standard_shaped(settings: Settings) -> None:
     body = response.json()
     assert body["status"] == "healthy"
     assert body["service"] == "intelliai-api"
-    assert body["version"] == "0.4.0"
+    assert body["version"] == "0.5.0"
     assert "timestamp" in body
     assert body["checks"] == {}
 
