@@ -17,6 +17,10 @@ which maps where every kind of truth lives.
 - `TESTING_STRATEGY.md` — what we test, at which level, and why.
 - `DOCUMENTATION_STANDARDS.md` — this map itself.
 - (Workflow & review checklist: [/CONTRIBUTING.md](../CONTRIBUTING.md) at repo root.)
+- `research/` — the foundation model research lab: governing framework,
+           append-only model status ledger, and per-candidate dossiers.
+           Knowledge base only — code experiments live in `/research` at
+           the repo root.
 - `adr/` — Architecture Decision Records (template: 0000). Write one BEFORE any
            significant decision lands; update Status when superseded. ADRs record
            HOW we build; the PRD records WHAT and WHY.
