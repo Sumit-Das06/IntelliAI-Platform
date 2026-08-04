@@ -447,6 +447,76 @@ The control is the leak-guard test pattern already proven in M2 and M3,
 extended to every usage projection and usage API. Lineage is never an
 input to rating (§9) — pricing must remain unable to see engines.
 
+### 7.6 The Ledger Fact Invariant
+
+Ratified by the founder at Step 1 close, 2026-08-04:
+
+> **The ledger stores facts, never interpretations.**
+
+| May be recorded (facts) | May never be recorded (interpretations) |
+|---|---|
+| quantities, units | billable **amount** (money) |
+| language | quota remaining |
+| origin | invoice state |
+| outcome | customer tier |
+| timestamps | premium status |
+| public capability | discounts |
+| lineage | any pricing decision |
+| request identity | |
+
+The distinguishing test is not "is it commercial?" but **"is it
+observed or concluded?"** A quantity is observed; a discount is
+concluded. An outcome is observed; a tier is concluded. The moment a
+concluded value enters an immutable row, that conclusion becomes
+permanent — and conclusions are precisely the things that must remain
+free to change.
+
+> **Reports and invoices are derived from facts, never the reverse.**
+
+Two clarifications this invariant forces, because both look like
+exceptions and are not:
+
+- **`billable` is a fact, not a price.** It records *the platform
+  delivered value and measured the quantity* — an observation about the
+  request. It is a necessary condition for a charge and never a
+  sufficient one; whether money is owed is concluded later from origin
+  and price book (F7, ADR-0023).
+- **`language` is a fact** and therefore belongs in the ledger as a
+  first-class column rather than in lineage: it is an observed property
+  of the request, it drives the Core Speech Language Policy analytics of
+  §12.4, and unlike lineage it is queryable and groupable. It never
+  affects billing semantics.
+
+### 7.7 The Request Identity Invariant
+
+Ratified by the founder at Step 1 close, 2026-08-04:
+
+> **Every ledger event corresponds to exactly one customer request. One
+> customer request produces one immutable commercial fact.**
+
+This must hold regardless of any future implementation change, and each
+of these is a way the 1:1 mapping is normally broken:
+
+| Future mechanism | The temptation | The rule |
+|---|---|---|
+| **Streaming** | one event per chunk | chunks are transport; one event at generation completion |
+| **Batching** | one event per batch | a batch is our scheduling convenience, not the customer's request |
+| **Retries** | one event per attempt | at-most-once billing, enforced by database uniqueness |
+| **Speculative decoding** | count the speculative work | drafts are an internal optimization the customer never asked for |
+| **Cascaded models** | one event per stage | a cascade is one product answering one question |
+| **Multi-engine routing** | one event per engine consulted | routing is invisible (§8.1) |
+| **Multi-model fallback** | one event per attempt, or an event for the failed primary | the customer asked once and was served once |
+
+The uniform reasoning: **the unit of billing is the unit the customer
+asked for, never the unit of work we happened to perform.** Internal
+work multiplies; customer intent does not. Where our machinery fans out,
+the ledger stays at one row — and where our machinery fails and retries
+internally, the ledger still stays at one row.
+
+Structurally this rests on the `request_id` uniqueness constraint
+(§7.2): the platform mints exactly one request id per customer request,
+and the ledger will refuse a second event carrying it.
+
 ## 8. Identity continuity — the law that survives every model change
 
 ### 8.0 The Commercial Identity Invariant
@@ -908,18 +978,49 @@ stays a pass-through**, which is the outcome that ADR predicted.
   to defend: metering plus limiting adds < 10 ms at p95, total gateway
   overhead stays under 5%** — measured on the existing harness, never
   asserted.
-- **R2 — Database connection lifetime versus long inference calls.** The
-  session opens for the whole request, so authentication checks out a
-  pooled connection that is held across the runtime call. With
-  `pool_size=5` and `pool_max_overflow=10`, effective concurrency may cap
-  near 15 in-flight requests regardless of inference capacity; M3's
-  benchmarks likely never surfaced it because the runtime pool refuses at
-  10 concurrent first, and the two ceilings mask each other. M4 adds
-  database work to this path. **Must be measured explicitly.** The likely
-  fix — close the auth transaction before the runtime call, open a short
-  transaction for the usage write — removes metering from the auth
-  transaction, so §6's durability argument must be **re-verified rather
-  than assumed**.
+- **R2 — Database connection lifetime versus long inference calls.**
+  ⚠️ **MEASURED AND CONFIRMED at Step 2, 2026-08-04.** The session opens
+  for the whole request, so authentication checks out a pooled connection
+  that is held across the runtime call.
+
+  Method: the real gateway over in-process HTTP against the dev Postgres,
+  a fake runtime with a fixed 300 ms inference, a concurrency ladder, and
+  the SQLAlchemy pool sampled every 5 ms.
+
+  | Concurrency | Wall (s) | p50 (ms) | max (ms) | Pool checked out | **Peak concurrent in runtime** |
+  |---|---|---|---|---|---|
+  | 1 | 0.341 | 341 | 341 | 1 | 1 |
+  | 5 | 0.449 | 442 | 445 | 5 | 5 |
+  | 15 | 0.808 | 784 | 804 | 15 | 15 |
+  | 25 | 1.153 | 795 | 1121 | **15** | **15** |
+  | 40 | 1.754 | 1248 | 1717 | **15** | **15** |
+
+  The last column is the finding: **inference concurrency is capped by
+  the database pool, not by inference capacity.** At 40 concurrent
+  requests only 15 reach the runtime at a time, and p50 inflates to
+  1248 ms for 300 ms of work — a 4.2× amplification produced entirely by
+  waiting for a connection. The ceiling is exactly
+  `pool_size + pool_max_overflow = 15`.
+
+  **This pre-dates M4** — authentication has always checked the
+  connection out — and M3 never surfaced it because the TTS worker pool
+  refuses at 10 concurrent, so the smaller ceiling masked the larger one.
+  It becomes load-bearing the moment capacity rises or two capabilities
+  are served at once.
+
+  **Metering did not cause it and barely adds to it:** ledger writes cost
+  **0 ms at c=1** (341 metered vs 347 unmetered — below measurement
+  noise) and **~12 ms at c=25** (795 vs 783), where the write competes
+  for the same saturated pool. Well inside the R1 budget.
+
+  **The fix is a founder decision, not a Step 2 edit**, because the
+  obvious remedy — release the connection before the runtime call and
+  reacquire it for the ledger write — removes metering from the request's
+  transaction and therefore weakens §6's durability guarantee. Options,
+  in increasing order of cost: raise `pool_size` (cheap, bounded by
+  Postgres `max_connections`); split the session lifecycle and re-verify
+  §6; or move to a dedicated metering connection pool. Registered as
+  **open decision F8** (§18).
 - **R3 — Silent revenue loss.** Mitigated by the write-failure alarm, the
   durable fallback sink, and the daily reconciliation invariant. Without
   all three, correct billing is a belief rather than a fact.
@@ -1001,6 +1102,7 @@ recorded here as settled inputs, not open questions.
 | **F5** | Free tier at launch | **Ship one from day one**, with generous default quotas — so quota logic, reset behavior, enforcement, analytics, and rating are exercised in production instead of lying dormant until the first customer | Step 4 |
 | **F6** | Billing period anchor | **Calendar month, UTC** | Step 5 |
 | **F7** | Billable origins | **Only `origin = customer`.** All other origins remain fully metered and are excluded during rating | Step 5 |
+| **F8** | How to lift the measured 15-request connection ceiling (R2) | **Open.** Raise `pool_size` (cheap, no durability consequence) / split the session lifecycle and re-verify §6 / dedicated metering pool. Recommendation: raise `pool_size` now, revisit the lifecycle only if measurement says it is still the binding constraint | Step 3 |
 
 F5 is the ruling with the largest engineering consequence and it is worth
 stating as a principle: **enforcement code that never runs is untested
