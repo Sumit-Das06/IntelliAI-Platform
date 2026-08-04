@@ -151,6 +151,28 @@ measured yet, and demanding evidence to *begin* measuring is circular.
 Demotion (`supported` → `available`) and withdrawal are never gated:
 honesty may always be increased.
 
+**The corpus precondition** (ratified 2026-08-05, after Step 4):
+
+> **A language cannot advance beyond `available` unless IntelliAI owns —
+> or has formally adopted — a versioned evaluation dataset for that
+> language. Evidence quality is bounded by dataset quality, so promotion
+> requires both: benchmark evidence, and a versioned evaluation corpus.**
+
+This closes the gap Step 4 found by walking into it. A benchmark can be
+run against anything; what makes its number *mean* something is the
+corpus behind it. Without this rule, a promotion could cite a technically
+valid evidence triple produced on a slice with no speech in the language
+being promoted — the number would be real, reproducible, and about
+nothing. Ownership matters as much as existence: an adopted third-party
+corpus carries its licence into every promotion that ever cites it, so
+which of the two applies is recorded, not assumed.
+
+Structurally: a `supported` route's evidence must declare its corpus as
+`owned` or `adopted`, and the cited corpus version must actually contain
+natural speech in the promoted language. Hindi therefore cannot be
+promoted today, and will not be able to be until F-M5-8 is resolved —
+which is the rule working, not the rule failing.
+
 **Why a ladder and not a boolean.** A boolean forces one of two lies.
 `supported=true` for Arabic claims a bar nobody measured.
 `supported=false` refuses traffic the incumbent genuinely handles —
@@ -702,6 +724,12 @@ Artifact lineage (structured minimum)
 > versions. Every binding in the registry is thereby explainable, years
 > later, from immutable records alone — the evaluation-plane sibling of
 > the Historical Explainability Invariant.
+>
+> **And the corpus must be ours** (§2): no language above `available`
+> without a versioned evaluation dataset IntelliAI owns or has formally
+> adopted for that language. Evidence quality is bounded by dataset
+> quality — a benchmark can be run against anything, and what makes its
+> number mean something is the corpus behind it.
 
 **Why this is where training pipelines attach.** A future fine-tuning
 pipeline touches this chain at exactly two points and nowhere else: it

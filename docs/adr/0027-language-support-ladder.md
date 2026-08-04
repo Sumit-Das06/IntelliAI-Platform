@@ -135,6 +135,22 @@ state machine — a production baseline is unobtainable without having
 served, so the top rung's bar structurally forbids the jump. Demotion
 and withdrawal remain ungated: honesty may always be increased.
 
+**Amendment 3 — the corpus precondition (2026-08-05, founder ruling
+after M5 step 4).** Extends Decision 1's evidence requirement for
+`supported` and Decision 4's promotion bar.
+
+> A language cannot advance beyond `available` unless IntelliAI owns —
+> or has formally adopted — a versioned evaluation dataset for that
+> language. Evidence quality is bounded by dataset quality, so promotion
+> requires both: benchmark evidence, and a versioned evaluation corpus.
+
+Step 4 found the gap by walking into it: a benchmark can be run against
+anything, and a technically valid evidence triple can be produced on a
+slice containing no speech in the language being promoted — a number that
+is real, reproducible, and about nothing. Ownership is recorded rather
+than assumed, because an adopted third-party corpus carries its licence
+into every promotion that ever cites it.
+
 **Amendment 2 — the initial ladder (2026-08-04, founder decision
 F-M5-2).** STT: English `supported`, Hindi `available`, Arabic
 `available`. TTS: English `supported`, Hindi and Arabic `unavailable`.
