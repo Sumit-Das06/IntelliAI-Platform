@@ -944,6 +944,56 @@ Already binding on the code as shipped: a degraded limiter returns
 it, and an alarm fires. Silence is the honest answer, and it is
 deliberately distinguishable from "you have plenty left".
 
+### 10.1c Operational Measurement Independence
+
+Ratified by the founder at Step 6 close, 2026-08-04:
+
+> **Operational measurements — latency, memory, CPU, GPU, worker count,
+> queue depth, routing decisions, infrastructure topology, language
+> routing — may never directly influence ledger facts, quotas, pricing,
+> rating, or invoices. Commercial interpretation may change only through
+> explicit public commercial policy.**
+
+The third and final independence law, and the one that closes the loop
+the other two leave open. §8.0 keeps the engine out of the *bill*;
+§10.1a keeps it out of *access*; this keeps the whole operational plane
+out of *both* — including measurements the platform legitimately
+collects and acts on elsewhere.
+
+The distinction it enforces is between two things that look alike:
+
+| Operational measurement | Commercial measurement |
+|---|---|
+| how hard it was for us | what the customer consumed |
+| latency, RTF, memory, queue depth | audio seconds, characters |
+| varies by engine, hardware, load | varies only by the request |
+| drives capacity and engine choice | drives the ledger and the invoice |
+
+Both are real, both are worth collecting, and **only the second may reach
+the ledger**. A request that took 8 seconds on a cold worker and one that
+took 300 ms on a warm one produced the same audio and cost the customer
+the same — anything else would make a bill a function of our operations
+rather than their usage.
+
+Three concrete prohibitions this creates, each of which would otherwise
+be an easy and defensible-sounding optimisation:
+
+- **No surge pricing by load.** Charging more when queue depth is high
+  makes the price unpredictable and unauditable.
+- **No cost-recovery pricing by placement.** A GPU-served request is
+  more expensive *to us*; the customer bought a capability, not a
+  placement (§8.0).
+- **No quota consumption by latency.** Slow requests may not consume
+  more allowance than fast ones — the customer did not ask for the
+  slowness.
+
+Operational measurement remains essential and keeps its own home:
+benchmarks decide capacity, evidence decides which engine serves, and
+lineage lets cost-to-serve be *analysed* per artifact. Analysis informs
+what we *choose to charge*; it never becomes the charge itself, and the
+only route from one to the other is a published price book version
+(ADR-0023).
+
 ### 10.2 The hierarchy
 
 | Level | Dimension | Purpose | Verdict |
