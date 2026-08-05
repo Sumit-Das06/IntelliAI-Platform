@@ -17,7 +17,14 @@ scoring, no ranking, no quality comparison, and no recommendation** — a
 candidate's presence here means only that its lineage is worth
 investigating.
 
-Current stage of this directory: **Gate 0 intake, speech-to-text only**
-(2026-08-05). No candidate has been screened (Gate 1), scored (Gate 2),
-or benchmarked. Status of record for every entry:
-[MODEL_LEDGER.md](../MODEL_LEDGER.md).
+Current stage of this directory: **Gate 1 complete, speech-to-text only**
+(2026-08-05) — 12 PASS · 4 BLOCKED · 0 REJECTED. No candidate has been
+scored (Gate 2), compared, or benchmarked.
+
+Gate 1 verdicts are recorded in the
+[screening record](../2026-08-05-stt-gate1-license-screen.md) and appended
+to [MODEL_LEDGER.md](../MODEL_LEDGER.md), which remains the status of
+record. The four BLOCKED dossiers carry the halt notice in their own
+header; **do not open a Gate 2 dossier for any of them** until the named
+clarification is obtained. PASS dossiers keep their Gate 0 licence text
+until Gate 2 rewrites their full §11 Licensing section.

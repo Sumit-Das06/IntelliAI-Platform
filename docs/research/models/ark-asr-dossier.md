@@ -2,7 +2,8 @@
 
 | | |
 |---|---|
-| **Stage** | Gate 0 — intake only. No screening, scoring, comparison, or recommendation. |
+| **Stage** | Gate 0 intake · **Gate 1 verdict: BLOCKED (2026-08-05) — work halted** |
+| **Gate 1** | Provenance **resolved** (Audio8 publishes; AutoArk is the research origin; card is canonical). Licence `apache-2.0`. Blocked on the **executing chain**: mandatory `trust_remote_code` whose code derives from `AutoArk/open-audio-opd`, `THUNLP/OPD`, `volcengine/verl` — none verified. **No Gate 2 dossier until those licences are verified.** [Screening record](../2026-08-05-stt-gate1-license-screen.md) |
 | **Status** | Researching |
 | **Registered** | 2026-08-05 |
 | **Capability** | transcription |

@@ -2,7 +2,8 @@
 
 | | |
 |---|---|
-| **Stage** | Gate 0 — intake only. No screening, scoring, comparison, or recommendation. |
+| **Stage** | Gate 0 intake · **Gate 1 verdict: BLOCKED (2026-08-05) — work halted** |
+| **Gate 1** | Card claims `apache-2.0`, but the model is built on **Qwen3-1.7B-base** and a **Qwen3-Omni-MoE** encoder with **no licences stated for either base**. A derivative cannot grant more than its bases allow. **No Gate 2 dossier until both upstream licences are verified.** [Screening record](../2026-08-05-stt-gate1-license-screen.md) |
 | **Status** | Researching |
 | **Registered** | 2026-08-05 |
 | **Capability** | transcription |

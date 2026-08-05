@@ -2,7 +2,8 @@
 
 | | |
 |---|---|
-| **Stage** | Gate 0 — intake only. No screening, scoring, comparison, or recommendation. |
+| **Stage** | Gate 0 intake · **Gate 1 verdict: BLOCKED (2026-08-05) — work halted** |
+| **Gate 1** | Checkpoints are distributed from third-party object storage with **no licence attached to the checkpoint files**; the repo's MIT statement does not travel with them, and discoverable HF copies are third-party re-uploads. **No Gate 2 dossier until a licence is attached to the checkpoint distribution.** [Screening record](../2026-08-05-stt-gate1-license-screen.md) |
 | **Status** | Researching |
 | **Registered** | 2026-08-05 |
 | **Capability** | transcription |

@@ -2,7 +2,8 @@
 
 | | |
 |---|---|
-| **Stage** | Gate 0 — intake only. No screening, scoring, comparison, or recommendation. |
+| **Stage** | Gate 0 intake · **Gate 1 verdict: BLOCKED as a serving candidate (2026-08-05)** |
+| **Gate 1** | Toolkit verified Apache-2.0 and clean — the **training-stack path (§12/§15) is unobstructed**. But pretrained checkpoints ship separately via GitHub Releases with **no per-checkpoint licence**, and training-corpus terms may bind derived weights. **No checkpoint may enter Gate 2 until its own licence and corpus terms are verified.** [Screening record](../2026-08-05-stt-gate1-license-screen.md) |
 | **Status** | Researching |
 | **Registered** | 2026-08-05 |
 | **Capability** | transcription |

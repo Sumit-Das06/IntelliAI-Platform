@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-05 (STT candidate intake sweep, Gate 0) |
+| **Last entry** | 2026-08-05 (STT Gate 1 licence & commercial screen) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -187,6 +187,50 @@ living research priorities ([RESEARCH_FRAMEWORK.md §16](RESEARCH_FRAMEWORK.md))
 | **Streaming STT/TTS** | Which lineages support the M8 streaming decision? | TTS streaming verdict GO (M3 evidence). STT streaming candidates now registered across three architectural families: transducer (Parakeet), delayed-streams (Kyutai), audio-LLM causal encoder (Voxtral), plus the CPU-native streaming stack (Zipformer/sherpa-onnx). |
 | **CPU-vs-GPU serving tier** | Does any 2026-generation candidate justify a GPU tier? | Opened 2026-08-05: most new entrants are 2–3B and GPU-oriented, while our constitution is CPU-first with GPU-ready architecture. Whether the quality on offer justifies a GPU serving class is a decision this research must eventually inform with measurements, not preferences. |
 | **Own IntelliAI-STT / IntelliAI-TTS** | When is pretraining justified? | Parked at Ladder rung 6 ([RESEARCH_FRAMEWORK §9](RESEARCH_FRAMEWORK.md)): requires measured ceilings on tuned incumbents + data moat. Not before the evaluation harness can prove the ceiling. |
+
+---
+
+---
+
+## Gate 1 verdicts — STT universe (appended 2026-08-05)
+
+Full evidence, per-candidate reasoning, and sources:
+[2026-08-05-stt-gate1-license-screen.md](2026-08-05-stt-gate1-license-screen.md).
+
+**Statuses are unchanged.** All 16 lineages remain `Researching`; status
+transitions occur at Gate 3 ([RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)).
+`PASS` / `BLOCKED` are gate outcomes, not ledger statuses — no new status was
+introduced. Work on BLOCKED lineages is **halted**: no Gate 2 dossier may be
+created for them until the named clarification is obtained.
+
+Result: **12 PASS · 4 BLOCKED · 0 REJECTED.** Every licence below was read at
+source on 2026-08-05; verdicts bind to the named artifact version only.
+
+**PASS — eligible for Gate 2**
+- 2026-08-05 — **Whisper (OpenAI)** — MIT covering *code and weights* explicitly; transitive chain verified the same day (faster-whisper MIT, CTranslate2 MIT). No gate, no remote code, no attribution beyond MIT notice. Cleanest lineage in the universe.
+- 2026-08-05 — **Qwen3-ASR 1.7B / 0.6B** — `apache-2.0` on card; not gated; no remote code; no separate LICENSE file. Verdict does **not** generalise to Qwen text repositories, several of which ship custom LICENSE files.
+- 2026-08-05 — **Granite Speech 4.1 2B (IBM)** — `apache-2.0`; not gated; **no remote code**. The only 2026-generation entrant carrying none of the three recurring risks.
+- 2026-08-05 — **Omnilingual ASR (Meta)** — `apache-2.0` verified in the raw YAML frontmatter of `facebook/omniASR-LLM-300M`, no `extra_gated` fields. Discharges the Gate 0 flag that Meta's claim could not be inherited from a sibling — SeamlessM4T v2 is CC-BY-NC, this is not.
+- 2026-08-05 — **Parakeet TDT 0.6B v3 (NVIDIA)** — CC-BY-4.0 verbatim ("Use of this model is governed by the CC-BY-4.0 license"); not gated; no remote code. ⚠ Attribution obligation vs engine-hiding API recorded as a condition.
+- 2026-08-05 — **Canary-Qwen 2.5B (NVIDIA)** — CC-BY-4.0; card states "ready for commercial use", Deployment Geography Global; no remote code. Confirms the split from the CC-BY-**NC** `Canary 1B` already Rejected — same family, opposite terms. ⚠ Attribution recorded.
+- 2026-08-05 — **Kyutai STT (stt-1b-en_fr)** — `cc-by-4.0` verified in raw frontmatter; nine named authors published for credit. ⚠ Attribution recorded.
+- 2026-08-05 — **Moonshine** — `mit`; not gated; no remote code. Provenance note: published under `moonshine-ai` while examples reference `UsefulSensors`; both namespaces MIT, reads as an org migration. ⚠ Canonical repository must be pinned before any fetch.
+- 2026-08-05 — **Cohere Transcribe Arabic 07-2026** — `apache-2.0`, card states verbatim "This model is governed by an Apache 2.0 license". Research-flavoured Terms-of-Use wording does **not** narrow the grant; commercial use genuinely permitted. ⚠ Gated ("agree to share your contact information") and requires `--trust-remote-code`.
+- 2026-08-05 — **Cohere Transcribe 03-2026** — `apache-2.0`; gated (the `/raw/` endpoint returned HTTP 401, the first signal); `trust_remote_code=True` required. Commercial-scope fact recorded: 14 languages including **Arabic**, **Hindi absent**. ⚠ Same two conditions.
+- 2026-08-05 — **Voxtral-Mini-3B-2507 (Mistral)** — `apache-2.0`; gated via privacy-policy notice. ⚠ Verdict covers the **Mini artifact only**; Small-24B and realtime/transcribe variants were not verified today and each needs its own verdict.
+- 2026-08-05 — **IndicConformer-600M (AI4Bharat)** — `mit` on card; not gated; `trust_remote_code=True` required, served from the same MIT repository. ⚠ Remote-code execution recorded.
+
+**BLOCKED — work halted pending clarification**
+- 2026-08-05 — **IndicWhisper (AI4Bharat)** — Repo states "Vistaar is MIT-licensed. The license applies to all the fine-tuned language models", but the checkpoints are **not hosted in that repository**: they are distributed from third-party object storage (`indicwhisper.objectstore.e2enetworks.net/*.zip`) with **no licence statement attached to the checkpoint files**, and the discoverable HuggingFace copies are third-party re-uploads. *Clarification required:* a licence attached to the checkpoint distribution itself, or an AI4Bharat-published repository with an explicit licence field.
+- 2026-08-05 — **Zipformer / sherpa-onnx (Next-gen Kaldi)** — Toolkit verified Apache-2.0 and actively maintained, but pretrained checkpoints ship **separately via GitHub Releases with no per-checkpoint licence statement**, and each is trained on a corpus whose terms may bind derived weights. *Split verdict:* the **toolkit-as-training-stack path is unobstructed** (relevant to §12/§15); no checkpoint may enter Gate 2 as a serving candidate until its own licence and training-corpus terms are verified.
+- 2026-08-05 — **MOSS-Transcribe-preview-2B (OpenMOSS)** — `apache-2.0` on card, but built on **Qwen3-1.7B-base** and a **Qwen3-Omni-MoE** encoder with **no licences stated for either base**. A derivative cannot grant more than its bases allow. *Clarification required:* verified licences for both upstream components.
+- 2026-08-05 — **ARK-ASR-3B (Audio8)** — Gate 0 provenance ambiguity **resolved**: Audio8 publishes, AutoArk is the research origin (`github.com/AutoArk/open-audio-opd`, arXiv:2605.28139); the card is canonical and no competing authority exists. Licence `apache-2.0`. **Blocked on the executing chain:** mandatory `trust_remote_code=True` whose code derives from repositories whose licences are unverified — the card states the work builds on `THUNLP/OPD` and `volcengine/verl`. Structurally the espeak-ng failure mode: permissive weights, unverified in-process code. *Clarification required:* licences for `AutoArk/open-audio-opd`, `THUNLP/OPD`, `volcengine/verl`, and confirmation the shipped `arkasr` code falls under the repository's Apache-2.0 grant.
+
+**REJECTED — none at this gate.** Gate 0's licence-first ordering had already
+removed the two non-commercial lineages the same day (ArTST, SeamlessM4T v2,
+both `cc-by-nc-4.0` verified at source). Notably, **no candidate's headline
+licence claim proved false** — every problem found was structural (access
+mechanics, in-process code, unverifiable chains), not a mislabelled licence.
 
 ---
 
