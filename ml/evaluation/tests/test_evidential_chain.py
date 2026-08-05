@@ -120,6 +120,47 @@ class TestEveryPromiseIsBacked:
         )
 
 
+def test_a_production_benchmark_citation_resolves_to_a_committed_ladder() -> None:
+    """The gap the ladder had: `production_benchmark` was stored, echoed
+    into the manifest, non-empty-checked — and never resolved. A
+    `supported` promotion could therefore cite a production benchmark
+    that did not exist, while every gate passed green.
+
+    Closed here (B8): the citation names a committed baseline DOCUMENT in
+    the capability's benchmarks tree, and that document must identify a
+    raw ladder record beside it that parses. Names, not paths: the
+    citation is the document's identity, and the document is the named
+    baseline the methodology says citations quote.
+    """
+    from intelliai_evaluation.evidence import BenchReport, TtsBenchReport
+
+    for model, capability, route in promised_routes():
+        assert route.evidence is not None
+        citation = route.evidence.production_benchmark
+        document_path = CAPABILITY_TREES[capability] / "benchmarks" / f"{citation}.md"
+        assert document_path.exists(), (
+            f"{model}/{route.language} cites production benchmark {citation!r}, "
+            f"and no committed baseline document carries that name"
+        )
+        text = document_path.read_text(encoding="utf-8")
+        raw_names = [
+            token
+            for token in text.replace("(", " ").replace(")", " ").split()
+            if token.endswith(".json")
+        ]
+        assert raw_names, (
+            f"baseline document {citation!r} identifies no raw ladder record; "
+            "a named baseline must link the JSON it renders"
+        )
+        raw_path = document_path.parent / raw_names[0].split("/")[-1].split("]")[-1]
+        assert raw_path.exists(), f"{citation!r} links {raw_names[0]}, which is not committed"
+        document = json.loads(raw_path.read_text(encoding="utf-8"))
+        ladder = BenchReport if "clip" in document else TtsBenchReport
+        assert ladder.model_validate(document).levels, (
+            f"the raw ladder behind {citation!r} does not parse as a production benchmark"
+        )
+
+
 def test_a_quality_baseline_citation_names_a_committed_record() -> None:
     """Every promise's quality baseline exists as a record, by NAME.
 

@@ -15,6 +15,7 @@ from intelliai_evaluation.corpus import load_corpus
 from intelliai_evaluation.dataset import load_dataset
 from intelliai_evaluation.fetch import materialize
 from intelliai_evaluation.normalization import ProfileNotRegisteredError
+from intelliai_evaluation.reports import regression_markdown, summary_markdown, switching_markdown
 from intelliai_evaluation.resolution import UnservedError, load_manifest
 from intelliai_evaluation.runner import RuntimeNotDescribedError, run_stt_eval
 from intelliai_evaluation.speech_results import EvaluatedArtifact, RuntimeIdentity
@@ -95,6 +96,21 @@ def main(argv: list[str] | None = None) -> int:
         help="the named operator asserting the machine is otherwise idle",
     )
 
+    report_parser = subcommands.add_parser(
+        "report",
+        help="regenerate a derived report from evidence (byte-reproducible; decides nothing)",
+    )
+    report_parser.add_argument(
+        "--kind", required=True, choices=("summary", "regression", "switching")
+    )
+    report_parser.add_argument(
+        "--record", type=Path, required=True, help="the (current/challenger) evidence record"
+    )
+    report_parser.add_argument(
+        "--against", type=Path, default=None, help="the baseline/incumbent record (comparisons)"
+    )
+    report_parser.add_argument("--out", type=Path, required=True)
+
     bench_parser = subcommands.add_parser(
         "bench", help="production benchmark: concurrency sweep + gateway overhead"
     )
@@ -165,6 +181,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "session":
         return _run_session(args)
+    if args.command == "report":
+        return _run_report(args)
     if args.command == "bench":
         return _run_bench(args)
     if args.command == "bench-tts":
@@ -226,6 +244,35 @@ def main(argv: list[str] | None = None) -> int:
             f"hallucinated={clip.hallucinated_words}"
         )
     print(f"recorded: {args.out}")
+    return 0
+
+
+def _run_report(args: argparse.Namespace) -> int:
+    """Regenerate a derived report. Same records in, same bytes out."""
+    from intelliai_evaluation.results import EvalRun
+
+    record = EvalRun.model_validate_json(args.record.read_text(encoding="utf-8"))
+    if args.kind == "summary":
+        rendered = summary_markdown(record, record_name=args.record.name)
+    else:
+        if args.against is None:
+            print(f"refusing: --kind {args.kind} requires --against (the baseline record)")
+            return 2
+        against = EvalRun.model_validate_json(args.against.read_text(encoding="utf-8"))
+        if args.kind == "regression":
+            rendered = regression_markdown(
+                against, record, baseline_name=args.against.name, current_name=args.record.name
+            )
+        else:
+            rendered = switching_markdown(
+                against, record, incumbent_name=args.against.name, challenger_name=args.record.name
+            )
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    # LF always: byte-reproducible means byte-reproducible across
+    # platforms, and CRLF-on-Windows would make the same report differ by
+    # checkout.
+    args.out.write_text(rendered, encoding="utf-8", newline="\n")
+    print(f"regenerated: {args.out}")
     return 0
 
 
