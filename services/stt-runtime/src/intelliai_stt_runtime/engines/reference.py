@@ -19,13 +19,29 @@ from intelliai_runtime_contract import (
     TranscriptionResult,
     TranscriptionSegment,
 )
+from intelliai_runtime_core import EngineDescription
 from intelliai_stt_runtime.pipeline import DecodedAudio
 
 ARTIFACT_ID: Final = "reference"
 
+#: The build label this engine has always carried in committed evidence
+#: (`intelliai-stt/en/reference@1/deterministic/...`). It is not a
+#: precision: this engine has no weights and no arithmetic to quantize.
+BUILD: Final = "deterministic"
+
 
 class ReferenceEngine:
     """Deterministic transcription: a digest-stamped description of the audio."""
+
+    def describe(self) -> EngineDescription:
+        """No decoder, and that is a fact rather than an omission.
+
+        `decode_params` is empty because there is nothing to configure —
+        this engine is a hash, so no library default is in force. That is
+        the one case where an empty map is honest; everywhere else it
+        would assert that no configuration was active when one always is.
+        """
+        return EngineDescription(compute_type=BUILD, emitted_unit="word", decode_params={})
 
     def transcribe(self, audio: DecodedAudio, request: TranscriptionRequest) -> TranscriptionResult:
         if audio.is_silence:

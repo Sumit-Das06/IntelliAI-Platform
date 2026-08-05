@@ -2,7 +2,7 @@
 
 import time
 from functools import partial
-from typing import Annotated, Any
+from typing import Annotated, Any, Final
 
 import structlog
 from fastapi import APIRouter, File, Form, Request, Response, UploadFile
@@ -20,7 +20,14 @@ from intelliai_runtime_contract import (
     Usage,
     UsageUnit,
 )
-from intelliai_runtime_core import ModelManager, RuntimeServiceError, WorkerPool
+from intelliai_runtime_core import (
+    ModelManager,
+    RuntimeServiceError,
+    WorkerPool,
+    host_environment,
+    interpreter_identity,
+    package_versions,
+)
 from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, ROUTE_TRANSCRIBE
 from intelliai_stt_runtime.engines import TranscriptionEngine
@@ -48,12 +55,43 @@ async def ready(request: Request) -> JSONResponse:
 
 @router.get("/info")
 async def info(request: Request) -> dict[str, Any]:
-    """Operational identity only — never payload (ADR-0016)."""
+    """Operational identity and runtime self-description — never payload.
+
+    **The lifetime law.** Every field here is true for the whole life of
+    this process. Anything that changes per request is telemetry and
+    belongs somewhere else. The rule exists because this endpoint has two
+    kinds of consumer with incompatible needs: a benchmark record quotes
+    it and needs a value that never moves, while monitoring wants one that
+    always does. Let both live here and the second wins by accretion —
+    every new counter individually reasonable, the endpoint no longer
+    quotable in permanent evidence. A CI test enforces this by calling
+    `/info`, running traffic, and calling it again.
+
+    **One grandfathered exception: `pool.admitted`.** It is a live gauge
+    and it predates this law. It stays only because `bench` polls it to
+    observe saturation, and breaking a benchmark consumer to tidy a schema
+    is the wrong trade. It is a documented debt, **not a precedent**: no
+    further live counters are admitted here.
+
+    **Why self-description belongs on the runtime.** A harness measures
+    this service from another process and usually another container, so
+    the build, the decode configuration, the VAD owner and the host are
+    all invisible to it. Reporting them here is what stops a benchmark
+    from *declaring* values the system already knows — Procedure §2's
+    low-friction rule, whose point is that a hand-typed value the system
+    could have supplied is a transcription error waiting to be committed.
+
+    ADR-0016 governs `RuntimeMetadata` in the contract package and is not
+    amended by anything below: this is a service endpoint, additive, and
+    it carries no payload and no business data.
+    """
     manager: ModelManager[TranscriptionEngine] = request.app.state.manager
     pool: WorkerPool = request.app.state.pool
+    pipeline: MediaPipeline = request.app.state.pipeline
     settings = request.app.state.settings
     return {
         "pool": {
+            # LEGACY EXCEPTION to the lifetime law — see the docstring.
             "admitted": pool.admitted,
             "max_concurrency": settings.max_concurrency,
             "max_queue": settings.max_queue,
@@ -62,15 +100,41 @@ async def info(request: Request) -> dict[str, Any]:
         "service_version": __version__,
         "contract_version": CONTRACT_VERSION,
         "capability": str(Capability.TRANSCRIPTION),
+        # Who decided there was speech. Process-level: the pipeline's VAD
+        # runs before any engine and therefore owns the decision.
+        "vad_owner": pipeline.vad_owner,
+        # The machine, as only this process can honestly describe it: the
+        # harness's own environment describes the harness's host, which is
+        # the right answer only when the runtime is local and native.
+        "environment": _environment(),
         "models": [
             {
                 "slot": loaded.slot,
                 "artifact": loaded.artifact,
                 "load_ms": round(loaded.load_ms, 1),
                 "warmup_ms": round(loaded.warmup_ms, 1),
+                # Per artifact, not per process: a multi-slot deployment
+                # can host two artifacts under different builds, and one
+                # description covering both would describe neither.
+                **loaded.engine.describe().as_dict(),
             }
             for loaded in manager.loaded_models()
         ],
+    }
+
+
+#: The engine libraries this service can host, plus the numeric stack they
+#: run on. A declared short list rather than every installed distribution:
+#: `/info` is an evidence surface, and a full dependency dump would make
+#: it a debugging endpoint by accretion.
+_REPORTED_PACKAGES: Final = ("faster-whisper", "ctranslate2", "numpy")
+
+
+def _environment() -> dict[str, Any]:
+    return {
+        **host_environment(),
+        "interpreter": interpreter_identity(),
+        "package_versions": package_versions(_REPORTED_PACKAGES),
     }
 
 

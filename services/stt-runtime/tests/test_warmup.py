@@ -7,6 +7,7 @@ one default-parameter inference over deterministic canonical audio.
 """
 
 from intelliai_runtime_contract import TranscriptionRequest, TranscriptionResult
+from intelliai_runtime_core import EngineDescription
 from intelliai_stt_runtime.main import transcription_warm_up
 from intelliai_stt_runtime.pipeline import DecodedAudio
 
@@ -20,6 +21,12 @@ class RecordingEngine:
         self.audio.append(audio)
         self.requests.append(request)
         return TranscriptionResult(text="", language="und", duration_seconds=audio.duration_seconds)
+
+    def describe(self) -> EngineDescription:
+        # Part of the seam now: an engine that cannot say how it decodes
+        # cannot be measured, so a double that omits it is not a stand-in
+        # for one.
+        return EngineDescription(compute_type="recording", emitted_unit="word")
 
     def close(self) -> None:
         return None

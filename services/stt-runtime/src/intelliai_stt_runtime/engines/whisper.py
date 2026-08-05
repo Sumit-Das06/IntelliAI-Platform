@@ -18,6 +18,7 @@ model.bin SHA-256 below was verified against Hugging Face's own LFS
 object metadata at pin time (2026-08-02).
 """
 
+import inspect
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Final
 
@@ -27,13 +28,43 @@ from intelliai_runtime_contract import (
     TranscriptionResult,
     TranscriptionSegment,
 )
-from intelliai_runtime_core import ArtifactFile, ArtifactSpec, RuntimeServiceError
+from intelliai_runtime_core import (
+    ArtifactFile,
+    ArtifactSpec,
+    EngineDescription,
+    RuntimeServiceError,
+    effective_parameters,
+)
 from intelliai_stt_runtime.pipeline import DecodedAudio
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
 ARTIFACT_ID: Final = "whisper-small"
+
+#: The decode knobs that describe *this engine's* behaviour for the
+#: process's lifetime. `language` is excluded deliberately: it varies per
+#: request, and a lifetime-stable endpoint must not report it.
+#:
+#: Most of these are never passed by this adapter — they are the library's
+#: own defaults, and they are in force on every measurement we have ever
+#: taken. Recording them is the difference between describing the measured
+#: system and describing the two lines of it we happened to write.
+_DECODE_KNOBS: Final = (
+    "task",
+    "beam_size",
+    "best_of",
+    "patience",
+    "length_penalty",
+    "temperature",
+    "condition_on_previous_text",
+    "compression_ratio_threshold",
+    "log_prob_threshold",
+    "no_speech_threshold",
+    "without_timestamps",
+    "word_timestamps",
+    "vad_filter",
+)
 
 _HF_BASE: Final = "https://huggingface.co/Systran/faster-whisper-small/resolve/main"
 
@@ -105,16 +136,38 @@ def convert_segments(
 class FasterWhisperEngine:
     """Thin adapter: one loaded WhisperModel, stateless beyond it."""
 
-    def __init__(self, model: Any) -> None:
+    #: What this adapter explicitly passes. Everything else in
+    #: `_DECODE_KNOBS` comes from the library's own signature.
+    _OVERRIDES: Final = {"task": "transcribe", "vad_filter": False}
+
+    def __init__(self, model: Any, *, compute_type: str) -> None:
         self._model = model
+        self._compute_type = compute_type
+
+    def describe(self) -> EngineDescription:
+        """The configuration this engine really runs under.
+
+        `decode_params` is read from the signature of the method about to
+        be called, overlaid with this adapter's explicit overrides —
+        never from a hand-maintained list of constants. That is the point:
+        a faster-whisper upgrade that changes `beam_size` changes the
+        measured system, and a constant would keep reporting the old value
+        with no diff anywhere in this repository.
+        """
+        return EngineDescription(
+            compute_type=self._compute_type,
+            emitted_unit="word",
+            decode_params=effective_parameters(
+                _signature_defaults(self._model.transcribe), _DECODE_KNOBS, self._OVERRIDES
+            ),
+        )
 
     def transcribe(self, audio: DecodedAudio, request: TranscriptionRequest) -> TranscriptionResult:
         try:
             segments, info = self._model.transcribe(
                 _to_float32(audio),
                 language=request.language,
-                task="transcribe",
-                vad_filter=False,  # VAD is the pipeline's job, never the engine's
+                **self._OVERRIDES,
             )
         except ValueError as exc:
             # An adapter's job is contract-shaped params in, contract-shaped
@@ -150,4 +203,25 @@ def load_faster_whisper(
     from faster_whisper import WhisperModel
 
     model = WhisperModel(str(local_dir), device="cpu", compute_type=compute_type)
-    return FasterWhisperEngine(model)
+    # The engine carries its own build label: a harness measuring this
+    # runtime over HTTP cannot see how it was loaded, and quality binds to
+    # (artifact, build) rather than to artifact alone.
+    return FasterWhisperEngine(model, compute_type=compute_type)
+
+
+def _signature_defaults(method: Any) -> dict[str, Any]:
+    """The library's own defaults for the call we are about to make.
+
+    Best effort by design: a future engine library that hides its
+    signature behind a C extension should degrade to reporting only what
+    the adapter explicitly passes, not crash a runtime at `/info`.
+    """
+    try:
+        parameters = inspect.signature(method).parameters
+    except (TypeError, ValueError):  # pragma: no cover - C-extension callables
+        return {}
+    return {
+        name: parameter.default
+        for name, parameter in parameters.items()
+        if parameter.default is not inspect.Parameter.empty
+    }

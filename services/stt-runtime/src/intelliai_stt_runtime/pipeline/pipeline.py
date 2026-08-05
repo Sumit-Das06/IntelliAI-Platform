@@ -56,6 +56,24 @@ class MediaPipeline:
         self._max_upload_bytes = max_upload_bytes
         self._max_audio_seconds = max_audio_seconds
 
+    @property
+    def vad_owner(self) -> str:
+        """Who decides there was speech: ``pipeline`` or ``none``.
+
+        Reported because it changes what a measurement *means*, not as
+        trivia. Our zero-hallucination result on silence is obtained
+        **structurally** — this pipeline's VAD short-circuits before the
+        engine is ever called — so a silence probe on this path measures
+        the pipeline, and a candidate that bundles its own VAD is a
+        different measured system wearing the same name.
+
+        A pipeline-level VAD wins whatever the engine does, precisely
+        because it runs first; ``engine`` is therefore not reportable from
+        here, and would need the engine to declare it (D-13 is the open
+        ruling on whether we permit such an engine at all).
+        """
+        return "pipeline" if self._vad is not None else "none"
+
     def verify(self) -> None:
         """Startup gate: refuse to serve without a working decoder."""
         self._decoder.verify()

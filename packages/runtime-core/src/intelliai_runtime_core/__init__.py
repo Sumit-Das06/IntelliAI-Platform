@@ -7,6 +7,13 @@ is ``close()``, and warm-up is a capability-defined deterministic probe
 injected by each runtime. The boundary test suite enforces this in CI.
 """
 
+from intelliai_runtime_core.description import (
+    EngineDescription,
+    effective_parameters,
+    host_environment,
+    interpreter_identity,
+    package_versions,
+)
 from intelliai_runtime_core.failures import RuntimeServiceError
 from intelliai_runtime_core.logging import configure_logging
 from intelliai_runtime_core.manager import (
@@ -24,6 +31,7 @@ __all__ = [
     "ArtifactFile",
     "ArtifactSpec",
     "ArtifactStore",
+    "EngineDescription",
     "LoadedModel",
     "ModelManager",
     "RuntimeServiceError",
@@ -31,5 +39,9 @@ __all__ = [
     "SupportsClose",
     "WorkerPool",
     "configure_logging",
+    "effective_parameters",
+    "host_environment",
+    "interpreter_identity",
+    "package_versions",
     "sha256_file",
 ]
