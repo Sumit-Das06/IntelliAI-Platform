@@ -17,6 +17,12 @@ ever touches them.
   researched model, with an **append-only** dated decision history.
 - `models/` — per-candidate dossiers (drafted at Gate 2; mandatory for
   any model holding Promising status or later).
+- **STT benchmark design** (Gate 3, design only — no measurement):
+  [methodology](STT_BENCHMARK_METHODOLOGY.md) ·
+  [record schema](STT_BENCHMARK_RECORD.md) ·
+  [execution procedure](STT_BENCHMARK_PROCEDURE.md) ·
+  [environment recording](STT_BENCHMARK_HARDWARE.md) ·
+  [corpus specification](STT_BENCHMARK_CORPORA.md).
 - Benchmark plans and adoption recommendations land here as standalone
   documents, cited from ledger entries.
 

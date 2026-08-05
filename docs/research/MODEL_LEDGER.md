@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-05 (STT Gate 2 desk research) |
+| **Last entry** | 2026-08-05 (STT Gate 3 benchmark design) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -283,6 +283,64 @@ researched** and remain frozen.
 - **Four of twelve hypotheses predict the binding constraint is not model quality** but
   our own infrastructure — deployment engineering, dependency isolation, evaluation
   infrastructure, or measurement validity.
+
+---
+
+---
+
+## Gate 3 — benchmark methodology designed (appended 2026-08-05)
+
+Deliverables: [methodology](STT_BENCHMARK_METHODOLOGY.md) · [record schema](STT_BENCHMARK_RECORD.md) ·
+[procedure](STT_BENCHMARK_PROCEDURE.md) · [environment spec](STT_BENCHMARK_HARDWARE.md) ·
+[corpus specification](STT_BENCHMARK_CORPORA.md) · [open prerequisites](2026-08-05-stt-gate3-prerequisites.md).
+
+**No candidate was benchmarked, scored, ranked, compared, or recommended.** All 12 PASS
+lineages remain `Researching`. Gate 3 designs measurement; it produces none. Promotion to
+`Promising` remains Gate 3 review work not yet performed, and execution requires a
+founder-approved plan at Gate 4.
+
+- 2026-08-05 — **Gate 3 complete** — permanent STT benchmark methodology designed and
+  reconciled. Produced by six parallel design tracks, then adversarially reviewed for gate
+  discipline, five-year durability, and integration fidelity against the actual code
+  (49 findings: 14 critical, 24 major, 11 minor). The critical findings were arbitrated into
+  a single reconciled vocabulary rather than merged, because the colliding artifacts are
+  append-only and first landing is permanent.
+
+**Findings about our own evaluation infrastructure, recorded as ledger evidence:**
+
+- **[FACT] Two evidence schemas exist, not one.** `results.EvalRun` (recognition) has no
+  metric registry, no validators, and no `methodology_version`; every discipline previously
+  described as platform-wide exists only on `speech_results.SpeechEvalRun` (generation).
+  Recognition evidence is the less-disciplined half. Recognition therefore extends `EvalRun`
+  while importing the same registry — `SpeechEvalRun` cannot hold an STT run because its
+  `judge` is required and STT's reference is a human transcript.
+- **[FACT] A live hazard in the scoring path.** `normalize_words` strips to `[^a-z0-9\s']+`,
+  so a Devanagari or Arabic reference normalises to nothing: `ClipResult.wer` returns `None`
+  silently and `hallucinated_words` returns the entire hypothesis. A perfectly transcribed
+  Hindi clip would be committed to an append-only ledger as *N hallucinated words*. Verified
+  at source. **Consequence: per-language rulers are a prerequisite that precedes corpus
+  collection** — Hindi and Arabic audio must not be recorded through this path.
+- **[FACT] Metric withdrawal would break the ledger.** `_require_registered` is a pydantic
+  `field_validator`, so it runs on every *read*. Removing or reserving a metric name makes
+  every historical record citing it unparseable, violating the charter that readers in five
+  years must parse today's records. Fixed by write-time enforcement with a permissive read
+  path.
+- **[FACT] Judge identity as defined is insufficient.** In the committed `kokoro-82m` /
+  `-repro` pair, with identical judge artifact *and version*, 9 of 25 transcripts differed
+  and `round_trip_wer` moved 0.5000 → 0.5042 — because the judge ran on a different host.
+  The existing claim that wall-clock is the only expected variance is contradicted by our own
+  evidence.
+- **[FACT] `rtf` is a name collision** — registered generically but described as synthesis
+  time over produced audio duration. Recognition registers `recognition_rtf`.
+- **[FACT] CER is named in PRD §10 and implemented nowhere.**
+- **[FACT] `TextCategory` cannot be appended to** without breaking
+  `test_corpus.py:102-104` against the immutable generation corpus.
+- **[FACT] Our entire STT natural-speech holding is one speaker, one ~11-second utterance,
+  21 reference words, one language.** Zero Arabic clips of any kind. The founder recording
+  protocol references a corpus version that does not exist, and `corpus-inbox/` is not
+  gitignored despite the protocol saying it is.
+- ~60 open prerequisites across six dependency layers, weighted toward **our own
+  infrastructure** rather than toward models.
 
 ---
 
