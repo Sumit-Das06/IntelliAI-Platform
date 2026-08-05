@@ -14,6 +14,7 @@ stops. The registry decides what serves a request; the runtime hosts
 what it was told to host, and refuses anything else (ADR-0025).
 """
 
+import dataclasses
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
@@ -37,13 +38,22 @@ class EngineBinding:
     ``weightless`` is a *fact*, not a permission: an engine with no
     downloaded weights has no artifact identity of its own, which is the
     only reason a deployment may host it under an arbitrary artifact id.
-    An engine whose identity IS its weights can never be relabelled.
+    An engine whose identity IS its weights can never be relabelled — but
+    it CAN host any artifact whose pinned bytes are **registered** in its
+    ``registered`` table. Selecting a registered artifact is not a
+    relabelling: the identity still comes from the pins, and the
+    declaration merely chooses which pinned identity this deployment
+    hosts. That table is the admission surface — admitting another
+    checkpoint of an already-operated family is one data entry, zero code.
     """
 
     artifact: str
     loader: Callable[[Settings], Callable[[Path | None], TranscriptionEngine]]
     files: ArtifactSpec | None = None
     weightless: bool = False
+    #: Every pinned artifact this engine family may host, by identity.
+    #: Empty for weightless engines, whose relabelling rule is separate.
+    registered: dict[str, ArtifactSpec] = dataclasses.field(default_factory=dict)
 
 
 def _load_reference(_: Settings) -> Callable[[Path | None], TranscriptionEngine]:
@@ -66,6 +76,7 @@ CATALOG: Final[dict[str, EngineBinding]] = {
         artifact=whisper.ARTIFACT_ID,
         loader=_load_whisper,
         files=whisper.WHISPER_SMALL_FILES,
+        registered=whisper.ARTIFACT_SPECS,
     ),
 }
 
@@ -101,17 +112,31 @@ def build_slot_specs(settings: Settings) -> tuple[SlotSpec[TranscriptionEngine],
             msg = f"unknown engine {engine!r}; this service can host {sorted(CATALOG)}"
             raise ValueError(msg)
         artifact = binding.artifact
+        files = binding.files
         if override is not None:
-            if not binding.weightless:
-                msg = (
-                    f"engine {engine!r} carries weights, so its artifact identity is "
-                    f"determined by them and cannot be declared as {override!r}"
-                )
-                raise ValueError(msg)
             if override == DEFAULT_SLOT:
                 msg = f"{DEFAULT_SLOT!r} is a slot role, not an artifact identity"
                 raise ValueError(msg)
-            artifact = override
+            if binding.weightless:
+                # A weightless engine has no identity of its own, so the
+                # deployment may name one freely (the M5 relabelling rule).
+                artifact = override
+            elif override in binding.registered:
+                # A weightful override SELECTS a registered pinned artifact
+                # of this family. Identity still comes from the pins; the
+                # declaration only chooses which pinned identity to host.
+                artifact = override
+                files = binding.registered[override]
+            else:
+                admitted = sorted(binding.registered) or [binding.artifact]
+                msg = (
+                    f"engine {engine!r} carries weights, so its artifact identity is "
+                    f"determined by them and cannot be declared as {override!r}; "
+                    f"this family's registered artifacts are {admitted}. Admitting a "
+                    "new checkpoint is a pinned entry in the engine's artifact table, "
+                    "never a declaration."
+                )
+                raise ValueError(msg)
         if artifact in hosted:
             msg = f"artifact {artifact!r} declared twice; a deployment hosts each artifact once"
             raise ValueError(msg)
@@ -121,7 +146,7 @@ def build_slot_specs(settings: Settings) -> tuple[SlotSpec[TranscriptionEngine],
                 slot=DEFAULT_SLOT if index == 0 else artifact,
                 artifact=artifact,
                 load=binding.loader(settings),
-                files=binding.files,
+                files=files,
             )
         )
     return tuple(specs)

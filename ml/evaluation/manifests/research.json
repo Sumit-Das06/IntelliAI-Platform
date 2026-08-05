@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "_comment": "RESEARCH HARNESS MANIFEST (B6). Hand-authored; NEVER exported from the production registry, which must not know these artifacts exist. Subjects are namespaced 'research:' so no entry can be mistaken for a product promise, and no route here carries a ladder status or evidence chain - a challenger has no promise to cite. A record produced against this manifest is research_harness evidence by construction and may be read beside product-path numbers, never differenced with them.",
+  "models": [
+    {
+      "public_model": "research:whisper-base",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "whisper-base",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
+    }
+  ]
+}

@@ -95,6 +95,53 @@ WHISPER_SMALL_FILES: Final = ArtifactSpec(
     ),
 )
 
+_HF_BASE_CHALLENGER: Final = "https://huggingface.co/Systran/faster-whisper-base/resolve/main"
+
+#: The first admitted challenger (B6). Same engine family, same loader,
+#: same adapter — a different checkpoint under different pinned bytes.
+#: Research-hosted only: no production route resolves to it, and the
+#: gateway's catalog has never heard its name. Licence: MIT, read at the
+#: Systran distribution 2026-08-06 (hosting-only verification; the full
+#: per-version re-verification is owed before any adoption citation).
+#: model.bin sha256 is Hugging Face's own LFS object id; the small files
+#: were downloaded and hashed locally at pin time.
+WHISPER_BASE_FILES: Final = ArtifactSpec(
+    artifact="whisper-base",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename="model.bin",
+            url=f"{_HF_BASE_CHALLENGER}/model.bin",
+            sha256="d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        ),
+        ArtifactFile(
+            filename="config.json",
+            url=f"{_HF_BASE_CHALLENGER}/config.json",
+            sha256="56a6d8110d311f19c8f0471e562832c7527f146b567275bfca59fcf7c184da9a",
+        ),
+        ArtifactFile(
+            filename="tokenizer.json",
+            url=f"{_HF_BASE_CHALLENGER}/tokenizer.json",
+            sha256="fb7b63191e9bb045082c79fd742a3106a12c99513ab30df4a0d47fa6cb6fd0ab",
+        ),
+        ArtifactFile(
+            filename="vocabulary.txt",
+            url=f"{_HF_BASE_CHALLENGER}/vocabulary.txt",
+            sha256="34ce3fe1c5041027b3f8d42912270993f986dbc4bb34cf27f951e34a1e453913",
+        ),
+    ),
+)
+
+#: Every artifact this engine family can host, keyed by identity. This
+#: table IS the admission surface for the CTranslate2 stack: admitting
+#: another checkpoint of this family is one pinned entry here — no new
+#: module, no adapter change, no gateway-vocabulary edit. An artifact's
+#: identity is determined by its pinned weights, which is why the table
+#: maps identities to specs rather than letting a declaration invent one.
+ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
+    spec.artifact: spec for spec in (WHISPER_SMALL_FILES, WHISPER_BASE_FILES)
+}
+
 
 def _to_float32(audio: DecodedAudio) -> Any:
     """Canonical s16le PCM -> the float32 waveform faster-whisper expects."""

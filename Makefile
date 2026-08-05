@@ -45,6 +45,23 @@ test: ## Run the Python test suite (all workspace packages)
 stt: ## Run the STT runtime locally with hot reload (port 8001)
 	uv run --package intelliai-stt-runtime uvicorn --factory intelliai_stt_runtime.main:create_app --reload --port 8001
 
+# ── Research hosting ──────────────────────────────────────────
+# A challenger runs in its OWN process on its OWN port, declared by
+# artifact identity. The gateway has no deployment entry for it, the
+# registry has no route to it, and the only thing that resolves it is
+# ml/evaluation/manifests/research.json. Weights are downloaded and
+# hash-verified on first start; identity comes from the pins, never from
+# this declaration.
+research-stt: ## Host a challenger for research: make research-stt artifact=whisper-base [port=8003]
+	@if [ -z "$(artifact)" ]; then \
+	  echo "make research-stt requires artifact= (a REGISTERED checkpoint, e.g. whisper-base)."; \
+	  echo "  Admitting a new checkpoint is a pinned entry in the engine's"; \
+	  echo "  artifact table (engines/whisper.py), never a declaration."; \
+	  exit 2; \
+	fi
+	INTELLIAI_STT_SLOTS="whisper:$(artifact)" uv run --package intelliai-stt-runtime \
+	  uvicorn --factory intelliai_stt_runtime.main:create_app --port $(or $(port),8003)
+
 # ── Evaluation workflows ──────────────────────────────────────
 # The documented workflows, executable.
 #
