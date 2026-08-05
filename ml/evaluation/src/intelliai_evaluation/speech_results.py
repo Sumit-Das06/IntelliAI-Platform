@@ -29,23 +29,41 @@ from typing import Final
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from intelliai_evaluation.metrics import SPEECH_METRICS, MetricConfidence
+from intelliai_evaluation.metrics import (
+    MEASURED_CONFIDENCES,
+    METRICS,
+    MetricConfidence,
+    MetricNotRegisteredError,
+)
 
 # Pinned from SPEECH_EVALUATION.md's header; recorded in every run so a
 # record always names the methodology it was produced under.
 METHODOLOGY_VERSION: Final = 1
 
-_MEASURED = (MetricConfidence.HIGH, MetricConfidence.MEDIUM)
+_MEASURED = MEASURED_CONFIDENCES
 
 
 def _require_registered(names: object, allowed: tuple[MetricConfidence, ...]) -> None:
+    """Reject free-form identifiers, on both read and write.
+
+    **This runs on every read**, because it is wired as a pydantic field
+    validator and validators run on `model_validate`. So it must ask only
+    questions whose answer cannot change after a record is written: is the
+    name known, and does it belong in this section. It must never consult
+    :class:`MetricStatus` — withdrawing a metric would then make every
+    record citing it unloadable, which is exactly backwards for an
+    append-only ledger. Recordability is asserted at write time instead.
+    """
     if not isinstance(names, dict):
         return
     for name in names:
-        spec = SPEECH_METRICS.get(name)
-        if spec is None:
-            msg = f"unknown metric {name!r}: metric names must exist in the registry"
-            raise ValueError(msg)
+        try:
+            spec = METRICS.require(name)
+        except MetricNotRegisteredError as exc:
+            # Re-raised as ValueError deliberately: pydantic converts only
+            # ValueError and AssertionError into a ValidationError, so a
+            # LookupError would escape the model boundary raw.
+            raise ValueError(str(exc)) from exc
         if spec.confidence not in allowed:
             msg = (
                 f"metric {name!r} has confidence {spec.confidence}; "

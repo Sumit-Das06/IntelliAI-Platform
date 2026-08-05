@@ -2,6 +2,8 @@
 
 import datetime
 
+import pytest
+
 from intelliai_evaluation.corpus import (
     CorpusProvenance,
     Difficulty,
@@ -9,7 +11,9 @@ from intelliai_evaluation.corpus import (
     SpeechTextCase,
     TextCategory,
 )
+from intelliai_evaluation.metrics import MetricNotRecordableError, MetricNotRegisteredError
 from intelliai_evaluation.speech_results import (
+    CaseResult,
     EvaluatedArtifact,
     JudgeIdentity,
     RuntimeIdentity,
@@ -20,6 +24,7 @@ from intelliai_evaluation.speech_runner import (
     SynthesisOutcome,
     run_speech_eval,
 )
+from intelliai_evaluation.speech_scoring import score_case
 from test_signal import tone, wav_of
 
 EVALUATED = EvaluatedArtifact(artifact="fake-voice", version=1, lineage="fake")
@@ -174,3 +179,55 @@ class TestDeterminismAndReplaceability:
         second = run_with(FakeSource(), FakeJudge("intelliai-stt-v1", dict(transcripts)))
         assert first.judge.artifact != second.judge.artifact
         assert first.aggregate_metrics == second.aggregate_metrics  # runner unchanged
+
+
+class TestRecordabilityIsCheckedAtWriteTime:
+    """The runner refuses to write a name that cannot mean anything.
+
+    The record's own validators cannot ask this — they run on read too,
+    and a withdrawn metric must keep loading from the records that already
+    cite it. So the write-time question is asked exactly once, here.
+    """
+
+    def test_a_reserved_metric_never_reaches_the_ledger(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # `predicted_mos` is registered and unimplemented: a number under
+        # it would be a claim, not a measurement.
+        def leaky(
+            case: SpeechTextCase, analysis: object, transcript: str, latency_ms: float
+        ) -> CaseResult:
+            scored = score_case(case, analysis, transcript, latency_ms)  # type: ignore[arg-type]
+            return scored.model_copy(update={"metrics": {**scored.metrics, "predicted_mos": 4.2}})
+
+        monkeypatch.setattr("intelliai_evaluation.speech_runner.score_case", leaky)
+        judge = FakeJudge(transcripts={"a": "hello evaluation world", "b": "the api gateway"})
+        with pytest.raises(MetricNotRecordableError, match="RESERVED"):
+            run_with(FakeSource(), judge)
+
+    def test_an_unregistered_metric_never_reaches_the_ledger(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # A reconciled-but-unratified name is exactly the realistic case:
+        # `wer_ascii` is designed and not landed, so writing it today would
+        # put a name in the ledger that no spec defines.
+        monkeypatch.setattr(
+            "intelliai_evaluation.speech_runner.aggregate_cases",
+            lambda cases: {"wer_ascii": 0.0},
+        )
+        judge = FakeJudge(transcripts={"a": "hello evaluation world", "b": "the api gateway"})
+        with pytest.raises(MetricNotRegisteredError, match="unknown metric"):
+            run_with(FakeSource(), judge)
+
+    def test_the_run_fails_rather_than_writing_a_partial_record(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # Dropping the offending metric and writing the rest would produce
+        # a record that says something false about which rulers made it.
+        monkeypatch.setattr(
+            "intelliai_evaluation.speech_runner.aggregate_cases",
+            lambda cases: {"round_trip_wer": 0.0, "not_a_metric": 1.0},
+        )
+        judge = FakeJudge(transcripts={"a": "hello evaluation world", "b": "the api gateway"})
+        with pytest.raises(MetricNotRegisteredError, match="not_a_metric"):
+            run_with(FakeSource(), judge)

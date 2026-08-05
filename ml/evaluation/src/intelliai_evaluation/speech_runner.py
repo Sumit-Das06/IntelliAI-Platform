@@ -20,6 +20,7 @@ from typing import Protocol
 import httpx
 
 from intelliai_evaluation.corpus import SpeechCorpus
+from intelliai_evaluation.metrics import METRICS
 from intelliai_evaluation.signal import analyze_wav
 from intelliai_evaluation.speech_results import (
     METHODOLOGY_VERSION,
@@ -30,6 +31,7 @@ from intelliai_evaluation.speech_results import (
     SpeechEvalRun,
 )
 from intelliai_evaluation.speech_scoring import aggregate_cases, score_case, signal_metrics
+from intelliai_runtime_contract import Capability
 
 
 class SynthesisError(Exception):
@@ -121,6 +123,9 @@ def run_speech_eval(
 
         case_results.append(score_case(case, analysis, transcript, outcome.latency_ms))
 
+    aggregates = aggregate_cases(case_results)
+    _assert_writable(case_results, aggregates)
+
     return SpeechEvalRun(
         corpus_name=corpus.name,
         corpus_version=corpus.version,
@@ -132,10 +137,24 @@ def run_speech_eval(
         run_at=datetime.now(tz=UTC),
         synthesis_params=params,
         cases=tuple(case_results),
-        aggregate_metrics=aggregate_cases(case_results),
+        aggregate_metrics=aggregates,
         baseline_name=baseline_name,
         notes=notes,
     )
+
+
+def _assert_writable(cases: list[CaseResult], aggregates: dict[str, float]) -> None:
+    """Every name about to enter the ledger must be recordable *now*.
+
+    The record's own validators cannot ask this: they run on read too, and
+    a withdrawn metric must keep loading from the records that already
+    cite it. So the question "may this still be written?" is asked exactly
+    once, here, at the moment of writing — and it raises rather than
+    dropping the metric, because a number that silently stops being
+    recorded is indistinguishable from one that was never measured.
+    """
+    for name in {*aggregates, *(name for case in cases for name in case.metrics)}:
+        METRICS.assert_recordable(name, capability=Capability.SPEECH_SYNTHESIS)
 
 
 class HttpTtsSynthesisSource:
