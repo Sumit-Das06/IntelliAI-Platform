@@ -208,12 +208,12 @@ class TestRecordabilityIsCheckedAtWriteTime:
     def test_an_unregistered_metric_never_reaches_the_ledger(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        # A reconciled-but-unratified name is exactly the realistic case:
-        # `wer_ascii` is designed and not landed, so writing it today would
-        # put a name in the ledger that no spec defines.
+        # A designed-but-unlanded name is exactly the realistic case:
+        # `recognition_rtf` waits on duration_bands@v1, so writing it today
+        # would put a name in the ledger that no spec defines.
         monkeypatch.setattr(
             "intelliai_evaluation.speech_runner.aggregate_cases",
-            lambda cases: {"wer_ascii": 0.0},
+            lambda cases: {"recognition_rtf": 0.0},
         )
         judge = FakeJudge(transcripts={"a": "hello evaluation world", "b": "the api gateway"})
         with pytest.raises(MetricNotRegisteredError, match="unknown metric"):

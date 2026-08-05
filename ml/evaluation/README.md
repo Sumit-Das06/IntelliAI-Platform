@@ -19,9 +19,10 @@ recipe for future capabilities.
    fine-tune, and replacement decision (the switching test) cites results
    produced here.
 2. **What does it own?** Evaluation dataset manifests (versioned,
-   immutable), metric implementations (WER v1), the benchmark result
-   format, and clip materialization (download + hash verification,
-   deterministic synthetic generation).
+   immutable), the metric registry and its normalization profiles, the
+   metric implementations, the benchmark result format, and clip
+   materialization (download + hash verification, deterministic
+   synthetic generation).
 3. **What does it explicitly NOT own?** Running inference (runtimes do),
    model weights (ModelManager does), quality *judgments* (humans do,
    citing results), the full evaluation-identity system (reserved for M9
@@ -37,7 +38,53 @@ recipe for future capabilities.
 6. **How does it evolve?** Dataset changes are new *versions* (manifests
    are immutable once released — same law as migrations and artifacts);
    metrics are added, never silently changed (a changed metric is a new
-   metric name); the results schema is additive-only.
+   metric name); rulers are corrected by a new profile *version*; the
+   results schema is additive-only.
+
+## Metrics and rulers
+
+A metric's identity is **computation plus normalisation**. The metric
+name says how two token sequences are compared; the
+`NormalizationProfile` says what a token is. Two numbers computed under
+different profiles are not comparable — the comparison would be decided
+by the ruler rather than by the models.
+
+**A profile is an evidence object, not a language object.** It is
+identified by `name@vN` and carries no language and no product meaning.
+Several languages may share one profile; one language may move between
+profile versions over time. Every evidence record cites the exact
+`name@vN` it used, so an old number is read against the ruler it was
+actually computed with — never against whatever the language is bound to
+today.
+
+| Ruler | What it does | Why it exists |
+|---|---|---|
+| `ascii_en@v1` | lowercase; everything outside `[a-z0-9 ']` becomes a space | **Frozen forever.** The ruler behind every committed English baseline, including records written before profiles existed. |
+| `unicode_generic@v1` | casefold, NFC, keep categories L/M/N; all else to a space | **Frozen with a known defect**: format characters (Cf) become spaces and therefore *split* words. It is the ruler the committed synthesis baselines used, and a released version may never change meaning. |
+| `unicode_generic@v2` | as `@v1`, but format characters are **removed** | The correction. ZWJ/ZWNJ control conjunct formation in Devanagari and joining in Arabic; they are word boundaries in no script. Correct for every script, which is why it is a version of the generic ruler rather than a language-named one. |
+
+**Metric names carry the ruler only where they must.** `wer_ascii` names
+its ruler because it has to stay self-identifying in records that cite no
+profile at all — it is the bridge to them. `wer_unicode` and `cer_unicode`
+name the *computation*, because they will never appear without a recorded
+profile. This is the corrected form of the methodology's A-1 rationale:
+once one computation has several rulers, a name cannot make cross-ruler
+averaging a type error, so the profile carries the ruler and gates
+comparability.
+
+**A ruler that erases a reference is a failure, not a number.** If the
+corpus declares a reference and the chosen profile normalises it to
+nothing, the computation raises rather than scoring. Before this existed,
+a Devanagari reference under the ASCII ruler produced no WER at all while
+`hallucinated_words` counted whatever Latin script the engine emitted — a
+perfect transcript scored 0 and a romanised one scored 4. The metric had
+become a script detector, and the numbers were permanent.
+
+**No Arabic ruler is registered.** It needs an enumerated fold table
+(tashkeel, alef variants, tatweel — all linguistic decisions with
+permanent evidential consequences), a native verifier, and a corpus to
+validate against. None exists. `profile_for("ar")` refuses rather than
+borrowing another language's ruler.
 
 ## Datasets
 

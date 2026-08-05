@@ -45,7 +45,10 @@ from intelliai_runtime_contract import Capability
 #: pins this number and the full contents together, so a vocabulary edit
 #: cannot be made without reading both. Nothing here can force the bump —
 #: that would need a stored snapshot, which is not what this milestone is.
-METRIC_REGISTRY_VERSION: Final = 1
+#:
+#: v1 (B1) — the framework, with the 16 generation metrics migrated
+#: v2 (B2) — the recognition accuracy family (methodology §3.1)
+METRIC_REGISTRY_VERSION: Final = 2
 
 
 @unique
@@ -254,8 +257,113 @@ def _build_registry() -> MetricRegistry:
     lower = MetricDirection.LOWER_IS_BETTER
     higher = MetricDirection.HIGHER_IS_BETTER
     synthesis = (Capability.SPEECH_SYNTHESIS,)
+    recognition = (Capability.TRANSCRIPTION,)
 
     for spec in (
+        # ── Recognition accuracy (B2) ───────────────────────────────────
+        #
+        # One aligner, several rulers. `wer_ascii` names its ruler because
+        # it must stay self-identifying in records written before profiles
+        # existed; the others name their COMPUTATION and are always read
+        # together with the NormalizationProfile the record cites. That
+        # asymmetry is deliberate and is the corrected form of methodology
+        # A-1: the name cannot make cross-ruler averaging a type error
+        # once one computation has several rulers, so the profile carries
+        # the ruler and gates comparability.
+        MetricSpec(
+            name="wer_ascii",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.HIGH,
+            description=(
+                "Word error rate under ascii_en@v1, the frozen English ruler. "
+                "The legacy compatibility anchor: preserves continuity with the "
+                "2026-08-03 English baseline."
+            ),
+            capabilities=recognition,
+        ),
+        MetricSpec(
+            name="wer_unicode",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.HIGH,
+            description=(
+                "Word error rate over a NormalizationProfile's word tokens. "
+                "Uninterpretable without the profile the record cites."
+            ),
+            capabilities=recognition,
+        ),
+        MetricSpec(
+            name="cer_unicode",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.HIGH,
+            description=(
+                "Character error rate over the same profile's character sequence, "
+                "inter-word space retained. Primary where errors are sub-word."
+            ),
+            capabilities=recognition,
+        ),
+        # Rates share WER's denominator, which is what makes them exactly
+        # additive with it. MEDIUM rather than HIGH because the split
+        # between substitution and insertion+deletion is a property of the
+        # frozen tie-break, not a physical fact: the total is robust, the
+        # partition is a convention.
+        MetricSpec(
+            name="substitution_rate",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.MEDIUM,
+            description="Substitutions over reference words, under the cited profile.",
+            capabilities=recognition,
+        ),
+        MetricSpec(
+            name="insertion_rate",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.MEDIUM,
+            description="Insertions over reference words, under the cited profile.",
+            capabilities=recognition,
+        ),
+        MetricSpec(
+            name="deletion_rate",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.MEDIUM,
+            description="Deletions over reference words, under the cited profile.",
+            capabilities=recognition,
+        ),
+        MetricSpec(
+            name="excess_word_ratio",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.MEDIUM,
+            description=(
+                "max(0, hypothesis - reference) / reference. A symptom of "
+                "over-generation, never a proof of hallucination."
+            ),
+            capabilities=recognition,
+        ),
+        MetricSpec(
+            name="hallucinated_words",
+            layer=MetricLayer.CORRECTNESS,
+            direction=lower,
+            unit="count",
+            confidence=MetricConfidence.HIGH,
+            description=(
+                "Words emitted where the CORPUS MANIFEST declares an empty "
+                "reference. Never where a reference merely normalised to empty: "
+                "that is a ruler failure and produces a Determination."
+            ),
+            capabilities=recognition,
+        ),
         # ── Correctness (automated) ─────────────────────────────────────
         MetricSpec(
             name="round_trip_wer",
@@ -411,9 +519,13 @@ def _build_registry() -> MetricRegistry:
     return registry
 
 
-#: The platform's metric namespace. Recognition metric names are NOT here
-#: yet: the reconciled vocabulary is a founder ratification (Gate 4 D-1),
-#: and first landing is permanent. This milestone builds the mechanism
-#: that makes that landing safe — the uniqueness assertion and the
-#: withdrawal path — precisely so the names arrive once and correctly.
+#: The platform's metric namespace.
+#:
+#: The recognition **accuracy** family landed in B2 under founder ruling
+#: D-1. The performance, latency, startup and resource families have not:
+#: none of them is language-aware, several are unrecordable today (the
+#: artifact store is untimed, no accelerator sampling exists, the runtime
+#: contract has no streaming method), and `recognition_rtf` is gated on
+#: `duration_bands@v1`. They land with the milestones that build the
+#: fields to hold them, so that each name is right when it lands.
 METRICS: Final = _build_registry()

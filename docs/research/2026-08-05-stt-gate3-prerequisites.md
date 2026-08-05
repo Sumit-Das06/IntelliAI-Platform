@@ -38,6 +38,26 @@ requirement.**
 | 1.3 | **Guard the empty-reference path** so a non-Latin reference cannot be silently scored | BUILD | Hindi and Arabic recording |
 | 1.4 | `unicode_generic@v1` and `ascii_en@v1` registered and pinned | BUILD | English continuity |
 
+### Status update — 2026-08-05, engineering milestone B2
+
+Recorded rather than edited into the table above: this is a dated register and what it
+said on the day it was written stays said.
+
+| # | State | Notes |
+|---|---|---|
+| **PR-1.1** | **Discharged, under a different name** | The corrected Devanagari ruler differs from `unicode_generic@v1` by exactly one rule — format characters (Cf) removed rather than spaced — and that correction is script-agnostic. Under the founder ruling that *a profile is an evidence object, not a language object*, naming it `devanagari@v1` would assert a language binding it does not have. Landed as **`unicode_generic@v2`**; Hindi binds to it. |
+| **PR-1.2** | **Deferred, deliberately** | `arabic_orthographic@v1` requires an enumerated fold table (tashkeel, alef variants, tatweel). Those are linguistic decisions with permanent evidential consequences, item 2.6 already names a native verifier as a prerequisite, and there are zero Arabic clips to validate against. `profile_for("ar")` refuses rather than borrowing another language's ruler. |
+| **PR-1.3** | **Discharged** | A profile that normalises a *declared* reference to nothing now raises `RulerFailureError` instead of scoring. Per founder ruling, this produces a Determination, never a numeric metric. |
+| **PR-1.4** | **Discharged** | Both registered and pinned by golden test. `ascii_en@v1` wraps `normalize_words` unchanged; `unicode_generic@v1` pins `speech_normalize` **including its Cf defect**, because it is the ruler behind the committed synthesis baselines and a released version may never change meaning. |
+
+**Numbering.** Normalization-profile work is **PR-1.1–PR-1.4**, never "D-2".
+[gate4-review.md](gate4-review.md) §4.1 already assigns **D-2 = recognition evidence extends
+`EvalRun`, registry reaching across rather than forking** — which milestone B1 satisfied by
+building one registry with capability scoping per spec instead of per-namespace registries.
+This project has renumbered twice already (the framework/session gate drift, and the `P<n>`
+collision that forced `PH<n>`/`HW<n>`/`PR<n.n>`); a third overload is not worth the
+convenience.
+
 ### The live hazard justifying this ordering
 
 **[FACT, verified at source]** `normalize_words` strips to `[^a-z0-9\s']+`

@@ -50,9 +50,19 @@ def test_registry_is_exactly_the_documented_hierarchy() -> None:
     the registry holds means editing a test that shows you both, so a
     vocabulary change cannot be made without noticing that it is one.
     """
-    assert METRIC_REGISTRY_VERSION == 1
+    assert METRIC_REGISTRY_VERSION == 2
 
     expected: dict[str, tuple[MetricLayer, MetricDirection, MetricConfidence]] = {
+        # ── Recognition accuracy (B2, methodology §3.1) ──────────────
+        "wer_ascii": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.HIGH),
+        "wer_unicode": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.HIGH),
+        "cer_unicode": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.HIGH),
+        "substitution_rate": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
+        "insertion_rate": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
+        "deletion_rate": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
+        "excess_word_ratio": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
+        "hallucinated_words": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.HIGH),
+        # ── Generation (B1, migrated unchanged from M2.5) ────────────
         "round_trip_wer": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
         "pronunciation_accuracy": (MetricLayer.CORRECTNESS, HIGHER, MetricConfidence.MEDIUM),
         "clipping_ratio": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.HIGH),
@@ -74,26 +84,49 @@ def test_registry_is_exactly_the_documented_hierarchy() -> None:
     assert actual == expected
 
 
-def test_no_recognition_metric_has_landed_yet() -> None:
-    """B1 builds the mechanism; the vocabulary is a founder ratification.
+def test_only_the_accuracy_family_has_landed() -> None:
+    """B2 landed §3.1. The rest wait for the milestones that can hold them.
 
-    A metric name is permanent on first landing and renaming is forbidden,
-    so landing the reconciled recognition names before they are ratified
-    would create synonyms that can never be cleaned up. This test fails
-    the day they arrive, which is the reminder to arrive at them once.
+    None of the performance, latency, startup or resource names is
+    language-aware, several are unrecordable today (the artifact store is
+    untimed, no accelerator sampling exists, the contract has no streaming
+    method), and `recognition_rtf` is additionally gated on
+    `duration_bands@v1`. A name is permanent on first landing, so each one
+    lands with the field that holds it. This test fails the day they
+    arrive, which is the reminder to arrive at them deliberately.
     """
-    reconciled = {
-        "wer_ascii",
-        "wer_unicode",
-        "cer_unicode",
+    not_yet = {
         "recognition_rtf",
-        "substitution_rate",
-        "insertion_rate",
-        "deletion_rate",
-        "excess_word_ratio",
-        "hallucinated_words",
+        "end_to_end_latency_ms",
+        "time_to_first_text_ms",
+        "output_chars_per_second",
+        "partial_revision_rate",
+        "cold_start_ready_ms",
+        "warm_restart_ready_ms",
+        "model_load_ms",
+        "model_warmup_ms",
+        "artifact_ensure_download_ms",
+        "artifact_ensure_verify_ms",
+        "accelerator_memory_peak_mib",
     }
-    assert not reconciled & set(METRICS.names())
+    assert not not_yet & set(METRICS.names())
+
+
+def test_the_accuracy_family_is_recognition_scoped() -> None:
+    # One namespace, applicability per spec. `rtf` (generation) and the
+    # recognition family coexist without either being able to claim the
+    # other's numbers.
+    for name in ("wer_ascii", "wer_unicode", "cer_unicode", "hallucinated_words"):
+        spec = METRICS.require(name)
+        assert spec.applies_to(Capability.TRANSCRIPTION)
+        assert not spec.applies_to(Capability.SPEECH_SYNTHESIS)
+
+
+def test_bare_wer_and_cer_are_never_registered() -> None:
+    # The ruler is part of a metric's identity. A bare name would be a
+    # permanent invitation to average two rulers.
+    assert "wer" not in METRICS
+    assert "cer" not in METRICS
 
 
 def test_judged_metrics_name_their_judge() -> None:
@@ -176,8 +209,10 @@ class TestWithdrawnMetricsStayReadable:
 
 class TestRecordability:
     def test_an_unregistered_name_is_refused(self) -> None:
+        # `recognition_rtf` is designed and not landed: exactly the shape of
+        # a name a runner might reach for before its milestone.
         with pytest.raises(MetricNotRegisteredError, match="unknown metric"):
-            METRICS.assert_recordable("wer_ascii")
+            METRICS.assert_recordable("recognition_rtf")
 
     def test_a_reserved_metric_cannot_be_written(self) -> None:
         # The architecture holds its place; nothing implements it, so a
