@@ -50,7 +50,7 @@ def test_registry_is_exactly_the_documented_hierarchy() -> None:
     the registry holds means editing a test that shows you both, so a
     vocabulary change cannot be made without noticing that it is one.
     """
-    assert METRIC_REGISTRY_VERSION == 2
+    assert METRIC_REGISTRY_VERSION == 3
 
     expected: dict[str, tuple[MetricLayer, MetricDirection, MetricConfidence]] = {
         # ── Recognition accuracy (B2, methodology §3.1) ──────────────
@@ -62,6 +62,8 @@ def test_registry_is_exactly_the_documented_hierarchy() -> None:
         "deletion_rate": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
         "excess_word_ratio": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
         "hallucinated_words": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.HIGH),
+        # ── Recognition performance (B4b) ────────────────────────────
+        "recognition_rtf": (MetricLayer.PERFORMANCE, LOWER, MetricConfidence.HIGH),
         # ── Generation (B1, migrated unchanged from M2.5) ────────────
         "round_trip_wer": (MetricLayer.CORRECTNESS, LOWER, MetricConfidence.MEDIUM),
         "pronunciation_accuracy": (MetricLayer.CORRECTNESS, HIGHER, MetricConfidence.MEDIUM),
@@ -84,7 +86,7 @@ def test_registry_is_exactly_the_documented_hierarchy() -> None:
     assert actual == expected
 
 
-def test_only_the_accuracy_family_has_landed() -> None:
+def test_only_the_ratified_recognition_metrics_have_landed() -> None:
     """B2 landed §3.1. The rest wait for the milestones that can hold them.
 
     None of the performance, latency, startup or resource names is
@@ -96,7 +98,6 @@ def test_only_the_accuracy_family_has_landed() -> None:
     arrive, which is the reminder to arrive at them deliberately.
     """
     not_yet = {
-        "recognition_rtf",
         "end_to_end_latency_ms",
         "time_to_first_text_ms",
         "output_chars_per_second",
@@ -209,10 +210,10 @@ class TestWithdrawnMetricsStayReadable:
 
 class TestRecordability:
     def test_an_unregistered_name_is_refused(self) -> None:
-        # `recognition_rtf` is designed and not landed: exactly the shape of
-        # a name a runner might reach for before its milestone.
+        # `end_to_end_latency_ms` is designed and not landed: exactly the
+        # shape of a name a runner might reach for before its milestone.
         with pytest.raises(MetricNotRegisteredError, match="unknown metric"):
-            METRICS.assert_recordable("recognition_rtf")
+            METRICS.assert_recordable("end_to_end_latency_ms")
 
     def test_a_reserved_metric_cannot_be_written(self) -> None:
         # The architecture holds its place; nothing implements it, so a

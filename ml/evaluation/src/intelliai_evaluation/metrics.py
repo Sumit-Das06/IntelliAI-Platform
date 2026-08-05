@@ -48,7 +48,8 @@ from intelliai_runtime_contract import Capability
 #:
 #: v1 (B1) — the framework, with the 16 generation metrics migrated
 #: v2 (B2) — the recognition accuracy family (methodology §3.1)
-METRIC_REGISTRY_VERSION: Final = 2
+#: v3 (B4b) — recognition_rtf, the first recognition performance metric
+METRIC_REGISTRY_VERSION: Final = 3
 
 
 @unique
@@ -395,6 +396,25 @@ def _build_registry() -> MetricRegistry:
                 "Words emitted where the CORPUS MANIFEST declares an empty "
                 "reference. Never where a reference merely normalised to empty: "
                 "that is a ruler failure and produces a Determination."
+            ),
+            capabilities=recognition,
+        ),
+        # ── Recognition performance (B4b) ───────────────────────────────
+        MetricSpec(
+            name="recognition_rtf",
+            layer=MetricLayer.PERFORMANCE,
+            direction=lower,
+            unit="ratio",
+            confidence=MetricConfidence.HIGH,
+            description=(
+                "Total inference time over total audio duration across the slice "
+                "- duration-weighted, never a mean of per-clip ratios, which "
+                "over-weights short clips (11-33% on our own committed records). "
+                "Comparable only within one duration band; bands are not yet "
+                "registered, so an RTF comparison is currently unguarded. Not "
+                "`rtf`, which is registered for synthesis: reusing it would make "
+                "that spec's own description false and permit averaging a "
+                "recognition number with a generation one."
             ),
             capabilities=recognition,
         ),

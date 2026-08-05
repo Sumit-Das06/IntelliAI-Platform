@@ -209,11 +209,11 @@ class TestRecordabilityIsCheckedAtWriteTime:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         # A designed-but-unlanded name is exactly the realistic case:
-        # `recognition_rtf` waits on duration_bands@v1, so writing it today
+        # `end_to_end_latency_ms` has no field to hold it yet, so writing it
         # would put a name in the ledger that no spec defines.
         monkeypatch.setattr(
             "intelliai_evaluation.speech_runner.aggregate_cases",
-            lambda cases: {"recognition_rtf": 0.0},
+            lambda cases: {"end_to_end_latency_ms": 0.0},
         )
         judge = FakeJudge(transcripts={"a": "hello evaluation world", "b": "the api gateway"})
         with pytest.raises(MetricNotRegisteredError, match="unknown metric"):

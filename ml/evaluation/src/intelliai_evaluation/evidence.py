@@ -23,6 +23,25 @@ later pass reads them and decides whether the run was valid. That is why
 :class:`Validity` has no member meaning "not yet computed" — absence is
 ``None``, and an absence that is spellable as a value is a value somebody
 will eventually set by hand.
+
+**The classification law.** Every value a runner writes into an
+:class:`ExecutionContext` is exactly one of three things, and which one it
+is must be answerable for each field:
+
+- **Observed** — read from a fact the measured system reported, over a
+  socket: an ``/info`` key or a field of a response envelope.
+- **Derived** — computed deterministically from evidence the run itself
+  holds. **A Derived value may never depend on current registry state,
+  filesystem state, environment variables, network state, or wall-clock
+  time**, and must be reproducible from recorded evidence alone. The
+  reason is the five-year reader: a value computed from mutable state
+  outside the record cannot be checked later, so it is an assertion
+  wearing a derivation's clothes.
+- **Determination** — cannot be established from where we stand. Recorded
+  as ``None`` plus a :class:`Determination` naming why.
+
+Nothing is *declared*. If a value would need an operator to type it, and
+it is not one of the three above, it is a Determination instead.
 """
 
 from __future__ import annotations

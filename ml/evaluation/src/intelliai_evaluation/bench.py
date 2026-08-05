@@ -224,11 +224,24 @@ async def measure_overhead(
     audio: bytes,
     repetitions: int,
     timeout_seconds: float,
+    language: str | None = None,
 ) -> OverheadResult:
-    """ADR-0002 check: same clip, same repetitions, both paths, medians."""
+    """ADR-0002 check: same clip, same repetitions, both paths, medians.
+
+    ``language`` is sent on BOTH paths when given. Without it the ladder
+    measured auto-detection while the quality pass measured an explicit
+    declaration - and the declared language is a first-order cost variable
+    on our own hardware, so the two halves of one session described
+    different systems.
+    """
     async with httpx.AsyncClient(timeout=timeout_seconds) as client:
-        direct_params = {"params": json.dumps({"model": artifact})}
-        gateway_params = {"model": public_model}
+        runtime_body: dict[str, str] = {"model": artifact}
+        gateway_params: dict[str, str] = {"model": public_model}
+        if language is not None:
+            # Both paths, or the comparison is between two different systems.
+            runtime_body["language"] = language
+            gateway_params["language"] = language
+        direct_params = {"params": json.dumps(runtime_body)}
         headers = {"Authorization": f"Bearer {api_key}"}
         direct_url = f"{runtime_url}/v1/transcribe"
         via_url = f"{gateway_url}/v1/audio/transcriptions"

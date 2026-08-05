@@ -46,19 +46,20 @@ stt: ## Run the STT runtime locally with hot reload (port 8001)
 	uv run --package intelliai-stt-runtime uvicorn --factory intelliai_stt_runtime.main:create_app --reload --port 8001
 
 # ── Evaluation workflows ──────────────────────────────────────
-# The documented workflows, executable. Two arguments are deliberately
-# NOT defaulted: `hardware` and `out`.
+# The documented workflows, executable.
 #
-# `hardware` is a free string today, and the machine we own is already
-# spelled four different ways across committed records. A default here
-# would mint a fifth spelling and make it canonical by accident. The
-# structured environment identity that replaces it is designed
-# (docs/research/hardware-profiles.md) but PROPOSED, not ratified — so
-# this Makefile refuses to guess and the operator states the machine.
+# `hardware`, `compute` and `engine_version` are GONE from `make eval`.
+# The runtime reports its own build, decode configuration and machine at
+# /info, so asking an operator for them was asking for facts the system
+# already holds — which is how one machine came to be spelled four
+# different ways across committed records. Nobody spells it now.
 #
-# `out` names a permanent, append-only record. Defaulting it invites
-# overwriting evidence, and the record-naming convention is likewise
-# still PROPOSED.
+# `out` is still not defaulted: it names a permanent, append-only record,
+# and defaulting it invites overwriting evidence.
+#
+# The TTS workflows still take `hardware` because the synthesis runtime
+# does not yet describe itself; that is symmetric work, not this
+# milestone's.
 
 CORPUS_STT ?= ml/evaluation/stt/datasets/stt-eval-v2.json
 CORPUS_TTS ?= ml/evaluation/tts/corpora/tts-eval-v1.json
@@ -67,26 +68,24 @@ MANIFEST   ?= ml/evaluation/manifests/resolution.json
 eval-fetch: ## Materialize the STT evaluation dataset into ml/evaluation/data/ (gitignored)
 	uv run --package intelliai-evaluation python -m intelliai_evaluation fetch --dataset $(CORPUS_STT)
 
-eval: eval-fetch ## Measure one STT slice: make eval lang=hi engine_version=1.2.1 hardware="..." out=...
-	@if [ -z "$(hardware)" ] || [ -z "$(out)" ] || [ -z "$(engine_version)" ]; then \
-	  echo "make eval requires hardware=, out= and engine_version=."; \
+eval: eval-fetch ## Measure one STT slice: make eval lang=hi out=...
+	@if [ -z "$(out)" ]; then \
+	  echo "make eval requires out=."; \
 	  echo; \
-	  echo '  make eval lang=en engine_version=<engine x.y.z> \'; \
-	  echo '            hardware="<describe THIS machine>" \'; \
+	  echo '  make eval lang=en \'; \
 	  echo '            out=ml/evaluation/stt/results/$(shell date +%Y-%m-%d)-intelliai-stt-en.json'; \
 	  echo; \
-	  echo "  No example string is given for hardware on purpose: the machine is"; \
-	  echo "  already spelled four ways across committed records and a fifth would"; \
-	  echo "  arrive by copy-paste. See the note in the Makefile."; \
+	  echo "  The build, the decode configuration and the machine are read from the"; \
+	  echo "  runtime's /info - there is no flag for any of them, on purpose."; \
 	  exit 2; \
 	fi
 	uv run --package intelliai-evaluation python -m intelliai_evaluation run \
 	  --dataset $(CORPUS_STT) --manifest $(MANIFEST) \
 	  --url $(or $(url),http://localhost:8001) \
 	  --model $(or $(model),intelliai-stt) --language $(or $(lang),en) \
-	  --engine $(or $(engine),faster-whisper) --engine-version "$(engine_version)" \
-	  --compute $(or $(compute),cpu-int8) --hardware "$(hardware)" \
-	  $(if $(benchmark),--benchmark "$(benchmark)",) $(if $(notes),--notes "$(notes)",) \
+	  --engine $(or $(engine),faster-whisper) \
+	  $(if $(benchmark),--benchmark "$(benchmark)",) $(if $(session),--session "$(session)",) \
+	  $(if $(notes),--notes "$(notes)",) \
 	  --out $(out)
 
 speech-eval: ## Measure TTS against its corpus via the STT judge: make speech-eval hardware="..." out=...
@@ -104,9 +103,12 @@ speech-eval: ## Measure TTS against its corpus via the STT judge: make speech-ev
 	  $(if $(baseline),--baseline-name "$(baseline)",) $(if $(notes),--notes "$(notes)",) \
 	  --out $(out)
 
-bench: ## STT production ladder + gateway overhead: make bench hardware="..." out=... [key=sk-...]
-	@if [ -z "$(hardware)" ] || [ -z "$(out)" ]; then \
-	  echo "make bench requires hardware= and out=."; \
+bench: ## STT production ladder + gateway overhead: make bench lang=en hardware="..." out=... [key=sk-...]
+	@if [ -z "$(hardware)" ] || [ -z "$(out)" ] || [ -z "$(lang)" ]; then \
+	  echo "make bench requires lang=, hardware= and out=."; \
+	  echo "  lang= is required because a ladder that declares no language measures"; \
+	  echo "  auto-detection, while the quality pass measures explicit declaration -"; \
+	  echo "  and the two halves of a session must describe the same system."; \
 	  echo "  without key=, the gateway-overhead phase is SKIPPED and the"; \
 	  echo "  record carries no overhead, no p95 and no PRD verdict."; \
 	  exit 2; \
@@ -116,7 +118,7 @@ bench: ## STT production ladder + gateway overhead: make bench hardware="..." ou
 	  --runtime-url $(or $(runtime_url),http://localhost:8001) \
 	  --gateway-url $(or $(gateway_url),http://localhost:8000) \
 	  --api-key "$(key)" --levels $(or $(levels),1,5,10,20) \
-	  --repetitions $(or $(repetitions),3) --hardware "$(hardware)" \
+	  --repetitions $(or $(repetitions),3) --hardware "$(hardware)" --language "$(lang)" \
 	  $(if $(container),--docker-container "$(container)",) $(if $(notes),--notes "$(notes)",) \
 	  --out $(out)
 

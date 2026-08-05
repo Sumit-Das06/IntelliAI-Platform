@@ -401,7 +401,7 @@ class TestTheImportBudget:
 class TestBothRootsShareOneGuard:
     def test_an_unregistered_metric_is_refused_on_the_recognition_root(self) -> None:
         with pytest.raises(ValidationError, match="unknown metric"):
-            _minimal_run(metrics={"recognition_rtf": 0.5})
+            _minimal_run(metrics={"end_to_end_latency_ms": 0.5})
 
     def test_a_human_metric_may_not_enter_the_measured_map(self) -> None:
         with pytest.raises(ValidationError, match="does not belong in this section"):

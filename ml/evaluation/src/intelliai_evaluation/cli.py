@@ -13,8 +13,9 @@ from intelliai_evaluation import bench, bench_tts
 from intelliai_evaluation.corpus import load_corpus
 from intelliai_evaluation.dataset import load_dataset
 from intelliai_evaluation.fetch import materialize
+from intelliai_evaluation.normalization import ProfileNotRegisteredError
 from intelliai_evaluation.resolution import UnservedError, load_manifest
-from intelliai_evaluation.runner import run_stt_eval
+from intelliai_evaluation.runner import RuntimeNotDescribedError, run_stt_eval
 from intelliai_evaluation.speech_results import EvaluatedArtifact, RuntimeIdentity
 from intelliai_evaluation.speech_runner import (
     HttpSttJudge,
@@ -56,12 +57,22 @@ def main(argv: list[str] | None = None) -> int:
     )
     run_parser.add_argument("--model", required=True, help="public model id, e.g. intelliai-stt")
     run_parser.add_argument("--language", required=True, help="the slice to measure, e.g. hi")
+    # The engine NAME stays an argument because `/info` reports no
+    # engine_module. Its VERSION does not: the runtime knows which library
+    # build it loaded, so asking an operator would be asking for a fact
+    # the system already holds.
     run_parser.add_argument("--engine", required=True, help="engine name, e.g. faster-whisper")
-    run_parser.add_argument("--engine-version", required=True)
-    run_parser.add_argument("--compute", required=True, help="the build, e.g. cpu-int8")
-    run_parser.add_argument("--hardware", required=True, help="human description of the machine")
+    # --compute, --engine-version and --hardware are DELIBERATELY absent.
+    # Each duplicated something `/info` now reports, and a hand-typed value
+    # the system already knows is a transcription error waiting to be
+    # committed. `--hardware` in particular is how one machine came to be
+    # spelled four different ways across committed records; the line is
+    # generated from observed facts now, so nobody spells it.
     run_parser.add_argument(
         "--benchmark", default=None, help="set ONLY when this run IS a named baseline"
+    )
+    run_parser.add_argument(
+        "--session", default=None, help="campaign session id; links a session's records"
     )
     run_parser.add_argument("--notes", default="")
     run_parser.add_argument(
@@ -77,6 +88,11 @@ def main(argv: list[str] | None = None) -> int:
     bench_parser.add_argument("--api-key", default="", help="gateway path key; empty skips it")
     bench_parser.add_argument("--artifact", default="whisper-small")
     bench_parser.add_argument("--model", default="intelliai-stt", help="public model id")
+    # A ladder that declares no language measures auto-detection, while
+    # the quality pass measures explicit declaration. Declaring `hi` cost
+    # 13698 ms against 1462 ms for `en` on identical audio, so the two
+    # halves of a session were describing different systems.
+    bench_parser.add_argument("--language", default=None, help="the language this ladder measures")
     bench_parser.add_argument("--levels", default="1,5,10,20")
     bench_parser.add_argument("--repetitions", type=int, default=3, help="requests per worker")
     bench_parser.add_argument("--overhead-repetitions", type=int, default=10)
@@ -147,8 +163,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  {clip_id:<16} {path}")
         return 0
 
-    # Registry state decides what is measured; the operator supplies only
-    # facts about the machine it runs on.
+    # Registry state decides what is measured, and the RUNTIME describes
+    # how: the operator supplies neither the build, nor the decode
+    # configuration, nor the machine.
     manifest = load_manifest(args.manifest)
     try:
         serving = manifest.resolve(args.model, args.language)
@@ -156,20 +173,24 @@ def main(argv: list[str] | None = None) -> int:
         print(f"refusing: {exc}")
         return 2
 
-    run = run_stt_eval(
-        dataset,
-        base_url=args.url,
-        data_dir=args.data_dir,
-        public_model=args.model,
-        language=args.language,
-        serving=serving,
-        build=args.compute,
-        engine=args.engine,
-        engine_version=args.engine_version,
-        hardware=args.hardware,
-        benchmark=args.benchmark,
-        notes=args.notes,
-    )
+    try:
+        run = run_stt_eval(
+            dataset,
+            base_url=args.url,
+            data_dir=args.data_dir,
+            public_model=args.model,
+            language=args.language,
+            serving=serving,
+            engine=args.engine,
+            benchmark=args.benchmark,
+            session_id=args.session,
+            notes=args.notes,
+        )
+    except (ProfileNotRegisteredError, RuntimeNotDescribedError) as exc:
+        # Fail closed: a language with no ruler, or a runtime that cannot
+        # describe itself, has no honest record to write.
+        print(f"refusing: {exc}")
+        return 2
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(run.model_dump_json(indent=2) + "\n", encoding="utf-8")
     print(json.dumps(run.summary(), indent=2, default=str))
@@ -313,7 +334,10 @@ def _run_bench_tts(args: argparse.Namespace) -> int:
 def _run_bench(args: argparse.Namespace) -> int:
     audio = args.clip.read_bytes()
     clip_seconds = bench.clip_duration_seconds(args.clip)
-    direct_params = {"params": json.dumps({"model": args.artifact})}
+    direct_body: dict[str, str] = {"model": args.artifact}
+    if args.language is not None:
+        direct_body["language"] = args.language
+    direct_params = {"params": json.dumps(direct_body)}
     levels = [int(level) for level in str(args.levels).split(",")]
     container = args.docker_container or None
 
@@ -347,6 +371,7 @@ def _run_bench(args: argparse.Namespace) -> int:
                 audio=audio,
                 repetitions=args.overhead_repetitions,
                 timeout_seconds=args.timeout,
+                language=args.language,
             )
             prd_actual = overhead.via_gateway_p50_ms  # see note below
         target_ms = clip_seconds * 1500.0  # PRD: p95 < 1.5x audio duration
