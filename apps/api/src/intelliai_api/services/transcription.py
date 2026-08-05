@@ -22,7 +22,12 @@ from intelliai_api.core.errors import (
 from intelliai_api.entitlements import EntitlementService
 from intelliai_api.limits import CapabilityAdmission
 from intelliai_api.metering import UsageRecorder, runtime_lineage
-from intelliai_api.registry import LanguageNotSupportedError, Registry, Resolution
+from intelliai_api.registry import (
+    LanguageNotSupportedError,
+    Registry,
+    Resolution,
+    normalize_language,
+)
 from intelliai_api.runtimes import RuntimeCallError, RuntimeClient, RuntimeUnavailableError
 from intelliai_api.services.auth import AuthContext
 from intelliai_api.services.demand import record_language_demand
@@ -129,10 +134,17 @@ class TranscriptionService:
             )
             raise InternalError("The service is misconfigured.")
 
+        # The engine is told what ROUTING decided, not what the customer
+        # typed. Engines speak base subtags; `hi-IN` is a fact about the
+        # request, not a language an engine has. Found in production
+        # validation, where a regional tag reached faster-whisper and
+        # became a 500 — the normalization law was being applied at the
+        # routing boundary and nowhere else.
+        declared = normalize_language(language)
         try:
             envelope = await client.transcribe(
                 audio,
-                TranscriptionRequest(language=language, model=resolution.artifact.id),
+                TranscriptionRequest(language=declared, model=resolution.artifact.id),
             )
         except RuntimeCallError as exc:
             await self._record_failure(auth, resolution, language, exc.error.type)
@@ -175,6 +187,13 @@ class TranscriptionService:
             organization_id=auth.organization_public_id,
             model=public_model_id,
             audio_seconds=round(audio_seconds, 3),
+            # Three different languages, and they are not interchangeable
+            # (design §4.2): what the customer DECLARED, what routing
+            # RESOLVED, and what the engine OBSERVED. The ledger stores the
+            # observed one; the declaration is a request-event fact and
+            # lives here until request events are persisted.
+            requested_language=language,
+            routed_language=declared,
             language=envelope.output.language,
         )
         return TranscriptionOutcome(

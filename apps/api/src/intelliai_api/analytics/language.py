@@ -19,7 +19,7 @@ same, and the day that stops being true it will be because a published
 price book says so.
 """
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -44,6 +44,32 @@ class LanguageUsage:
     @property
     def in_policy(self) -> bool:
         return (self.language or "").split("-")[0].lower() in POLICY_LANGUAGES
+
+
+@dataclass(frozen=True)
+class LadderCoverage:
+    """One (capability, language): what we promise, and what we served."""
+
+    capability: str
+    language: str
+    status: str  # the ladder rung, as the registry states it
+    requests: int
+    organizations: int
+
+    @property
+    def is_contradiction(self) -> bool:
+        """Traffic on a language we say we do not serve.
+
+        Never expected — the gateway refuses `unavailable` languages
+        before crossing a plane — and therefore worth a loud check rather
+        than a comment claiming it cannot happen.
+        """
+        return self.status == "unavailable" and self.requests > 0
+
+    @property
+    def is_unexercised_promise(self) -> bool:
+        """A promise nobody has used yet: a product signal, not a defect."""
+        return self.status == "supported" and self.requests == 0
 
 
 @dataclass(frozen=True)
@@ -80,6 +106,33 @@ class LanguageReport:
         intuition about which language matters next.
         """
         return tuple(sorted({row.language for row in self.outside_policy_rows if row.language}))
+
+    def against_ladder(self, ladder: Mapping[tuple[str, str], str]) -> tuple[LadderCoverage, ...]:
+        """What we *promise* per (capability, language) beside what we *served*.
+
+        Two different silences look identical in a usage report and mean
+        opposite things: a `supported` language with no traffic is a
+        product problem, and an `unavailable` language with traffic is a
+        serving defect. Reading adoption without the rung beside it
+        cannot tell them apart, which is why this join exists rather
+        than a second query.
+        """
+        served: dict[tuple[str, str], tuple[int, int]] = {}
+        for row in self.rows:
+            base = (row.language or "").split("-")[0].lower()
+            key = (row.capability, base)
+            requests, organizations = served.get(key, (0, 0))
+            served[key] = (requests + row.requests, organizations + row.organizations)
+        return tuple(
+            LadderCoverage(
+                capability=capability,
+                language=language,
+                status=status,
+                requests=served.get((capability, language), (0, 0))[0],
+                organizations=served.get((capability, language), (0, 0))[1],
+            )
+            for (capability, language), status in sorted(ladder.items())
+        )
 
 
 async def language_report(

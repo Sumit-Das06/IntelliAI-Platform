@@ -156,6 +156,32 @@ today), different engines serve different languages internally behind the
 one stable customer API. Support is *complete* only when measured: a
 corpus, a quality baseline, and a production benchmark per language.
 
+**Where each language actually stands** (the Language Support Ladder,
+ADR-0027; validated in production 2026-08-05). This table is the honest
+one — it says what we promise, not what an engine claims:
+
+| | English | Hindi | Arabic |
+|---|---|---|---|
+| **Speech-to-Text** | `supported` — promised, WER 0.000 on the committed baseline | `available` — served, honestly unpromised, **no quality claim** | `available` — served, honestly unpromised, **no quality claim** |
+| **Text-to-Speech** | `supported` — promised, round-trip baseline committed | `unavailable` — no licensed serving path; expressed as the absence of Hindi voices | `unavailable` — same |
+
+`available` means exactly what it says: we serve it, we label it, and we
+promise nothing about its quality. Two facts behind that honesty, both
+measured rather than assumed:
+
+- **Neither Hindi nor Arabic has a speech corpus.** Transcription needs
+  audio with committed reference transcripts; the M2.5 corpus has Hindi
+  *text*, which serves synthesis and cannot ground a transcription WER.
+  Until such a corpus exists (founder decisions F-M5-8 for Hindi, F-M5-6
+  for Arabic), neither language can pass `available` — the corpus is a
+  precondition, not a threshold.
+- **The Hindi route is slower and the Arabic route hallucinates.**
+  Measured on the shipped path: declaring Hindi costs an order of
+  magnitude more inference than English on the same audio, and Arabic
+  emits text on non-speech input where English and Hindi emit nothing.
+  Both are recorded, neither is diagnosed, and both are precisely what
+  the middle rung exists to collect.
+
 Phase 2 (directional): dataset pipeline, fine-tuning (Whisper-lineage adapters),
 custom-model serving, TTS voice cloning on the Chatterbox lineage
 (consent-gated, watermark-policied), diarization, speech translation

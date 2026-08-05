@@ -27,6 +27,7 @@ from intelliai_api.analytics.anomalies import (
 )
 from intelliai_api.analytics.language import (
     POLICY_LANGUAGES,
+    LadderCoverage,
     LanguageReport,
     LanguageUsage,
     language_report,
@@ -42,6 +43,7 @@ __all__ = [
     "POLICY_LANGUAGES",
     "FailureRate",
     "Finding",
+    "LadderCoverage",
     "LanguageReport",
     "LanguageUsage",
     "Reconciler",

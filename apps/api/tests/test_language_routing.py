@@ -173,8 +173,10 @@ async def test_declared_language_selects_the_artifact(
         # public model the customer named never changed.
         (call,) = fake.calls
         assert call[1].model == artifact
-        # The full tag reaches the runtime; only ROUTING normalized it.
-        assert call[1].language == language
+        # The engine is told the ROUTED language, never the raw tag: this
+        # assertion said the opposite until production validation found a
+        # regional tag reaching faster-whisper as a 500.
+        assert call[1].language == language.split("-")[0].lower()
 
 
 async def test_an_undeclared_language_takes_the_default_route(
@@ -652,3 +654,51 @@ async def test_synthesis_has_no_public_language_field_and_none_leaks_inward(
             ).one()
             # The voice's language, not the ignored input.
             assert event.language == "en"
+
+
+# ── Regression: a regional tag must never reach an engine ───────────────
+
+
+@pytest.mark.parametrize(
+    ("declared", "routed"),
+    [("hi-IN", "hi"), ("HI", "hi"), ("en-GB", "en"), ("hi_IN", "hi")],
+)
+async def test_the_engine_is_told_what_routing_decided_not_what_was_typed(
+    settings: Settings, db_engine: AsyncEngine, declared: str, routed: str
+) -> None:
+    # Found in M5 step 7 production validation: `hi-IN` reached
+    # faster-whisper, which accepts base subtags only, and became a 500.
+    # Engines speak base subtags; the regional tag is a fact about the
+    # request, not a language any engine has.
+    fake = FakeRuntimeClient(envelope=make_stt_envelope())
+    configure = install(stt_registry(), **{"stt-runtime": fake})
+    async with client_with_db(settings, db_engine, configure) as (client, factory):
+        tenant = await _tenant(factory, f"normalize-{declared}@example.com")
+        response = await client.post(
+            "/v1/audio/transcriptions",
+            headers=_bearer(tenant.generated.secret),
+            **post_kwargs(language=declared),
+        )
+        assert response.status_code == 200
+        (call,) = fake.calls
+        assert call[1].language == routed
+
+
+async def test_the_declaration_survives_as_a_request_event_fact(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # Three languages, never interchangeable: declared, routed, observed.
+    fake = FakeRuntimeClient(envelope=make_stt_envelope())
+    configure = install(stt_registry(), **{"stt-runtime": fake})
+    async with client_with_db(settings, db_engine, configure) as (client, factory):
+        tenant = await _tenant(factory, "declared-fact@example.com")
+        with structlog.testing.capture_logs() as logs:
+            await client.post(
+                "/v1/audio/transcriptions",
+                headers=_bearer(tenant.generated.secret),
+                **post_kwargs(language="hi-IN"),
+            )
+    (completed,) = [entry for entry in logs if entry["event"] == "transcription.completed"]
+    assert completed["requested_language"] == "hi-IN"
+    assert completed["routed_language"] == "hi"
+    assert completed["language"] == "en"  # what the engine observed

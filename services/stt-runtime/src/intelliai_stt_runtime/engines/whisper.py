@@ -22,11 +22,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Final
 
 from intelliai_runtime_contract import (
+    RuntimeErrorType,
     TranscriptionRequest,
     TranscriptionResult,
     TranscriptionSegment,
 )
-from intelliai_runtime_core import ArtifactFile, ArtifactSpec
+from intelliai_runtime_core import ArtifactFile, ArtifactSpec, RuntimeServiceError
 from intelliai_stt_runtime.pipeline import DecodedAudio
 
 if TYPE_CHECKING:
@@ -108,12 +109,24 @@ class FasterWhisperEngine:
         self._model = model
 
     def transcribe(self, audio: DecodedAudio, request: TranscriptionRequest) -> TranscriptionResult:
-        segments, info = self._model.transcribe(
-            _to_float32(audio),
-            language=request.language,
-            task="transcribe",
-            vad_filter=False,  # VAD is the pipeline's job, never the engine's
-        )
+        try:
+            segments, info = self._model.transcribe(
+                _to_float32(audio),
+                language=request.language,
+                task="transcribe",
+                vad_filter=False,  # VAD is the pipeline's job, never the engine's
+            )
+        except ValueError as exc:
+            # An adapter's job is contract-shaped params in, contract-shaped
+            # results out — including when the engine says no. A language
+            # this model does not have is the caller's mistake, and letting
+            # the library's ValueError escape turned it into a 500 (found
+            # in M5 step 7 production validation, on `hi-IN`).
+            raise RuntimeServiceError(
+                RuntimeErrorType.INVALID_INPUT,
+                f"language {request.language!r} is not served by this artifact",
+                param="language",
+            ) from exc
         return convert_segments(segments, getattr(info, "language", None), audio)
 
     def close(self) -> None:

@@ -18,6 +18,7 @@ from pathlib import Path
 from intelliai_api.analytics import (
     POLICY_LANGUAGES,
     FailureRate,
+    LadderCoverage,
     LanguageReport,
     ReconciliationReport,
     UsageSpike,
@@ -100,8 +101,10 @@ async def _commercial_report(month: str | None) -> int:
     finally:
         await engine.dispose()
 
-    _print_commercial_report(report, spikes, failures, reversals, languages)
-    return 0 if report.clean else 1
+    contradictions = _print_commercial_report(report, spikes, failures, reversals, languages)
+    # A ladder contradiction is a serving defect, and this command's
+    # exit code is what a scheduler notices.
+    return 0 if report.clean and not contradictions else 1
 
 
 def _period_from(month: str | None) -> BillingPeriod:
@@ -120,7 +123,7 @@ def _print_commercial_report(
     failures: list[FailureRate],
     reversals: int,
     languages: LanguageReport,
-) -> None:
+) -> list[LadderCoverage]:
     print()
     print("=" * 72)
     print(f"COMMERCIAL PLANE REPORT — {report.period.label} (UTC)")
@@ -161,7 +164,41 @@ def _print_commercial_report(
         print(f"  {language} : {adoption.get(language, 0)} organization(s)")
     unserved = languages.unserved_demand()
     print(f"  outside the policy : {', '.join(unserved) if unserved else 'none'}")
+
+    print("-" * 72)
+    print("LADDER COVERAGE (what we promise, beside what we served)")
+    contradictions: list[LadderCoverage] = []
+    for row in languages.against_ladder(_shipped_ladder()):
+        marker = "  !! " if row.is_contradiction else "     "
+        print(
+            f"{marker}{row.capability:<18} {row.language:<3} {row.status:<12} "
+            f"{row.requests:>5} request(s)  {row.organizations:>3} org(s)"
+        )
+        if row.is_contradiction:
+            contradictions.append(row)
+    for row in contradictions:
+        print(
+            f"  [error] served {row.language!r} for {row.capability} while the ladder "
+            f"says {row.status} — a serving defect, not a usage pattern"
+        )
     print("=" * 72)
+    return contradictions
+
+
+def _shipped_ladder() -> dict[tuple[str, str], str]:
+    """The rung the registry currently states for every (capability, language).
+
+    Read from the registry rather than restated here: a report that
+    carried its own copy of the ladder would eventually disagree with
+    what the platform actually serves, and disagree silently.
+    """
+    registry = default_registry()
+    return {
+        (model.capability.value, route.selector.language): route.status.value
+        for model in registry.list_models()
+        for route in registry.list_languages(model.id)
+        if route.selector.language is not None
+    }
 
 
 def _registry_manifest(out: Path) -> int:
