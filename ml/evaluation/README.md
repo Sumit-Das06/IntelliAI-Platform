@@ -41,18 +41,28 @@ recipe for future capabilities.
 
 ## Datasets
 
-- `stt/datasets/stt-eval-v1.json` — the seed set: 2 public-domain speech
-  clips with exact reference transcripts (pinned URLs + SHA-256; audio is
-  **never committed** — the large-file guard and the weights rule apply
-  to eval data too) and 2 deterministic synthetic probes (silence, tone)
-  with empty references — Whisper's documented silence-hallucination
-  failure mode is probed from day one.
-- **v2 (pending recordings):** v1 plus founder-recorded English + Hindi
-  read speech — the first wedge-aligned measurements and the start of the
-  long-term evaluation corpus. v2 releases when the recordings below
-  exist; manifests are immutable, so it is not created ahead of them.
+Released versions are immutable. A change is always the **next** version,
+never an edit — so what a years-old record cites still resolves.
 
-### Recording protocol for the v2 corpus (founder homework)
+- **`stt-eval-seed@v1`** (`stt/datasets/stt-eval-v1.json`) — the seed set:
+  2 public-domain speech clips with exact reference transcripts (pinned
+  URLs + SHA-256; audio is **never committed** — the large-file guard and
+  the weights rule apply to eval data too) and 2 deterministic synthetic
+  probes (silence, tone) with empty references, so Whisper's documented
+  silence-hallucination failure mode is probed from day one.
+- **`stt-eval-seed@v2`** (`stt/datasets/stt-eval-v2.json`) — **current.**
+  v1's four clips plus four language-tagged probes (`en`, `hi` silence and
+  tone), added in M5 so a language slice could be measured at all. It is
+  what every current record cites and what `make eval-fetch` materializes.
+
+**What v2 is not.** It carries **no natural speech outside English**: its
+`hi` slice is two synthetic probes with empty references, which is why the
+Hindi record reads `is_quality_claim: false`. Its English slice is two
+natural clips — the same ~11-second utterance in two containers. Both facts
+are honest properties of the manifest, and both are why no promotion above
+`available` can rest on it.
+
+### Recording protocol (founder homework)
 
 Because reference transcripts must be *exact*, the reference is written
 first and read aloud, not transcribed afterwards:
@@ -66,31 +76,70 @@ first and read aloud, not transcribed afterwards:
    Natural pace — this corpus should sound like a real user, not a
    voice-over.
 3. **Name and place:** `en-read-01.wav` … `hi-read-05.wav` into
-   `ml/evaluation/corpus-inbox/` (gitignored staging dir).
+   `ml/evaluation/corpus-inbox/`. That directory and every audio
+   extension are gitignored: a corpus we built and never published is
+   the only structurally clean position against training-data
+   contamination, and publication cannot be undone.
 4. Then the manifests get built: each file is SHA-256-pinned, reference
-   text attached, and `stt-eval-v2.json` released with v1's clips
-   included unchanged. Hosting: private clips stay local-path pinned
-   until object storage lands (MinIO/S3) — the manifest schema gains a
-   `path` source alongside `url`/`synthetic` at that point.
+   text attached, and the recordings release as **`stt-eval-seed@v3`** —
+   not v2. v2 is already released and immutable; the next version is the
+   only place new clips can go.
+
+**Two things block step 4 today, and they are not homework:**
+
+- **`EvalClip` has no local-path source.** `_exactly_one_source` permits a
+  pinned URL + SHA-256 or a synthetic spec, and nothing else — so audio we
+  record ourselves is currently unregisterable. Private clips stay local
+  until either the schema gains a `path` source or object storage lands.
+- **Hindi must not be scored before its ruler exists.** `normalize_words`
+  strips to `[^a-z0-9\s']+`, so a Devanagari reference normalises to an
+  empty word list: a *perfectly* transcribed Hindi clip would be recorded
+  as N hallucinated words with no WER, permanently, in an append-only
+  ledger. Recording Hindi is safe; running it through this path is not.
 
 ## Usage
 
 ```bash
 make eval-fetch      # materialize clips into ml/evaluation/data/ (gitignored)
 
-# Measure a LIVE runtime (end-to-end over HTTP — the product's numbers):
-uv run --package intelliai-evaluation python -m intelliai_evaluation run \
-  --dataset ml/evaluation/stt/datasets/stt-eval-v1.json \
-  --url http://localhost:8001 --artifact whisper-small \
-  --engine faster-whisper --engine-version <x.y.z> --compute cpu-int8 \
-  --hardware "<cpu description>" --out ml/evaluation/stt/results/<date>-<artifact>.json
+# Measure one LIVE slice (end-to-end over HTTP — the product's numbers).
+# `hardware`, `out` and `engine_version` have no defaults; see below.
+make eval lang=en engine_version=1.2.1 \
+     hardware="<cpu description>" \
+     out=ml/evaluation/stt/results/<date>-intelliai-stt-en.json
 ```
 
+The same thing without make, which is what the target runs:
+
+```bash
+uv run --package intelliai-evaluation python -m intelliai_evaluation run \
+  --dataset ml/evaluation/stt/datasets/stt-eval-v2.json \
+  --manifest ml/evaluation/manifests/resolution.json \
+  --url http://localhost:8001 \
+  --model intelliai-stt --language en \
+  --engine faster-whisper --engine-version <x.y.z> --compute cpu-int8 \
+  --hardware "<cpu description>" \
+  --out ml/evaluation/stt/results/<date>-intelliai-stt-en.json
+```
+
+**There is no `--artifact` flag, deliberately.** A run measures one
+*slice* — one public model, one language — and the artifact comes from
+the registry's exported resolution manifest, never from the operator. A
+benchmark against an artifact somebody named records a claim; a benchmark
+against the artifact the registry resolved records what the product
+actually serves. The runner then refuses to write anything if the runtime
+is not hosting that artifact.
+
+**`--hardware` has no default anywhere**, including in the make target.
+It is a free string today and the one machine we own is already spelled
+four ways across committed records; a default would quietly mint a fifth
+and make it canonical. The structured replacement is designed
+(`docs/research/hardware-profiles.md`) and not yet ratified.
+
 Results are recorded as JSON conforming to `results.EvalRun`, committed
-under `stt/results/` (small, text, append-only): one file per run,
-named `YYYY-MM-DD-<artifact>.json`. Aggregates: word-weighted overall
-WER across non-empty-reference clips; mean RTF; total hallucinated words
-on empty-reference clips.
+under `stt/results/` (small, text, append-only): one file per run.
+Aggregates: word-weighted overall WER across non-empty-reference clips;
+mean RTF; total hallucinated words on empty-reference clips.
 
 ### Speech synthesis evaluation (the reproducible workflow)
 
@@ -102,16 +151,17 @@ misnames its subject would poison the ledger.
 
 ```bash
 # Runtimes: tts-runtime with the evaluated engine, stt-runtime (whisper)
-# as the judge. This exact command regenerates the kokoro-82m baseline
-# evidence (latencies are measurements of the moment; transcripts and
-# WER are properties of the artifacts and should reproduce):
-uv run --package intelliai-evaluation python -m intelliai_evaluation speech-eval \
-  --corpus ml/evaluation/tts/corpora/tts-eval-v1.json \
-  --tts-url http://localhost:8002 --stt-url http://localhost:8001 \
-  --artifact kokoro-82m --lineage kokoro --voice reference-alto \
-  --hardware "<cpu description>" \
-  --out ml/evaluation/tts/results/<date>-<artifact>.json
+# as the judge. This regenerates the kokoro-82m baseline evidence
+# (latencies are measurements of the moment; transcripts and WER are
+# properties of the artifacts and should reproduce):
+make speech-eval hardware="<cpu description>" \
+     out=ml/evaluation/tts/results/<date>-kokoro-82m.json
 ```
+
+Comparisons hold **only within one judge identity, including its host**:
+in our own committed `kokoro-82m` / `-repro` pair the judge artifact and
+version were identical, yet 9 of 25 transcripts differed and RTF moved
++27.5% — because the judge ran on a different machine.
 
 Ledger law (SPEECH_EVALUATION.md §5): `tts/results/` is append-only —
 re-runs and corrections are NEW records citing the old (`--notes`,

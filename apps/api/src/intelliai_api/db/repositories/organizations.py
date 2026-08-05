@@ -3,15 +3,26 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from intelliai_api.db.models import Membership, MembershipRole, Organization
+from intelliai_api.db.models import Membership, MembershipRole, Organization, UsageOrigin
 
 
 class OrganizationRepository:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
-    async def create(self, name: str) -> Organization:
-        organization = Organization(name=name)
+    async def create(
+        self, name: str, *, usage_origin: UsageOrigin = UsageOrigin.CUSTOMER
+    ) -> Organization:
+        """Create a tenant. ``usage_origin`` defaults to the column default.
+
+        It is a parameter rather than a post-create mutation because a
+        tenant's origin decides how every event it ever produces is
+        interpreted, and usage events are append-only: traffic recorded
+        under the wrong origin cannot be reattributed afterwards. The
+        classification has to be true before the first request, so it is
+        set at birth or not at all.
+        """
+        organization = Organization(name=name, usage_origin=usage_origin)
         self._session.add(organization)
         # flush, never commit: ids/public_ids get assigned, but the
         # transaction boundary belongs to the caller (request scope).

@@ -3,11 +3,17 @@
 # and produces noisy diffs. Editors on Windows handle LF fine.
 * text=auto eol=lf
 
-# Binary types git must never touch
+# Binary types git must never touch. Audio formats are all listed even
+# though .gitignore excludes them, because the ignore rule documents a
+# `!` exception path: a deliberately committed clip must not meet
+# `text=auto eol=lf` on the way in.
 *.png binary
 *.jpg binary
 *.wav binary
+*.flac binary
 *.mp3 binary
+*.m4a binary
+*.ogg binary
 *.onnx binary
 *.ckpt binary
 *.safetensors binary

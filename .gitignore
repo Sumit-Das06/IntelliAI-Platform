@@ -29,6 +29,28 @@ weights/
 *.onnx
 .ipynb_checkpoints/
 
+# ── Recorded audio — publication is irreversible ──────────────
+# A corpus we built and never published is the only structurally clean
+# position we hold against training-data contamination: once audio is
+# committed it is crawled, it enters somebody's next training set, and
+# no later decision can withdraw it. So audio is ignored by extension
+# rather than by directory — the protection must not depend on the
+# recording landing in the folder somebody remembered to name.
+#
+# `corpus-inbox/` is the recording staging area (ml/evaluation/README.md).
+# It is listed separately so the directory stays ignored whatever it ends
+# up holding: transcripts, rosters, consent forms, session notes.
+#
+# To commit audio deliberately, add a `!` exception BELOW this block with
+# a comment saying why, and check that its extension is declared binary
+# in .gitattributes — `text=auto eol=lf` corrupts an undeclared format.
+corpus-inbox/
+*.wav
+*.flac
+*.mp3
+*.m4a
+*.ogg
+
 # ── IDE / OS ──────────────────────────────────────────────────
 .vscode/
 .idea/

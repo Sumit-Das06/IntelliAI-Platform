@@ -36,10 +36,17 @@ from intelliai_api.db.engine import create_engine, create_session_factory
 from intelliai_api.entitlements import BillingPeriod, period_for
 from intelliai_api.registry import default_registry
 from intelliai_api.registry.manifest import serving_manifest
-from intelliai_api.services.identity import BootstrapResult, IdentityService
+from intelliai_api.services.identity import (
+    DEFAULT_TENANT_ORIGIN,
+    TENANT_ORIGINS,
+    BootstrapResult,
+    IdentityService,
+    tenant_origin,
+)
 
 
 def _print_bootstrap_result(result: BootstrapResult) -> None:
+    origin = result.organization.usage_origin
     print()
     print("=" * 64)
     print("Organization bootstrapped.")
@@ -47,6 +54,13 @@ def _print_bootstrap_result(result: BootstrapResult) -> None:
     print(f"  organization : {result.organization.name}  ({result.organization.public_id})")
     print(f"  owner        : {result.owner.email}  ({result.owner.public_id})")
     print(f"  api key      : {result.api_key.name}  ({result.api_key.public_id})")
+    # Printed always, and loudly when it is not the default: an operator
+    # who meant to create a benchmark tenant and got a customer one has
+    # started attributing our own traffic to revenue, and usage events
+    # are append-only.
+    print(f"  usage origin : {origin.value}")
+    if origin is not DEFAULT_TENANT_ORIGIN:
+        print("                 NOT rated, and excluded from commercial analytics by default")
     print("-" * 64)
     print("  YOUR API KEY - shown once, never recoverable. Store it now:")
     print()
@@ -55,7 +69,10 @@ def _print_bootstrap_result(result: BootstrapResult) -> None:
     print("=" * 64)
 
 
-async def _bootstrap_org(organization: str, email: str, name: str) -> None:
+async def _bootstrap_org(organization: str, email: str, name: str, usage_origin: str) -> None:
+    # Parsed by the service, which owns the tenant vocabulary; the
+    # entrypoint carries the operator's string and nothing more.
+    origin = tenant_origin(usage_origin)
     settings = get_settings()
     configure_logging(settings)
     engine = create_engine(settings)
@@ -67,6 +84,7 @@ async def _bootstrap_org(organization: str, email: str, name: str) -> None:
                 organization_name=organization,
                 owner_email=email,
                 owner_name=name,
+                usage_origin=origin,
             )
             # The CLI owns the commit: the service defined the atomic scope,
             # the entrypoint pulls the trigger (same split as the request scope).
@@ -226,6 +244,17 @@ def main(argv: list[str] | None = None) -> int:
     bootstrap.add_argument("--org-name", required=True)
     bootstrap.add_argument("--owner-email", required=True)
     bootstrap.add_argument("--owner-name", required=True)
+    bootstrap.add_argument(
+        "--usage-origin",
+        default=DEFAULT_TENANT_ORIGIN.value,
+        choices=TENANT_ORIGINS,
+        help=(
+            "why this tenant's traffic exists (default: %(default)s). Anything "
+            "other than 'customer' is metered but never rated, and is excluded "
+            "from commercial analytics by default. Set it at creation: usage "
+            "events are append-only and cannot be reattributed."
+        ),
+    )
 
     report = subcommands.add_parser(
         "commercial-report",
@@ -246,7 +275,9 @@ def main(argv: list[str] | None = None) -> int:
             return _registry_manifest(args.out)
         if args.command == "commercial-report":
             return asyncio.run(_commercial_report(args.month))
-        asyncio.run(_bootstrap_org(args.org_name, args.owner_email, args.owner_name))
+        asyncio.run(
+            _bootstrap_org(args.org_name, args.owner_email, args.owner_name, args.usage_origin)
+        )
     except IntelliAIError as exc:
         print(f"error [{exc.code}]: {exc.message}", file=sys.stderr)
         return 1

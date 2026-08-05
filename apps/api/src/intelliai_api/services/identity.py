@@ -19,6 +19,7 @@ outbox rows.
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Final
 
 import structlog
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,7 +27,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from intelliai_api.core.errors import ConflictError, InvalidRequestError, ResourceNotFoundError
 from intelliai_api.core.security import GeneratedKey, generate_api_key
 from intelliai_api.core.time import utc_now
-from intelliai_api.db.models import ApiKey, Membership, MembershipRole, Organization, User
+from intelliai_api.db.models import (
+    ApiKey,
+    Membership,
+    MembershipRole,
+    Organization,
+    UsageOrigin,
+    User,
+)
 from intelliai_api.db.repositories import (
     ApiKeyRepository,
     OrganizationRepository,
@@ -35,6 +43,38 @@ from intelliai_api.db.repositories import (
 from intelliai_api.services.auth import AuthContext
 
 logger = structlog.get_logger("intelliai_api.identity")
+
+#: A tenant born without a stated reason is a customer. The safe default,
+#: because misclassifying a customer as internal suppresses a real charge
+#: while the reverse merely over-counts — and only one of those is
+#: recoverable.
+DEFAULT_TENANT_ORIGIN: Final = UsageOrigin.CUSTOMER
+
+#: The classifications an operator may give a new tenant. The vocabulary
+#: itself is the commercial taxonomy and lives with the usage event;
+#: identity owns which of them a tenant may be *born* with, and
+#: entrypoints read the list from here rather than reaching into the
+#: persistence layer for it.
+TENANT_ORIGINS: Final[tuple[str, ...]] = tuple(origin.value for origin in UsageOrigin)
+
+
+def tenant_origin(value: str) -> UsageOrigin:
+    """Parse an operator-supplied origin, refusing anything unregistered.
+
+    Refusing rather than defaulting: an unrecognised origin is far more
+    likely to be a typo in a tenant that was meant to be internal than a
+    deliberate request for customer treatment, and the failure mode of
+    guessing is that our own traffic is rated as revenue.
+    """
+    try:
+        return UsageOrigin(value)
+    except ValueError as exc:
+        known = ", ".join(TENANT_ORIGINS)
+        raise InvalidRequestError(
+            f"unknown usage origin {value!r}; the taxonomy is: {known}",
+            code="unknown_usage_origin",
+            param="usage_origin",
+        ) from exc
 
 
 def normalize_email(email: str) -> str:
@@ -65,6 +105,7 @@ class IdentityService:
         owner_email: str,
         owner_name: str,
         key_name: str = "bootstrap",
+        usage_origin: UsageOrigin = DEFAULT_TENANT_ORIGIN,
     ) -> BootstrapResult:
         """Create organization + owner + membership + first key, atomically.
 
@@ -72,6 +113,14 @@ class IdentityService:
         original key (shown-once), so silently "succeeding" would hand back
         a half-truth. A duplicate owner email fails loudly with
         ``ConflictError`` and nothing is persisted.
+
+        ``usage_origin`` says why this tenant's traffic exists. It defaults
+        to CUSTOMER — the safe default, since misclassifying a customer as
+        internal would suppress a real charge. Our own benchmark and
+        evaluation traffic must be created with its true origin instead:
+        rating (``RATEABLE_ORIGINS``) and every commercial analytic filter
+        on it, so an unclassified benchmark tenant does not merely look
+        untidy — it is counted as revenue and read as demand.
         """
         email = normalize_email(owner_email)
         if await self._users.get_by_email(email) is not None:
@@ -81,8 +130,14 @@ class IdentityService:
                 param="owner_email",
             )
 
-        organization = await self._organizations.create(organization_name.strip())
-        logger.info("organization.created", organization_id=organization.public_id)
+        organization = await self._organizations.create(
+            organization_name.strip(), usage_origin=usage_origin
+        )
+        logger.info(
+            "organization.created",
+            organization_id=organization.public_id,
+            usage_origin=usage_origin.value,
+        )
 
         owner = await self._users.create(email, owner_name.strip())
         logger.info("user.created", user_id=owner.public_id)

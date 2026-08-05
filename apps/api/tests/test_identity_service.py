@@ -1,20 +1,43 @@
 """Identity service tests: business rules, atomicity, events, shown-once."""
 
+from collections.abc import Iterator
+
 import pytest
+import structlog
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from intelliai_api.core.config import Settings
-from intelliai_api.core.errors import ConflictError
+from intelliai_api.core.errors import ConflictError, InvalidRequestError
 from intelliai_api.core.logging import configure_logging
 from intelliai_api.core.security import verify_api_key
-from intelliai_api.db.models import MembershipRole, Organization
+from intelliai_api.db.models import MembershipRole, Organization, UsageOrigin
 from intelliai_api.db.repositories import ApiKeyRepository, UserRepository
-from intelliai_api.services.identity import IdentityService, normalize_email
+from intelliai_api.pricing.rating import RATEABLE_ORIGINS
+from intelliai_api.services.identity import (
+    TENANT_ORIGINS,
+    IdentityService,
+    normalize_email,
+    tenant_origin,
+)
 
 pytestmark = pytest.mark.anyio
 
 PEPPER = "service-test-pepper"
+
+
+@pytest.fixture(autouse=True)
+def _unbind_logging() -> Iterator[None]:
+    """Undo any `configure_logging` a test performs.
+
+    `configure_logging` binds structlog's PrintLogger to whatever stdout
+    is current — under `capsys` that is a captured stream which pytest
+    closes at teardown. The binding is global and outlives the test, so
+    the next test to log anything raises `I/O operation on closed file`.
+    Without this, the order tests happen to be written in is load-bearing.
+    """
+    yield
+    structlog.reset_defaults()
 
 
 def _service(session: AsyncSession) -> IdentityService:
@@ -114,3 +137,60 @@ async def test_domain_events_are_emitted(
 
 def test_normalize_email() -> None:
     assert normalize_email("  Sumit@EXAMPLE.Com ") == "sumit@example.com"
+
+
+class TestTenantOrigin:
+    """A tenant's origin decides how every event it ever emits is read.
+
+    Usage events are append-only, so this classification cannot be
+    corrected after the fact — traffic recorded against a customer org is
+    rated as revenue and counted as demand, permanently. It is therefore
+    set at birth, and an origin nobody registered is refused rather than
+    defaulted.
+    """
+
+    async def test_a_tenant_is_a_customer_unless_told_otherwise(
+        self, db_session: AsyncSession
+    ) -> None:
+        result = await _service(db_session).bootstrap_organization(
+            organization_name="Acme",
+            owner_email="default@example.com",
+            owner_name="Owner",
+        )
+        assert result.organization.usage_origin is UsageOrigin.CUSTOMER
+
+    async def test_our_own_measurement_traffic_can_be_created_as_such(
+        self, db_session: AsyncSession
+    ) -> None:
+        result = await _service(db_session).bootstrap_organization(
+            organization_name="IntelliAI Benchmark",
+            owner_email="bench@example.com",
+            owner_name="Owner",
+            usage_origin=UsageOrigin.BENCHMARK,
+        )
+        assert result.organization.usage_origin is UsageOrigin.BENCHMARK
+
+    async def test_the_benchmark_tenant_is_never_rated(self, db_session: AsyncSession) -> None:
+        # The isolation is not a property of the name or of a convention:
+        # rating filters on the origin, so a benchmark tenant cannot bill
+        # even if someone points a customer-shaped workload at it.
+        result = await _service(db_session).bootstrap_organization(
+            organization_name="IntelliAI Benchmark",
+            owner_email="unrated@example.com",
+            owner_name="Owner",
+            usage_origin=UsageOrigin.BENCHMARK,
+        )
+        assert result.organization.usage_origin not in RATEABLE_ORIGINS
+
+    def test_every_registered_origin_is_offerable(self) -> None:
+        # The entrypoint reads its choices from TENANT_ORIGINS rather than
+        # hardcoding a list that would silently rot when the taxonomy grows.
+        assert set(TENANT_ORIGINS) == {origin.value for origin in UsageOrigin}
+
+    def test_a_registered_origin_parses(self) -> None:
+        assert tenant_origin("benchmark") is UsageOrigin.BENCHMARK
+
+    def test_an_unregistered_origin_is_refused_not_defaulted(self) -> None:
+        # Guessing here means our own traffic is rated as revenue.
+        with pytest.raises(InvalidRequestError, match="unknown usage origin"):
+            tenant_origin("benchmarking")
