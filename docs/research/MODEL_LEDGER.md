@@ -406,4 +406,75 @@ consistency is **unverified** — recorded as a prerequisite in [gate4-review.md
 
 ---
 
+---
+
+## CORRECTION — appended 2026-08-05, after Gate 4 verification
+
+**The Gate 4 entry above contains an error. It is corrected here, not edited.** This is the
+append-only law working as designed: the mistake stays visible, and the correction carries
+the evidence.
+
+### C-1 · The language-declaration figure — the correction was itself wrong
+
+The Gate 4 entry states as **[FACT]**: *"the circulating 9.4× is a median of three that was
+never committed. The committed pair gives 12.8×."*
+
+**Both halves are false.** Verified at source 2026-08-05 in
+[`ml/evaluation/stt/benchmarks/2026-08-05-multilingual-baselines.md`](../../ml/evaluation/stt/benchmarks/2026-08-05-multilingual-baselines.md)
+§2a *"The declaration costs 9× on non-speech input"*:
+
+> Identical 5-second tone clip, three declarations, **median of three runs each**, same process:
+> `en` 1462.4 ms (RTF 0.292) · `ar` 1389.4 ms (RTF 0.278) · **`hi` 13698.1 ms (RTF 2.740)**
+
+- The 9.4× figure **is committed**, in a published baseline document.
+- It is a **median of three runs per declaration** — the *stronger* measurement.
+- The 12.8× pair that displaced it is a **single-sample** comparison — the *weaker* one.
+
+**The standing figure is ~9.4×** (13698.1 ms `hi` vs 1462.4 ms `en`). RTF 2.740 on a
+5-second tone means the Hindi route passes real time on this hardware. Arabic is
+indistinguishable from English (1389.4 ms).
+
+**How the error happened, recorded because the process failure matters more than the number:**
+a research agent reported the figure as uncommitted; I did not verify that claim at source
+before repeating it to the founder and writing it into this ledger as a labelled **[FACT]**.
+Framework §2 requires verification at source for exactly this class of claim, and I applied
+the rule to external claims while exempting a claim about our own repository.
+
+**Consequence for the campaign:** none to the design. The declaration effect is real, large,
+and if anything better evidenced than the entry claimed. Documents citing 12.8× are corrected
+to 9.4× with this source. The Gate 3 procedure document's citation of the figure remains
+defensible, since the committed baseline is a legitimate source.
+
+### C-2 · Gate 4 verification did run, and its findings stand against the entry above
+
+The Gate 4 entry disclosed that no adversarial verification ran. It has since run: four
+passes, **87 findings, 24 critical**. The verdict was that the five documents are
+*"individually well-argued and collectively incoherent at every seam where they had to agree
+without ever being reconciled"* — the Gate 3 failure mode, in the same shape, concentrated in
+the two documents written without designer review.
+
+Material findings against the campaign documents, since corrected:
+
+- The execution matrix specified sessions in a **private vocabulary** (`M1`–`M12` unit codes,
+  `<subject>` placeholders, "the five S2 lineages") never translated into registered metric
+  names, artifact identities, or lineage names — so no session could reach its first measured
+  value. Stack-group membership was **not recoverable** from committed dossiers: no reading of
+  "has an ONNX path" returns the five the matrix claimed.
+- The matrix **deleted an entire stack group** on the premise that its members are GPU-only.
+  That premise is the hypothesis under test (falsifiable in the "it does run on CPU"
+  direction), is contradicted by a **[FACT]**-labelled dossier line, and is overruled by the
+  order document committed beside it. **A row precise enough to encode its own expected
+  result** — the reverse of the failure this gate guards against.
+- The matrix **under-blocked systematically**, omitting universal prerequisites and — most
+  dangerously — omitting the ruler prerequisites from the Hindi and Arabic re-baseline rows,
+  which would have run non-Latin audio through the ASCII stripper and committed the exact
+  silent corruption the campaign exists to prevent.
+- The campaign plan presented founder approval as granting `Approved for Benchmark` **directly
+  from `Researching`** — an illegal transition under framework §3, which requires the
+  Promising review first.
+- `P<n>` was overloaded across **three** meanings (campaign phase, hardware profile,
+  prerequisite item) inside single matrix rows, in identifiers the plan declares permanent.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

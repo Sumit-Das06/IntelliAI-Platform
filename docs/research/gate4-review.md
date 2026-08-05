@@ -12,10 +12,20 @@
 **Labels used throughout:** **[FACT]** verified in this repository or read at source on the stated
 date · **[CLAIM]** external assertion, unverified by us · **[INFERENCE]** reasoning over facts.
 
-> **⚠ Verification gap — disclosed, not hidden.** Gate 4's design ran three planned adversarial
-> verification passes (gate discipline · methodology/schema consistency · executability attack).
-> **All three failed to run** — the session hit its usage limit before they started, as did the
-> agents for the campaign plan and the execution matrix. Consequently:
+> **✅ VERIFICATION HAS SINCE RUN (2026-08-05).** Four adversarial passes — gate discipline,
+> schema consistency, executability, cross-document coherence — produced **87 findings, 24
+> critical**. The verdict: the five documents were *"individually well-argued and collectively
+> incoherent at every seam where they had to agree without ever being reconciled"*, with the
+> damage concentrated in the two orchestrator-written documents. The criticals have been
+> applied: [benchmark-matrix.md](benchmark-matrix.md) was rewritten to v0.2 and
+> [gate4-benchmark-campaign.md](gate4-benchmark-campaign.md) to v0.2. **The verdict on the
+> plan as first committed stands: it was a coverage sketch, not an execution matrix.** The
+> historical note below describes the gap that made that so.
+>
+> **⚠ Original verification gap — disclosed, not hidden.** Gate 4's design ran three planned
+> adversarial verification passes. **All three failed to run** — the session hit its usage
+> limit before they started, as did the agents for the campaign plan and the execution matrix.
+> Consequently:
 > - [gate4-benchmark-campaign.md](gate4-benchmark-campaign.md) and
 >   [benchmark-matrix.md](benchmark-matrix.md) were written directly by the orchestrator from the
 >   completed ground research, not by a designer agent.
@@ -242,10 +252,13 @@ describe **registry state that was never shipped**, with no field in which to sa
 
 ### R-10 · Citing an anecdote as evidence
 
-**[FACT]** The circulating "9.4×" language-declaration figure is a **median of three runs that were
-never committed**. The committed pair gives **12.8×** (`hi` 17859 ms versus `en` 1391 ms on the same
-tone clip). Both are true statements about different runs; nothing reconciles them; **only the
-record is append-only evidence**. **[FACT — framework §6.4]** a number not reproducible from its
+**[CORRECTED 2026-08-05 — the claim originally made here was wrong.]** The "9.4×"
+language-declaration figure **is committed**, at
+[`2026-08-05-multilingual-baselines.md` §2a](../../ml/evaluation/stt/benchmarks/2026-08-05-multilingual-baselines.md),
+as a **median of three runs per declaration** (`hi` 13698.1 ms, `en` 1462.4 ms, `ar` 1389.4 ms).
+That makes it the **stronger** measurement; the 17859/1391 ms pair (12.8×) is single-sample.
+The error was repeated to the founder and written into the append-only ledger before anyone
+verified it at source — see ledger correction C-1. **[FACT — framework §6.4]** a number not reproducible from its
 recorded metadata "may motivate a hypothesis but may never justify a status change". A campaign
 document that cites 9.4× as a design input is citing an anecdote — and the campaign's own
 [procedure §1] rationale currently does exactly that.

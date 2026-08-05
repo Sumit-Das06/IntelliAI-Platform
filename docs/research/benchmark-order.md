@@ -274,10 +274,13 @@ its position would be nearly arbitrary — numbers do not cross the language bou
    sentence in a document and becomes a property of a record.
 
 7. **The declaration-cost control point.** **[FACT]** Declaring a language is itself a
-   first-order cost variable: the committed M5 pair gives 17859 ms (`hi`) against 1391 ms
-   (`en`) on identical audio — 12.8×. (The 9.4× figure cited in
-   [procedure §1](STT_BENCHMARK_PROCEDURE.md) is a median of three that was never committed;
-   see §11.7.) **[INFERENCE]** English is where `language_mode` (`explicit` | `auto`) gets
+   first-order cost variable. **[CORRECTED 2026-08-05 — the claim originally made here was
+   wrong.]** The standing figure is **~9.4×**: `hi` 13698.1 ms against `en` 1462.4 ms
+   (RTF 2.740 vs 0.292), **committed** at
+   [`2026-08-05-multilingual-baselines.md` §2a](../../ml/evaluation/stt/benchmarks/2026-08-05-multilingual-baselines.md)
+   as a **median of three runs per declaration**. The 17859/1391 ms pair (12.8×) is a
+   *single-sample* comparison and is the weaker measurement. Arabic is indistinguishable from
+   English (1389.4 ms). See the ledger correction C-1. **[INFERENCE]** English is where `language_mode` (`explicit` | `auto`) gets
    its first *paired* measurement on a language whose behaviour is otherwise known. That
    pairing is the instrument through which every Hindi and Arabic ladder is subsequently
    read; without it, a Hindi ladder number confounds the candidate with the declaration.
@@ -822,8 +825,11 @@ not fix this; M8 does (§4.3).
 
 **11.7 A number this document builds on is inconsistent in the source.**
 [Procedure §1](STT_BENCHMARK_PROCEDURE.md) cites, as **[FACT]**, `hi` 13698 ms vs `en` 1462 ms
-— a **9.4×** declaration effect. **[FACT]** That figure is a median of three that was never
-committed; the committed pair gives 17859 ms vs 1391 ms, i.e. **12.8×**. Nothing in this
+— a **9.4×** declaration effect. **[CORRECTED 2026-08-05]** The claim previously made here —
+that this figure "was never committed" — is **false**. It *is* committed, at
+[`2026-08-05-multilingual-baselines.md` §2a](../../ml/evaluation/stt/benchmarks/2026-08-05-multilingual-baselines.md),
+as a **median of three runs per declaration**, which makes it the *stronger* measurement; the
+17859/1391 ms pair is single-sample. **Procedure §1 needs no correction.** Nothing in this
 ordering depends on the magnitude — only on the fact that language declaration is a first-order
 cost variable — but the discrepancy should be corrected in the procedure rather than silently
 re-cited.

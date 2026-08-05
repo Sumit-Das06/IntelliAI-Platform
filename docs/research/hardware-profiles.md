@@ -2,7 +2,8 @@
 
 | | |
 |---|---|
-| **Status** | PROPOSED (Gate 4 campaign planning, 2026-08-05) — IN FORCE only on founder approval. **Received an orchestrator gate-discipline scan only; no independent adversarial verification ran** (see [gate4-review.md](gate4-review.md) verification gap). |
+| **Status** | PROPOSED v0.2 (Gate 4, 2026-08-05) — IN FORCE only on founder approval. Verified 2026-08-05; three corrections below. |
+| **Corrections from verification** | **(1)** The claim "no field is invented" does **not** hold: `hardware_class`, `unknown_fields`, and a `SoftwareIdentity` notes field are **not** declared in [STT_BENCHMARK_HARDWARE.md](STT_BENCHMARK_HARDWARE.md). They are proposed *additions* and must be treated as prerequisites, not as present-tense spec fields. **(2)** `unknown` / `not_applicable` sentinels are assigned in places to `int`-typed fields (`device_memory_mib`, `cpu_base_clock_mhz`), which cannot hold a string — those fields take `None` plus a `Determination`. **(3)** Two founder items ask to "append members" to `storage_class` and `virtualisation`; both are plain `str` in the authority document, not enums, so no append is needed and no DECIDE item is warranted. **(4)** Profile ids are `HW1`–`HW6`, not `P1`–`P6` — `P<n>` collided with campaign phases. |
 | **Version** | 0.1 |
 | **Role** | The named, stable set of machine profiles a benchmark may be executed on, and the exact environment identity each one records. Instantiates [STT_BENCHMARK_HARDWARE.md](STT_BENCHMARK_HARDWARE.md) — that document defines the *fields*; this one defines the *machines* and states which of them exist. |
 | **Gate discipline** | **This document defines. It never measures.** No model is run, scored, ranked, or compared anywhere below. Every number quoted is either read from a committed record or read from a machine's own firmware/library introspection — none was produced by an inference run for this document. |

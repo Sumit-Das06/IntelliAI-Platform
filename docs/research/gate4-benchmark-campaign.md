@@ -2,13 +2,35 @@
 
 | | |
 |---|---|
-| **Status** | PROPOSED (Gate 4 campaign planning, 2026-08-05) — IN FORCE only on founder approval |
+| **Status** | PROPOSED v0.2 (revised 2026-08-05 after verification) — IN FORCE only on founder approval |
 | **Campaign id** | `CAMP-STT-2026A` (permanent once issued) |
 | **Version** | 0.1 |
 | **Role** | The master execution plan for IntelliAI's first speech-to-text benchmark campaign. Instantiates the Gate 3 methodology as a concrete, ordered, resourced sequence of sessions. |
 | **Gate discipline** | **This document plans. It executes nothing.** No candidate is benchmarked, scored, ranked, compared, preferred, or recommended — not by statement, not by ordering, not by emphasis. |
 | **Companions** | [Execution matrix](benchmark-matrix.md) · [Order rationale](benchmark-order.md) · [Hardware profiles](hardware-profiles.md) · [Readiness review](gate4-review.md) · [Methodology](STT_BENCHMARK_METHODOLOGY.md) · [Prerequisites](2026-08-05-stt-gate3-prerequisites.md) |
 | **Scope exclusion** | The four lineages BLOCKED at Gate 1 — IndicWhisper, Zipformer/sherpa-onnx checkpoints, MOSS-Transcribe, ARK-ASR-3B — are frozen and appear in **no session of this campaign**. |
+
+> ## ⚠ Two disclosures the founder must read before approving anything
+>
+> **1. Approval of this plan CANNOT grant `Approved for Benchmark`.** v0.1 of this document
+> presented it that way; that is an **illegal transition** under
+> [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md), which requires
+> `Researching → Promising → Approved for Benchmark`. **[FACT]** All 12 screened lineages are
+> `Researching`; none has passed a Promising review. Approving this campaign approves a *plan*.
+> Each candidate still needs its own Promising review and its own founder gate before any
+> session touching it may run.
+>
+> **[FACT] The Promising review is currently ungrantable as specified**: framework §3 requires
+> a FOUNDATION_MODELS §1 weighted score among the minimum evidence and §11 mandates a
+> Recommendation section — the twelve Gate 2 dossiers carry neither. This applies identically
+> to all twelve. It is a process gap, not a judgement about any candidate, and closing it is
+> a founder decision (commission the scoring, or waive the requirement in writing).
+>
+> **2. The gate numbering has drifted.** The framework numbers Gate 3 = Promising review,
+> Gate 4 = benchmark plan, Gate 5 = adoption recommendation. This session used "Gate 3" for
+> methodology design and speaks of "Gate 5" as *execute*. Under framework §1 research never
+> owns execution at all — the evaluation plane measures and engineering executes. The mapping
+> is recorded in full in [gate4-review.md §5](gate4-review.md).
 
 ---
 
@@ -48,13 +70,19 @@ from evidence this campaign produces. A campaign that "finds a winner" has skipp
 | Step | Owner | Output |
 |---|---|---|
 | Plan | Research | this document + matrix |
-| Approve | **Founder** | `Approved for Benchmark` status per candidate; campaign funding |
+| Approve the **plan** | **Founder** | campaign funding. **Not a status change** — see the disclosure above |
+| Promising review, per candidate | Research proposes → **Founder** grants | `Promising` |
+| Approve **for benchmark**, per candidate | **Founder** | `Approved for Benchmark` |
 | Execute | **Engineering** (via `ml/evaluation`) | raw records |
 | Record | Evaluation plane | immutable `EvalRun` JSON, append-only |
-| Derive | Research/tooling | summaries, regression and switching reports |
-| Interpret | Research | recommendation (separate artifact) |
+| Derive | **Evaluation plane / tooling** | summaries, regression and switching reports |
+| Interpret | Research | recommendation (separate artifact the package manifest cannot cite) |
 | Decide | **Founder** | status change in the ledger |
 | Archive | Engineering | permanent record retention |
+
+**Derived artifacts belong to the evaluation plane, not to Research.** v0.1 assigned them to
+Research; that would let the party that authored the hypothesis generate the evidence
+summaries read against it. Research consumes derived reports; it does not produce them.
 
 **Research neither executes nor decides.** Framework §1 is the constraint: research plans and
 interprets, the evaluation plane measures, engineering executes, the founder decides.
@@ -65,10 +93,19 @@ Permanent once issued; never renamed, never reused.
 
 ```
 campaign   CAMP-STT-2026A
-phase      CAMP-STT-2026A/P<n>-<slug>
-session    CAMP-STT-2026A/P<n>/S<nn>-<lang>-<stack>-<subject>
+phase      CAMP-STT-2026A/PH<n>-<slug>              # PH, never bare P
+session    CAMP-STT-2026A/PH<n>/S<nn>-<lang>-<route>-<artifact>
 record     YYYY-MM-DD-<public-model>-<language>-<artifact>-<serving-class>
 ```
+
+**Namespace discipline (v0.2).** v0.1 overloaded `P<n>` across phases, hardware profiles and
+prerequisite items **inside single matrix rows**, in identifiers this document declares
+permanent. Permanently disambiguated: `PH<n>` phases · `HW<n>` hardware profiles ·
+`PR<n.n>` prerequisites · `S<nn>` sessions · `M<n>` measurement units (an internal grouping
+that **never** appears where a metric name is expected).
+
+**No baseline naming scheme is minted.** A baseline is referenced by the record identity of
+the run that produced it. v0.1's matrix invented a parallel scheme; that is withdrawn.
 
 The **record** identity is the Gate 3 convention, unchanged — a session id names the *plan*,
 a record identity names the *evidence*. They are deliberately different: re-running a session
@@ -80,16 +117,22 @@ produces a second record, never an overwritten one. Both are carried on the reco
 Phases are separated because their **validity criteria, repetition requirements and failure
 modes differ**. A failure in one does not invalidate another.
 
-| Phase | What it measures | Entry condition | Invalidated by |
+**On the last column (v0.2 correction):** it lists the **validity conditions a record is
+computed against** — it does not grant anyone a power to invalidate. Methodology §7 is
+explicit that validity is computed from recorded facts, that nobody invalidates a record, and
+that research in particular may append determinations but never revoke measurements. v0.1's
+"Invalidated by" heading implied a lever the methodology denies.
+
+| Phase | What it measures | Entry condition | Validity conditions |
 |---|---|---|---|
-| **P0 · Apparatus** | Normalisation round-trip, probe corpus behaviour — **no model, no candidate** | rulers registered | V-7 round-trip failure |
-| **P1 · Incumbent re-baseline** | The incumbent under the Gate 3 methodology, per language | P0 complete; corpus exists | any V-1..V-10 failure |
-| **P2 · Quality** | Per-language accuracy on C2 | P1 complete for that language | corpus < 100; ruler mismatch |
-| **P3 · Production** | Startup, ladder, memory, gateway overhead — **per language** | P1 complete | p95 cited under 20 samples |
-| **P4 · Robustness** | Accuracy over C3 condition slices | P2 complete (needs a clean baseline to read against) | missing clean-condition reference |
-| **P5 · Operational** | Timestamps, determinism, failure behaviour | P1 complete | — |
-| **P6 · Streaming** | Streaming latency and partial revisions | **M8 landed** — the contract has no streaming method | — |
-| **P7 · Regression** | New records against named prior baselines | ≥2 comparable records exist | comparability blocked |
+| **PH0 · Apparatus** | Normalisation round-trip, probe corpus behaviour — **no model, no candidate** | rulers registered | V-7 round-trip failure |
+| **PH1 · Bridging + incumbent re-baseline** | The incumbent under the Gate 3 methodology, per language, preceded by thread-policy and topology bridging runs | PH0 complete; corpus exists | any V-1..V-10 failure |
+| **PH2 · Quality** | Per-language accuracy on C2 | PH1 complete for that language | corpus < 100; ruler mismatch |
+| **PH3 · Production** | Startup, ladder, memory, gateway overhead — **per language** | PH1 complete | p95 cited under 20 samples |
+| **PH4 · Robustness** | Accuracy over C3 condition slices | PH2 complete (needs a clean baseline to read against) | missing clean-condition reference |
+| **PH5 · Operational** | Determinism, failure behaviour, timeouts (timestamps unschedulable — no registered metric) | PH1 complete | — |
+| **PH6 · Streaming** | Streaming latency and partial revisions | **M8 landed** — the contract has no streaming method | — |
+| **PH7 · Regression** | New records against named prior baselines | ≥2 comparable records exist | comparability blocked |
 
 ## 6. Candidate grouping — by serving stack
 
@@ -125,15 +168,21 @@ Six profiles, defined in [hardware-profiles.md](hardware-profiles.md). **Only P1
 
 | Profile | Class | Existence |
 |---|---|---|
-| P1 CPU reference | `cpu-x86-consumer-2026` | **EXISTS** — every committed number is from this machine |
-| P2 CPU production | `cpu-x86-server-2026` | PROCURABLE |
-| P3 GPU reference | `gpu-nvidia-consumer-2026` | hardware present, **no software path** |
-| P4 GPU production | `gpu-nvidia-datacenter-2026` | HYPOTHETICAL |
-| P5 Edge | `cpu-arm-edge-2026` | HYPOTHETICAL |
-| P6 Cloud | `cloud-x86-shared-2026` | PROCURABLE |
+| **HW1** CPU reference | `cpu-x86-consumer-2026` | **EXISTS** — every committed number is from this machine |
+| **HW2** CPU production | `cpu-x86-server-2026` | PROCURABLE |
+| **HW3** GPU reference | `gpu-nvidia-consumer-2026` | hardware present, **no software path** |
+| **HW4** GPU production | `gpu-nvidia-datacenter-2026` | HYPOTHETICAL |
+| **HW5** Edge | `cpu-arm-edge-2026` | HYPOTHETICAL |
+| **HW6** Cloud | `cloud-x86-shared-2026` | PROCURABLE |
 
-Every session in this campaign is scheduled on **P1**. Sessions requiring any other profile are
-`BLOCKED-ON-FOUNDER` pending the GPU-tier decision.
+Every session in this campaign is scheduled on **HW1**. A lineage whose only *published*
+operating point is GPU is **not** thereby excluded: it gets an HW1 **CPU-viability session**
+terminating in a determination, because "it does not run on our CPU class" is a hypothesis to
+test and record, not a premise that deletes the session. Sessions genuinely requiring HW3–HW6
+are `BLOCKED-ON-FOUNDER` pending the GPU-tier decision.
+
+*(v0.2: the hardware profiles are `HW<n>`; the phases above are `PH<n>`. v0.1 numbered both
+`P<n>`, so `P1` meant two different things in this one document.)*
 
 ## 9. Reproducibility requirements
 
@@ -147,9 +196,12 @@ route. **A record missing any required field is not a benchmark.**
 The matrix **will** change as prerequisites land. Therefore:
 
 - The campaign version increments when the matrix changes (`CAMP-STT-2026A.v1`, `.v2`, …).
-- **Records are stamped with the campaign version under which they were produced** and are
-  never invalidated by a later version. A mid-campaign change adds sessions; it does not
-  retroactively spoil completed ones.
+- **The campaign version is carried in `ExecutionContext.decode_params` or as a
+  `Determination`, not as a new record field.** v0.1 said records are "stamped with the
+  campaign version" — but no such field exists in `EvalRun` or in the Gate 3 record schema,
+  and inventing one would be a schema change this document has no authority to make. Adding a
+  first-class field is a prerequisite, not a plan assumption.
+- A mid-campaign change adds sessions; it does not retroactively spoil completed ones.
 - A change that alters a **ruler, corpus version, or hardware class** does not merely bump the
   campaign — it re-baselines everything downstream of it, and the plan must say so explicitly
   before it is approved.
