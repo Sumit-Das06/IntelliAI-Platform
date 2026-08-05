@@ -58,7 +58,7 @@ from intelliai_evaluation.evidence import (
     TimestampSource,
     VadOwner,
 )
-from intelliai_evaluation.fetch import materialize
+from intelliai_evaluation.fetch import materialize_clips
 from intelliai_evaluation.identity import EvaluationIdentity, SliceCoverage
 from intelliai_evaluation.normalization import NormalizationProfile, profile_for
 from intelliai_evaluation.resolution import ResolvedServing
@@ -198,8 +198,15 @@ def run_stt_eval(
     benchmark: str | None = None,
     session_id: str | None = None,
     notes: str = "",
+    extra_determinations: tuple[Determination, ...] = (),
 ) -> EvalRun:
-    """Measure one slice against the artifact the registry resolved for it."""
+    """Measure one slice against the artifact the registry resolved for it.
+
+    ``extra_determinations`` lets the SESSION layer contribute statements
+    the instrument cannot make itself — the operator's idleness assertion
+    is the canonical case: authored by a person, held as a claim. The
+    runner appends them verbatim; it never authors on their behalf.
+    """
     if serving.artifact is None or serving.artifact_version is None:  # pragma: no cover
         msg = "an unserved route has nothing to evaluate"
         raise ValueError(msg)
@@ -215,7 +222,9 @@ def run_stt_eval(
 
     run_at = datetime.datetime.now(tz=datetime.UTC)
     ledger = _Ledger(run_at=run_at)
-    paths = materialize(dataset, data_dir)
+    # The SLICE, not the dataset: a hi session must not download
+    # English audio it will never send.
+    paths = materialize_clips(clips, data_dir)
 
     with httpx.Client(base_url=base_url, timeout=300) as client:
         info = read_info(client)
@@ -270,7 +279,7 @@ def run_stt_eval(
         ),
         coverage=slice_coverage(clips, results),
         execution=execution,
-        determinations=tuple(ledger.entries),
+        determinations=tuple(ledger.entries) + extra_determinations,
         metrics=_aggregate(observations),
         # Evidence only. Validity is an interpretation, made later.
         validity=None,

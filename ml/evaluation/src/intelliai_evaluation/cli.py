@@ -10,6 +10,7 @@ from pathlib import Path
 import httpx
 
 from intelliai_evaluation import bench, bench_tts
+from intelliai_evaluation.campaign import PreconditionError, SessionSpec, run_session
 from intelliai_evaluation.corpus import load_corpus
 from intelliai_evaluation.dataset import load_dataset
 from intelliai_evaluation.fetch import materialize
@@ -77,6 +78,21 @@ def main(argv: list[str] | None = None) -> int:
     run_parser.add_argument("--notes", default="")
     run_parser.add_argument(
         "--out", type=Path, required=True, help="result JSON path (append-only results/ dir)"
+    )
+
+    session_parser = subcommands.add_parser(
+        "session",
+        help="execute one defined campaign session: preconditions -> W1 -> runs -> manifest",
+    )
+    session_parser.add_argument("--spec", type=Path, required=True, help="session spec JSON")
+    # P-9 is an OPERATOR assertion (founder ruling): idleness is asserted
+    # by a named person at execution time, never assumed and never stored
+    # in the spec - a spec is a plan, and a plan cannot know the machine
+    # will be idle when it finally runs.
+    session_parser.add_argument(
+        "--assert-idle-by",
+        required=True,
+        help="the named operator asserting the machine is otherwise idle",
     )
 
     bench_parser = subcommands.add_parser(
@@ -147,6 +163,8 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
 
+    if args.command == "session":
+        return _run_session(args)
     if args.command == "bench":
         return _run_bench(args)
     if args.command == "bench-tts":
@@ -208,6 +226,21 @@ def main(argv: list[str] | None = None) -> int:
             f"hallucinated={clip.hallucinated_words}"
         )
     print(f"recorded: {args.out}")
+    return 0
+
+
+def _run_session(args: argparse.Namespace) -> int:
+    """One defined session, fail-closed: a refusal names its precondition."""
+    try:
+        spec = SessionSpec.load(args.spec)
+        result = run_session(spec, idle_asserted_by=args.assert_idle_by)
+    except PreconditionError as exc:
+        print(f"refusing: {exc}")
+        return 2
+    print(f"session   : {spec.session_id}")
+    for path in result.record_paths:
+        print(f"  record  : {path}")
+    print(f"  manifest: {result.manifest_path}")
     return 0
 
 

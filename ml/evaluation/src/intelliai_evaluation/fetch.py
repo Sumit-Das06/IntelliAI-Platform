@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import math
 import wave
+from collections.abc import Iterable
 from pathlib import Path
 
 import httpx
@@ -83,11 +84,22 @@ def materialize_clip(clip: EvalClip, data_dir: Path, client: httpx.Client) -> Pa
     return target
 
 
-def materialize(dataset: EvalDataset, data_dir: Path) -> dict[str, Path]:
-    """Materialize every clip in the dataset; return id → local path."""
+def materialize_clips(clips: Iterable[EvalClip], data_dir: Path) -> dict[str, Path]:
+    """Materialize exactly these clips; return id → local path.
+
+    Slice-level on purpose: a session measures one language slice, and a
+    `hi` session has no business downloading English audio it will never
+    send (found at B7 — the whole-dataset call made every session pay for
+    every clip).
+    """
     data_dir.mkdir(parents=True, exist_ok=True)
     paths: dict[str, Path] = {}
     with httpx.Client(follow_redirects=True, timeout=_DOWNLOAD_TIMEOUT_SECONDS) as client:
-        for clip in dataset.clips:
+        for clip in clips:
             paths[clip.id] = materialize_clip(clip, data_dir, client)
     return paths
+
+
+def materialize(dataset: EvalDataset, data_dir: Path) -> dict[str, Path]:
+    """Materialize every clip in the dataset; return id → local path."""
+    return materialize_clips(dataset.clips, data_dir)

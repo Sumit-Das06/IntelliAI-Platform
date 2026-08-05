@@ -142,6 +142,19 @@ bench: ## STT production ladder + gateway overhead: make bench lang=en hardware=
 manifest: ## Re-export registry state to ml/evaluation/manifests/ (CI fails if it drifts)
 	uv run --package intelliai-api python -m intelliai_api.cli registry-manifest --out $(MANIFEST)
 
+# A session executes a REVIEWED spec. Idleness is asserted by a named
+# operator at execution time (procedure P-9) - never assumed, never
+# stored in the spec, because a plan cannot know the machine will be
+# idle when it finally runs.
+session: ## Execute one campaign session: make session spec=... idle_by="Your Name"
+	@if [ -z "$(spec)" ] || [ -z "$(idle_by)" ]; then \
+	  echo "make session requires spec= and idle_by=."; \
+	  echo '  make session spec=ml/evaluation/stt/sessions/specs/<file>.json idle_by="Your Name"'; \
+	  exit 2; \
+	fi
+	uv run --package intelliai-evaluation python -m intelliai_evaluation session \
+	  --spec $(spec) --assert-idle-by "$(idle_by)"
+
 migrate: ## Apply database migrations to head
 	uv run --package intelliai-api alembic -c apps/api/alembic.ini upgrade head
 
