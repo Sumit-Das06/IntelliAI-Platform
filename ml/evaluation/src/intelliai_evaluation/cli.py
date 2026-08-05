@@ -167,8 +167,15 @@ def main(argv: list[str] | None = None) -> int:
     # how: the operator supplies neither the build, nor the decode
     # configuration, nor the machine.
     manifest = load_manifest(args.manifest)
+    # The slice language and the ROUTING key are different facts. A `zxx`
+    # slice ("no linguistic content") sends no language on any request, so
+    # its honest resolution is the DEFAULT route — exactly as a request
+    # that declares nothing resolves in production. Looking up the literal
+    # string would either refuse (correct but unmeasurable) or require a
+    # zxx route nobody serves. Found at PH0 S04.
+    routing_language = None if args.language == "zxx" else args.language
     try:
-        serving = manifest.resolve(args.model, args.language)
+        serving = manifest.resolve(args.model, routing_language)
     except UnservedError as exc:
         print(f"refusing: {exc}")
         return 2

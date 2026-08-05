@@ -1,0 +1,240 @@
+{
+  "dataset_name": "stt-eval-seed",
+  "dataset_version": 2,
+  "capability": "transcription",
+  "run_at": "2026-08-05T21:30:23.638010Z",
+  "artifact": "whisper-small",
+  "engine": "faster-whisper",
+  "engine_version": "1.2.1",
+  "compute": "int8",
+  "hardware": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel · Windows 11",
+  "notes": "PH0 apparatus validation. otherwise idle: asserted by operator. Runtime process fresh, launched for this phase.",
+  "clips": [
+    {
+      "clip_id": "jfk-flac",
+      "duration_seconds": 11.0,
+      "inference_seconds": 1.6956521000247449,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 22,
+      "hypothesis_words": 22,
+      "hypothesis_text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+      "metrics": {
+        "wer_unicode": 0.0,
+        "cer_unicode": 0.0,
+        "substitution_rate": 0.0,
+        "insertion_rate": 0.0,
+        "deletion_rate": 0.0,
+        "excess_word_ratio": 0.0,
+        "wer_ascii": 0.0,
+        "recognition_rtf": 0.15415019091134044
+      },
+      "failure": null
+    },
+    {
+      "clip_id": "jfk-wav",
+      "duration_seconds": 11.0,
+      "inference_seconds": 1.7466757000656798,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 22,
+      "hypothesis_words": 22,
+      "hypothesis_text": "And so my fellow Americans, ask not what your country can do for you. Ask what you can do for your country.",
+      "metrics": {
+        "wer_unicode": 0.0,
+        "cer_unicode": 0.0,
+        "substitution_rate": 0.0,
+        "insertion_rate": 0.0,
+        "deletion_rate": 0.0,
+        "excess_word_ratio": 0.0,
+        "wer_ascii": 0.0,
+        "recognition_rtf": 0.1587887000059709
+      },
+      "failure": null
+    },
+    {
+      "clip_id": "en-silence-10s",
+      "duration_seconds": 10.0,
+      "inference_seconds": 0.000016300007700920105,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 0,
+      "hypothesis_words": 0,
+      "hypothesis_text": "",
+      "metrics": {
+        "hallucinated_words": 0.0,
+        "recognition_rtf": 1.6300007700920105e-6
+      },
+      "failure": null
+    },
+    {
+      "clip_id": "en-tone-440hz-5s",
+      "duration_seconds": 5.0,
+      "inference_seconds": 1.4049636999843642,
+      "substitutions": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "reference_words": 0,
+      "hypothesis_words": 0,
+      "hypothesis_text": "",
+      "metrics": {
+        "hallucinated_words": 0.0,
+        "recognition_rtf": 0.28099273999687285
+      },
+      "failure": null
+    }
+  ],
+  "load_ms": 3637.6,
+  "warmup_ms": 2667.6,
+  "identity": {
+    "public_model": "intelliai-stt",
+    "language": "en",
+    "artifact": "whisper-small",
+    "artifact_version": 1,
+    "build": "int8",
+    "deployment": "stt-runtime",
+    "dataset": "stt-eval-seed",
+    "dataset_version": 2,
+    "benchmark": null,
+    "judge": null,
+    "run_at": "2026-08-05T21:30:23.638010Z"
+  },
+  "coverage": {
+    "clips": 4,
+    "natural_speech_clips": 2,
+    "probe_clips": 2,
+    "reference_words": 44
+  },
+  "execution": {
+    "route": "product_path",
+    "normalization": "unicode_generic@v2",
+    "declared_language": "en",
+    "language_mode": "explicit",
+    "emitted_unit": "word",
+    "vad_owner": "pipeline",
+    "timestamp_source": "native",
+    "decode_params": {
+      "task": "transcribe",
+      "beam_size": "5",
+      "best_of": "5",
+      "patience": "1",
+      "length_penalty": "1",
+      "temperature": "0.0,0.2,0.4,0.6,0.8,1.0",
+      "condition_on_previous_text": "true",
+      "compression_ratio_threshold": "2.4",
+      "log_prob_threshold": "-1.0",
+      "no_speech_threshold": "0.6",
+      "without_timestamps": "false",
+      "word_timestamps": "false",
+      "vad_filter": "false"
+    },
+    "environment": {
+      "cpu_model": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "cpu_physical_cores": null,
+      "cpu_logical_threads": 24,
+      "cpu_base_clock_mhz": null,
+      "cpu_boost_clock_mhz": null,
+      "ram_total_mib": null,
+      "ram_type": null,
+      "storage_class": null,
+      "accelerator": null,
+      "thread_config": {},
+      "blas_backend": null,
+      "compute_type": "int8",
+      "virtualisation": null,
+      "power_profile": null,
+      "otherwise_idle": null,
+      "hardware_class": null,
+      "observed_from": "runtime"
+    },
+    "deployment": {
+      "topology": null,
+      "max_concurrency": 2,
+      "max_queue": 8,
+      "resource_limits": {},
+      "gateway_present": false
+    },
+    "stack": null,
+    "auxiliary_artifacts": [],
+    "seed": null
+  },
+  "determinations": [
+    {
+      "code": "manifest_provenance_unverified",
+      "subject": "resolution manifest",
+      "state": "undeterminable",
+      "authored_by": "harness",
+      "basis": "fact",
+      "detail": "the exported manifest carries no provenance metadata, so a reader cannot distinguish shipped registry state from a branch export",
+      "source": null,
+      "verified_on": "2026-08-05"
+    },
+    {
+      "code": "stack_not_reported",
+      "subject": "serving stack",
+      "state": "not_measured",
+      "authored_by": "harness",
+      "basis": "fact",
+      "detail": "the runtime reports no serving_stack or engine_module; a flag here would reintroduce the operator memory this milestone exists to remove",
+      "source": null,
+      "verified_on": "2026-08-05"
+    },
+    {
+      "code": "cpu_physical_cores_unavailable",
+      "subject": "environment.cpu_physical_cores",
+      "state": "undeterminable",
+      "authored_by": "harness",
+      "basis": "fact",
+      "detail": "physical core count needs a dependency the runtime deliberately does not carry; logical threads are reported instead and are not a substitute",
+      "source": null,
+      "verified_on": "2026-08-05"
+    },
+    {
+      "code": "ram_total_mib_unavailable",
+      "subject": "environment.ram_total_mib",
+      "state": "undeterminable",
+      "authored_by": "harness",
+      "basis": "fact",
+      "detail": "total memory is POSIX-only through the standard library; the Windows path would need a pointer cast that has already produced one silent zero here",
+      "source": null,
+      "verified_on": "2026-08-05"
+    },
+    {
+      "code": "thread_env_unavailable",
+      "subject": "environment.thread_env",
+      "state": "undeterminable",
+      "authored_by": "harness",
+      "basis": "fact",
+      "detail": "no thread-pool variable is set in the runtime's environment, so the engine libraries defaulted internally - which is not the same as one thread",
+      "source": null,
+      "verified_on": "2026-08-05"
+    },
+    {
+      "code": "hardware_class_unruled",
+      "subject": "environment.hardware_class",
+      "state": "not_measured",
+      "authored_by": "harness",
+      "basis": "fact",
+      "detail": "the reference machine has not been ratified, so no era label is recorded; performance comparability across machines stays ungated",
+      "source": null,
+      "verified_on": "2026-08-05"
+    }
+  ],
+  "metrics": {
+    "wer_unicode": 0.0,
+    "substitution_rate": 0.0,
+    "insertion_rate": 0.0,
+    "deletion_rate": 0.0,
+    "excess_word_ratio": 0.0,
+    "wer_ascii": 0.0,
+    "cer_unicode": 0.0,
+    "hallucinated_words": 0.0,
+    "recognition_rtf": 0.13100831892114836
+  },
+  "validity": null,
+  "session_id": "CAMP-STT-2026A/PH0/S01-en",
+  "methodology_version": null
+}

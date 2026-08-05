@@ -269,6 +269,19 @@ class TestEnvironmentIdentityIsStructureOnly:
 # ─────────────────────────────────────────────────────────────────────
 
 
+#: The pre-methodology era, pinned by name: the records written before the
+#: evidence schema existed. These must NEVER carry the v2 fields — their
+#: defaults are what keeps history honest. Records written from PH0 onward
+#: carry them, which is the schema doing its job, not a violation.
+HISTORICAL = (
+    STT_RESULTS / "2026-08-02-whisper-small.json",
+    STT_RESULTS / "2026-08-05-intelliai-stt-en.json",
+    STT_RESULTS / "2026-08-05-intelliai-stt-hi.json",
+    TTS_RESULTS / "2026-08-03-kokoro-82m-repro.json",
+    TTS_RESULTS / "2026-08-03-kokoro-82m.json",
+)
+
+
 def _records() -> list[Path]:
     return sorted(STT_RESULTS.glob("*.json")) + sorted(TTS_RESULTS.glob("*.json"))
 
@@ -290,7 +303,8 @@ def _minimal_run(**overrides: object) -> EvalRun:
 
 
 def test_there_are_records_to_check() -> None:
-    assert len(_records()) == 5
+    # Every pinned historical record still exists, and the ledger only grows.
+    assert set(HISTORICAL) <= set(_records())
 
 
 @pytest.mark.parametrize("path", _records(), ids=lambda p: p.name)
@@ -300,7 +314,7 @@ def test_every_committed_record_still_parses(path: Path) -> None:
     assert root.model_validate(document)
 
 
-@pytest.mark.parametrize("path", _records(), ids=lambda p: p.name)
+@pytest.mark.parametrize("path", list(HISTORICAL), ids=lambda p: p.name)
 def test_no_committed_record_carries_any_new_key(path: Path) -> None:
     """The defaults are not merely safe — they are TRUE of the ledger.
 
@@ -322,14 +336,16 @@ def test_no_committed_record_carries_any_new_key(path: Path) -> None:
     assert not added & set(document)
 
 
-@pytest.mark.parametrize("path", sorted(STT_RESULTS.glob("*.json")), ids=lambda p: p.name)
+@pytest.mark.parametrize(
+    "path", [p for p in HISTORICAL if p.parent == STT_RESULTS], ids=lambda p: p.name
+)
 def test_no_committed_clip_carries_a_new_key(path: Path) -> None:
     document = json.loads(path.read_text(encoding="utf-8"))
     for clip in document["clips"]:
         assert not {"metrics", "failure"} & set(clip)
 
 
-@pytest.mark.parametrize("path", _records(), ids=lambda p: p.name)
+@pytest.mark.parametrize("path", list(HISTORICAL), ids=lambda p: p.name)
 def test_history_reads_as_not_computed_never_as_a_claim(path: Path) -> None:
     document = json.loads(path.read_text(encoding="utf-8"))
     if "cases" in document:

@@ -50,11 +50,18 @@ def _reproduce(path: Path) -> int:
 
 
 #: How many referenced clips each committed record contains. Pinned so the
-#: reproduction above cannot quietly start checking nothing.
+#: reproduction above cannot quietly start checking nothing. Every record
+#: that enters the ledger joins this table — an unlisted file fails loudly.
 _WITH_REFERENCE = {
     "2026-08-02-whisper-small.json": 2,
     "2026-08-05-intelliai-stt-en.json": 2,
     "2026-08-05-intelliai-stt-hi.json": 0,  # no natural Hindi speech exists
+    # PH0 apparatus validation (2026-08-06): en sessions carry the two JFK
+    # clips; the probe-only slices carry none.
+    "2026-08-06-intelliai-stt-en-whisper-small-int8-ph0.json": 2,
+    "2026-08-06-intelliai-stt-en-whisper-small-int8-ph0-replicate.json": 2,
+    "2026-08-06-intelliai-stt-hi-whisper-small-int8-ph0.json": 0,
+    "2026-08-06-intelliai-stt-zxx-whisper-small-int8-ph0.json": 0,
 }
 
 
@@ -85,7 +92,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 4
+        assert sum(_WITH_REFERENCE.values()) == 8
 
 
 class TestUnicodeRulersNeverChooseThemselves:

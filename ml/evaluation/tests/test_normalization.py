@@ -126,6 +126,13 @@ class TestLanguageBindingIsPolicyNotIdentity:
     def test_several_languages_share_one_profile(self) -> None:
         assert profile_for("en") is profile_for("hi") is UNICODE_GENERIC_V2
 
+    def test_no_linguistic_content_is_bound_to_the_generic_ruler(self) -> None:
+        # Ruled at PH0: a zxx slice measures hallucination, and counting
+        # emitted words needs a tokenizer honest for any script they might
+        # arrive in. A zxx slice carries no reference text, so no reference
+        # can ever be scored under this binding.
+        assert profile_for("zxx") is UNICODE_GENERIC_V2
+
     def test_an_unbound_language_refuses_rather_than_defaulting(self) -> None:
         # Defaulting is how a Devanagari reference gets scored by an ASCII
         # ruler and committed to an append-only ledger.

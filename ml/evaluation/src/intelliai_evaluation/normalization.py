@@ -325,6 +325,13 @@ PROFILES: Final = _build_registry()
 LANGUAGE_PROFILES: Final[Mapping[str, NormalizationProfile]] = {
     "en": UNICODE_GENERIC_V2,
     "hi": UNICODE_GENERIC_V2,
+    # "No linguistic content" (probe clips). These slices measure
+    # hallucination, and counting the words a system emitted requires a
+    # tokenizer that is honest for ANY script it might emit them in — the
+    # generic ruler is the only defensible choice, and binding it is
+    # policy, ruled at PH0. There is no reference text in a zxx slice, so
+    # no reference can ever be scored under this binding.
+    "zxx": UNICODE_GENERIC_V2,
 }
 
 
