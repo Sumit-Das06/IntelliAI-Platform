@@ -29,47 +29,18 @@ from typing import Final
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from intelliai_evaluation.metrics import (
-    MEASURED_CONFIDENCES,
-    METRICS,
-    MetricConfidence,
-    MetricNotRegisteredError,
-)
+from intelliai_evaluation.evidence import Determination
+from intelliai_evaluation.metrics import MEASURED_CONFIDENCES, MetricConfidence, require_registered
 
 # Pinned from SPEECH_EVALUATION.md's header; recorded in every run so a
-# record always names the methodology it was produced under.
+# record always names the methodology it was produced under. Note that
+# `EvalRun.methodology_version` on the recognition root names a DIFFERENT
+# document — the two roots are measured under two methodologies, and a
+# reader of any single record is never ambiguous about which.
 METHODOLOGY_VERSION: Final = 1
 
 _MEASURED = MEASURED_CONFIDENCES
-
-
-def _require_registered(names: object, allowed: tuple[MetricConfidence, ...]) -> None:
-    """Reject free-form identifiers, on both read and write.
-
-    **This runs on every read**, because it is wired as a pydantic field
-    validator and validators run on `model_validate`. So it must ask only
-    questions whose answer cannot change after a record is written: is the
-    name known, and does it belong in this section. It must never consult
-    :class:`MetricStatus` — withdrawing a metric would then make every
-    record citing it unloadable, which is exactly backwards for an
-    append-only ledger. Recordability is asserted at write time instead.
-    """
-    if not isinstance(names, dict):
-        return
-    for name in names:
-        try:
-            spec = METRICS.require(name)
-        except MetricNotRegisteredError as exc:
-            # Re-raised as ValueError deliberately: pydantic converts only
-            # ValueError and AssertionError into a ValidationError, so a
-            # LookupError would escape the model boundary raw.
-            raise ValueError(str(exc)) from exc
-        if spec.confidence not in allowed:
-            msg = (
-                f"metric {name!r} has confidence {spec.confidence}; "
-                f"it does not belong in this section"
-            )
-            raise ValueError(msg)
+_require_registered = require_registered
 
 
 class _Record(BaseModel):
@@ -165,6 +136,20 @@ class SpeechEvalRun(_Record):
     # Pinned synthesis parameters (voice, speed, seed …): part of what
     # "the same evaluation" means.
     synthesis_params: dict[str, str] = Field(default_factory=dict)
+
+    # ── Schema unification (B3): additive, optional, mandatory in the
+    #    runner from now on ─────────────────────────────────────────
+    #
+    # The ruler, as a record cites it: `name@vN`. Every committed
+    # `round_trip_wer` was computed with `unicode_generic@v1` and says so
+    # nowhere, which makes those records incomplete evidence by the
+    # platform's own rule — a benchmark that cannot state which profile
+    # produced its metric cannot be reproduced. Optional so they still
+    # parse; stated from now on so no new record joins them.
+    normalization: str | None = None
+    #: Absence recorded as evidence, on this root too. One mechanism,
+    #: both disciplines.
+    determinations: tuple[Determination, ...] = ()
 
     # ── Evidence ────────────────────────────────────────────────────
     cases: tuple[CaseResult, ...] = Field(min_length=1)

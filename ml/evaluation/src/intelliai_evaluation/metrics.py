@@ -248,6 +248,40 @@ class MetricRegistry:
         return spec
 
 
+def require_registered(names: object, allowed: tuple[MetricConfidence, ...]) -> None:
+    """Reject free-form identifiers in a record's metric map, on every read.
+
+    Wired as a pydantic field validator by both evidence roots, which means
+    it runs on ``model_validate`` — on every read of every committed
+    record. So it may ask only questions whose answer cannot change after a
+    record is written: is the name known, and does it belong in this
+    section. It must never consult :class:`MetricStatus` — withdrawing a
+    metric would then make every record citing it unloadable, which is
+    exactly backwards for an append-only ledger. Recordability is asserted
+    at write time by :meth:`MetricRegistry.assert_recordable`.
+
+    Lives here rather than on either record root so that recognition and
+    generation share one guard instead of two that can drift. This module
+    must never import a record module in return, or the two become a cycle.
+    """
+    if not isinstance(names, dict):
+        return
+    for name in names:
+        try:
+            spec = METRICS.require(name)
+        except MetricNotRegisteredError as exc:
+            # Re-raised as ValueError deliberately: pydantic converts only
+            # ValueError and AssertionError into a ValidationError, so a
+            # LookupError would escape the model boundary raw.
+            raise ValueError(str(exc)) from exc
+        if spec.confidence not in allowed:
+            msg = (
+                f"metric {name!r} has confidence {spec.confidence}; "
+                f"it does not belong in this section"
+            )
+            raise ValueError(msg)
+
+
 def _build_registry() -> MetricRegistry:
     """Every metric the platform knows, registered one at a time.
 

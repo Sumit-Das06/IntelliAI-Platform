@@ -17,13 +17,35 @@ target. Streaming, if it ever lands (M8), can only improve this number.
 from __future__ import annotations
 
 import asyncio
-import json
 import time
 
 import httpx
-from pydantic import BaseModel, ConfigDict
 
-from intelliai_evaluation.bench import DockerSampler, LevelResult, OverheadResult, nearest_rank
+from intelliai_evaluation.bench import DockerSampler
+
+# Same reason as bench.py: the pure record types live in `evidence` so a
+# committed synthesis ladder is readable without httpx. Leaving these
+# behind would make the STT ladder readable without a network stack and
+# the TTS ladder not, which defeats the purpose entirely.
+from intelliai_evaluation.evidence import (
+    LevelResult,
+    OverheadResult,
+    TtsBenchReport,
+    TtsSample,
+    nearest_rank,
+    sample_from_response,
+)
+
+__all__ = [
+    "LevelResult",
+    "OverheadResult",
+    "TtsBenchReport",
+    "TtsSample",
+    "measure_tts_overhead",
+    "nearest_rank",
+    "run_tts_level",
+    "sample_from_response",
+]
 
 HEADER_RUNTIME_ENVELOPE = "X-Runtime-Envelope"
 
@@ -33,41 +55,6 @@ BENCH_TEXT = (
     "IntelliAI turns text into natural speech. This fixed benchmark "
     "sentence measures synthesis latency and real time factor."
 )
-
-
-class TtsSample(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    ok: bool
-    status: int
-    client_ms: float
-    synthesis_ms: float | None = None
-    audio_seconds: float | None = None
-
-
-def sample_from_response(status: int, envelope_header: str | None, client_ms: float) -> TtsSample:
-    """Pure parser: HTTP facts -> one sample (testable without a socket)."""
-    if status != 200:
-        return TtsSample(ok=False, status=status, client_ms=client_ms)
-    synthesis_ms: float | None = None
-    audio_seconds: float | None = None
-    if envelope_header is not None:
-        try:
-            envelope = json.loads(envelope_header)
-            stages = envelope.get("timing", {}).get("stages", {})
-            raw = stages.get("synthesis")
-            synthesis_ms = float(raw) if raw is not None else None
-            audio_seconds = float(envelope["output"]["duration_seconds"])
-        except (ValueError, KeyError, TypeError):
-            synthesis_ms = None
-            audio_seconds = None
-    return TtsSample(
-        ok=True,
-        status=200,
-        client_ms=client_ms,
-        synthesis_ms=synthesis_ms,
-        audio_seconds=audio_seconds,
-    )
 
 
 async def _one_synthesis(
@@ -203,19 +190,3 @@ async def measure_tts_overhead(
         inference_p50_ms=round(synthesis_p50, 1),
         overhead_fraction_of_inference=round(overhead / synthesis_p50, 4),
     )
-
-
-class TtsBenchReport(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    text: str
-    characters: int
-    audio_seconds: float | None
-    repetitions_per_worker: int
-    hardware: str
-    notes: str = ""
-    levels: list[LevelResult]
-    overhead: OverheadResult | None = None
-    prd_ttfb_target_ms: float
-    prd_ttfb_actual_ms: float | None
-    prd_verdict: str

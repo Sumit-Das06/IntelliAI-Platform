@@ -14,9 +14,11 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 
+from intelliai_evaluation.evidence import Determination, ExecutionContext, Validity
 from intelliai_evaluation.identity import EvaluationIdentity, SliceCoverage
+from intelliai_evaluation.metrics import MEASURED_CONFIDENCES, require_registered
 from intelliai_runtime_contract import Capability
 
 
@@ -34,6 +36,24 @@ class ClipResult(BaseModel):
     reference_words: int
     hypothesis_words: int
     hypothesis_text: str
+    # ── Additive (B3) ───────────────────────────────────────────────
+    #: Registry-validated numbers for this clip. The alignment counts
+    #: above are the raw facts; this is where named metrics computed from
+    #: them live, so a reader never has to guess which ruler produced a
+    #: number that has no name.
+    metrics: dict[str, float] = {}
+    #: **Failures are evidence.** A clip that errored keeps whatever
+    #: partial metrics were obtained and says what went wrong, verbatim.
+    #: Until this existed the recognition runner could only abort the
+    #: whole run — so the hypotheses whose expected outcome is "the
+    #: candidate does not run at all" were the ones it could not record.
+    failure: str | None = None
+
+    @field_validator("metrics")
+    @classmethod
+    def _measured_only(cls, value: dict[str, float]) -> dict[str, float]:
+        require_registered(value, MEASURED_CONFIDENCES)
+        return value
 
     @property
     def errors(self) -> int:
@@ -82,6 +102,65 @@ class EvalRun(BaseModel):
     # deployment it measured.
     identity: EvaluationIdentity | None = None
     coverage: SliceCoverage | None = None
+
+    # ── Evidence record v2 (additive, B3) ───────────────────────────
+    #
+    # Every field below is optional in the schema and mandatory in the
+    # runner. Optional because a required field would break
+    # `model_validate` on all three committed recognition records — which
+    # breaks `find_dataset`, which breaks `switching_test` against the
+    # incumbent baseline, silently. Each default is not merely safe but
+    # TRUE of what those records contain.
+
+    #: How the run was executed: route, ruler, language, decode
+    #: configuration, and the machine. One container rather than a dozen
+    #: loose fields, so the bare name `conditions` stays unclaimed on this
+    #: root and a four-way collision cannot recur.
+    #:
+    #: `None` means no execution context was recorded — true of every
+    #: committed record, and honestly so: the oldest of them mixes `en`
+    #: and `zxx` clips in one run, so no single `declared_language` would
+    #: be a fact about it.
+    execution: ExecutionContext | None = None
+
+    #: Absence recorded as evidence: what could not be measured, why, who
+    #: says so, and when they last checked. Never a missing field, never a
+    #: zero. This is also where a ruler failure lands — a declared
+    #: reference that a profile normalises to nothing is a Determination,
+    #: not a number.
+    determinations: tuple[Determination, ...] = ()
+
+    #: Registry-validated aggregates. The properties below stayed as they
+    #: were: they are the M2-era computed view, and changing what they
+    #: return would change what a committed record means.
+    metrics: dict[str, float] = {}
+
+    #: Whether these numbers can mean what they claim — computed from the
+    #: recorded facts by a later pass, never asserted by the run itself.
+    #: `None` is "not computed", which is true of every record we hold:
+    #: validity is computed at the end of a session, and no session has
+    #: ever run under this methodology. There is no enum member for this
+    #: state on purpose.
+    validity: Validity | None = None
+
+    #: One session emits several records — a quality record and a
+    #: production record per language. A shared id makes "which production
+    #: benchmark accompanies this quality benchmark" a query rather than
+    #: something a human has to remember. `None` means unlinked; it does
+    #: not mean the run belonged to no session.
+    session_id: str | None = None
+
+    #: Which recognition methodology produced this record. `None` means it
+    #: predates the methodology entirely — true of all three committed
+    #: records, and more honest than stamping them as conforming to a
+    #: document written after them.
+    methodology_version: int | None = None
+
+    @field_validator("metrics")
+    @classmethod
+    def _measured_only(cls, value: dict[str, float]) -> dict[str, float]:
+        require_registered(value, MEASURED_CONFIDENCES)
+        return value
 
     @property
     def overall_wer(self) -> float | None:

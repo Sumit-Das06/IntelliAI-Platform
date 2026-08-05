@@ -23,80 +23,42 @@ from __future__ import annotations
 
 import asyncio
 import json
-import math
 import subprocess
 import time
 import wave
 from pathlib import Path
 
 import httpx
-from pydantic import BaseModel, ConfigDict
 
+# The record types and the percentile function live in `evidence`, which
+# imports nothing beyond pydantic and stdlib. This module needs httpx and
+# shells out to `docker stats`, so leaving them here would mean reading a
+# five-year-old committed ladder required an HTTP client to be
+# installable. Re-exported so every existing import keeps working.
+from intelliai_evaluation.evidence import (
+    BenchReport,
+    LevelResult,
+    OverheadResult,
+    RequestSample,
+    nearest_rank,
+)
 
-def nearest_rank(sorted_values: list[float], percentile: float) -> float:
-    """Deterministic nearest-rank percentile over a pre-sorted sample."""
-    if not sorted_values:
-        raise ValueError("empty sample")
-    rank = max(1, math.ceil(percentile * len(sorted_values)))
-    return sorted_values[rank - 1]
+__all__ = [
+    "BenchReport",
+    "DockerSampler",
+    "LevelResult",
+    "OverheadResult",
+    "RequestSample",
+    "clip_duration_seconds",
+    "measure_overhead",
+    "nearest_rank",
+    "run_level",
+]
 
 
 def clip_duration_seconds(path: Path) -> float:
     with wave.open(str(path)) as reader:
         return float(reader.getnframes()) / float(reader.getframerate())
-
-
-class RequestSample(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    ok: bool
-    status: int
-    client_ms: float
-    runtime_total_ms: float | None = None
-    stages_ms: dict[str, float] = {}
-
-
-class LevelResult(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    concurrency: int
-    requests: int
-    succeeded: int
-    overloaded: int
-    other_errors: int
-    wall_seconds: float
-    p50_ms: float | None
-    p95_ms: float | None
-    throughput_rps: float
-    mean_rtf: float | None
-    max_pool_admitted: int | None = None
-    docker_cpu_percent_max: float | None = None
-    docker_memory_mib_max: float | None = None
-
-
-class OverheadResult(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    direct_p50_ms: float
-    via_gateway_p50_ms: float
-    gateway_overhead_ms: float
-    inference_p50_ms: float
-    overhead_fraction_of_inference: float
-
-
-class BenchReport(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    clip: str
-    clip_seconds: float
-    repetitions_per_worker: int
-    hardware: str
-    notes: str = ""
-    levels: list[LevelResult]
-    overhead: OverheadResult | None = None
-    prd_p95_target_ms: float
-    prd_p95_actual_ms: float | None
-    prd_verdict: str
 
 
 async def _one_request(
