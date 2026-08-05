@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-05 (STT Gate 3 benchmark design) |
+| **Last entry** | 2026-08-05 (STT Gate 4 campaign planning) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -341,6 +341,68 @@ founder-approved plan at Gate 4.
   gitignored despite the protocol saying it is.
 - ~60 open prerequisites across six dependency layers, weighted toward **our own
   infrastructure** rather than toward models.
+
+---
+
+---
+
+## Gate 4 — benchmark campaign planned (appended 2026-08-05)
+
+Deliverables: [campaign plan](gate4-benchmark-campaign.md) · [execution matrix](benchmark-matrix.md) ·
+[order rationale](benchmark-order.md) · [hardware profiles](hardware-profiles.md) ·
+[readiness review](gate4-review.md). Campaign id **`CAMP-STT-2026A`**.
+
+**No benchmark was executed. No candidate was scored, ranked, compared, or recommended.**
+All 12 PASS lineages remain `Researching`. The 4 BLOCKED lineages appear in no session.
+
+- 2026-08-05 — **Gate 4 complete** — ~40 sessions defined across 8 phases, grouped by serving
+  stack (7 groups) and ordered by prerequisite depth (English → Hindi → Arabic → streaming →
+  robustness → regression). **Zero sessions are executable today**, including a re-run against
+  our own incumbent.
+
+**Findings recorded as ledger evidence:**
+
+- **[FACT] Our published language-declaration figure was wrong.** The circulating 9.4× is a
+  *median of three that was never committed*. The committed pair gives **12.8×** (17859 ms vs
+  1391 ms on identical audio). The effect also interacts with duration: RTF 2.740 at 5 s,
+  ≈30 at 1 s. The Gate 3 procedure document cites the uncommitted anecdote as its rationale —
+  which framework §6.4 forbids as justification. **Correction carried forward.**
+- **[FACT] Zero of the ~20 Gate 3 metric names are registered or recorded today.** `EvalRun`
+  has no `metrics` dict. `cer_unicode` does not exist, so **no Hindi or Arabic primary ruler is
+  computable** — not merely un-run.
+- **[FACT] A candidate that fails a clip is unrecordable**: `raise_for_status()` aborts the
+  whole run and `ClipResult` has no `failure` field. Three hypotheses concern candidates
+  failing to run.
+- **[FACT] `_comparability` has two defects beyond the known gaps**: it *blocks* same-artifact
+  version upgrades as `not_a_replacement`, and on non-Latin slices it returns TRADE while
+  differencing whole-hypothesis "hallucination" counts — i.e. it would confidently compare
+  corrupted numbers. It can never fire `different_judge` on STT, since both sides record
+  `judge=None`.
+- **[FACT] `enablement_test` currently REFUSES every language** while defect F-M5-3 is open, so
+  no session can terminate in an enablement verdict regardless of its measurements.
+- **[FACT] The Promising review is not merely unperformed — it is currently ungrantable as
+  specified.** Framework §3 requires a FOUNDATION_MODELS §1 weighted score among the minimum
+  evidence and §11 mandates a Recommendation section; the twelve Gate 2 dossiers use a
+  16-section structure with **neither**. This applies identically to all twelve — a process
+  gap, not a judgement about any candidate.
+- **[FACT] `hardware_class` exists in docs and in zero Python files**, so the fairness
+  mechanism the order rationale depends on is a prerequisite, not a present-tense fact.
+- **[FACT] The reference machine is spelled four different ways** across committed artifacts.
+  A free string is not an identity; profile **P1 `cpu-x86-consumer-2026`** now names it, with
+  the four legacy spellings recorded as aliases. No historical record was edited.
+- **[FACT] The reference machine has a discrete GPU that no measurement has ever used**
+  (`device="cpu"` is a literal in the engine). Recorded as a determination rather than by
+  letting `accelerator = None` imply a GPU-less machine.
+- **[FACT] Outbound contamination risk**: `corpus-inbox/` is not gitignored, so the
+  clean-corpus position can be destroyed by one `git add` — irreversibly, and to exactly the
+  crawlers that build the next training sets.
+- **[FACT] The JFK reference is 22 words per clip / 44 in the slice**, not 21 as previously
+  recorded in this ledger.
+
+**Process disclosure:** three planned adversarial verification passes did **not run** (session
+usage limit), as did the campaign-plan and matrix designers. Those two documents were written
+by the orchestrator; the other three received a gate-discipline scan only. Cross-document
+consistency is **unverified** — recorded as a prerequisite in [gate4-review.md](gate4-review.md).
 
 ---
 
