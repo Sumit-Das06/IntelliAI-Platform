@@ -1,8 +1,8 @@
 # IntelliAI Platform — Architecture
 
-> Current as of **v0.5 (Milestone 4 complete)**. Updated at every milestone
+> Current as of **v0.6 (Milestone 5 complete)**. Updated at every milestone
 > close, alongside [PRD.md](PRD.md). Decisions behind this document live in
-> [adr/](adr/) (0001–0024, all with review criteria); company law lives in
+> [adr/](adr/) (0001–0027, all with review criteria); company law lives in
 > [CONSTITUTION.md](CONSTITUTION.md) with the strategy stack indexed at
 > [STRATEGY.md](STRATEGY.md); working rules live in
 > [/CONTRIBUTING.md](../CONTRIBUTING.md) and the `docs/` handbooks.
@@ -86,8 +86,104 @@ promotion → promotion changes registry state → registry changes routing.
     aggregate must be exactly reproducible from the ledger, and any
     disagreement is repaired by rebuilding the cache — never by adjusting
     the facts.
+13. **The platform speaks two vocabularies** (M5). The *permanent*
+    vocabulary names promises and identities — capabilities, public model
+    and voice ids, languages and their ladder statuses, units, dataset and
+    corpus versions, the ledgers, price-book and rating-algorithm
+    versions, request ids, the laws themselves. The *temporary* vocabulary
+    names implementations — engines, artifacts in service, builds,
+    deployments, slots, route bindings, topology. The admission test for
+    any new noun: **if we replaced or renamed this, who breaks?** If
+    customers, history, or reproducibility break, it is permanent:
+    append-only, never renamed, never removed. Customer surfaces,
+    deployment names, and ledger *facts* draw only from the permanent
+    column; the temporary column appears in ledgers only inside lineage —
+    stored, never projected. Invariants 6, 8 and 9 are instances of this
+    one test.
+14. **Every (public model, language) pair has an explicit status from a
+    three-rung ladder** (ADR-0027): `supported` — a product promise;
+    `available` — served best-effort and honestly labelled, promising
+    nothing; `unavailable` — refused with a clear error naming what *is*
+    served, and the refusal recorded as demand evidence. The rungs are
+    exhaustive by construction: toward a customer exactly three stances
+    exist. The ladder is a **lifecycle**, not three labels — a language
+    enters at `available` and reaches `supported` only through evidence
+    that `available` service makes possible, which no state machine
+    enforces because a production baseline is unobtainable without having
+    served. **No language passes `available` without a versioned
+    evaluation corpus the platform owns or has formally adopted,
+    containing material in that language**: evidence quality is bounded
+    by dataset quality.
+15. **Routing is resolution.** The registry is the only component that
+    maps a customer's request to an artifact, and it does so from
+    declarative, evidence-gated state (ADR-0025). Runtimes serve what
+    they are told; gateways ask; nothing else decides. Two rules bound
+    what may ever influence that map:
+    - **The Selector Admission Test.** A routing dimension is admissible
+      only if the customer could know its value from their own request or
+      their own commercial agreement — declared intent or contracted
+      policy. A dimension knowable only from our operations (hardware
+      class, load, placement, cost) is inadmissible and lives on
+      deployment records. *What serves a customer may depend on what they
+      asked for and what they bought — never on what our infrastructure
+      was doing.*
+    - **The Specificity Law.** Resolution selects the most specific
+      matching selector; the default route matches everything; a tie
+      between equally specific selectors is a composition-time error,
+      never a runtime coin-flip.
+16. **Binding, never coordination — the Route/Strategy Boundary.** A
+    serving route binds one selector to one artifact. Coordination among
+    routes — fallbacks, cascades, A/B splits, shadow and canary routing,
+    ensembles, chained routing, regional failover — belongs to future
+    *Serving Strategy* mechanisms and never changes the semantics of an
+    individual route. A route record that accretes coordination fields is
+    a resolution function that has stopped being pure. **There is no
+    automatic cross-artifact fallback**: an automatic quality
+    substitution is a promotion nobody approved.
+17. **Three identities, never interchangeable** (ADR-0026). An
+    **artifact** is a set of trained weights — an identity, permanent as
+    a record. A **deployment** is a named place that hosts one or more
+    artifacts — configuration. A **runtime process** realizes a
+    deployment — ephemeral. *A deployment hosts an artifact; a runtime
+    process realizes a deployment.* An artifact can be hosted by several
+    deployments, so it is never a place; a deployment can be realized by
+    several processes, so a restart is never a change of what is hosted;
+    and a process holds no identity at all — nothing may name one, route
+    to one, or record one as the thing that served. A slot's artifact
+    binding is fixed for the life of its process: replacing it is a
+    deployment operation, never a mutation.
+18. **Three languages in one request, and only one of them routes.** The
+    **requested** language is an input the customer declared, normalized
+    to its base subtag for routing and recorded in full as a request
+    fact; the **resolved route** is the registry's answer, a pure
+    function of (request, registry state), decided before any inference
+    runs; the **observed** language is what the engine reported. *Observed
+    language is an output fact produced by serving; it is never routing
+    input.* The arrow only points down: an evaluation cannot cause its
+    own adoption, and serving state cannot alter the record of what was
+    measured. Engines are told what routing decided, never what the
+    customer typed.
+19. **The Evidential Chain, and the promotion chain it feeds.** No route
+    above `unavailable` without its evidence; no evidence without a
+    versioned corpus; no trained artifact without cited dataset versions.
+    Every binding is therefore explainable years later from immutable
+    records alone — the evaluation-plane sibling of Historical
+    Explainability. Evidence becomes serving only along one path:
+    *evaluation → switching test → promotion verdict → **human review** →
+    registry diff → serving changes*. The switching test never performs a
+    promotion; it ends at a verdict, and every step after it is a human
+    act or a consequence of one. **Rollback is a revert, not a
+    promotion** — it restores a state that was already justified, on
+    evidence that never expired.
+20. **Language never touches admission or price.** A Hindi request and an
+    English request of the same size consume the same quota and cost the
+    same; routing changes which artifact serves and nothing commercial —
+    proven per route by the continuity fingerprint. Capacity differences
+    between languages surface as the runtime's honest 503, never as a
+    429, and the only route from an observation to a charge remains a
+    published price book version (invariant 11).
 
-## What exists today (v0.5)
+## What exists today (v0.6)
 
 | Component | State |
 |---|---|
@@ -114,14 +210,21 @@ promotion → promotion changes registry state → registry changes routing.
 | Pricing (M4) | `pricing/` — versioned immutable price books selected **per event** by `occurred_at` (a price cut never re-prices the past), pure rating carrying `price_book_versions` + `rating_algorithm_version`, discounts as read-time agreements, rounding once at the line; `usage_rollups` as a rebuildable cache the ledger always outranks (ADR-0023) |
 | Idempotency (M4) | optional `Idempotency-Key`; at-most-once **billing** (not compute) enforced by database uniqueness — held even with Redis stopped, in production (ADR-0024) |
 | Commercial analytics (M4) | `analytics/` — reconciliation across gateway → ledger → rollups → rating (8 checks), anomaly queries against each tenant's own baseline, language adoption for the Core Speech Language Policy; `intelliai commercial-report` exits non-zero on disagreement; [commercial baseline](benchmarks/2026-08-04-commercial-plane-baseline.md) (+18 ms p50, 2.1 % of a served request) |
-| Tests | 576 passing across 6 workspace packages (gateway over real HTTP+Postgres+Redis; both runtimes incl. isolation AST suites and license-boundary enforcement; contract goldens; runtime-core lifecycle + capability-independence proofs; eval determinism + CLI integration; commercial continuity proof with pricing negative control) |
+| Model registry v1.5 (M5) | `ServingRoute` records binding a typed, append-only `RouteSelector` (one dimension: language) to one artifact and deployment, carrying the ladder rung, its serving-path licence verdict, and its evidence citations; `resolve(model, language)` and `resolve_voice(model, voice)`; composition refuses an empty selector, a tie, an unevidenced promise, an unversioned corpus citation, a non-commercial serving path, or a binding stage below `production` (reserved for V2) (ADR-0025, ADR-0027) |
+| Multi-artifact runtimes (M5) | Deployments declare the artifacts they host (`INTELLIAI_{STT,TTS}_SLOTS`); `ModelManager`'s multi-slot shape needed no change, so `runtime-core` gained zero code; slot selection by the request's pinned artifact (unhosted → `INVALID_INPUT`); per-slot voice catalogs keyed by the loaded engine, so a voice cannot be resolved before a slot is selected; engine-named deployments refused at startup (ADR-0026) |
+| Language routing (M5) | Gateway resolves per declared language (STT) and per voice (TTS); runtime clients keyed by **deployment**; `language_not_supported` (400) names what *is* served and is recorded as demand evidence with no billable event; TTS ledger language derived from the rendering voice — M4's gap closed with **no public language field** (F-M5-7) |
+| Evaluation identity (M5) | Every record names public model, language, artifact, artifact version, build, deployment, dataset version, benchmark, judge, timestamp — plus a slice-coverage block that stops a record overstating itself (`is_quality_claim`); the registry exports a **resolution manifest** (CI drift-guarded) so evaluation measures what the registry selected and never an operator's claim; datasets located by `name@vN`, never by filename |
+| Promotion (M5) | Three classes with distinct bars — language enablement (absolute), route replacement (relative), voice rebinding (relative + listening); `switching_test` reports *comparability* separately from outcome, and a wash-with-movement is a `TRADE` for a human to accept in writing; the Evidential Chain checked on both sides (shape at composition, resolution in CI); [procedure](../ml/evaluation/PROMOTION.md) |
+| Language policy state (M5) | STT: `en` supported, `hi`/`ar` available. TTS: `en` supported, `hi`/`ar` unavailable. Ladder coverage joins usage to the rungs in `commercial-report`; no Hindi or Arabic **speech corpus** exists, so neither can pass `available` (F-M5-8, F-M5-6) |
+| Tests | 823 passing across 6 workspace packages (gateway over real HTTP+Postgres+Redis; both runtimes incl. isolation AST suites, multi-slot coexistence and license-boundary enforcement; contract goldens; runtime-core lifecycle + capability-independence proofs; eval determinism, identity, promotion bars and the Evidential Chain; commercial continuity proof with pricing negative control, now per route) |
 
-## Request flow (as of v0.4)
+## Request flow (as of v0.6)
 
-The speech route mirrors transcription: SpeechService → registry + voice
-catalog → `RuntimeClient.synthesize` → tts-runtime [text pipeline → voice
-map → pool → engine] → WAV body + envelope header → raw audio to the
-customer, envelope to accounting (`speech.completed`).
+Transcription resolves on the customer's **declared language**; synthesis
+resolves on the **voice**, because a voice's sound is an artifact-specific
+asset. Both ask the registry and accept its answer; neither contains a
+branch on language. Resolution names an artifact *and* a deployment, and
+the runtime client is keyed by the deployment.
 
 ```
 client ──► uvicorn ──► RequestContextMiddleware (request_id, timing, logs)
@@ -129,10 +232,14 @@ client ──► uvicorn ──► RequestContextMiddleware (request_id, timing,
                                 │         HMAC → lookup → revoke/expiry → AuthContext;
                                 │         org_id + key_id bound into every log line]
                                 │             └─► services ──► repositories ──► PG
-                                │             └─► TranscriptionService ──► registry.resolve
-                                │                  ──► RuntimeClient (HTTP; X-Request-ID
-                                │                  propagated) ──► stt-runtime [pipeline →
-                                │                  VAD → pool → engine] ──► envelope ──►
+                                │             └─► TranscriptionService ──► capability check
+                                │                  ──► registry.resolve(model, language)
+                                │                       [route → artifact + deployment,
+                                │                        or language_not_supported 400]
+                                │                  ──► RuntimeClient[deployment] (HTTP;
+                                │                  X-Request-ID propagated) ──► stt-runtime
+                                │                  [pipeline → VAD → pool → SLOT SELECTED BY
+                                │                  PINNED ARTIFACT → engine] ──► envelope ──►
                                 │                  translate + emit transcription.completed
                                 └─► any failure ──► error handlers ──► one envelope
                                      {error: {type, code, message, param, request_id}}
@@ -141,10 +248,20 @@ client ──► uvicorn ──► RequestContextMiddleware (request_id, timing,
 ## Deployment shape
 
 Docker Compose (base file at repo root; overlays in `infra/compose/` for
-gpu/prod). Every deployable is one process per container, non-root, logging
-JSON to stdout, health-checked. The compose topology maps 1:1 to Kubernetes
-(service→Deployment+Service, env→ConfigMap/Secret, volume→PVC, healthchecks→
-probes) — post-1.0 concern by design.
+multilingual/gpu/prod). Every deployable is one process per container,
+non-root, logging JSON to stdout, health-checked. The compose topology
+maps 1:1 to Kubernetes (service→Deployment+Service, env→ConfigMap/Secret,
+volume→PVC, healthchecks→probes) — post-1.0 concern by design.
+
+A capability service is a **set of deployments**; today's topology is the
+degenerate case of one deployment per capability, carrying the service's
+own name, and the gateway holds a deployment → URL map. Deployment names
+draw only from permanent vocabulary — capabilities and languages, never
+engines — and an engine-named deployment is refused at startup. **On CPU
+the default is one artifact per deployment** (F-M5-5): the measured
+~54 MiB interpreter overhead buys simpler operations, independent
+scaling, and a cleaner blast radius, rollback, and promotion. Packing
+remains supported by the architecture and is not the default posture.
 
 ## Where things will land (forward map)
 
@@ -157,9 +274,13 @@ evaluation seed with measured baselines~~ ✅
 ~~M4 metering, admission control, entitlements, pricing + commercial
 production baseline~~ ✅ ([review](milestones/4-metering-review.md);
 [design](milestones/4-metering-design.md)) ·
-**M5 multilingual foundation** (Hindi + Arabic engines under the Core
-Speech Language Policy — requires *no* commercial redesign; see
-[M4 review §6](milestones/4-metering-review.md)) · M5.5 batch jobs
+~~M5 multilingual foundation — serving routes, multi-artifact runtimes,
+language routing, evaluation identity, promotion workflow, deployment
+topology~~ ✅ ([review](milestones/5-multilingual-review.md);
+[design](milestones/5-multilingual-design.md)). *The socket, not the
+bulb: adopting a language engine is now an artifact record, a deployment,
+a route binding and its evidence — no contract, runtime-core, gateway, or
+commercial change.* · M5.5 batch jobs
 (PG `SKIP LOCKED`, and the trigger for reserve/settle quota) · M6 console ·
 M7 playground · M8 streaming (WebSocket, runtime-contract v2) · M9 registry
 v2 (implements [REGISTRY_V2.md](REGISTRY_V2.md) + [MODEL_IDENTITY.md](MODEL_IDENTITY.md))
