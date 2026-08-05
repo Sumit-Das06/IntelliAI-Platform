@@ -17,9 +17,15 @@ scoring, no ranking, no quality comparison, and no recommendation** — a
 candidate's presence here means only that its lineage is worth
 investigating.
 
-Current stage of this directory: **Gate 1 complete, speech-to-text only**
-(2026-08-05) — 12 PASS · 4 BLOCKED · 0 REJECTED. No candidate has been
-scored (Gate 2), compared, or benchmarked.
+Current stage of this directory: **Gate 2 complete, speech-to-text only**
+(2026-08-05). Gate 1 was 12 PASS · 4 BLOCKED · 0 REJECTED; all 12 PASS
+lineages now carry full §11 dossiers. No candidate has been scored,
+ranked, compared for a winner, or benchmarked — and none has been
+promoted beyond `Researching`.
+
+Gate 2 synthesis (language observations, architectural fit, training-programme
+fit, open questions, and one benchmark hypothesis per candidate):
+[2026-08-05-stt-gate2-synthesis.md](../2026-08-05-stt-gate2-synthesis.md).
 
 Gate 1 verdicts are recorded in the
 [screening record](../2026-08-05-stt-gate1-license-screen.md) and appended

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-05 (STT Gate 1 licence & commercial screen) |
+| **Last entry** | 2026-08-05 (STT Gate 2 desk research) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -231,6 +231,58 @@ removed the two non-commercial lineages the same day (ArTST, SeamlessM4T v2,
 both `cc-by-nc-4.0` verified at source). Notably, **no candidate's headline
 licence claim proved false** — every problem found was structural (access
 mechanics, in-process code, unverifiable chains), not a mislabelled licence.
+
+---
+
+---
+
+## Gate 2 — desk research complete (appended 2026-08-05)
+
+Synthesis: [2026-08-05-stt-gate2-synthesis.md](2026-08-05-stt-gate2-synthesis.md).
+Full dossiers: [models/](models/).
+
+**Statuses unchanged.** All 12 PASS lineages remain `Researching`. Promotion to
+`Promising` happens at **Gate 3**, requires an explicit hypothesis against a named
+baseline, and is **not proposed** by this gate. The 4 BLOCKED lineages were **not
+researched** and remain frozen.
+
+- 2026-08-05 — **Gate 2 complete for all 12 PASS lineages** — each Gate 0 intake record
+  expanded into a full [§11](RESEARCH_FRAMEWORK.md) dossier covering architecture, runtime
+  and deployment profile, fine-tuning ecosystem, training support, research maturity,
+  strengths, weaknesses, integration risks, strategic value, open questions, and one
+  falsifiable benchmark hypothesis. Every statement labelled FACT / CLAIM / INFERENCE.
+  Dossiers: [whisper](models/whisper-dossier.md) · [qwen3-asr](models/qwen3-asr-dossier.md) ·
+  [granite-speech](models/granite-speech-dossier.md) · [voxtral](models/voxtral-dossier.md) ·
+  [cohere-transcribe-arabic](models/cohere-transcribe-arabic-dossier.md) ·
+  [cohere-transcribe](models/cohere-transcribe-dossier.md) ·
+  [parakeet-tdt](models/parakeet-tdt-dossier.md) · [canary-qwen](models/canary-qwen-dossier.md) ·
+  [omnilingual-asr](models/omnilingual-asr-dossier.md) · [kyutai-stt](models/kyutai-stt-dossier.md) ·
+  [moonshine](models/moonshine-dossier.md) · [indicconformer](models/indicconformer-dossier.md)
+
+**Structural findings recorded at Gate 2** (observations, not recommendations):
+
+- **No candidate covers English, Hindi and Arabic together.** A multi-engine topology is
+  now the most likely shape of any future STT deployment — the hypothesis reserved in
+  [§7](RESEARCH_FRAMEWORK.md) now has coverage evidence behind it.
+- **The Arabic constraint moved** from *no candidate exists* to *no evaluation
+  infrastructure exists* — no Arabic corpus, baseline, or benchmark. That blocker is
+  entirely within our control.
+- **Hindi has three architecturally distinct claimant shapes** — dedicated Indic
+  specialist (IndicConformer), small audio-LLM generalist (Qwen3-ASR 0.6B), larger
+  audio-LLM generalist (Voxtral). The cheapest fourth path — an in-lineage Whisper
+  fine-tune — is frozen at Gate 1 (IndicWhisper BLOCKED), which raises the cost of every
+  remaining Hindi option.
+- **Only two candidates have first-party quantized CPU artifacts today**: Moonshine (int8
+  by default) and Cohere Transcribe general (INT8 ONNX, dynamic quantization, no
+  calibration data).
+- **We hold exactly one CPU measurement in this entire universe** — our own whisper-small.
+  Every other CPU statement across the 12 dossiers is inference.
+- **Timestamps are a contract requirement, not a nicety** (`verbose_json` already returns
+  them) and are native in only one candidate (Parakeet); Qwen3-ASR requires a *second
+  model* covering only 11 languages; the rest are undocumented or unverified.
+- **Four of twelve hypotheses predict the binding constraint is not model quality** but
+  our own infrastructure — deployment engineering, dependency isolation, evaluation
+  infrastructure, or measurement validity.
 
 ---
 
