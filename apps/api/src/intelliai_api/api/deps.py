@@ -37,9 +37,11 @@ from intelliai_api.metering import (
 from intelliai_api.registry import Registry
 from intelliai_api.runtimes import RuntimeClient
 from intelliai_api.services.auth import AuthContext, AuthService
+from intelliai_api.services.collection import DataCollectionService
 from intelliai_api.services.identity import IdentityService
 from intelliai_api.services.speech import SpeechService
 from intelliai_api.services.transcription import TranscriptionService
+from intelliai_api.storage import ObjectStorage
 
 
 def app_settings(request: Request) -> Settings:
@@ -286,6 +288,26 @@ def transcription_service(
     return TranscriptionService(
         cast(Registry, request.app.state.registry), clients, usage, admission, entitlements
     )
+
+
+def object_storage(request: Request) -> ObjectStorage | None:
+    """The storage seam of this application instance; None = collection
+    structurally off (the kill switch removed the seam at startup)."""
+    return cast("ObjectStorage | None", request.app.state.object_storage)
+
+
+ObjectStorageDep = Annotated[ObjectStorage | None, Depends(object_storage)]
+
+
+def collection_service(
+    session: SessionDep, settings: SettingsDep, storage: ObjectStorageDep
+) -> DataCollectionService:
+    """Collection seam: same session as the request (the sample row commits
+    with the response), the app's storage, the app's kill switch."""
+    return DataCollectionService(session, storage, enabled=settings.collection.enabled)
+
+
+CollectionDep = Annotated[DataCollectionService, Depends(collection_service)]
 
 
 def speech_service(

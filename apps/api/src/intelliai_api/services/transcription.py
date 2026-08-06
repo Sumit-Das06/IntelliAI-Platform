@@ -9,8 +9,9 @@ names and the public taxonomy, nothing else.
 """
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
+from typing import Any
 
 import structlog
 
@@ -50,6 +51,10 @@ class TranscriptionOutcome:
     result: TranscriptionResult
     public_model_id: str
     audio_seconds: float
+    # Who actually served this — the same lineage the usage ledger keeps,
+    # carried on the outcome so the collection layer can stamp samples
+    # with their producer. Defaulted so existing constructions stay valid.
+    lineage: Mapping[str, Any] = field(default_factory=dict)
 
 
 class TranscriptionService:
@@ -162,6 +167,14 @@ class TranscriptionService:
         audio_seconds = sum(
             usage.amount for usage in envelope.usage if usage.unit is UsageUnit.AUDIO_SECONDS
         )
+        # One lineage, two readers: the usage ledger (billing analytics)
+        # and the collection layer (sample provenance). Computed once so
+        # the two can never quietly disagree about who served the request.
+        lineage = runtime_lineage(
+            resolution,
+            served_artifact=envelope.model,
+            service_version=envelope.runtime.service_version,
+        )
         # The permanent commercial fact (ADR-0021), written before the
         # response is serialized, inside this request's own transaction.
         # The language recorded is the one OBSERVED (detected or honored),
@@ -173,11 +186,7 @@ class TranscriptionService:
                 public_model_id=public_model_id,
                 quantities={UsageUnit.AUDIO_SECONDS.value: Decimal(str(audio_seconds))},
                 language=envelope.output.language,
-                lineage=runtime_lineage(
-                    resolution,
-                    served_artifact=envelope.model,
-                    service_version=envelope.runtime.service_version,
-                ),
+                lineage=lineage,
                 idempotency_key=idempotency_key,
             )
         # The request-event side of the daily reconciliation invariant:
@@ -200,6 +209,7 @@ class TranscriptionService:
             result=envelope.output,
             public_model_id=public_model_id,
             audio_seconds=audio_seconds,
+            lineage=lineage,
         )
 
     async def _record_failure(

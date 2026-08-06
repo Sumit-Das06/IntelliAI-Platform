@@ -20,6 +20,7 @@ class SpeechSampleRepository:
         self,
         *,
         organization_id: int,
+        public_id: str | None = None,
         audio_key: str,
         duration_seconds: Decimal,
         file_size_bytes: int,
@@ -48,9 +49,13 @@ class SpeechSampleRepository:
         rule, not by caller choice: the original is the immutable machine
         output and the current one evolves from it. Status starts at the
         column default (collected); the caller records the matching
-        lifecycle event via :meth:`record_event`.
+        lifecycle event via :meth:`record_event`. ``public_id`` may be
+        supplied when the caller minted it first (the object key embeds
+        it); omitted, the model default mints one.
         """
+        minted: dict[str, str] = {"public_id": public_id} if public_id is not None else {}
         sample = SpeechSample(
+            **minted,
             organization_id=organization_id,
             audio_key=audio_key,
             duration_seconds=duration_seconds,
