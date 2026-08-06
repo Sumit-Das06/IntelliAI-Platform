@@ -26,6 +26,7 @@ from intelliai_api.db.engine import create_engine, create_session_factory
 from intelliai_api.limits import AdmissionController, RedisLimiterBackend
 from intelliai_api.registry import default_registry
 from intelliai_api.runtimes import HTTPRuntimeClient, RuntimeClient
+from intelliai_api.storage import ObjectStorage, S3ObjectStorage
 
 logger = structlog.get_logger("intelliai_api.lifecycle")
 
@@ -43,6 +44,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     yield
     for client in app.state.runtime_clients.values():
         await client.close()
+    if app.state.object_storage is not None:
+        await app.state.object_storage.close()
     await app.state.engine.dispose()
     logger.info("app_stopped")
 
@@ -80,6 +83,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         for name, url in settings.runtimes.deployment_urls().items()
     }
     app.state.runtime_clients = runtime_clients
+    # The collection kill switch gates whether a storage seam exists at
+    # all: None means every collection path structurally no-ops. Tests
+    # overwrite this state entry with a fake, exactly like runtime_clients.
+    object_storage: ObjectStorage | None = (
+        S3ObjectStorage(settings.storage) if settings.collection.enabled else None
+    )
+    app.state.object_storage = object_storage
     app.state.limits = build_admission_controller(settings)
 
     # Middleware runs outermost-last: the edge guard is added AFTER the

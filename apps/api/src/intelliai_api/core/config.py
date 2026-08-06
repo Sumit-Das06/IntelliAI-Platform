@@ -84,6 +84,23 @@ class StorageSettings(BaseSettings):
     audio_bucket: str = "intelliai-audio"
 
 
+class CollectionSettings(BaseSettings):
+    """Speech data collection — the flywheel's kill switch.
+
+    ``enabled`` gates whether the app builds an object-storage client at
+    all: off means no storage seam exists in the process and every
+    collection path no-ops, regardless of tenant consent. An operational
+    control, deliberately separate from consent (a legal fact about the
+    tenant) — turning collection off platform-wide must never touch what
+    anyone consented to. Settings are frozen at startup, so flipping it
+    requires a restart.
+    """
+
+    model_config = _group("INTELLIAI_COLLECTION_")
+
+    enabled: bool = True
+
+
 #: Deployment names draw only from PERMANENT vocabulary — capabilities and
 #: languages — and may never reference an engine (ADR-0026's naming law).
 #: A language-named deployment is safe because languages are promises kept
@@ -223,6 +240,7 @@ class Settings(BaseSettings):
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
     redis: RedisSettings = Field(default_factory=RedisSettings)
     storage: StorageSettings = Field(default_factory=StorageSettings)
+    collection: CollectionSettings = Field(default_factory=CollectionSettings)
     runtimes: RuntimeSettings = Field(default_factory=RuntimeSettings)
     metering: MeteringSettings = Field(default_factory=MeteringSettings)
     limits: LimitsSettings = Field(default_factory=LimitsSettings)
