@@ -18,6 +18,7 @@ from intelliai_api.api.edge import UnauthenticatedEdgeMiddleware
 from intelliai_api.api.errors import register_error_handlers
 from intelliai_api.api.health import router as health_router
 from intelliai_api.api.middleware import RequestContextMiddleware
+from intelliai_api.api.pages import router as pages_router
 from intelliai_api.api.v1.router import router as v1_router
 from intelliai_api.core.config import Settings, get_settings
 from intelliai_api.core.health import HealthService, default_checks
@@ -100,6 +101,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_error_handlers(app)
 
     app.include_router(health_router)
+    # Pages live OUTSIDE /v1: no bearer auth to view, no OpenAPI entry;
+    # the unauthenticated edge limiter covers them like any public path.
+    app.include_router(pages_router)
     # Admission control is attached to the ROUTER, not to routes. A new
     # endpoint under /v1 therefore cannot forget to be rate limited —
     # enforcement is structural, and a test refuses the diff that removes
