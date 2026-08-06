@@ -13,6 +13,35 @@
           "artifact": "whisper-base",
           "artifact_version": 1,
           "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "whisper-base",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
+    },
+    {
+      "public_model": "research:whisper-large-v3",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "whisper-large-v3",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "whisper-large-v3",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
         }
       ],
       "voices": []

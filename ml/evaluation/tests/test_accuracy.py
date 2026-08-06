@@ -62,6 +62,15 @@ _WITH_REFERENCE = {
     "2026-08-06-intelliai-stt-en-whisper-small-int8-ph0-replicate.json": 2,
     "2026-08-06-intelliai-stt-hi-whisper-small-int8-ph0.json": 0,
     "2026-08-06-intelliai-stt-zxx-whisper-small-int8-ph0.json": 0,
+    # Stage 1 Whisper family benchmark (2026-08-06): every en session
+    # carries the two JFK clips.
+    "2026-08-06-intelliai-stt-en-whisper-small-int8-stage1.json": 2,
+    "2026-08-06-intelliai-stt-en-whisper-small-int8-stage1-replicate.json": 2,
+    "2026-08-06-intelliai-stt-en-whisper-small-int8-stage1-r2.json": 2,
+    "2026-08-06-research-whisper-base-en-whisper-base-int8-stage1.json": 2,
+    "2026-08-06-research-whisper-base-en-whisper-base-int8-stage1-replicate.json": 2,
+    "2026-08-06-research-whisper-large-v3-en-whisper-large-v3-int8-stage1.json": 2,
+    "2026-08-06-research-whisper-large-v3-en-whisper-large-v3-int8-stage1-replicate.json": 2,
 }
 
 
@@ -92,7 +101,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 8
+        assert sum(_WITH_REFERENCE.values()) == 22
 
 
 class TestUnicodeRulersNeverChooseThemselves:

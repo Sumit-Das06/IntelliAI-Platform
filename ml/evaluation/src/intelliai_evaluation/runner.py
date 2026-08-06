@@ -238,6 +238,7 @@ def run_stt_eval(
         hosted=hosted,
         profile=profile,
         language=language,
+        public_model=public_model,
         observations=observations,
         ledger=ledger,
     )
@@ -479,6 +480,7 @@ def _execution_context(
     hosted: ModelInfo,
     profile: NormalizationProfile,
     language: str,
+    public_model: str,
     observations: list[_Observation],
     ledger: _Ledger,
 ) -> ExecutionContext:
@@ -512,11 +514,20 @@ def _execution_context(
     )
 
     return ExecutionContext(
-        # Derived from evidence this run holds: it received an /info
-        # response and transcription responses over a real socket, with
-        # the hosted artifact verified against them. A research shim would
-        # have neither.
-        route=MeasurementRoute.PRODUCT_PATH,
+        # Derived from evidence this run holds: the subject it resolved.
+        # The research manifest namespaces every subject `research:` so no
+        # entry can be mistaken for a product promise (B6) — the namespace
+        # IS the manifest identity metadata, carried on the record itself,
+        # so the derivation depends on no filesystem or registry state.
+        # (The pre-B6 rationale here — "a research shim would have no
+        # socket and no /info" — described a research route that no longer
+        # exists: B6's research runtime has both, and hardcoding
+        # PRODUCT_PATH mislabeled its evidence. Found by Stage 1 execution.)
+        route=(
+            MeasurementRoute.RESEARCH_HARNESS
+            if public_model.startswith("research:")
+            else MeasurementRoute.PRODUCT_PATH
+        ),
         normalization=profile.id,
         declared_language=language,
         language_mode=_language_mode(language),

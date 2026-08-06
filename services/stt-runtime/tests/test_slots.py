@@ -119,11 +119,26 @@ class TestChallengerAdmission:
         assert spec.artifact == "whisper-small"
         assert spec.files is CATALOG["whisper"].files
 
+    def test_the_quality_ceiling_checkpoint_is_admitted_with_its_own_files(self) -> None:
+        # Stage 1 admission: large-v3 ships a different tokenizer
+        # generation (vocabulary.json) and a load-bearing
+        # preprocessor_config.json (feature_size=128 vs 80).
+        assert specs("whisper:whisper-large-v3") == [("default", "whisper-large-v3")]
+        (spec,) = build_slot_specs(Settings(slots="whisper:whisper-large-v3"))
+        assert spec.files is not None
+        assert {f.filename for f in spec.files.files} == {
+            "model.bin",
+            "config.json",
+            "preprocessor_config.json",
+            "tokenizer.json",
+            "vocabulary.json",
+        }
+
     def test_an_unregistered_checkpoint_is_still_refused(self) -> None:
         # The M5 identity law survives admission: a declaration can select
         # a pinned identity, never invent one.
         with pytest.raises(ValueError, match="registered artifacts are"):
-            specs("whisper:whisper-large-v3")
+            specs("whisper:whisper-tiny")
 
     def test_incumbent_and_challenger_may_share_one_research_process(self) -> None:
         # Not the production topology (one artifact per deployment,

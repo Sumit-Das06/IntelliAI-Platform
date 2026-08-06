@@ -132,6 +132,51 @@ WHISPER_BASE_FILES: Final = ArtifactSpec(
     ),
 )
 
+_HF_BASE_LARGE_V3: Final = "https://huggingface.co/Systran/faster-whisper-large-v3/resolve/main"
+
+#: The lineage's quality-ceiling checkpoint (Stage 1, Whisper family
+#: benchmark). Research-hosted only, same rules as whisper-base.
+#: Licence: MIT, read at the Systran distribution 2026-08-06
+#: (hosting-only verification; full re-verification owed before any
+#: adoption citation). model.bin sha256 is Hugging Face's own LFS object
+#: id; the small files were downloaded and hashed locally at pin time.
+#: Unlike small/base, large-v3 ships `vocabulary.json` (a different
+#: tokenizer generation) and `preprocessor_config.json` — the latter is
+#: load-bearing: it declares feature_size=128 mel bins where earlier
+#: checkpoints use 80, so omitting it would silently extract the wrong
+#: features.
+WHISPER_LARGE_V3_FILES: Final = ArtifactSpec(
+    artifact="whisper-large-v3",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename="model.bin",
+            url=f"{_HF_BASE_LARGE_V3}/model.bin",
+            sha256="69f74147e3334731bc3a76048724833325d2ec74642fb52620eda87352e3d4f1",
+        ),
+        ArtifactFile(
+            filename="config.json",
+            url=f"{_HF_BASE_LARGE_V3}/config.json",
+            sha256="a9306624f5ec14270a014b647e5c316b6e03a662c369758d1b90697a7b0655b9",
+        ),
+        ArtifactFile(
+            filename="preprocessor_config.json",
+            url=f"{_HF_BASE_LARGE_V3}/preprocessor_config.json",
+            sha256="7ccc62c6f2765af1f3b46c00c9b5894426835a05021c8b9c01eecb6dfb542711",
+        ),
+        ArtifactFile(
+            filename="tokenizer.json",
+            url=f"{_HF_BASE_LARGE_V3}/tokenizer.json",
+            sha256="6d8cbd7cd0d8d5815e478dac67b85a26bbe77c1f5e0c6d76d1ce2abc0e5f21ca",
+        ),
+        ArtifactFile(
+            filename="vocabulary.json",
+            url=f"{_HF_BASE_LARGE_V3}/vocabulary.json",
+            sha256="c69260f2ab26d659b7c398f9a2b2b48ed0df16c3b47d7326782fd9cba71690c1",
+        ),
+    ),
+)
+
 #: Every artifact this engine family can host, keyed by identity. This
 #: table IS the admission surface for the CTranslate2 stack: admitting
 #: another checkpoint of this family is one pinned entry here — no new
@@ -139,7 +184,8 @@ WHISPER_BASE_FILES: Final = ArtifactSpec(
 #: identity is determined by its pinned weights, which is why the table
 #: maps identities to specs rather than letting a declaration invent one.
 ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
-    spec.artifact: spec for spec in (WHISPER_SMALL_FILES, WHISPER_BASE_FILES)
+    spec.artifact: spec
+    for spec in (WHISPER_SMALL_FILES, WHISPER_BASE_FILES, WHISPER_LARGE_V3_FILES)
 }
 
 
