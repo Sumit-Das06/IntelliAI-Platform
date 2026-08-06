@@ -1,0 +1,49 @@
+# Production overlay: HTTPS in front, the same stack behind.
+#   docker compose -f docker-compose.yml -f infra/compose/prod.yml up -d --build
+# (make prod-up)
+#
+# The base file is already production-shaped: every stateful port binds to
+# 127.0.0.1 only, every service restarts unless stopped, healthchecks
+# gate startup. This overlay adds exactly one thing the internet needs —
+# Caddy terminating TLS on 80/443 — and pins the production posture
+# (INTELLIAI_ENV=prod, whisper slots explicit). Nothing else changes shape,
+# which is the point: dev and prod run the same system.
+
+services:
+  caddy:
+    # Automatic HTTPS: with a real DOMAIN and DNS pointing here, Caddy
+    # obtains and renews Let's Encrypt certificates on its own. With
+    # DOMAIN=localhost it issues an internal self-signed cert — which is
+    # how the from-scratch verification runs without a domain.
+    image: caddy:2.10-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env (e.g. api.yourdomain.com)}
+    volumes:
+      # Relative paths in overlays resolve against the PROJECT directory
+      # (where docker-compose.yml lives), not this file's directory —
+      # found the hard way by the from-scratch verification.
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data      # certificates — must survive restarts
+      - caddyconfig:/config
+    depends_on:
+      api:
+        condition: service_started
+    networks: [intelliai]
+    restart: unless-stopped
+
+  api:
+    environment:
+      INTELLIAI_ENV: prod
+
+  stt-runtime:
+    environment:
+      # Explicit in prod, never inherited from a stray dev variable: this
+      # deployment hosts the real engine.
+      INTELLIAI_STT_SLOTS: whisper
+
+volumes:
+  caddydata:
+  caddyconfig:

@@ -1,0 +1,11 @@
+# IntelliAI edge: TLS termination + reverse proxy to the gateway.
+# DOMAIN comes from the environment (compose passes it through).
+#   real domain  -> automatic Let's Encrypt certificates
+#   localhost    -> Caddy's internal CA (self-signed; used by the
+#                   from-scratch verification)
+{$DOMAIN:localhost} {
+	encode gzip
+
+	# The gateway sets X-Request-ID itself; Caddy only forwards.
+	reverse_proxy api:8000
+}

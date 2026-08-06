@@ -25,8 +25,12 @@ COPY packages/runtime-contract/pyproject.toml packages/runtime-contract/
 RUN uv sync --frozen --no-dev --no-install-workspace --package intelliai-api
 
 # Layer 2: our source (the gateway and the workspace packages it depends
-# on), then install the workspace packages themselves.
+# on), then install the workspace packages themselves. Alembic ships in
+# the image so a fresh deployment can migrate its own database:
+#   docker compose run --rm api alembic -c apps/api/alembic.ini upgrade head
 COPY apps/api/src apps/api/src
+COPY apps/api/alembic.ini apps/api/alembic.ini
+COPY apps/api/alembic apps/api/alembic
 COPY packages/runtime-contract/src packages/runtime-contract/src
 RUN uv sync --frozen --no-dev --package intelliai-api
 

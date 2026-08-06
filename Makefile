@@ -10,7 +10,7 @@
 help: ## List available commands
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-24s\033[0m %s\n", $$1, $$2}'
 
-up: ## Start the full platform (API + Postgres + Redis + MinIO)
+up: ## Start the platform, STT-only (API + STT + Postgres + Redis + MinIO); TTS via make up-tts
 	docker compose up -d
 
 build: ## Rebuild the API image (after dependency changes)
@@ -105,7 +105,7 @@ eval: eval-fetch ## Measure one STT slice: make eval lang=hi out=...
 	  $(if $(notes),--notes "$(notes)",) \
 	  --out $(out)
 
-speech-eval: ## Measure TTS against its corpus via the STT judge: make speech-eval hardware="..." out=...
+speech-eval: ## Measure TTS via the STT judge (needs make up-tts first): make speech-eval hardware="..." out=...
 	@if [ -z "$(hardware)" ] || [ -z "$(out)" ]; then \
 	  echo "make speech-eval requires hardware= and out=."; \
 	  echo "  needs tts-runtime on :8002 and the judge stt-runtime on :8001"; \
@@ -203,6 +203,23 @@ grant-consent: ## Record a tenant's data-collection opt-in: make grant-consent o
 
 revoke-consent: ## Withdraw a tenant's data-collection consent: make revoke-consent org=org_...
 	uv run --package intelliai-api python -m intelliai_api.cli revoke-consent --org "$(org)"
+
+up-tts: ## Also start the TTS runtime (V1 is STT-only by default)
+	docker compose --profile tts up -d
+
+# ── Production (see docs/ops/deployment.md) ───────────────────────────
+prod-up: ## Deploy/refresh the production stack (base + prod overlay, builds images)
+	docker compose -f docker-compose.yml -f infra/compose/prod.yml up -d --build
+
+prod-migrate: ## Apply database migrations inside the production stack
+	docker compose -f docker-compose.yml -f infra/compose/prod.yml run --rm --no-deps api \
+	  alembic -c apps/api/alembic.ini upgrade head
+
+prod-down: ## Stop the production stack (volumes are kept)
+	docker compose -f docker-compose.yml -f infra/compose/prod.yml down
+
+backup: ## Postgres dump + MinIO snapshot into ./backups (see docs/ops/backup.md)
+	bash infra/backup.sh
 
 db-ui: ## Open a visual database browser (Adminer) at http://localhost:8081
 	docker compose --profile tools up -d adminer

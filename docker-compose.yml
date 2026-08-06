@@ -75,6 +75,11 @@ services:
     build:
       context: .
       dockerfile: infra/docker/tts-runtime.Dockerfile
+    # Version 1 is STT-only: the default stack does not start TTS. Restore
+    # it with `make up-tts` (docker compose --profile tts up -d). The
+    # catalog still declares intelliai-tts; calls 503 cleanly while the
+    # runtime is absent — switched off, not removed.
+    profiles: [tts]
     environment:
       # The artifacts this deployment hosts, in order; the first takes the
       # `default` slot. One env flip swaps the engine ("reference" serves
