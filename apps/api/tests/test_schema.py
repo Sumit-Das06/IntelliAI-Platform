@@ -9,7 +9,11 @@ from sqlalchemy import UniqueConstraint
 from intelliai_api.db import models  # noqa: F401 — registers all mappers
 from intelliai_api.db.base import Base, generate_public_id
 
-EXPECTED_TABLES = {"organizations", "users", "memberships", "api_keys"}
+EXPECTED_TABLES = {"organizations", "users", "memberships", "api_keys", "speech_samples"}
+# speech_sample_events is registered but deliberately exempt from the
+# core-column conventions: append-only history has no public_id (never
+# projected) and no updated_at (appends have no updates). Its shape is
+# pinned in test_speech_samples.py instead.
 
 
 def test_all_identity_tables_are_registered() -> None:
