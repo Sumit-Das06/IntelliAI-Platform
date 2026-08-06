@@ -11,10 +11,12 @@ stored — the OpenAI-mirror response bodies stay byte-identical.
 """
 
 import time
-from typing import Annotated, Any, Literal
+from datetime import datetime
+from typing import Annotated, Any, Literal, cast
 
 from fastapi import APIRouter, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
+from pydantic import BaseModel, Field
 
 from intelliai_api.api.deps import CollectionDep, CurrentAuth, IdempotencyKey, TranscriptionDep
 
@@ -82,3 +84,44 @@ async def create_transcription(
     else:
         payload = {"text": result.text}
     return JSONResponse(payload, headers=headers)
+
+
+class CorrectionRequest(BaseModel):
+    """The user's improved transcript. Bounded generously: transcripts of
+    a ≤25 MiB clip are KB-scale; 20k chars refuses only abuse."""
+
+    corrected_text: str = Field(min_length=1, max_length=20_000)
+
+
+class CorrectionResponse(BaseModel):
+    id: str
+    corrected_text: str
+    last_modified_at: datetime
+
+
+@router.post("/transcriptions/{sample_id}/correction")
+async def correct_transcription(
+    sample_id: str,
+    body: CorrectionRequest,
+    auth: CurrentAuth,
+    collection: CollectionDep,
+) -> CorrectionResponse:
+    """Attach a human correction to a collected sample.
+
+    The first source of human-labelled data: ``current_transcript``
+    evolves, the machine's ``original_transcript`` never changes, and the
+    lifecycle history gains a ``corrected`` event. Last write wins —
+    re-correcting is a legitimate act, not a conflict.
+    """
+    sample = await collection.correct(
+        auth=auth,
+        sample_public_id=sample_id,
+        corrected_text=body.corrected_text,
+    )
+    return CorrectionResponse(
+        id=sample.public_id,
+        corrected_text=sample.current_transcript,
+        # The service always stamps it before returning; the cast states
+        # that contract to the type checker without a runtime crutch.
+        last_modified_at=cast(datetime, sample.last_modified_at),
+    )

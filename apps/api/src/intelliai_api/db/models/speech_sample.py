@@ -69,6 +69,17 @@ class ClientSource(StrEnum):
     API = "api"
 
 
+class CorrectionSource(StrEnum):
+    """Who evolved ``current_transcript``. Carried in the ``corrected``
+    event's detail (vocabulary now, so review tooling later needs no
+    migration). Today every correction is USER; REVIEWER and ADMIN arrive
+    with the Phase 4 review workflow."""
+
+    USER = "user"
+    REVIEWER = "reviewer"
+    ADMIN = "admin"
+
+
 class SpeechSample(TimestampMixin, Base):
     __tablename__ = "speech_samples"
     __table_args__ = (

@@ -26,9 +26,10 @@ from typing import Any
 import structlog
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from intelliai_api.core.errors import ResourceNotFoundError
 from intelliai_api.core.time import utc_now
 from intelliai_api.db.base import generate_public_id
-from intelliai_api.db.models import ClientSource
+from intelliai_api.db.models import ClientSource, CorrectionSource, SpeechSample
 from intelliai_api.db.repositories import SpeechSampleRepository
 from intelliai_api.registry import normalize_language
 from intelliai_api.services.auth import AuthContext
@@ -201,6 +202,47 @@ class DataCollectionService:
             language=outcome.result.language,
         )
         return sample_public_id
+
+    async def correct(
+        self,
+        *,
+        auth: AuthContext,
+        sample_public_id: str,
+        corrected_text: str,
+        source: CorrectionSource = CorrectionSource.USER,
+    ) -> SpeechSample:
+        """Evolve ``current_transcript``; the original stays immutable.
+
+        Unlike :meth:`collect`, this RAISES: correction is a customer-
+        facing operation with a contract (404s, validation), not a silent
+        side effect. Last write wins — the author is the same human
+        refining an edit, and the machine's original is preserved on the
+        row, so nothing is ever lost. Org-scoped: a foreign tenant's
+        sample does not exist from this caller's point of view (404,
+        never 403 — no existence disclosure).
+        """
+        sample = await self._samples.get_for_organization(auth.organization_id, sample_public_id)
+        if sample is None:
+            raise ResourceNotFoundError(
+                f"No speech sample {sample_public_id!r} exists in this organization.",
+                code="sample_not_found",
+                param="sample_id",
+            )
+        sample.current_transcript = corrected_text
+        sample.last_modified_at = utc_now()
+        await self._session.flush()
+        await self._samples.record_event(
+            sample.id,
+            "corrected",
+            detail={"correction_source": source.value},
+        )
+        logger.info(
+            "collection.corrected",
+            sample_id=sample.public_id,
+            organization_id=auth.organization_public_id,
+            correction_source=source.value,
+        )
+        return sample
 
 
 def _version_of(lineage: dict[str, Any]) -> str | None:
