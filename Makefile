@@ -194,6 +194,16 @@ bootstrap-org: ## Create org + owner + first API key: make bootstrap-org org="Ac
 bootstrap-benchmark-org: ## Create the benchmark tenant (origin=benchmark, never rated): make bootstrap-benchmark-org email="you@x.com" name="You"
 	$(MAKE) bootstrap-org org="$(or $(org),IntelliAI Benchmark)" email="$(email)" name="$(name)" origin=benchmark
 
+# Consent is opt-in by law: nothing is stored for model improvement until
+# an operator records the tenant's explicit grant, and revocation stops
+# collection immediately. ref= names the signed document the grant rests
+# on (e.g. ref="cohort-2026-08-consent-v1").
+grant-consent: ## Record a tenant's data-collection opt-in: make grant-consent org=org_... ref="doc"
+	uv run --package intelliai-api python -m intelliai_api.cli grant-consent --org "$(org)" $(if $(ref),--reference "$(ref)",)
+
+revoke-consent: ## Withdraw a tenant's data-collection consent: make revoke-consent org=org_...
+	uv run --package intelliai-api python -m intelliai_api.cli revoke-consent --org "$(org)"
+
 db-ui: ## Open a visual database browser (Adminer) at http://localhost:8081
 	docker compose --profile tools up -d adminer
 

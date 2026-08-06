@@ -1,10 +1,11 @@
 """Organization: the tenant — the unit of ownership, quota, and billing."""
 
+from datetime import datetime
 from decimal import Decimal
 from functools import partial
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger, Enum, Identity, Numeric, String
+from sqlalchemy import BigInteger, DateTime, Enum, Identity, Numeric, String, false
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from intelliai_api.db.base import Base, TimestampMixin, generate_public_id
@@ -50,6 +51,20 @@ class Organization(TimestampMixin, Base):
     # able to protect themselves. NUMERIC, never float: sub-cent drift is
     # a real number at volume and an embarrassing one in an audit.
     spend_limit: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
+
+    # Whether this tenant has explicitly agreed that its speech uploads,
+    # transcripts, and corrections may be stored to improve our models.
+    # Opt-in by law (AI_STRATEGY: "never by default"): the server default
+    # is FALSE and nothing downstream may store a sample while this is
+    # false. A permission, deliberately not a classification — the
+    # commercial counterpart lives in usage_origin above. When the flag
+    # is granted, the moment and the governing document are recorded so
+    # every stored sample can snapshot the consent it was collected
+    # under; revocation clears only the flag, leaving the historical
+    # grant readable.
+    data_consent: Mapped[bool] = mapped_column(default=False, server_default=false())
+    data_consented_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    consent_reference: Mapped[str | None] = mapped_column(String(255))
 
     # Deliberately minimal: quota/billing columns arrive with the
     # milestones that give them meaning (M4+), as additive migrations.

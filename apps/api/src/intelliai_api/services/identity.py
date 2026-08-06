@@ -195,6 +195,67 @@ class IdentityService:
         )
         return api_key, generated
 
+    # ── Operator-facing consent operations (CLI surface, like bootstrap) ─
+
+    async def grant_data_consent(
+        self,
+        *,
+        organization_public_id: str,
+        reference: str | None = None,
+    ) -> Organization:
+        """Record the tenant's explicit opt-in to speech data collection.
+
+        An operator act, because consent arrives on paper (a signed form,
+        a policy version) before it exists in the database — ``reference``
+        names that document. Idempotent: re-granting with the same
+        reference changes nothing and emits no second event; re-granting
+        with a *different* reference refreshes the grant, because the
+        governing document changed and samples snapshot it.
+        """
+        organization = await self._organizations.get_by_public_id(organization_public_id)
+        if organization is None:
+            raise ResourceNotFoundError(
+                f"No organization {organization_public_id!r} exists.",
+                code="organization_not_found",
+                param="organization_id",
+            )
+        if organization.data_consent and organization.consent_reference == reference:
+            return organization
+        organization.data_consent = True
+        organization.data_consented_at = utc_now()
+        organization.consent_reference = reference
+        await self._session.flush()
+        logger.info(
+            "organization.consent_granted",
+            organization_id=organization.public_id,
+            consent_reference=reference,
+        )
+        return organization
+
+    async def revoke_data_consent(self, *, organization_public_id: str) -> Organization:
+        """Withdraw consent; collection stops immediately for future samples.
+
+        Idempotent: revoking a non-consented tenant changes nothing and
+        emits no event. The historical grant (timestamp and reference)
+        deliberately survives — it records what past samples were
+        collected under; only the permission itself is cleared.
+        """
+        organization = await self._organizations.get_by_public_id(organization_public_id)
+        if organization is None:
+            raise ResourceNotFoundError(
+                f"No organization {organization_public_id!r} exists.",
+                code="organization_not_found",
+                param="organization_id",
+            )
+        if organization.data_consent:
+            organization.data_consent = False
+            await self._session.flush()
+            logger.info(
+                "organization.consent_revoked",
+                organization_id=organization.public_id,
+            )
+        return organization
+
     # ── AuthContext-facing operations (the public API's surface) ─────────
 
     async def create_key(

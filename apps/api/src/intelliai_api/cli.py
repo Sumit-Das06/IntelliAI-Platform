@@ -94,6 +94,39 @@ async def _bootstrap_org(organization: str, email: str, name: str, usage_origin:
         await engine.dispose()
 
 
+async def _set_consent(organization_id: str, *, grant: bool, reference: str | None) -> None:
+    """Grant or revoke a tenant's speech-data-collection consent.
+
+    Same entrypoint contract as bootstrap: the service owns the rule and
+    the atomic scope, the CLI owns the session and the commit.
+    """
+    settings = get_settings()
+    configure_logging(settings)
+    engine = create_engine(settings)
+    try:
+        factory = create_session_factory(engine)
+        async with factory() as session:
+            service = IdentityService(session, pepper=settings.auth.key_pepper.get_secret_value())
+            if grant:
+                organization = await service.grant_data_consent(
+                    organization_public_id=organization_id, reference=reference
+                )
+            else:
+                organization = await service.revoke_data_consent(
+                    organization_public_id=organization_id
+                )
+            await session.commit()
+    finally:
+        await engine.dispose()
+    state = "GRANTED" if organization.data_consent else "REVOKED"
+    print(f"consent {state} for {organization.name} ({organization.public_id})")
+    if organization.data_consent:
+        print(f"  granted at : {organization.data_consented_at}")
+        print(f"  reference  : {organization.consent_reference or '(none recorded)'}")
+    elif organization.data_consented_at is not None:
+        print(f"  last grant : {organization.data_consented_at} (historical record, retained)")
+
+
 async def _commercial_report(month: str | None) -> int:
     """Reconcile the commercial plane and report what it found.
 
@@ -256,6 +289,23 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
 
+    grant = subcommands.add_parser(
+        "grant-consent",
+        help="Record a tenant's explicit opt-in to speech data collection",
+    )
+    grant.add_argument("--org", required=True, help="organization public id (org_...)")
+    grant.add_argument(
+        "--reference",
+        default=None,
+        help="the governing consent document (e.g. 'cohort-2026-08-consent-v1')",
+    )
+
+    revoke = subcommands.add_parser(
+        "revoke-consent",
+        help="Withdraw a tenant's data-collection consent; collection stops immediately",
+    )
+    revoke.add_argument("--org", required=True, help="organization public id (org_...)")
+
     report = subcommands.add_parser(
         "commercial-report",
         help="Reconcile the commercial plane; exits non-zero if anything disagrees",
@@ -275,6 +325,12 @@ def main(argv: list[str] | None = None) -> int:
             return _registry_manifest(args.out)
         if args.command == "commercial-report":
             return asyncio.run(_commercial_report(args.month))
+        if args.command == "grant-consent":
+            asyncio.run(_set_consent(args.org, grant=True, reference=args.reference))
+            return 0
+        if args.command == "revoke-consent":
+            asyncio.run(_set_consent(args.org, grant=False, reference=None))
+            return 0
         asyncio.run(
             _bootstrap_org(args.org_name, args.owner_email, args.owner_name, args.usage_origin)
         )
