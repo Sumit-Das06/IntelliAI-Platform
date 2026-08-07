@@ -15,6 +15,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Manual re-trigger for runner-infrastructure hiccups (a job abandoned
+  # by GitHub's own runners should not need an empty commit to retry).
+  workflow_dispatch:
 
 # Least-privilege token for every run. Dependabot-triggered workflows get a
 # token stripped to contents:read unless permissions are declared explicitly;
