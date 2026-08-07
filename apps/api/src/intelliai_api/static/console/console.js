@@ -16,7 +16,7 @@ window.IntelliAI = (function () {
   /* status: "live" = page exists; "soon" = visible in the IA, not yet open. */
   var NAV = [
     { title: null, items: [
-      { id: "dashboard", label: "Dashboard", href: "/console", status: "live" }
+      { id: "home", label: "Home", href: "/console/home", status: "live" }
     ] },
     { title: "Build", items: [
       { id: "keys", label: "API Keys", href: "/console/keys", status: "live" },
@@ -123,7 +123,7 @@ window.IntelliAI = (function () {
   /* ── identity: resolve the organization behind the stored key ──
    * Resolves to the organization object, or null when no key is stored.
    * Rejects (with .status === 401) when the stored key is refused.
-   * One request is shared by every surface on the page (chip, dashboard)
+   * One request is shared by every surface on the page (chip, Home)
    * so they can never disagree; pass fresh=true after changing the key. */
   var identityRequest = null;
   function identity(fresh) {
@@ -139,7 +139,7 @@ window.IntelliAI = (function () {
 
   /* ── shell rendering ───────────────────────────────────────── */
   function brand() {
-    return el("a", { class: "brand", href: "/console" }, [
+    return el("a", { class: "brand", href: "/console/home" }, [
       el("span", { class: "brand-mark", "aria-hidden": "true" }, ["iA"]),
       el("span", { class: "brand-name" }, ["IntelliAI", el("small", {}, ["Platform"])])
     ]);
@@ -206,7 +206,7 @@ window.IntelliAI = (function () {
       if (event.key === "Escape") setNavOpen(false);
     });
 
-    var chip = el("a", { class: "chip off", href: "/console", id: "iai-chip" }, [
+    var chip = el("a", { class: "chip off", href: "/console/home", id: "iai-chip" }, [
       el("span", { class: "dot", "aria-hidden": "true" }),
       el("span", { id: "iai-chip-text" }, ["Not connected"])
     ]);
@@ -235,7 +235,7 @@ window.IntelliAI = (function () {
     });
   }
 
-  /* ── services grid (dashboard now, AI Services page later) ─── */
+  /* ── services grid (Home's Explore, AI Services page) ──────── */
   function renderServices(container) {
     SERVICES.forEach(function (service) {
       var live = service.status === "production";

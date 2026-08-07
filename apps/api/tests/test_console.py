@@ -17,14 +17,19 @@ from tests.helpers import client_with_db
 pytestmark = pytest.mark.anyio
 
 
-async def test_the_dashboard_is_served_as_html(settings: Settings, db_engine: AsyncEngine) -> None:
+async def test_the_home_page_is_served_as_html(settings: Settings, db_engine: AsyncEngine) -> None:
     async with client_with_db(settings, db_engine) as (client, _factory):
-        response = await client.get("/console")
+        response = await client.get("/console/home")
 
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert 'data-page="dashboard"' in response.text
-    assert "Welcome to IntelliAI" in response.text
+    assert 'data-page="home"' in response.text
+    assert "Welcome to IntelliAI Platform" in response.text
+    assert "One API for Speech Intelligence today." in response.text
+    # Recent Activity ships as an HONEST empty state until real data
+    # wires in — no invented backend, no fake rows.
+    assert "Recent Activity" in response.text
+    assert "No activity yet" in response.text
 
 
 async def test_the_keys_page_is_served_as_html(settings: Settings, db_engine: AsyncEngine) -> None:
@@ -94,15 +99,17 @@ async def test_the_samples_page_is_served_as_html(
     assert "Lifecycle" in response.text
 
 
-async def test_the_root_url_leads_to_the_console(
-    settings: Settings, db_engine: AsyncEngine
-) -> None:
-    # A platform whose front door 404s is not a platform.
+async def test_every_front_door_leads_to_home(settings: Settings, db_engine: AsyncEngine) -> None:
+    # A platform whose front door 404s is not a platform — and both
+    # roots land on Home, the page that answers "what should I do first?"
     async with client_with_db(settings, db_engine) as (client, _factory):
-        response = await client.get("/")
+        root = await client.get("/")
+        console = await client.get("/console")
 
-    assert response.status_code == 307
-    assert response.headers["location"] == "/console"
+    assert root.status_code == 307
+    assert root.headers["location"] == "/console/home"
+    assert console.status_code == 307
+    assert console.headers["location"] == "/console/home"
 
 
 async def test_the_shared_assets_are_served_with_their_types(
@@ -138,7 +145,7 @@ async def test_the_navigation_carries_the_whole_platform(
         js = (await client.get("/console/assets/console.js")).text
 
     for label in (
-        "Dashboard",
+        "Home",
         "API Keys",
         "Playground",
         "AI Services",
@@ -162,7 +169,7 @@ async def test_the_navigation_carries_the_whole_platform(
     # Pages that have shipped must be LIVE in the registry — reverting a
     # flip would silently unlink a working page from the whole console.
     for live_entry in (
-        '{ id: "dashboard", label: "Dashboard", href: "/console", status: "live" }',
+        '{ id: "home", label: "Home", href: "/console/home", status: "live" }',
         '{ id: "keys", label: "API Keys", href: "/console/keys", status: "live" }',
         '{ id: "playground", label: "Playground", href: "/console/playground", status: "live" }',
         '{ id: "services", label: "AI Services", href: "/console/services", status: "live" }',
@@ -176,7 +183,7 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
     # implementation detail and never appear in the console.
     async with client_with_db(settings, db_engine) as (client, _factory):
         pages = [
-            (await client.get("/console")).text,
+            (await client.get("/console/home")).text,
             (await client.get("/console/keys")).text,
             (await client.get("/console/services")).text,
             (await client.get("/console/samples")).text,
@@ -187,6 +194,9 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
 
     for text in pages:
         assert "whisper" not in text.lower()
+        # Dashboard was renamed to Home in Commit 6; the old word must
+        # never resurface on any console surface.
+        assert "dashboard" not in text.lower()
 
 
 async def test_the_openapi_schema_is_unchanged(settings: Settings, db_engine: AsyncEngine) -> None:
@@ -203,7 +213,7 @@ def test_the_console_assets_ship_inside_the_package() -> None:
     # the packaging guarantee: wherever the package goes, the console goes.
     console = files("intelliai_api") / "static" / "console"
     for name in (
-        "dashboard.html",
+        "home.html",
         "keys.html",
         "services.html",
         "studio.html",

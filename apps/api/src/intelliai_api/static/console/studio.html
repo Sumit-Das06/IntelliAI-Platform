@@ -24,7 +24,7 @@
       </div>
 
       <div id="connect-note" class="notice hidden" style="margin-top: 12px;">
-        This console isn't connected yet — <a href="/console">connect your API key on the Dashboard</a> to use the Studio.
+        This console isn't connected yet — <a href="/console/home">connect your API key on Home</a> to use the Studio.
       </div>
 
       <div class="grid-2 section" style="margin-top: 18px;">
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   transcribeBtn.addEventListener("click", function () {
     var key = IntelliAI.getKey();
-    if (!key) { setStatus("Connect your API key on the Dashboard first.", "err"); return; }
+    if (!key) { setStatus("Connect your API key on Home first.", "err"); return; }
     if (!audioBlob) { setStatus("Record or upload audio first.", "err"); return; }
     var form = new FormData();
     form.append("file", audioBlob, audioName);

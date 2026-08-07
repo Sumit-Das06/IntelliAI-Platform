@@ -37,14 +37,20 @@ def _static_text(*parts: str) -> str:
 
 @router.get("/", include_in_schema=False)
 async def root() -> RedirectResponse:
-    """The platform's front door is the console."""
-    return RedirectResponse("/console", status_code=307)
+    """The platform's front door is Home."""
+    return RedirectResponse("/console/home", status_code=307)
 
 
 @router.get("/console", include_in_schema=False)
-async def console_dashboard() -> HTMLResponse:
-    """Platform home: AI services, quick actions, getting started."""
-    return HTMLResponse(_static_text("console", "dashboard.html"), headers=_NO_CACHE)
+async def console_root() -> RedirectResponse:
+    """The console's own root also lands on Home."""
+    return RedirectResponse("/console/home", status_code=307)
+
+
+@router.get("/console/home", include_in_schema=False)
+async def console_home() -> HTMLResponse:
+    """Home: welcome, quick actions, getting started, the catalogue."""
+    return HTMLResponse(_static_text("console", "home.html"), headers=_NO_CACHE)
 
 
 @router.get("/console/keys", include_in_schema=False)

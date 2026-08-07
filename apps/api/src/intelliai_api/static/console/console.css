@@ -389,8 +389,11 @@ a.nav-item:hover { background: var(--hover); }
   margin-top: 1px;
 }
 .step h3 { margin: 0 0 2px; font-size: 0.92rem; }
+.step h3 a { color: inherit; text-decoration: none; }
+.step h3 a:hover { color: var(--accent); }
 .step p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 .step .codeblock { margin-top: 10px; }
+.step.done .step-num { background: var(--ok-soft); color: var(--ok); }
 
 /* ── Table ──────────────────────────────────────────────────── */
 .table-wrap {

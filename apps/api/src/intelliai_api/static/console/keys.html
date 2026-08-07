@@ -38,7 +38,7 @@
         <div class="card empty">
           <h3>Connect to manage keys</h3>
           <p id="disconnected-reason">This console isn't connected to a workspace yet.</p>
-          <a class="btn btn-primary" href="/console">Go to Dashboard</a>
+          <a class="btn btn-primary" href="/console/home">Go to Home</a>
         </div>
       </section>
 
@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (wasSelf) {
           /* The bearer this page runs on is gone: say so honestly and
            * let the chip re-check with a fresh request. */
-          showDisconnected("You revoked the key this browser was using. Connect with a new key from the Dashboard.");
+          showDisconnected("You revoked the key this browser was using. Connect with a new key from Home.");
           IntelliAI.refreshIdentity(true);
         } else {
           load();
