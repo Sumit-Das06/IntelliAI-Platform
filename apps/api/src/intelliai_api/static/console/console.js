@@ -19,7 +19,7 @@ window.IntelliAI = (function () {
       { id: "dashboard", label: "Dashboard", href: "/console", status: "live" }
     ] },
     { title: "Build", items: [
-      { id: "keys", label: "API Keys", href: "/console/keys", status: "soon" },
+      { id: "keys", label: "API Keys", href: "/console/keys", status: "live" },
       { id: "playground", label: "Playground", href: "/console/playground", status: "live" },
       { id: "services", label: "AI Services", href: "/console/services", status: "soon" }
     ] },
@@ -195,8 +195,8 @@ window.IntelliAI = (function () {
     label.textContent = text; /* textContent: org names render inert */
   }
 
-  function refreshIdentity() {
-    return identity().then(function (org) {
+  function refreshIdentity(fresh) {
+    return identity(fresh).then(function (org) {
       if (org) setChip("on", org.name);
       else setChip("off", "Not connected");
       return org;

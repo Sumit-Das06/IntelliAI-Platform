@@ -48,6 +48,18 @@
 
 * { box-sizing: border-box; }
 html { height: 100%; }
+/* Visually hidden, still read by assistive tech (.hidden removes both). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 body {
   margin: 0;
   background: var(--bg);
@@ -185,6 +197,13 @@ a.nav-item:hover { background: var(--hover); }
 
 /* ── Content ────────────────────────────────────────────────── */
 .content { padding: 26px 28px 56px; width: 100%; max-width: 1080px; margin: 0 auto; }
+.page-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 .page-head { margin: 0 0 6px; }
 .page-head h1 { font-size: 1.35rem; margin: 0 0 2px; }
 .page-head .sub { color: var(--muted); font-size: 0.85rem; margin: 0; }
@@ -332,6 +351,78 @@ a.nav-item:hover { background: var(--hover); }
 .step h3 { margin: 0 0 2px; font-size: 0.92rem; }
 .step p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 .step .codeblock { margin-top: 10px; }
+
+/* ── Table ──────────────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+table.table { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-width: 680px; }
+.table th {
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: var(--hover); }
+.mono {
+  font-family: ui-monospace, Consolas, "Cascadia Mono", monospace;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+.cell-muted { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+.cell-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+.btn-sm { padding: 6px 12px; min-height: 32px; font-size: 0.8rem; }
+
+/* ── Modal ──────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 500px;
+  padding: 20px 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.modal h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.modal .modal-sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 14px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+
+/* ── Tabs ───────────────────────────────────────────────────── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 14px; flex-wrap: wrap; }
+.tab {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--ink); }
+.tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* ── Empty state ────────────────────────────────────────────── */
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }

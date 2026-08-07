@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>API Keys · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="keys">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>API Keys</h1>
+          <p class="sub">Manage API keys for accessing IntelliAI AI Services.</p>
+        </div>
+        <button class="btn btn-primary" id="create-btn" type="button">Create API Key</button>
+      </div>
+
+      <div class="section" style="margin-top: 18px;">
+        <div class="card">
+          <p>API keys let applications, playgrounds, and future IntelliAI clients — Keyboard, Mobile App, Desktop App — securely access IntelliAI services. Each key belongs to your organization and can be revoked at any time.</p>
+          <p style="margin-top: 8px;">
+            <span class="badge badge-live">✓ IntelliAI STT</span>
+            <span class="cell-muted" style="white-space: normal;"> &nbsp;IntelliAI TTS, OCR, Translate, Vision, and LLM — Coming Soon. Keys automatically gain access to new services as they launch.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- ── Not connected ── -->
+      <section id="disconnected" class="section hidden">
+        <div class="card empty">
+          <h3>Connect to manage keys</h3>
+          <p id="disconnected-reason">This console isn't connected to a workspace yet.</p>
+          <a class="btn btn-primary" href="/console">Go to Dashboard</a>
+        </div>
+      </section>
+
+      <!-- ── Keys list ── -->
+      <section id="keys-section" class="section hidden">
+        <h2 id="keys-heading" tabindex="-1">Your keys</h2>
+        <div id="keys-empty" class="card empty hidden">
+          <h3>No API Keys Yet</h3>
+          <p>Create your first key to start using IntelliAI STT.</p>
+          <button class="btn btn-primary" id="empty-create-btn" type="button">Create API Key</button>
+        </div>
+        <div id="keys-table-wrap" class="table-wrap hidden">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Key</th>
+                <th scope="col">Status</th>
+                <th scope="col">Services</th>
+                <th scope="col">Created</th>
+                <th scope="col">Last used</th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="keys-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── Getting started ── -->
+      <section class="section">
+        <h2>Use your key</h2>
+        <div class="card">
+          <p style="margin-bottom: 12px;">Send audio to IntelliAI STT with a Bearer token. Replace <span class="mono">YOUR_API_KEY</span> with a key from this page.</p>
+          <div class="tabs" role="tablist" aria-label="Code examples">
+            <button class="tab is-active" type="button" role="tab" id="tab-curl" aria-controls="example-curl-wrap" aria-selected="true" data-example="curl">cURL</button>
+            <button class="tab" type="button" role="tab" id="tab-python" aria-controls="example-python-wrap" aria-selected="false" tabindex="-1" data-example="python">Python</button>
+            <button class="tab" type="button" role="tab" id="tab-js" aria-controls="example-js-wrap" aria-selected="false" tabindex="-1" data-example="js">JavaScript</button>
+          </div>
+          <div class="codeblock" id="example-curl-wrap" role="tabpanel" aria-labelledby="tab-curl">
+            <button class="copy-btn" data-copy-target="example-curl" type="button">Copy</button>
+            <pre id="example-curl"></pre>
+          </div>
+          <div class="codeblock hidden" id="example-python-wrap" role="tabpanel" aria-labelledby="tab-python">
+            <button class="copy-btn" data-copy-target="example-python" type="button">Copy</button>
+            <pre id="example-python"></pre>
+          </div>
+          <div class="codeblock hidden" id="example-js-wrap" role="tabpanel" aria-labelledby="tab-js">
+            <button class="copy-btn" data-copy-target="example-js" type="button">Copy</button>
+            <pre id="example-js"></pre>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── Create key modal ── -->
+<div class="modal-overlay hidden" id="create-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-title">
+    <div id="create-form-view">
+      <h2 id="create-title">Create API Key</h2>
+      <p class="modal-sub">Give the key a name that says where it will live — you'll thank yourself later.</p>
+      <label class="label" for="key-name">Key name</label>
+      <input class="input" id="key-name" type="text" maxlength="120" placeholder="e.g. My laptop, Keyboard app, CI">
+      <div class="status-line" id="create-status"></div>
+      <div class="modal-actions">
+        <button class="btn" id="create-cancel" type="button">Cancel</button>
+        <button class="btn btn-primary" id="create-submit" type="button">Create key</button>
+      </div>
+    </div>
+    <div id="create-done-view" class="hidden">
+      <h2>Your new API key</h2>
+      <p class="modal-sub">Copy it now and store it somewhere safe — <strong>it will never be shown again.</strong></p>
+      <div class="codeblock">
+        <button class="copy-btn" data-copy-target="new-key" type="button">Copy</button>
+        <pre id="new-key" class="mono" style="white-space: pre-wrap; word-break: break-all;"></pre>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="create-done" type="button">I've stored it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Revoke confirm modal ── -->
+<div class="modal-overlay hidden" id="revoke-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="revoke-title">
+    <h2 id="revoke-title">Revoke this key?</h2>
+    <p class="modal-sub" id="revoke-detail"></p>
+    <p class="notice hidden" id="revoke-self-warning">This is the key <strong>this browser</strong> is connected with. After revoking it, you'll need a different key to keep using the console.</p>
+    <div class="status-line" id="revoke-status"></div>
+    <div class="modal-actions">
+      <button class="btn" id="revoke-cancel" type="button">Keep key</button>
+      <button class="btn btn-danger" id="revoke-confirm" type="button">Revoke key</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var el = IntelliAI.el;
+  var keysSection = document.getElementById("keys-section");
+  var disconnected = document.getElementById("disconnected");
+  var emptyCard = document.getElementById("keys-empty");
+  var tableWrap = document.getElementById("keys-table-wrap");
+  var tbody = document.getElementById("keys-tbody");
+
+  /* ── code examples (origin-aware, key never embedded) ─────── */
+  var origin = window.location.origin;
+  document.getElementById("example-curl").textContent =
+    "curl " + origin + "/v1/audio/transcriptions \\\n" +
+    "  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n" +
+    "  -F model=intelliai-stt \\\n" +
+    "  -F file=@audio.wav";
+  document.getElementById("example-python").textContent =
+    "import requests\n\n" +
+    "response = requests.post(\n" +
+    "    \"" + origin + "/v1/audio/transcriptions\",\n" +
+    "    headers={\"Authorization\": \"Bearer YOUR_API_KEY\"},\n" +
+    "    data={\"model\": \"intelliai-stt\"},\n" +
+    "    files={\"file\": open(\"audio.wav\", \"rb\")},\n" +
+    ")\n" +
+    "print(response.json()[\"text\"])";
+  document.getElementById("example-js").textContent =
+    "const form = new FormData();\n" +
+    "form.append(\"model\", \"intelliai-stt\");\n" +
+    "form.append(\"file\", audioFile);\n\n" +
+    "const response = await fetch(\"" + origin + "/v1/audio/transcriptions\", {\n" +
+    "  method: \"POST\",\n" +
+    "  headers: { \"Authorization\": \"Bearer YOUR_API_KEY\" },\n" +
+    "  body: form,\n" +
+    "});\n" +
+    "const { text } = await response.json();";
+
+  /* Tabs implement the full ARIA tabs contract: roving tabindex plus
+   * Arrow/Home/End movement — the roles promise it, so the keys keep it. */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var active = t === tab;
+      t.classList.toggle("is-active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+      t.tabIndex = active ? 0 : -1;
+    });
+    ["curl", "python", "js"].forEach(function (name) {
+      document.getElementById("example-" + name + "-wrap")
+        .classList.toggle("hidden", name !== tab.dataset.example);
+    });
+  }
+  tabs.forEach(function (tab, index) {
+    tab.addEventListener("click", function () { selectTab(tab); });
+    tab.addEventListener("keydown", function (event) {
+      var target = null;
+      if (event.key === "ArrowRight") target = tabs[(index + 1) % tabs.length];
+      else if (event.key === "ArrowLeft") target = tabs[(index + tabs.length - 1) % tabs.length];
+      else if (event.key === "Home") target = tabs[0];
+      else if (event.key === "End") target = tabs[tabs.length - 1];
+      if (target) { event.preventDefault(); selectTab(target); target.focus(); }
+    });
+  });
+
+  /* ── modal plumbing: open/close, Escape, focus trap + return ── */
+  var lastTrigger = null;
+  var trapHandler = null;
+  function openModal(overlay, focusEl) {
+    lastTrigger = document.activeElement;
+    overlay.classList.remove("hidden");
+    /* aria-modal promises contained focus; Tab cycles inside the dialog. */
+    trapHandler = function (event) {
+      if (event.key !== "Tab") return;
+      var nodes = overlay.querySelectorAll("button:not(:disabled), input, a[href]");
+      var visible = Array.prototype.filter.call(nodes, function (node) {
+        return node.offsetParent !== null;
+      });
+      if (!visible.length) return;
+      var first = visible[0];
+      var last = visible[visible.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", trapHandler);
+    if (focusEl) focusEl.focus();
+  }
+  function closeModal(overlay) {
+    overlay.classList.add("hidden");
+    if (trapHandler) {
+      document.removeEventListener("keydown", trapHandler);
+      trapHandler = null;
+    }
+    if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+  }
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    document.querySelectorAll(".modal-overlay:not(.hidden)").forEach(function (overlay) {
+      overlay.dispatchEvent(new CustomEvent("modal-close"));
+    });
+  });
+  /* Backdrop dismissal only when the gesture STARTED and ENDED on the
+   * backdrop — a text-selection drag that leaves the dialog must never
+   * destroy it (it may be showing a shown-once secret). */
+  document.querySelectorAll(".modal-overlay").forEach(function (overlay) {
+    var pressedOnBackdrop = false;
+    overlay.addEventListener("pointerdown", function (event) {
+      pressedOnBackdrop = event.target === overlay;
+    });
+    overlay.addEventListener("click", function (event) {
+      if (pressedOnBackdrop && event.target === overlay) {
+        overlay.dispatchEvent(new CustomEvent("modal-close"));
+      }
+      pressedOnBackdrop = false;
+    });
+  });
+
+  /* ── key list ─────────────────────────────────────────────── */
+  function statusOf(key) {
+    if (key.revoked_at) return { label: "Revoked", cls: "badge-soon" };
+    if (key.expires_at && new Date(key.expires_at) <= new Date()) {
+      return { label: "Expired", cls: "badge-soon" };
+    }
+    return { label: "Active", cls: "badge-ok" };
+  }
+  function isThisBrowsersKey(key) {
+    var stored = IntelliAI.getKey();
+    return !!stored && stored.indexOf(key.key_prefix) === 0 &&
+      stored.slice(-4) === key.key_last4;
+  }
+  function fmtDate(value) {
+    if (!value) return "Never";
+    return new Date(value).toLocaleDateString(undefined,
+      { year: "numeric", month: "short", day: "numeric" });
+  }
+
+  function row(key) {
+    var status = statusOf(key);
+    var nameCell = el("td", {}, [key.name]);
+    if (isThisBrowsersKey(key)) {
+      nameCell.appendChild(document.createTextNode(" "));
+      nameCell.appendChild(el("span", { class: "badge badge-live", title: "The key this browser is connected with" }, ["This browser"]));
+    }
+    var actions = el("div", { class: "cell-actions" }, [
+      el("span", { class: "cell-muted", "aria-disabled": "true", title: "Key rotation is coming soon" }, [
+        "Rotate ", el("span", { class: "badge badge-soon" }, ["Soon"])
+      ])
+    ]);
+    if (!key.revoked_at) {
+      var revokeBtn = el("button", { class: "btn btn-sm", type: "button" }, ["Revoke"]);
+      revokeBtn.addEventListener("click", function () { askRevoke(key); });
+      actions.appendChild(revokeBtn);
+    }
+    return el("tr", {}, [
+      nameCell,
+      el("td", {}, [el("span", { class: "mono" }, [key.key_prefix + "…" + key.key_last4])]),
+      el("td", {}, [el("span", { class: "badge " + status.cls }, [status.label])]),
+      el("td", {}, [el("span", { class: "cell-muted" }, ["IntelliAI STT"])]),
+      el("td", {}, [el("span", { class: "cell-muted" }, [fmtDate(key.created_at)])]),
+      el("td", {}, [el("span", { class: "cell-muted" }, [fmtDate(key.last_used_at)])]),
+      el("td", {}, [actions])
+    ]);
+  }
+
+  function showDisconnected(reason) {
+    keysSection.classList.add("hidden");
+    disconnected.classList.remove("hidden");
+    document.getElementById("create-btn").disabled = true;
+    if (reason) document.getElementById("disconnected-reason").textContent = reason;
+  }
+
+  function load() {
+    if (!IntelliAI.getKey()) {
+      showDisconnected();
+      return;
+    }
+    IntelliAI.apiJSON("/v1/api-keys").then(function (body) {
+      disconnected.classList.add("hidden");
+      keysSection.classList.remove("hidden");
+      document.getElementById("create-btn").disabled = false;
+      tbody.replaceChildren();
+      var keys = body.data || [];
+      emptyCard.classList.toggle("hidden", keys.length !== 0);
+      tableWrap.classList.toggle("hidden", keys.length === 0);
+      keys.forEach(function (key) { tbody.appendChild(row(key)); });
+    }).catch(function (error) {
+      showDisconnected(error.status === 401
+        ? "Your saved API key was rejected — connect with a current one."
+        : "Could not reach the API: " + error.message);
+    });
+  }
+
+  /* ── create flow ──────────────────────────────────────────── */
+  var createOverlay = document.getElementById("create-overlay");
+  var nameInput = document.getElementById("key-name");
+  var createStatus = document.getElementById("create-status");
+  var formView = document.getElementById("create-form-view");
+  var doneView = document.getElementById("create-done-view");
+
+  var createPending = false;
+
+  function openCreate() {
+    if (!IntelliAI.getKey()) return; /* disconnected: nothing to auth with */
+    nameInput.value = "";
+    document.getElementById("new-key").textContent = ""; /* never a stale secret */
+    createStatus.textContent = "";
+    createStatus.className = "status-line";
+    formView.classList.remove("hidden");
+    doneView.classList.add("hidden");
+    openModal(createOverlay, nameInput);
+  }
+  function submitCreate() {
+    var name = nameInput.value.trim();
+    if (!name) {
+      createStatus.textContent = "Give the key a name first.";
+      createStatus.className = "status-line err";
+      return;
+    }
+    if (createPending) return;
+    createPending = true;
+    var submit = document.getElementById("create-submit");
+    var cancel = document.getElementById("create-cancel");
+    submit.disabled = true;
+    cancel.disabled = true;
+    createStatus.textContent = "Creating…";
+    createStatus.className = "status-line";
+    IntelliAI.apiJSON("/v1/api-keys", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name })
+    }).then(function (body) {
+      document.getElementById("new-key").textContent = body.key;
+      formView.classList.add("hidden");
+      doneView.classList.remove("hidden");
+      document.getElementById("create-done").focus();
+      load(); /* the list behind the modal is already up to date */
+    }).catch(function (error) {
+      createStatus.textContent = error.message;
+      createStatus.className = "status-line err";
+    }).finally(function () {
+      createPending = false;
+      submit.disabled = false;
+      cancel.disabled = false;
+    });
+  }
+  function reallyCloseCreate() {
+    /* Wipe the secret from the DOM the moment the dialog closes. */
+    document.getElementById("new-key").textContent = "";
+    closeModal(createOverlay);
+  }
+  function closeCreate() {
+    /* Never dismissable mid-request — a key the server minted MUST be
+     * shown. And the reveal view closes only through "I've stored it":
+     * an accidental Escape must not destroy a shown-once secret. */
+    if (createPending) return;
+    if (!doneView.classList.contains("hidden")) return;
+    reallyCloseCreate();
+  }
+  /* The reveal never survives leaving the page (incl. back/forward cache). */
+  window.addEventListener("pagehide", function () {
+    document.getElementById("new-key").textContent = "";
+  });
+  document.getElementById("create-btn").addEventListener("click", openCreate);
+  document.getElementById("empty-create-btn").addEventListener("click", openCreate);
+  document.getElementById("create-submit").addEventListener("click", submitCreate);
+  nameInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") submitCreate();
+  });
+  document.getElementById("create-cancel").addEventListener("click", closeCreate);
+  document.getElementById("create-done").addEventListener("click", reallyCloseCreate);
+  createOverlay.addEventListener("modal-close", closeCreate);
+
+  /* ── revoke flow ──────────────────────────────────────────── */
+  var revokeOverlay = document.getElementById("revoke-overlay");
+  var revokeTarget = null;
+
+  function askRevoke(key) {
+    revokeTarget = key;
+    document.getElementById("revoke-detail").textContent =
+      "“" + key.name + "” (" + key.key_prefix + "…" + key.key_last4 + ") stops working on its next request. This cannot be undone.";
+    document.getElementById("revoke-self-warning").classList.toggle("hidden", !isThisBrowsersKey(key));
+    var status = document.getElementById("revoke-status");
+    status.textContent = "";
+    status.className = "status-line";
+    openModal(revokeOverlay, document.getElementById("revoke-cancel"));
+  }
+  function closeRevoke() { revokeTarget = null; closeModal(revokeOverlay); }
+  document.getElementById("revoke-cancel").addEventListener("click", closeRevoke);
+  revokeOverlay.addEventListener("modal-close", closeRevoke);
+  document.getElementById("revoke-confirm").addEventListener("click", function () {
+    if (!revokeTarget) return;
+    var confirmBtn = document.getElementById("revoke-confirm");
+    if (confirmBtn.disabled) return;
+    confirmBtn.disabled = true;
+    var wasSelf = isThisBrowsersKey(revokeTarget);
+    IntelliAI.apiJSON("/v1/api-keys/" + encodeURIComponent(revokeTarget.id) + "/revoke", { method: "POST" })
+      .then(function () {
+        closeRevoke();
+        if (wasSelf) {
+          /* The bearer this page runs on is gone: say so honestly and
+           * let the chip re-check with a fresh request. */
+          showDisconnected("You revoked the key this browser was using. Connect with a new key from the Dashboard.");
+          IntelliAI.refreshIdentity(true);
+        } else {
+          load();
+          /* The revoke button that held focus is being re-rendered away;
+           * anchor focus on the section heading instead of <body>. */
+          document.getElementById("keys-heading").focus();
+        }
+      }).catch(function (error) {
+        var status = document.getElementById("revoke-status");
+        status.textContent = error.message;
+        status.className = "status-line err";
+      }).finally(function () {
+        confirmBtn.disabled = false;
+      });
+  });
+
+  load();
+});
+</script>
+</body>
+</html>

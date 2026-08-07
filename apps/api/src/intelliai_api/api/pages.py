@@ -47,6 +47,12 @@ async def console_dashboard() -> HTMLResponse:
     return HTMLResponse(_static_text("console", "dashboard.html"), headers=_NO_CACHE)
 
 
+@router.get("/console/keys", include_in_schema=False)
+async def console_keys() -> HTMLResponse:
+    """API key management: create (shown once), list, revoke."""
+    return HTMLResponse(_static_text("console", "keys.html"), headers=_NO_CACHE)
+
+
 @router.get("/console/playground", include_in_schema=False)
 async def console_playground() -> HTMLResponse:
     """Speech to Text playground — IntelliAI STT's interactive page."""
