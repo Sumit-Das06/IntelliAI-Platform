@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>AI Services · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="services">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head">
+        <h1>AI Services</h1>
+        <p class="sub">The IntelliAI product catalogue. One API key, every service — new services light up here as they launch.</p>
+      </div>
+
+      <div id="catalogue"></div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+"use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var el = IntelliAI.el;
+  var catalogue = document.getElementById("catalogue");
+
+  function languageChips(service) {
+    var row = el("div", { class: "lang-row" }, [
+      el("span", { class: "lang-label" }, ["Languages"])
+    ]);
+    service.languages.forEach(function (language) {
+      var beta = language.tier === "beta";
+      row.appendChild(el("span", { class: "badge " + (beta ? "badge-beta" : "badge-ok") },
+        [beta ? language.name + " · Beta" : language.name]));
+    });
+    return row;
+  }
+
+  function serviceCard(service) {
+    var live = service.status === "production";
+    var card = el("div", { class: "card svc-card" + (live ? "" : " is-soon") });
+    card.appendChild(el("div", { class: "svc-head" }, [
+      IntelliAI.icon(service.icon),
+      el("div", { class: "svc-title" }, [el("h3", {}, [service.name])]),
+      el("span", { class: "badge " + (live ? "badge-live" : "badge-soon") },
+        [live ? "Production" : "Coming Soon"])
+    ]));
+    card.appendChild(el("p", {}, [service.desc]));
+    if (service.languages) card.appendChild(languageChips(service));
+    if (live) {
+      card.appendChild(el("div", { class: "svc-actions" }, [
+        el("a", { class: "btn btn-primary btn-sm", href: service.href }, [service.cta]),
+        el("a", { class: "btn btn-sm", href: "/docs", target: "_blank", rel: "noopener" }, ["View API Documentation"])
+      ]));
+    }
+    return card;
+  }
+
+  /* One section per category, in catalogue order — a future service in
+   * an existing category lands in that section automatically. */
+  var seen = [];
+  IntelliAI.SERVICES.forEach(function (service) {
+    if (seen.indexOf(service.category) === -1) seen.push(service.category);
+  });
+  seen.forEach(function (category) {
+    var section = el("section", { class: "section" }, [el("h2", {}, [category])]);
+    var grid = el("div", { class: "services-grid" });
+    IntelliAI.SERVICES.filter(function (service) {
+      return service.category === category;
+    }).forEach(function (service) {
+      grid.appendChild(serviceCard(service));
+    });
+    section.appendChild(grid);
+    catalogue.appendChild(section);
+  });
+});
+</script>
+</body>
+</html>

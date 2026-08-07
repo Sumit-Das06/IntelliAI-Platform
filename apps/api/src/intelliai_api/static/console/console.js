@@ -21,7 +21,7 @@ window.IntelliAI = (function () {
     { title: "Build", items: [
       { id: "keys", label: "API Keys", href: "/console/keys", status: "live" },
       { id: "playground", label: "Playground", href: "/console/playground", status: "live" },
-      { id: "services", label: "AI Services", href: "/console/services", status: "soon" }
+      { id: "services", label: "AI Services", href: "/console/services", status: "live" }
     ] },
     { title: "Data", items: [
       { id: "samples", label: "Speech Samples", href: "/console/samples", status: "soon" },
@@ -37,22 +37,50 @@ window.IntelliAI = (function () {
     ] }
   ];
 
-  /* The platform's public services. The console shows SERVICES, customers
-   * never think about foundation models. */
+  /* The platform's public product catalogue. The console shows SERVICES,
+   * customers never think about foundation models — categories, language
+   * tiers, and descriptions here are product facts, deliberately NOT
+   * derived from any internal registry. Launching a service = flipping
+   * one entry to production and giving it an href. */
   var SERVICES = [
     {
+      id: "stt",
       name: "IntelliAI STT",
+      category: "Speech",
+      icon: "mic",
       desc: "Speech to text in English, with Hindi and Arabic in beta - and human-correction capture built in.",
       status: "production",
+      languages: [
+        { name: "English", tier: "production" },
+        { name: "Hindi", tier: "beta" },
+        { name: "Arabic", tier: "beta" }
+      ],
       href: "/console/playground",
       cta: "Open Playground"
     },
-    { name: "IntelliAI TTS", desc: "Natural speech from text.", status: "soon" },
-    { name: "IntelliAI OCR", desc: "Text from images and documents.", status: "soon" },
-    { name: "IntelliAI Translate", desc: "Translation across Indian and global languages.", status: "soon" },
-    { name: "IntelliAI Vision", desc: "Understanding for images and video.", status: "soon" },
-    { name: "IntelliAI LLM", desc: "Reasoning and generation APIs.", status: "soon" }
+    { id: "tts", name: "IntelliAI TTS", category: "Speech Synthesis", icon: "wave", desc: "Natural speech from text.", status: "soon" },
+    { id: "ocr", name: "IntelliAI OCR", category: "Document Intelligence", icon: "doc", desc: "Text from images and documents.", status: "soon" },
+    { id: "translate", name: "IntelliAI Translate", category: "Translation", icon: "globe", desc: "Translation across Indian and global languages.", status: "soon" },
+    { id: "vision", name: "IntelliAI Vision", category: "Vision", icon: "eye", desc: "Understanding for images and video.", status: "soon" },
+    { id: "llm", name: "IntelliAI LLM", category: "LLM", icon: "spark", desc: "Reasoning and generation APIs.", status: "soon" }
   ];
+
+  /* Fixed local strings only — never user or server data. */
+  var ICONS = {
+    mic: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
+    wave: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4"/><path d="M8 7v10"/><path d="M12 4v16"/><path d="M16 7v10"/><path d="M20 10v4"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a13.5 13.5 0 0 1 0 18"/><path d="M12 3a13.5 13.5 0 0 0 0 18"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+    spark: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 4.9L19 9.8l-5.1 1.9L12 17l-1.9-5.3L5 9.8l5.1-1.9z"/><path d="M18.5 15.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>'
+  };
+
+  function icon(name) {
+    var span = document.createElement("span");
+    span.className = "svc-icon";
+    span.innerHTML = ICONS[name] || ICONS.spark;
+    return span;
+  }
 
   /* ── tiny DOM helper: attributes + children, no innerHTML ──── */
   function el(tag, attrs, children) {
@@ -258,6 +286,7 @@ window.IntelliAI = (function () {
   return {
     NAV: NAV,
     SERVICES: SERVICES,
+    icon: icon,
     el: el,
     getKey: getKey,
     setKey: setKey,

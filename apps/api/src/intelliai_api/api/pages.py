@@ -53,6 +53,12 @@ async def console_keys() -> HTMLResponse:
     return HTMLResponse(_static_text("console", "keys.html"), headers=_NO_CACHE)
 
 
+@router.get("/console/services", include_in_schema=False)
+async def console_services() -> HTMLResponse:
+    """The public product catalogue: IntelliAI services, never models."""
+    return HTMLResponse(_static_text("console", "services.html"), headers=_NO_CACHE)
+
+
 @router.get("/console/playground", include_in_schema=False)
 async def console_playground() -> HTMLResponse:
     """Speech to Text playground — IntelliAI STT's interactive page."""

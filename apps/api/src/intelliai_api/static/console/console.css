@@ -23,6 +23,7 @@
   --ok: #2c6e49;
   --ok-soft: rgba(44, 110, 73, 0.12);
   --warn: #9a6b1f;
+  --warn-soft: rgba(154, 107, 31, 0.12);
   --radius: 12px;
   --sidebar-w: 248px;
 }
@@ -43,6 +44,7 @@
     --ok: #74c69d;
     --ok-soft: rgba(116, 198, 157, 0.16);
     --warn: #d9a441;
+    --warn-soft: rgba(217, 164, 65, 0.16);
   }
 }
 
@@ -284,6 +286,7 @@ a.nav-item:hover { background: var(--hover); }
 .badge-live { background: var(--accent-soft); color: var(--accent); }
 .badge-soon { background: var(--hover); color: var(--muted); }
 .badge-ok { background: var(--ok-soft); color: var(--ok); }
+.badge-beta { background: var(--warn-soft); color: var(--warn); }
 
 /* ── Services grid ──────────────────────────────────────────── */
 .services-grid {
@@ -302,6 +305,40 @@ a.nav-item:hover { background: var(--hover); }
   text-decoration: none;
 }
 .service-card .goto:hover { text-decoration: underline; }
+
+/* ── Service catalogue (AI Services page) ───────────────────── */
+.svc-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.svc-card { display: flex; flex-direction: column; gap: 12px; }
+/* Production services get room to breathe; Coming Soon stays compact. */
+@media (min-width: 700px) {
+  .svc-card:not(.is-soon) { grid-column: span 2; }
+}
+.svc-card.is-soon .svc-icon { background: var(--hover); color: var(--muted); }
+.svc-card.is-soon h3, .svc-card.is-soon p { color: var(--muted); }
+.svc-head { display: flex; align-items: center; gap: 12px; }
+.svc-head .svc-title { flex: 1 1 auto; min-width: 0; }
+.svc-head h3 { margin: 0; font-size: 1rem; }
+.svc-card p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+.lang-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.lang-row .lang-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 2px;
+}
+.svc-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
 
 /* ── Code block ─────────────────────────────────────────────── */
 .codeblock {

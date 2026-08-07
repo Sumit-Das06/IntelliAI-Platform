@@ -41,6 +41,42 @@ async def test_the_keys_page_is_served_as_html(settings: Settings, db_engine: As
     assert "it will never be shown again" in response.text
 
 
+async def test_the_services_page_is_served_as_html(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        response = await client.get("/console/services")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert 'data-page="services"' in response.text
+    assert "The IntelliAI product catalogue" in response.text
+
+
+async def test_the_catalogue_speaks_in_products_and_languages(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # The catalogue data lives in the shared console kit: categories are
+    # product truths (Speech, Document Intelligence, ...), languages carry
+    # honest tiers (Hindi and Arabic are beta), and every future service
+    # is one entry — this test pins the vocabulary customers see.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        js = (await client.get("/console/assets/console.js")).text
+
+    for category in (
+        "Speech",
+        "Speech Synthesis",
+        "Document Intelligence",
+        "Translation",
+        "Vision",
+        "LLM",
+    ):
+        assert category in js
+    assert '{ name: "English", tier: "production" }' in js
+    assert '{ name: "Hindi", tier: "beta" }' in js
+    assert '{ name: "Arabic", tier: "beta" }' in js
+
+
 async def test_the_root_url_leads_to_the_console(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
@@ -112,6 +148,7 @@ async def test_the_navigation_carries_the_whole_platform(
         '{ id: "dashboard", label: "Dashboard", href: "/console", status: "live" }',
         '{ id: "keys", label: "API Keys", href: "/console/keys", status: "live" }',
         '{ id: "playground", label: "Playground", href: "/console/playground", status: "live" }',
+        '{ id: "services", label: "AI Services", href: "/console/services", status: "live" }',
     ):
         assert live_entry in js
 
@@ -123,6 +160,7 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
         pages = [
             (await client.get("/console")).text,
             (await client.get("/console/keys")).text,
+            (await client.get("/console/services")).text,
             (await client.get("/console/playground")).text,
             (await client.get("/console/assets/console.js")).text,
             (await client.get("/console/assets/console.css")).text,
@@ -145,6 +183,6 @@ def test_the_console_assets_ship_inside_the_package() -> None:
     # importlib.resources is how the routes read them, so this is exactly
     # the packaging guarantee: wherever the package goes, the console goes.
     console = files("intelliai_api") / "static" / "console"
-    for name in ("dashboard.html", "keys.html", "console.css", "console.js"):
+    for name in ("dashboard.html", "keys.html", "services.html", "console.css", "console.js"):
         asset = console / name
         assert asset.is_file()
