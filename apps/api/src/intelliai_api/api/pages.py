@@ -61,8 +61,8 @@ async def console_services() -> HTMLResponse:
 
 @router.get("/console/playground", include_in_schema=False)
 async def console_playground() -> HTMLResponse:
-    """Speech to Text playground — IntelliAI STT's interactive page."""
-    return HTMLResponse(_static_text("playground.html"), headers=_NO_CACHE)
+    """The STT Studio — IntelliAI STT's primary product experience."""
+    return HTMLResponse(_static_text("console", "studio.html"), headers=_NO_CACHE)
 
 
 @router.get("/console/assets/{asset}", include_in_schema=False)

@@ -461,6 +461,32 @@ table.table { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-wi
 .tab:hover { color: var(--ink); }
 .tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
 
+/* ── STT Studio ─────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+.summary-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.summary-chip {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  background: var(--bg);
+}
+.summary-chip span { color: var(--muted); }
+.summary-chip b { font-weight: 600; }
+details.dev-details { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+details.dev-details summary { cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+details.dev-details summary:hover { color: var(--ink); }
+details.dev-details .codeblock { margin-top: 10px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 0.82rem; margin: 10px 0 0; }
+.kv dt { color: var(--muted); white-space: nowrap; }
+.kv dd { margin: 0; word-break: break-all; }
+audio.player { width: 100%; margin-top: 10px; display: none; }
+audio.player.on { display: block; }
+
 /* ── Empty state ────────────────────────────────────────────── */
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .empty h3 { color: var(--ink); margin: 0 0 4px; font-size: 1rem; }

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Speech to Text · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="playground">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>Speech to Text</h1>
+          <p class="sub">Speak or upload audio, get text back, and teach it when it's wrong.</p>
+        </div>
+        <span class="badge badge-live" style="align-self: center;">IntelliAI STT · Production</span>
+      </div>
+
+      <div id="connect-note" class="notice hidden" style="margin-top: 12px;">
+        This console isn't connected yet — <a href="/console">connect your API key on the Dashboard</a> to use the Studio.
+      </div>
+
+      <div class="grid-2 section" style="margin-top: 18px;">
+        <!-- ── Input ── -->
+        <div class="card">
+          <h3>Audio</h3>
+          <div style="margin-top: 12px;">
+            <label class="label" for="lang">Language</label>
+            <select class="input" id="lang">
+              <option value="">Auto detect</option>
+              <option value="en">English</option>
+              <option value="hi">Hindi (Beta)</option>
+              <option value="ar">Arabic (Beta)</option>
+            </select>
+          </div>
+          <div class="btn-row" style="margin-top: 14px;">
+            <button class="btn" id="record" type="button">🎤 Record</button>
+            <button class="btn" id="upload" type="button">Upload file</button>
+          </div>
+          <input id="file" type="file" accept="audio/*" hidden>
+          <audio id="player" class="player" controls></audio>
+          <button class="btn btn-primary" id="transcribe" type="button" disabled
+                  style="width: 100%; margin-top: 14px;">Transcribe</button>
+          <div class="status-line" id="status"></div>
+        </div>
+
+        <!-- ── Output ── -->
+        <div class="card">
+          <h3>Transcript</h3>
+          <textarea class="input" id="transcript" style="min-height: 170px; resize: vertical; margin-top: 12px;"
+                    placeholder="Your transcript appears here…"></textarea>
+          <button class="btn btn-primary hidden" id="save" type="button"
+                  style="width: 100%; margin-top: 10px;">Save correction</button>
+          <div class="status-line" id="thanks"></div>
+          <div class="summary-row hidden" id="summary"></div>
+
+          <details class="dev-details" id="dev-details">
+            <summary>Developer details</summary>
+            <dl class="kv">
+              <dt>Request ID</dt><dd id="dev-request">—</dd>
+              <dt>Sample ID</dt><dd id="dev-sample">—</dd>
+              <dt>Client</dt><dd>web (X-IntelliAI-Client)</dd>
+            </dl>
+            <div class="codeblock">
+              <button class="copy-btn" data-copy-target="dev-response" type="button">Copy</button>
+              <pre id="dev-response">The raw response JSON appears here after a request.</pre>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- ── Code examples ── -->
+      <section class="section">
+        <h2>Use it from code</h2>
+        <div class="card">
+          <p style="margin-bottom: 12px;">The Studio uses the same public API you would. Replace <span class="mono">YOUR_API_KEY</span> with a key from <a href="/console/keys">API Keys</a>.</p>
+          <div class="tabs" role="tablist" aria-label="Code examples">
+            <button class="tab is-active" type="button" role="tab" id="tab-curl" aria-controls="example-curl-wrap" aria-selected="true" data-example="curl">cURL</button>
+            <button class="tab" type="button" role="tab" id="tab-python" aria-controls="example-python-wrap" aria-selected="false" tabindex="-1" data-example="python">Python</button>
+            <button class="tab" type="button" role="tab" id="tab-js" aria-controls="example-js-wrap" aria-selected="false" tabindex="-1" data-example="js">JavaScript</button>
+          </div>
+          <div class="codeblock" id="example-curl-wrap" role="tabpanel" aria-labelledby="tab-curl">
+            <button class="copy-btn" data-copy-target="example-curl" type="button">Copy</button>
+            <pre id="example-curl"></pre>
+          </div>
+          <div class="codeblock hidden" id="example-python-wrap" role="tabpanel" aria-labelledby="tab-python">
+            <button class="copy-btn" data-copy-target="example-python" type="button">Copy</button>
+            <pre id="example-python"></pre>
+          </div>
+          <div class="codeblock hidden" id="example-js-wrap" role="tabpanel" aria-labelledby="tab-js">
+            <button class="copy-btn" data-copy-target="example-js" type="button">Copy</button>
+            <pre id="example-js"></pre>
+          </div>
+        </div>
+      </section>
+
+      <p class="notice">
+        Recordings, transcripts, and submitted corrections may be stored to improve
+        IntelliAI speech models when your organization has granted data collection
+        consent. Do not record other people without permission.
+      </p>
+
+    </main>
+  </div>
+</div>
+
+<script>
+"use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var el = IntelliAI.el;
+  var recordBtn = document.getElementById("record");
+  var uploadBtn = document.getElementById("upload");
+  var transcribeBtn = document.getElementById("transcribe");
+  var fileInput = document.getElementById("file");
+  var player = document.getElementById("player");
+  var statusEl = document.getElementById("status");
+  var transcript = document.getElementById("transcript");
+  var saveBtn = document.getElementById("save");
+  var thanksEl = document.getElementById("thanks");
+  var summaryEl = document.getElementById("summary");
+  var langSelect = document.getElementById("lang");
+
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+  var audioBlob = null;
+  var audioName = "recording.webm";
+  var sampleId = null;
+  var recorder = null;
+  var chunks = [];
+
+  if (!IntelliAI.getKey()) document.getElementById("connect-note").classList.remove("hidden");
+
+  var examples = IntelliAI.codeExamples(window.location.origin);
+  document.getElementById("example-curl").textContent = examples.curl;
+  document.getElementById("example-python").textContent = examples.python;
+  document.getElementById("example-js").textContent = examples.js;
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var active = t === tab;
+      t.classList.toggle("is-active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+      t.tabIndex = active ? 0 : -1;
+    });
+    ["curl", "python", "js"].forEach(function (name) {
+      document.getElementById("example-" + name + "-wrap")
+        .classList.toggle("hidden", name !== tab.dataset.example);
+    });
+  }
+  tabs.forEach(function (tab, index) {
+    tab.addEventListener("click", function () { selectTab(tab); });
+    tab.addEventListener("keydown", function (event) {
+      var target = null;
+      if (event.key === "ArrowRight") target = tabs[(index + 1) % tabs.length];
+      else if (event.key === "ArrowLeft") target = tabs[(index + tabs.length - 1) % tabs.length];
+      else if (event.key === "Home") target = tabs[0];
+      else if (event.key === "End") target = tabs[tabs.length - 1];
+      if (target) { event.preventDefault(); selectTab(target); target.focus(); }
+    });
+  });
+
+  function setStatus(text, kind) {
+    statusEl.textContent = text || "";
+    statusEl.className = "status-line" + (kind ? " " + kind : "");
+  }
+  function setThanks(text, kind) {
+    thanksEl.textContent = text || "";
+    thanksEl.className = "status-line" + (kind ? " " + kind : "");
+  }
+
+  function setAudio(blob, name) {
+    audioBlob = blob;
+    audioName = name;
+    player.src = URL.createObjectURL(blob);
+    player.classList.add("on");
+    transcribeBtn.disabled = false;
+    saveBtn.classList.add("hidden");
+    sampleId = null;
+    setThanks("");
+  }
+
+  function recorderMime() {
+    if (!window.MediaRecorder) return null;
+    var candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
+    for (var i = 0; i < candidates.length; i++) {
+      if (MediaRecorder.isTypeSupported(candidates[i])) return candidates[i];
+    }
+    return "";
+  }
+
+  recordBtn.addEventListener("click", function () {
+    if (recorder && recorder.state === "recording") {
+      recorder.stop();
+      return;
+    }
+    var mime = recorderMime();
+    if (mime === null) {
+      setStatus("Recording is not supported in this browser — use Upload instead.", "err");
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      chunks = [];
+      recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      recorder.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
+      recorder.onstop = function () {
+        stream.getTracks().forEach(function (t) { t.stop(); });
+        var type = recorder.mimeType || "audio/webm";
+        var ext = type.indexOf("mp4") !== -1 ? "m4a" : "webm";
+        setAudio(new Blob(chunks, { type: type }), "recording." + ext);
+        recordBtn.textContent = "🎤 Record";
+        recordBtn.classList.remove("btn-danger");
+        setStatus("Recorded. Ready to transcribe.");
+      };
+      recorder.start();
+      recordBtn.textContent = "■ Stop";
+      recordBtn.classList.add("btn-danger");
+      setStatus("Recording… speak now, then press Stop.");
+    }).catch(function () {
+      setStatus("Microphone permission was refused.", "err");
+    });
+  });
+
+  uploadBtn.addEventListener("click", function () { fileInput.click(); });
+  fileInput.addEventListener("change", function () {
+    if (fileInput.files.length) {
+      var f = fileInput.files[0];
+      setAudio(f, f.name);
+      setStatus("File ready: " + f.name);
+    }
+  });
+
+  function summaryChip(label, value) {
+    return el("span", { class: "summary-chip" }, [
+      el("span", {}, [label]), el("b", {}, [value])
+    ]);
+  }
+
+  function showSummary(body, elapsedMs) {
+    summaryEl.replaceChildren();
+    var language = LANGUAGE_NAMES[body.language] || body.language || "—";
+    summaryEl.appendChild(summaryChip("Service", "IntelliAI STT"));
+    summaryEl.appendChild(summaryChip("Language", language));
+    if (typeof body.duration === "number") {
+      summaryEl.appendChild(summaryChip("Audio", body.duration.toFixed(1) + " s"));
+    }
+    summaryEl.appendChild(summaryChip("Time", (elapsedMs / 1000).toFixed(1) + " s"));
+    summaryEl.classList.remove("hidden");
+  }
+
+  function apiError(body, fallback) {
+    try { return body.error.message || fallback; } catch (e) { return fallback; }
+  }
+
+  transcribeBtn.addEventListener("click", function () {
+    var key = IntelliAI.getKey();
+    if (!key) { setStatus("Connect your API key on the Dashboard first.", "err"); return; }
+    if (!audioBlob) { setStatus("Record or upload audio first.", "err"); return; }
+    var form = new FormData();
+    form.append("file", audioBlob, audioName);
+    form.append("model", "intelliai-stt");
+    form.append("response_format", "verbose_json");
+    if (langSelect.value) form.append("language", langSelect.value);
+
+    transcribeBtn.disabled = true;
+    setStatus("Transcribing…");
+    var started = performance.now();
+    fetch("/v1/audio/transcriptions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + key,
+        "X-IntelliAI-Client": "web"
+      },
+      body: form
+    }).then(function (response) {
+      var elapsedMs = Math.round(performance.now() - started);
+      sampleId = response.headers.get("X-IntelliAI-Sample");
+      var requestId = response.headers.get("X-Request-ID");
+      return response.json().then(function (body) {
+        document.getElementById("dev-request").textContent = requestId || "—";
+        document.getElementById("dev-sample").textContent = sampleId || "not stored (no consent)";
+        document.getElementById("dev-response").textContent = JSON.stringify(body, null, 2);
+        if (!response.ok) throw new Error(apiError(body, "Transcription failed."));
+        transcript.value = body.text || "";
+        showSummary(body, elapsedMs);
+        if (sampleId) {
+          saveBtn.classList.remove("hidden");
+          saveBtn.textContent = "Save correction";
+          saveBtn.disabled = false;
+          setThanks("Stored with your organization's consent — this helps improve IntelliAI STT.", "ok");
+        } else {
+          saveBtn.classList.add("hidden");
+          setThanks("");
+        }
+        setStatus("Done. Edit the text if anything is wrong.", "ok");
+      });
+    }).catch(function (err) {
+      setStatus(err.message || "Network error.", "err");
+    }).finally(function () {
+      transcribeBtn.disabled = false;
+    });
+  });
+
+  saveBtn.addEventListener("click", function () {
+    if (!sampleId) return;
+    var text = transcript.value.trim();
+    if (!text) { setThanks("The correction cannot be empty.", "err"); return; }
+    if (saveBtn.disabled) return;
+    saveBtn.disabled = true;
+    IntelliAI.apiJSON("/v1/audio/transcriptions/" + encodeURIComponent(sampleId) + "/correction", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ corrected_text: text })
+    }).then(function () {
+      saveBtn.textContent = "Correction saved ✓";
+      setThanks("Your correction helps improve IntelliAI STT.", "ok");
+    }).catch(function (error) {
+      setThanks(error.message || "Saving failed.", "err");
+    }).finally(function () {
+      saveBtn.disabled = false;
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -254,6 +254,33 @@ window.IntelliAI = (function () {
     });
   }
 
+  /* ── shared code examples (API Keys page, STT Studio) ──────── */
+  function codeExamples(origin) {
+    return {
+      curl: "curl " + origin + "/v1/audio/transcriptions \\\n" +
+        "  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n" +
+        "  -F model=intelliai-stt \\\n" +
+        "  -F file=@audio.wav",
+      python: "import requests\n\n" +
+        "response = requests.post(\n" +
+        "    \"" + origin + "/v1/audio/transcriptions\",\n" +
+        "    headers={\"Authorization\": \"Bearer YOUR_API_KEY\"},\n" +
+        "    data={\"model\": \"intelliai-stt\"},\n" +
+        "    files={\"file\": open(\"audio.wav\", \"rb\")},\n" +
+        ")\n" +
+        "print(response.json()[\"text\"])",
+      js: "const form = new FormData();\n" +
+        "form.append(\"model\", \"intelliai-stt\");\n" +
+        "form.append(\"file\", audioFile);\n\n" +
+        "const response = await fetch(\"" + origin + "/v1/audio/transcriptions\", {\n" +
+        "  method: \"POST\",\n" +
+        "  headers: { \"Authorization\": \"Bearer YOUR_API_KEY\" },\n" +
+        "  body: form,\n" +
+        "});\n" +
+        "const { text } = await response.json();"
+    };
+  }
+
   /* ── copy-to-clipboard for .copy-btn[data-copy-target] ─────── */
   function bindCopyButtons() {
     document.addEventListener("click", function (event) {
@@ -294,6 +321,7 @@ window.IntelliAI = (function () {
     apiJSON: apiJSON,
     identity: identity,
     refreshIdentity: refreshIdentity,
-    renderServices: renderServices
+    renderServices: renderServices,
+    codeExamples: codeExamples
   };
 })();

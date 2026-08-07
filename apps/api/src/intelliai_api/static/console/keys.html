@@ -150,31 +150,10 @@ document.addEventListener("DOMContentLoaded", function () {
   var tbody = document.getElementById("keys-tbody");
 
   /* ── code examples (origin-aware, key never embedded) ─────── */
-  var origin = window.location.origin;
-  document.getElementById("example-curl").textContent =
-    "curl " + origin + "/v1/audio/transcriptions \\\n" +
-    "  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n" +
-    "  -F model=intelliai-stt \\\n" +
-    "  -F file=@audio.wav";
-  document.getElementById("example-python").textContent =
-    "import requests\n\n" +
-    "response = requests.post(\n" +
-    "    \"" + origin + "/v1/audio/transcriptions\",\n" +
-    "    headers={\"Authorization\": \"Bearer YOUR_API_KEY\"},\n" +
-    "    data={\"model\": \"intelliai-stt\"},\n" +
-    "    files={\"file\": open(\"audio.wav\", \"rb\")},\n" +
-    ")\n" +
-    "print(response.json()[\"text\"])";
-  document.getElementById("example-js").textContent =
-    "const form = new FormData();\n" +
-    "form.append(\"model\", \"intelliai-stt\");\n" +
-    "form.append(\"file\", audioFile);\n\n" +
-    "const response = await fetch(\"" + origin + "/v1/audio/transcriptions\", {\n" +
-    "  method: \"POST\",\n" +
-    "  headers: { \"Authorization\": \"Bearer YOUR_API_KEY\" },\n" +
-    "  body: form,\n" +
-    "});\n" +
-    "const { text } = await response.json();";
+  var examples = IntelliAI.codeExamples(window.location.origin);
+  document.getElementById("example-curl").textContent = examples.curl;
+  document.getElementById("example-python").textContent = examples.python;
+  document.getElementById("example-js").textContent = examples.js;
 
   /* Tabs implement the full ARIA tabs contract: roving tabindex plus
    * Arrow/Home/End movement — the roles promise it, so the keys keep it. */

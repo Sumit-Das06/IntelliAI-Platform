@@ -14,17 +14,35 @@ import time
 from datetime import datetime
 from typing import Annotated, Any, Literal, cast
 
-from fastapi import APIRouter, File, Form, UploadFile
+from fastapi import APIRouter, File, Form, Header, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from pydantic import BaseModel, Field
 
 from intelliai_api.api.deps import CollectionDep, CurrentAuth, IdempotencyKey, TranscriptionDep
+from intelliai_api.db.models import ClientSource
 
 router = APIRouter(prefix="/audio", tags=["audio"])
 
 ResponseFormat = Literal["json", "text", "verbose_json"]
 
 SAMPLE_HEADER = "X-IntelliAI-Sample"
+CLIENT_HEADER = "X-IntelliAI-Client"
+
+
+def _parse_client(header: str | None) -> tuple[ClientSource, str | None]:
+    """``source[/version]`` — e.g. ``web`` or ``keyboard/1.4.0``.
+
+    A labelling header must never be able to fail a transcription:
+    absent, unknown, or malformed values fall back to the API default.
+    """
+    if header is None or not header.strip():
+        return ClientSource.API, None
+    source_part, _, version_part = header.strip().partition("/")
+    try:
+        source = ClientSource(source_part.strip().lower())
+    except ValueError:
+        return ClientSource.API, None
+    return source, version_part.strip()[:64] or None
 
 
 @router.post("/transcriptions")
@@ -37,8 +55,10 @@ async def create_transcription(
     idempotency_key: IdempotencyKey,
     language: Annotated[str | None, Form()] = None,
     response_format: Annotated[ResponseFormat, Form()] = "json",
+    client: Annotated[str | None, Header(alias=CLIENT_HEADER)] = None,
 ) -> Response:
     started = time.monotonic()
+    client_source, client_version = _parse_client(client)
     audio = await file.read()
     outcome = await service.transcribe(
         auth=auth,
@@ -60,6 +80,8 @@ async def create_transcription(
         idempotency_key=idempotency_key,
         outcome=outcome,
         request_started=started,
+        client_source=client_source,
+        client_version=client_version,
     )
     headers = {SAMPLE_HEADER: sample_id} if sample_id is not None else None
     result = outcome.result

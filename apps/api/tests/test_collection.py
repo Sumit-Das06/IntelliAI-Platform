@@ -159,6 +159,75 @@ async def test_consented_request_stores_object_row_event_and_header(
         assert event.detail["client_source"] == "api"
 
 
+async def test_the_client_header_labels_the_sample(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    runtime = FakeRuntimeClient(envelope=make_envelope())
+    storage = FakeObjectStorage()
+    async with client_with_db(settings, db_engine, install(runtime, storage)) as (
+        client,
+        factory,
+    ):
+        tenant = await _tenant(factory, "client-web@example.com", consent=True)
+        response = await client.post(
+            "/v1/audio/transcriptions",
+            headers={**_bearer(tenant.generated.secret), "X-IntelliAI-Client": "web/1.0"},
+            **_post_kwargs(),
+        )
+
+        assert response.status_code == 200
+        (sample,), (event,) = await _rows(factory)
+        assert sample.client_source is ClientSource.WEB
+        assert sample.client_version == "1.0"
+        assert event.detail["client_source"] == "web"
+
+
+async def test_a_bare_client_source_needs_no_version(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    runtime = FakeRuntimeClient(envelope=make_envelope())
+    storage = FakeObjectStorage()
+    async with client_with_db(settings, db_engine, install(runtime, storage)) as (
+        client,
+        factory,
+    ):
+        tenant = await _tenant(factory, "client-kbd@example.com", consent=True)
+        response = await client.post(
+            "/v1/audio/transcriptions",
+            headers={**_bearer(tenant.generated.secret), "X-IntelliAI-Client": "keyboard"},
+            **_post_kwargs(),
+        )
+
+        assert response.status_code == 200
+        (sample,), _events = await _rows(factory)
+        assert sample.client_source is ClientSource.KEYBOARD
+        assert sample.client_version is None
+
+
+async def test_an_unknown_client_header_falls_back_to_api(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # A labelling header must never be able to fail (or skew) a request:
+    # unrecognized values degrade to the API default, they don't error.
+    runtime = FakeRuntimeClient(envelope=make_envelope())
+    storage = FakeObjectStorage()
+    async with client_with_db(settings, db_engine, install(runtime, storage)) as (
+        client,
+        factory,
+    ):
+        tenant = await _tenant(factory, "client-odd@example.com", consent=True)
+        response = await client.post(
+            "/v1/audio/transcriptions",
+            headers={**_bearer(tenant.generated.secret), "X-IntelliAI-Client": "smart-fridge/9.9"},
+            **_post_kwargs(),
+        )
+
+        assert response.status_code == 200
+        (sample,), _events = await _rows(factory)
+        assert sample.client_source is ClientSource.API
+        assert sample.client_version is None
+
+
 async def test_without_consent_transcription_succeeds_and_nothing_is_stored(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:

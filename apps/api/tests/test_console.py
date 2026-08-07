@@ -183,6 +183,13 @@ def test_the_console_assets_ship_inside_the_package() -> None:
     # importlib.resources is how the routes read them, so this is exactly
     # the packaging guarantee: wherever the package goes, the console goes.
     console = files("intelliai_api") / "static" / "console"
-    for name in ("dashboard.html", "keys.html", "services.html", "console.css", "console.js"):
+    for name in (
+        "dashboard.html",
+        "keys.html",
+        "services.html",
+        "studio.html",
+        "console.css",
+        "console.js",
+    ):
         asset = console / name
         assert asset.is_file()
