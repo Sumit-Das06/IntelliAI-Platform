@@ -59,6 +59,12 @@ async def console_services() -> HTMLResponse:
     return HTMLResponse(_static_text("console", "services.html"), headers=_NO_CACHE)
 
 
+@router.get("/console/samples", include_in_schema=False)
+async def console_samples() -> HTMLResponse:
+    """Browse the organization's consented speech samples."""
+    return HTMLResponse(_static_text("console", "samples.html"), headers=_NO_CACHE)
+
+
 @router.get("/console/playground", include_in_schema=False)
 async def console_playground() -> HTMLResponse:
     """The STT Studio — IntelliAI STT's primary product experience."""

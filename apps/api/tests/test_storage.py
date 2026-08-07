@@ -14,6 +14,7 @@ from intelliai_api.main import create_app
 from intelliai_api.storage import (
     ObjectStorage,
     S3ObjectStorage,
+    StorageObjectMissingError,
     StorageWriteError,
     object_extension,
     object_key,
@@ -71,6 +72,12 @@ class FakeObjectStorage:
 
     async def put(self, *, key: str, data: bytes, content_type: str | None) -> None:
         self.puts.append((key, data, content_type))
+
+    async def get(self, *, key: str) -> bytes:
+        for stored_key, data, _content_type in self.puts:
+            if stored_key == key:
+                return data
+        raise StorageObjectMissingError(f"object {key!r} does not exist")
 
     async def close(self) -> None:
         self.closed = True

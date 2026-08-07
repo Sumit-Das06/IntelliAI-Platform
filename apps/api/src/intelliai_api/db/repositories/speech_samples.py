@@ -110,6 +110,15 @@ class SpeechSampleRepository:
         )
         return result.scalars().all()
 
+    async def list_events(self, sample_id: int) -> Sequence[SpeechSampleEvent]:
+        """The sample's lifecycle history, oldest first — timeline order."""
+        result = await self._session.execute(
+            select(SpeechSampleEvent)
+            .where(SpeechSampleEvent.sample_id == sample_id)
+            .order_by(SpeechSampleEvent.occurred_at.asc(), SpeechSampleEvent.id.asc())
+        )
+        return result.scalars().all()
+
     async def record_event(
         self,
         sample_id: int,

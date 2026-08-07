@@ -93,13 +93,25 @@ class StorageWriteError(Exception):
     means — for collection it means: log, skip, never fail the request."""
 
 
+class StorageReadError(Exception):
+    """A read did not complete. Unlike writes, reads serve a customer who
+    asked for exactly this object — the caller maps this to its contract."""
+
+
+class StorageObjectMissingError(StorageReadError):
+    """The key does not exist — a row without its object. For the audio
+    endpoint that is a 404; for operators it is a data-integrity signal."""
+
+
 @runtime_checkable
 class ObjectStorage(Protocol):
-    """What the platform needs from an object store: durable puts and a
-    clean shutdown. Reads arrive with the console (Phase 3); this protocol
-    grows then, not speculatively."""
+    """What the platform needs from an object store: durable puts, reads
+    for the console's playback, and a clean shutdown. This protocol grew
+    ``get`` when the Speech Samples page needed it — never speculatively."""
 
     async def put(self, *, key: str, data: bytes, content_type: str | None) -> None: ...
+
+    async def get(self, *, key: str) -> bytes: ...
 
     async def close(self) -> None: ...
 
@@ -153,6 +165,19 @@ class S3ObjectStorage:
             raise
         except Exception as exc:
             raise StorageWriteError(f"put {key!r} failed: {type(exc).__name__}") from exc
+
+    async def get(self, *, key: str) -> bytes:
+        try:
+            response = await asyncio.to_thread(
+                self._client.get_object, Bucket=self._bucket, Key=key
+            )
+            return await asyncio.to_thread(response["Body"].read)
+        except self._client.exceptions.NoSuchKey as exc:
+            raise StorageObjectMissingError(f"object {key!r} does not exist") from exc
+        except StorageReadError:
+            raise
+        except Exception as exc:
+            raise StorageReadError(f"get {key!r} failed: {type(exc).__name__}") from exc
 
     async def _ensure_bucket(self) -> None:
         """Create the bucket on first write if absent (dev MinIO has no

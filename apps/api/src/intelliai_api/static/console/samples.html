@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Speech Samples · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="samples">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head">
+        <h1>Speech Samples</h1>
+        <p class="sub">Every consented recording your organization has contributed — browse, listen, and see how each one improves IntelliAI STT.</p>
+      </div>
+
+      <!-- ── Not connected ── -->
+      <section id="disconnected" class="section hidden">
+        <div class="card empty">
+          <h3>Connect to browse samples</h3>
+          <p id="disconnected-reason">This console isn't connected to a workspace yet.</p>
+          <a class="btn btn-primary" href="/console">Go to Dashboard</a>
+        </div>
+      </section>
+
+      <!-- ── Browser ── -->
+      <section id="browser" class="section hidden">
+        <div class="toolbar">
+          <input class="input grow" id="search" type="search" placeholder="Search transcripts…" aria-label="Search transcripts">
+          <select class="input" id="filter-language" aria-label="Filter by language">
+            <option value="">All languages</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ar">Arabic</option>
+            <option value="other">Other</option>
+          </select>
+          <select class="input" id="filter-status" aria-label="Filter by status">
+            <option value="">All statuses</option>
+            <option value="collected">Collected</option>
+            <option value="validated">Validated</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+            <option value="training">Training</option>
+            <option value="archived">Archived</option>
+          </select>
+          <select class="input" id="filter-client" aria-label="Filter by client">
+            <option value="">All clients</option>
+            <option value="web">Web</option>
+            <option value="keyboard">Keyboard</option>
+            <option value="api">API</option>
+          </select>
+        </div>
+        <p class="count-line" id="count-line"></p>
+        <div id="samples-empty" class="card empty hidden">
+          <h3>No speech samples yet</h3>
+          <p>Open the Studio and say something — consented recordings appear here.</p>
+          <a class="btn btn-primary" href="/console/playground">Open Speech to Text</a>
+        </div>
+        <div id="no-matches" class="card empty hidden">
+          <h3>Nothing matches</h3>
+          <p>No samples match the current search and filters.</p>
+        </div>
+        <div class="sample-list" id="sample-list"></div>
+      </section>
+
+      <p class="notice">
+        Recordings, transcripts, and submitted corrections may be stored to improve
+        IntelliAI speech models when your organization has granted data collection
+        consent. Do not record other people without permission.
+      </p>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── Detail drawer ── -->
+<div class="drawer-overlay hidden" id="drawer-overlay"></div>
+<aside class="drawer hidden" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <div class="drawer-head">
+    <h2 id="drawer-title">Sample</h2>
+    <span class="badge" id="drawer-status"></span>
+    <button class="btn btn-sm" id="drawer-close" type="button">Close</button>
+  </div>
+  <audio id="drawer-audio" controls></audio>
+  <div class="block-label">Original transcript · immutable</div>
+  <div class="transcript-block muted" id="drawer-original"></div>
+  <div class="block-label">Current transcript</div>
+  <div class="transcript-block" id="drawer-current"></div>
+  <div class="summary-row" id="drawer-chips" style="margin-top: 14px;"></div>
+  <div class="block-label">Lifecycle</div>
+  <ul class="timeline" id="drawer-timeline"></ul>
+  <details class="dev-details">
+    <summary>Developer details</summary>
+    <dl class="kv" id="drawer-dev"></dl>
+  </details>
+</aside>
+
+<script>
+"use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var el = IntelliAI.el;
+  var browser = document.getElementById("browser");
+  var disconnected = document.getElementById("disconnected");
+  var listEl = document.getElementById("sample-list");
+  var countLine = document.getElementById("count-line");
+  var emptyCard = document.getElementById("samples-empty");
+  var noMatches = document.getElementById("no-matches");
+
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+  var CLIENT_NAMES = { web: "Web", keyboard: "Keyboard", api: "API" };
+  var STATUS_BADGES = {
+    collected: "badge-soon",
+    validated: "badge-beta",
+    accepted: "badge-ok",
+    rejected: "badge-danger",
+    training: "badge-live",
+    archived: "badge-soon"
+  };
+  var EVENT_NAMES = {
+    collected: "Collected",
+    corrected: "Corrected",
+    validated: "Validated",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    training: "Training",
+    archived: "Archived"
+  };
+
+  var samples = [];
+
+  function languageOf(sample) {
+    return sample.detected_language || sample.requested_language || "";
+  }
+  function languageName(code) {
+    return LANGUAGE_NAMES[code] || (code ? code.toUpperCase() : "—");
+  }
+  function titleCase(value) {
+    return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+  }
+  function fmtWhen(value) {
+    return new Date(value).toLocaleString(undefined,
+      { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  }
+  function isCorrected(sample) {
+    return sample.current_transcript !== sample.original_transcript;
+  }
+
+  function statusBadge(sample) {
+    return el("span", { class: "badge " + (STATUS_BADGES[sample.status] || "badge-soon") },
+      [titleCase(sample.status)]);
+  }
+
+  /* ── audio playback: bearer fetch → blob URL (audio tags cannot
+   * send Authorization headers themselves) ── */
+  var blobUrls = {};
+  function audioUrl(sample) {
+    if (blobUrls[sample.id]) return Promise.resolve(blobUrls[sample.id]);
+    return fetch("/v1/speech-samples/" + encodeURIComponent(sample.id) + "/audio", {
+      headers: { "Authorization": "Bearer " + IntelliAI.getKey() }
+    }).then(function (response) {
+      if (!response.ok) throw new Error("Audio unavailable.");
+      return response.blob();
+    }).then(function (blob) {
+      blobUrls[sample.id] = URL.createObjectURL(blob);
+      return blobUrls[sample.id];
+    });
+  }
+
+  function row(sample) {
+    var top = el("div", { class: "row-top" }, [
+      statusBadge(sample),
+      el("span", { class: "badge badge-soon" }, [languageName(languageOf(sample))]),
+      el("span", { class: "cell-muted" }, [CLIENT_NAMES[sample.client_source] || sample.client_source]),
+      el("span", { class: "cell-muted" }, [sample.duration_seconds.toFixed(1) + " s"])
+    ]);
+    if (isCorrected(sample)) {
+      top.appendChild(el("span", { class: "badge badge-ok" }, ["Corrected ✓"]));
+    }
+    var playBtn = el("button", { class: "btn btn-sm", type: "button", "aria-label": "Play sample" }, ["▶ Play"]);
+    top.appendChild(playBtn);
+    top.appendChild(el("span", { class: "row-time" }, [fmtWhen(sample.created_at)]));
+
+    var card = el("div", { class: "card sample-row", tabindex: "0", role: "button" }, [
+      top,
+      el("div", { class: "row-text" }, [sample.current_transcript || "(empty transcript)"])
+    ]);
+
+    playBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      playBtn.disabled = true;
+      audioUrl(sample).then(function (url) {
+        var audio = el("audio", { controls: "", src: url });
+        playBtn.replaceWith(audio);
+        audio.play();
+      }).catch(function () {
+        playBtn.disabled = false;
+        playBtn.textContent = "Audio unavailable";
+      });
+    });
+    function open() { openDrawer(sample); }
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
+    });
+    return card;
+  }
+
+  /* ── search + filters, client-side over the loaded window ── */
+  function applyFilters() {
+    var query = document.getElementById("search").value.trim().toLowerCase();
+    var lang = document.getElementById("filter-language").value;
+    var status = document.getElementById("filter-status").value;
+    var clientSource = document.getElementById("filter-client").value;
+    var shown = samples.filter(function (sample) {
+      if (status && sample.status !== status) return false;
+      if (clientSource && sample.client_source !== clientSource) return false;
+      if (lang) {
+        var code = languageOf(sample);
+        if (lang === "other" ? (code in LANGUAGE_NAMES) : code !== lang) return false;
+      }
+      if (query) {
+        var haystack = (sample.current_transcript + " " + sample.original_transcript).toLowerCase();
+        if (haystack.indexOf(query) === -1) return false;
+      }
+      return true;
+    });
+    listEl.replaceChildren();
+    shown.forEach(function (sample) { listEl.appendChild(row(sample)); });
+    emptyCard.classList.toggle("hidden", samples.length !== 0);
+    noMatches.classList.toggle("hidden", !(samples.length && !shown.length));
+    countLine.textContent = samples.length
+      ? "Showing " + shown.length + " of " + samples.length + " samples, newest first."
+      : "";
+  }
+  ["search", "filter-language", "filter-status", "filter-client"].forEach(function (id) {
+    document.getElementById(id).addEventListener("input", applyFilters);
+  });
+
+  function load() {
+    if (!IntelliAI.getKey()) {
+      disconnected.classList.remove("hidden");
+      return;
+    }
+    IntelliAI.apiJSON("/v1/speech-samples?limit=200").then(function (body) {
+      samples = body.data || [];
+      disconnected.classList.add("hidden");
+      browser.classList.remove("hidden");
+      applyFilters();
+    }).catch(function (error) {
+      browser.classList.add("hidden");
+      disconnected.classList.remove("hidden");
+      document.getElementById("disconnected-reason").textContent = error.status === 401
+        ? "Your saved API key was rejected — connect with a current one."
+        : "Could not reach the API: " + error.message;
+    });
+  }
+
+  /* ── detail drawer ── */
+  var overlay = document.getElementById("drawer-overlay");
+  var drawer = document.getElementById("drawer");
+  var lastTrigger = null;
+
+  function chip(label, value) {
+    return el("span", { class: "summary-chip" }, [el("span", {}, [label]), el("b", {}, [value])]);
+  }
+
+  function renderTimeline(detail) {
+    var timeline = document.getElementById("drawer-timeline");
+    timeline.replaceChildren();
+    var seen = {};
+    (detail.events || []).forEach(function (event) {
+      seen[event.event] = true;
+      timeline.appendChild(el("li", {}, [
+        el("div", { class: "t-name" }, [EVENT_NAMES[event.event] || event.event]),
+        el("div", { class: "t-time" }, [fmtWhen(event.occurred_at)])
+      ]));
+    });
+    /* The road ahead, honestly ghosted: stages this sample has not
+     * reached yet — acceptance review, then training runs. */
+    if (!seen.accepted && !seen.rejected) {
+      timeline.appendChild(el("li", { class: "ghost" }, [
+        el("div", { class: "t-name" }, ["Accepted"]),
+        el("div", { class: "t-time" }, ["Awaiting review"])
+      ]));
+    }
+    if (!seen.training) {
+      timeline.appendChild(el("li", { class: "ghost" }, [
+        el("div", { class: "t-name" }, ["Training"]),
+        el("div", { class: "t-time" }, ["Future — when this sample joins a training dataset"])
+      ]));
+    }
+  }
+
+  function openDrawer(sample) {
+    lastTrigger = document.activeElement;
+    document.getElementById("drawer-title").textContent = sample.id;
+    var statusEl = document.getElementById("drawer-status");
+    statusEl.className = "badge " + (STATUS_BADGES[sample.status] || "badge-soon");
+    statusEl.textContent = titleCase(sample.status);
+    document.getElementById("drawer-original").textContent = sample.original_transcript;
+    document.getElementById("drawer-current").textContent = sample.current_transcript;
+
+    var chips = document.getElementById("drawer-chips");
+    chips.replaceChildren();
+    chips.appendChild(chip("Language", languageName(languageOf(sample))));
+    chips.appendChild(chip("Client", CLIENT_NAMES[sample.client_source] || sample.client_source));
+    chips.appendChild(chip("Duration", sample.duration_seconds.toFixed(1) + " s"));
+    chips.appendChild(chip("Size", Math.max(1, Math.round(sample.file_size_bytes / 1024)) + " KB"));
+
+    var dev = document.getElementById("drawer-dev");
+    dev.replaceChildren();
+    [
+      ["Sample ID", sample.id],
+      ["MIME type", sample.mime_type || "—"],
+      ["File size", sample.file_size_bytes + " bytes"],
+      ["Consent reference", sample.consent_reference || "—"],
+      ["Created", new Date(sample.created_at).toLocaleString()],
+      ["Last modified", sample.last_modified_at ? new Date(sample.last_modified_at).toLocaleString() : "—"],
+      ["API", "/v1/speech-samples/" + sample.id]
+    ].forEach(function (pair) {
+      dev.appendChild(el("dt", {}, [pair[0]]));
+      dev.appendChild(el("dd", {}, [pair[1]]));
+    });
+
+    var audio = document.getElementById("drawer-audio");
+    audio.removeAttribute("src");
+    audioUrl(sample).then(function (url) { audio.src = url; }).catch(function () {});
+
+    /* Timeline needs the events — fetched per open, cheap and current. */
+    renderTimeline({ events: [] });
+    IntelliAI.apiJSON("/v1/speech-samples/" + encodeURIComponent(sample.id))
+      .then(renderTimeline).catch(function () {});
+
+    overlay.classList.remove("hidden");
+    drawer.classList.remove("hidden");
+    document.getElementById("drawer-close").focus();
+  }
+  function closeDrawer() {
+    overlay.classList.add("hidden");
+    drawer.classList.add("hidden");
+    var audio = document.getElementById("drawer-audio");
+    audio.pause();
+    if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+  }
+  document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+  (function () {
+    var pressedOnOverlay = false;
+    overlay.addEventListener("pointerdown", function (event) {
+      pressedOnOverlay = event.target === overlay;
+    });
+    overlay.addEventListener("click", function (event) {
+      if (pressedOnOverlay && event.target === overlay) closeDrawer();
+      pressedOnOverlay = false;
+    });
+  })();
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !drawer.classList.contains("hidden")) closeDrawer();
+  });
+  window.addEventListener("pagehide", function () {
+    Object.keys(blobUrls).forEach(function (id) { URL.revokeObjectURL(blobUrls[id]); });
+  });
+
+  load();
+});
+</script>
+</body>
+</html>

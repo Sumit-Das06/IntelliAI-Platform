@@ -77,6 +77,23 @@ async def test_the_catalogue_speaks_in_products_and_languages(
     assert '{ name: "Arabic", tier: "beta" }' in js
 
 
+async def test_the_samples_page_is_served_as_html(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        response = await client.get("/console/samples")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert 'data-page="samples"' in response.text
+    assert "Speech Samples" in response.text
+    # The data page carries the permanent consent notice and honest
+    # empty/lifecycle vocabulary.
+    assert "Recordings, transcripts, and submitted corrections may be stored" in response.text
+    assert "No speech samples yet" in response.text
+    assert "Lifecycle" in response.text
+
+
 async def test_the_root_url_leads_to_the_console(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
@@ -149,6 +166,7 @@ async def test_the_navigation_carries_the_whole_platform(
         '{ id: "keys", label: "API Keys", href: "/console/keys", status: "live" }',
         '{ id: "playground", label: "Playground", href: "/console/playground", status: "live" }',
         '{ id: "services", label: "AI Services", href: "/console/services", status: "live" }',
+        '{ id: "samples", label: "Speech Samples", href: "/console/samples", status: "live" }',
     ):
         assert live_entry in js
 
@@ -161,6 +179,7 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
             (await client.get("/console")).text,
             (await client.get("/console/keys")).text,
             (await client.get("/console/services")).text,
+            (await client.get("/console/samples")).text,
             (await client.get("/console/playground")).text,
             (await client.get("/console/assets/console.js")).text,
             (await client.get("/console/assets/console.css")).text,
@@ -188,6 +207,7 @@ def test_the_console_assets_ship_inside_the_package() -> None:
         "keys.html",
         "services.html",
         "studio.html",
+        "samples.html",
         "console.css",
         "console.js",
     ):

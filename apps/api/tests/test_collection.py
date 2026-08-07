@@ -90,11 +90,32 @@ def _post_kwargs(**form: str) -> dict[str, Any]:
 
 
 async def _rows(
-    factory: async_sessionmaker[AsyncSession],
+    factory: async_sessionmaker[AsyncSession], organization_id: int
 ) -> tuple[list[SpeechSample], list[SpeechSampleEvent]]:
+    # Org-scoped by law: the dev database legitimately holds other
+    # tenants' samples (demos, cohort testing) — the same lesson the
+    # usage-event assertions learned. Never count the whole table.
     async with factory() as session:
-        samples = (await session.execute(select(SpeechSample))).scalars().all()
-        events = (await session.execute(select(SpeechSampleEvent))).scalars().all()
+        samples = (
+            (
+                await session.execute(
+                    select(SpeechSample).where(SpeechSample.organization_id == organization_id)
+                )
+            )
+            .scalars()
+            .all()
+        )
+        events = (
+            (
+                await session.execute(
+                    select(SpeechSampleEvent)
+                    .join(SpeechSample, SpeechSampleEvent.sample_id == SpeechSample.id)
+                    .where(SpeechSample.organization_id == organization_id)
+                )
+            )
+            .scalars()
+            .all()
+        )
         return list(samples), list(events)
 
 
@@ -129,7 +150,7 @@ async def test_consented_request_stores_object_row_event_and_header(
         assert put_content_type == "audio/wav"
 
         # Row: birth state with every locked fact.
-        (sample,), (event,) = await _rows(factory)
+        (sample,), (event,) = await _rows(factory, tenant.organization.id)
         assert sample.public_id == sample_id
         assert sample.status is SampleStatus.COLLECTED
         assert sample.audio_key == put_key
@@ -176,7 +197,7 @@ async def test_the_client_header_labels_the_sample(
         )
 
         assert response.status_code == 200
-        (sample,), (event,) = await _rows(factory)
+        (sample,), (event,) = await _rows(factory, tenant.organization.id)
         assert sample.client_source is ClientSource.WEB
         assert sample.client_version == "1.0"
         assert event.detail["client_source"] == "web"
@@ -199,7 +220,7 @@ async def test_a_bare_client_source_needs_no_version(
         )
 
         assert response.status_code == 200
-        (sample,), _events = await _rows(factory)
+        (sample,), _events = await _rows(factory, tenant.organization.id)
         assert sample.client_source is ClientSource.KEYBOARD
         assert sample.client_version is None
 
@@ -223,7 +244,7 @@ async def test_an_unknown_client_header_falls_back_to_api(
         )
 
         assert response.status_code == 200
-        (sample,), _events = await _rows(factory)
+        (sample,), _events = await _rows(factory, tenant.organization.id)
         assert sample.client_source is ClientSource.API
         assert sample.client_version is None
 
@@ -247,7 +268,7 @@ async def test_without_consent_transcription_succeeds_and_nothing_is_stored(
         assert response.status_code == 200
         assert SAMPLE_HEADER not in response.headers
         assert storage.puts == []
-        samples, events = await _rows(factory)
+        samples, events = await _rows(factory, tenant.organization.id)
         assert samples == [] and events == []
 
 
@@ -270,7 +291,7 @@ async def test_the_kill_switch_disables_collection_despite_consent(
 
         assert response.status_code == 200
         assert SAMPLE_HEADER not in response.headers
-        samples, events = await _rows(factory)
+        samples, events = await _rows(factory, tenant.organization.id)
         assert samples == [] and events == []
 
 
@@ -296,7 +317,7 @@ async def test_storage_failure_never_fails_the_customer_request(
         assert SAMPLE_HEADER not in response.headers
         assert any(log["event"] == "collection.store_failed" for log in logs)
 
-        samples, events = await _rows(factory)
+        samples, events = await _rows(factory, tenant.organization.id)
         assert samples == [] and events == []
         # Billing independence: the usage event was written regardless.
         async with factory() as session:
