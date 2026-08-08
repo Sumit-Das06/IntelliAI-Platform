@@ -15,14 +15,20 @@ exception that authentication needs: metering always knows its tenant.
 """
 
 from collections.abc import Collection, Mapping, Sequence
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import Select, distinct, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import InstrumentedAttribute
 
 from intelliai_api.db.models import UsageEvent, UsageOrigin, UsageOutcome, UsageQuantity
+
+#: The STT runtime's measured unit. Analytics reads name it explicitly
+#: rather than summing every unit together: minutes of audio and (future)
+#: pages of OCR are not addable quantities.
+AUDIO_SECONDS = "audio_seconds"
 
 
 class UsageEventRepository:
@@ -161,6 +167,134 @@ class UsageEventRepository:
             .order_by(UsageEvent.occurred_at, UsageEvent.id)
         )
         return result.all()
+
+    # ── Analytics reads ───────────────────────────────────────────
+    # The console's Usage page reads API CONSUMPTION from this ledger:
+    # requests, audio measured, outcomes, languages, public models. It
+    # never reads the dataset tables — collected samples and corrections
+    # are a different subject with a different page.
+    #
+    # Two counting rules, applied consistently everywhere below:
+    #   * requests count only ORIGINAL events (a compensating event is a
+    #     correction to a measurement, not a second request);
+    #   * amounts SUM every row including compensating ones, because
+    #     netting is what the negated quantities exist for.
+
+    def _window(
+        self, statement: Select[Any], organization_id: int, since: datetime, until: datetime
+    ) -> Select[Any]:
+        """Org scope + the half-open period every analytics read shares."""
+        return statement.where(
+            UsageEvent.organization_id == organization_id,
+            UsageEvent.occurred_at >= since,
+            UsageEvent.occurred_at < until,
+        )
+
+    async def outcome_counts_for_organization(
+        self, organization_id: int, *, since: datetime, until: datetime
+    ) -> dict[str, int]:
+        """Requests per outcome — the honest basis for a success rate.
+
+        Failures reach the ledger out-of-band (``record_failure``), so
+        this is a real distribution and not a tautological 100%.
+        """
+        statement = self._window(
+            select(UsageEvent.outcome, func.count()).where(
+                UsageEvent.reverses_usage_event_id.is_(None)
+            ),
+            organization_id,
+            since,
+            until,
+        ).group_by(UsageEvent.outcome)
+        result = await self._session.execute(statement)
+        return {outcome.value: count for outcome, count in result.all()}
+
+    def _activity_columns(self) -> tuple[Any, Any, Any]:
+        """Requests, requests carrying audio, and netted audio seconds.
+
+        ``LEFT JOIN`` on the audio unit: an event without a measured
+        quantity (a failure) still counts as a request, and its absent
+        amount contributes nothing.
+        """
+        return (
+            func.count(distinct(UsageEvent.id)).filter(
+                UsageEvent.reverses_usage_event_id.is_(None)
+            ),
+            func.count(distinct(UsageEvent.id)).filter(
+                UsageEvent.reverses_usage_event_id.is_(None),
+                UsageQuantity.amount.is_not(None),
+            ),
+            func.coalesce(func.sum(UsageQuantity.amount), 0),
+        )
+
+    def _activity_select(self, *group_by: Any) -> Select[Any]:
+        requests, audio_requests, seconds = self._activity_columns()
+        return (
+            select(*group_by, requests, audio_requests, seconds)
+            .select_from(UsageEvent)
+            .join(
+                UsageQuantity,
+                (UsageQuantity.usage_event_id == UsageEvent.id)
+                & (UsageQuantity.unit == AUDIO_SECONDS),
+                isouter=True,
+            )
+        )
+
+    async def daily_activity_for_organization(
+        self, organization_id: int, *, since: datetime, until: datetime
+    ) -> list[tuple[date, int, int, Decimal]]:
+        """Per-UTC-day activity: (day, requests, audio requests, seconds).
+
+        Bucketed in explicit UTC rather than the session's time zone, so
+        the same request lands in the same day whatever the server is
+        configured to think local time is.
+        """
+        day = func.date_trunc("day", func.timezone("UTC", UsageEvent.occurred_at)).label("day")
+        statement = (
+            self._window(self._activity_select(day), organization_id, since, until)
+            .group_by(day)
+            .order_by(day)
+        )
+        result = await self._session.execute(statement)
+        return [
+            (bucket.date(), requests, audio_requests, seconds)
+            for bucket, requests, audio_requests, seconds in result.all()
+        ]
+
+    async def _grouped_activity(
+        self,
+        organization_id: int,
+        column: InstrumentedAttribute[Any],
+        *,
+        since: datetime,
+        until: datetime,
+    ) -> list[tuple[Any, int, int, Decimal]]:
+        statement = (
+            self._window(self._activity_select(column), organization_id, since, until)
+            .group_by(column)
+            .order_by(func.count(distinct(UsageEvent.id)).desc(), column)
+        )
+        result = await self._session.execute(statement)
+        return [tuple(row) for row in result.all()]
+
+    async def language_activity_for_organization(
+        self, organization_id: int, *, since: datetime, until: datetime
+    ) -> list[tuple[str | None, int, int, Decimal]]:
+        """Activity per observed language. ``None`` means the request did
+        not declare one and the engine reported none — a real category,
+        never silently folded into another language."""
+        return await self._grouped_activity(
+            organization_id, UsageEvent.language, since=since, until=until
+        )
+
+    async def model_activity_for_organization(
+        self, organization_id: int, *, since: datetime, until: datetime
+    ) -> list[tuple[str, int, int, Decimal]]:
+        """Activity per PUBLIC model id (``intelliai-stt``). The artifact
+        that served it lives in lineage and never leaves the database."""
+        return await self._grouped_activity(
+            organization_id, UsageEvent.public_model_id, since=since, until=until
+        )
 
     async def totals_for_organization(
         self,
