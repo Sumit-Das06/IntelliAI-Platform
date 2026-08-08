@@ -166,6 +166,20 @@ async def test_usage_distinguishes_a_quiet_window_from_a_new_account(
     assert "/v1/usage/summary?days=90" in page
 
 
+async def test_usage_dates_are_formatted_in_the_platform_s_own_utc_days(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # The API counts UTC calendar days. Rendering them in local time
+    # would move every label west of Greenwich to the previous day, so
+    # the formatter is pinned to UTC.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert 'timeZone: "UTC"' in page
+    assert 'new Date(isoDate + "T00:00:00Z")' in page
+    assert '{ month: "short", day: "numeric"' in page
+
+
 async def test_usage_names_services_from_the_catalogue(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:

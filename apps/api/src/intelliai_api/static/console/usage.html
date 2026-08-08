@@ -148,6 +148,23 @@ document.addEventListener("DOMContentLoaded", function () {
     return node;
   }
 
+  /* The API's days are UTC calendar dates. Formatting them in UTC keeps
+   * "Aug 8" meaning the same day the platform counted — parsing them in
+   * local time would shift every label west of Greenwich by a day. */
+  function dayParts(isoDate, withYear) {
+    var options = { month: "short", day: "numeric", timeZone: "UTC" };
+    if (withYear) options.year = "numeric";
+    return new Date(isoDate + "T00:00:00Z").toLocaleDateString(undefined, options);
+  }
+
+  function formatRange(series) {
+    if (!series.length) return "";
+    var first = series[0].date;
+    var last = series[series.length - 1].date;
+    var sameYear = first.slice(0, 4) === last.slice(0, 4);
+    return dayParts(first, !sameYear) + " – " + dayParts(last, true);
+  }
+
   /* Hand-drawn bar chart: no chart library, no external assets, themed
    * entirely through Console Kit tokens. The viewBox matches the
    * container's real pixel width so nothing is scaled non-uniformly —
@@ -170,10 +187,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var padLeft = 34;
     var plotHeight = height - padTop - padBottom;
     var plotWidth = width - padLeft;
-    /* Scale to an EVEN ceiling so the midpoint gridline's label is the
-     * exact value at that height — a rounded label at an unrounded
-     * position mislabels the axis. */
-    var axisMax = peak % 2 === 0 ? peak : peak + 1;
+    /* Scale to a ceiling divisible by the number of gridlines, so every
+     * axis label is the exact value at its own height — a rounded label
+     * at an unrounded position mislabels the axis. */
+    var levels = peak <= 2 ? 2 : 4;
+    var axisMax = peak <= 2 ? 2 : Math.ceil(peak / 4) * 4;
     var chart = svg("svg", {
       class: "chart",
       viewBox: "0 0 " + width + " " + height,
@@ -184,50 +202,95 @@ document.addEventListener("DOMContentLoaded", function () {
         " requests across " + series.length + " days, peak " + peak + " in a day"
     });
 
-    /* Gridlines at 0, half, top — enough to read a value, not a cage. */
-    [0, 0.5, 1].forEach(function (fraction) {
-      var y = padTop + plotHeight - fraction * plotHeight;
+    /* Dashed gridlines with an exact label each — a scale to read
+     * against, not a cage around the data. */
+    for (var level = 0; level <= levels; level++) {
+      var fraction = level / levels;
+      var gridY = padTop + plotHeight - fraction * plotHeight;
       chart.appendChild(svg("line", {
-        class: "grid-line", x1: padLeft, x2: width, y1: y, y2: y
+        class: "grid-line" + (level === 0 ? " base" : ""),
+        x1: padLeft, x2: width, y1: gridY, y2: gridY
       }));
-      var label = svg("text", { class: "axis-text", x: 0, y: y + 3 });
-      label.textContent = String(fraction * axisMax);
-      chart.appendChild(label);
-    });
+      var gridLabel = svg("text", { class: "axis-text", x: 0, y: gridY + 3 });
+      gridLabel.textContent = String(fraction * axisMax);
+      chart.appendChild(gridLabel);
+    }
 
-    var slot = plotWidth / series.length;
-    var barWidth = Math.max(1, slot * 0.62);
+    var count = series.length;
+    var step = count > 1 ? plotWidth / (count - 1) : 0;
+    function pointX(index) {
+      return count > 1 ? padLeft + index * step : padLeft + plotWidth / 2;
+    }
+    function pointY(requests) {
+      return padTop + plotHeight - (requests / axisMax) * plotHeight;
+    }
+
+    /* Cubic segments with horizontal control points: smooth to read,
+     * and mathematically unable to bulge past the two days it joins —
+     * the curve never implies traffic that did not happen. */
+    var line = "M " + pointX(0) + " " + pointY(series[0].requests);
+    for (var index = 1; index < count; index++) {
+      var midX = (pointX(index - 1) + pointX(index)) / 2;
+      line += " C " + midX + " " + pointY(series[index - 1].requests) +
+        " " + midX + " " + pointY(series[index].requests) +
+        " " + pointX(index) + " " + pointY(series[index].requests);
+    }
+
+    var baseline = padTop + plotHeight;
+    var gradient = svg("linearGradient", {
+      id: "iai-trend-fill", x1: "0", y1: "0", x2: "0", y2: "1"
+    });
+    gradient.appendChild(svg("stop", { class: "area-top", offset: "0" }));
+    gradient.appendChild(svg("stop", { class: "area-bottom", offset: "1" }));
+    var defs = svg("defs", {});
+    defs.appendChild(gradient);
+    chart.appendChild(defs);
+
+    chart.appendChild(svg("path", {
+      class: "trend-area",
+      d: line + " L " + pointX(count - 1) + " " + baseline +
+        " L " + pointX(0) + " " + baseline + " Z"
+    }));
+    chart.appendChild(svg("path", { class: "trend-line", d: line }));
+
+    /* One hover target per day: the exact value stays discoverable even
+     * though the line itself draws no dots. */
     series.forEach(function (day, index) {
-      var barHeight = day.requests ? Math.max(2, (day.requests / axisMax) * plotHeight) : 0;
-      if (!barHeight) return;
-      var rect = svg("rect", {
-        class: "bar",
-        x: padLeft + index * slot + (slot - barWidth) / 2,
-        y: padTop + plotHeight - barHeight,
-        width: barWidth,
-        height: barHeight,
-        rx: Math.min(2, barWidth / 2)
+      var slot = count > 1 ? step : plotWidth;
+      var hit = svg("rect", {
+        class: "hit",
+        x: pointX(index) - slot / 2,
+        y: padTop,
+        width: slot,
+        height: plotHeight
       });
       var title = svg("title", {});
-      title.textContent = day.date + ": " + day.requests +
+      title.textContent = dayParts(day.date, false) + " · " + day.requests +
         (day.requests === 1 ? " request" : " requests");
-      rect.appendChild(title);
-      chart.appendChild(rect);
+      hit.appendChild(title);
+      chart.appendChild(hit);
+      chart.appendChild(svg("circle", {
+        class: "point", cx: pointX(index), cy: pointY(day.requests), r: 3.5
+      }));
     });
 
-    /* First and last day only — dense tick labels are noise. */
-    [[0, "start"], [series.length - 1, "end"]].forEach(function (pair) {
-      var day = series[pair[0]];
-      if (!day) return;
-      var text = svg("text", {
+    /* Evenly spaced date ticks, thinned to what the width can hold. */
+    var tickCount = width < 420 ? 3 : width < 700 ? 5 : 7;
+    var seen = {};
+    for (var tick = 0; tick < tickCount; tick++) {
+      var at = Math.round((tick / (tickCount - 1)) * (count - 1));
+      if (seen[at]) continue;
+      seen[at] = true;
+      var anchor = at === 0 ? "start" : at === count - 1 ? "end" : "middle";
+      var tickLabel = svg("text", {
         class: "axis-text",
-        x: padLeft + pair[0] * slot + slot / 2,
+        x: pointX(at),
         y: height - 8,
-        "text-anchor": pair[1] === "start" ? "start" : "end"
+        "text-anchor": anchor
       });
-      text.textContent = day.date;
-      chart.appendChild(text);
-    });
+      tickLabel.textContent = dayParts(series[at].date, false);
+      chart.appendChild(tickLabel);
+    }
 
     host.appendChild(chart);
   }
@@ -268,8 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderTotals(body) {
     var totals = body.totals;
     setStat("stat-requests", totals.requests.toLocaleString());
-    document.getElementById("stat-requests-note").textContent =
-      "Last " + body.period.days + " days";
+    document.getElementById("stat-requests-note").textContent = formatRange(body.daily);
     setStat("stat-minutes", totals.speech_minutes.toLocaleString());
     setStat("stat-average", totals.average_request_seconds === null
       ? null
@@ -282,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderTotals(body);
 
     document.getElementById("trend-caption").textContent =
-      "Daily API requests · last " + body.period.days + " days";
+      "Daily API requests · " + formatRange(body.daily);
     lastSeries = body.daily;
     renderTrend(body.daily);
 

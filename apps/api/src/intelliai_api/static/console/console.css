@@ -629,9 +629,21 @@ audio.player.on { display: block; }
 /* Height comes from the drawing code (it depends on width); the SVG
  * viewBox matches real pixels, so nothing is scaled non-uniformly. */
 .chart { width: 100%; display: block; overflow: visible; }
-.chart .grid-line { stroke: var(--line); stroke-width: 1; }
-.chart .bar { fill: var(--accent); }
-.chart .bar:hover { fill: var(--ink); }
+.chart .grid-line { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
+.chart .grid-line.base { stroke-dasharray: none; }
+.chart .trend-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.chart .trend-area { stroke: none; fill: url(#iai-trend-fill); }
+.chart .area-top { stop-color: var(--accent); stop-opacity: 0.24; }
+.chart .area-bottom { stop-color: var(--accent); stop-opacity: 0.02; }
+.chart .point { fill: var(--accent); opacity: 0; }
+.chart .hit { fill: transparent; }
+.chart .hit:hover + .point, .chart .point.on { opacity: 1; }
 .chart .axis-text { fill: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
 .chart-empty { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 30px 0; }
 
