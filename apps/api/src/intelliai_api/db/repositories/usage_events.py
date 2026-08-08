@@ -15,7 +15,7 @@ exception that authentication needs: metering always knows its tenant.
 """
 
 from collections.abc import Collection, Mapping, Sequence
-from datetime import date, datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -240,25 +240,36 @@ class UsageEventRepository:
             )
         )
 
-    async def daily_activity_for_organization(
-        self, organization_id: int, *, since: datetime, until: datetime
-    ) -> list[tuple[date, int, int, Decimal]]:
-        """Per-UTC-day activity: (day, requests, audio requests, seconds).
+    async def bucketed_activity_for_organization(
+        self,
+        organization_id: int,
+        *,
+        since: datetime,
+        until: datetime,
+        unit: str,
+    ) -> list[tuple[datetime, int, int, Decimal]]:
+        """Per-bucket activity: (bucket start, requests, audio requests, seconds).
+
+        ``unit`` is a ``date_trunc`` field — ``day``, ``hour``, or
+        ``minute`` — chosen by the caller from a closed set, never
+        interpolated from a customer's string.
 
         Bucketed in explicit UTC rather than the session's time zone, so
-        the same request lands in the same day whatever the server is
-        configured to think local time is.
+        the same request lands in the same bucket whatever the server is
+        configured to think local time is. ``timezone('UTC', …)`` yields
+        a naive timestamp, so the boundary is re-stamped as UTC on the
+        way out and callers never handle an ambiguous datetime.
         """
-        day = func.date_trunc("day", func.timezone("UTC", UsageEvent.occurred_at)).label("day")
+        bucket = func.date_trunc(unit, func.timezone("UTC", UsageEvent.occurred_at)).label("bucket")
         statement = (
-            self._window(self._activity_select(day), organization_id, since, until)
-            .group_by(day)
-            .order_by(day)
+            self._window(self._activity_select(bucket), organization_id, since, until)
+            .group_by(bucket)
+            .order_by(bucket)
         )
         result = await self._session.execute(statement)
         return [
-            (bucket.date(), requests, audio_requests, seconds)
-            for bucket, requests, audio_requests, seconds in result.all()
+            (moment.replace(tzinfo=UTC), requests, audio_requests, seconds)
+            for moment, requests, audio_requests, seconds in result.all()
         ]
 
     async def _grouped_activity(
