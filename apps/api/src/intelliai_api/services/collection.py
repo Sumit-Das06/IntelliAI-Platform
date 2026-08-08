@@ -66,6 +66,7 @@ class DataCollectionService:
         client_source: ClientSource = ClientSource.API,
         client_version: str | None = None,
         app_locale: str | None = None,
+        contribute: bool = True,
     ) -> str | None:
         """Store one consented sample; return its public id, or None.
 
@@ -75,6 +76,12 @@ class DataCollectionService:
         operational metadata about the collection act, not a benchmark
         metric, which is why it lives in the event's detail and not in a
         metrics system.
+
+        ``contribute`` is the caller's per-request opt-out (default True
+        preserves every existing caller). It can only NARROW collection:
+        the organization's ``data_consent`` remains the ceiling checked
+        first, so a client can never opt IN to collection the tenant has
+        not consented to.
         """
         try:
             return await self._collect(
@@ -89,6 +96,7 @@ class DataCollectionService:
                 client_source=client_source,
                 client_version=client_version,
                 app_locale=app_locale,
+                contribute=contribute,
             )
         except Exception:
             # The backstop for the one law this service exists to keep:
@@ -113,13 +121,21 @@ class DataCollectionService:
         client_source: ClientSource,
         client_version: str | None,
         app_locale: str | None,
+        contribute: bool,
     ) -> str | None:
         # Gates, cheapest first. Silent by design: absence of collection
         # is a normal outcome, not an error.
         if not self._enabled or self._storage is None:
             return None
         organization = auth.organization
+        # Organization consent is the CEILING — checked before the
+        # per-request preference, so contribution can only narrow, never
+        # widen, what the tenant consented to.
         if not organization.data_consent:
+            return None
+        # Per-request opt-out: this caller (e.g. a keyboard user who
+        # turned "Improve IntelliAI STT" off) declined for THIS request.
+        if not contribute:
             return None
 
         # The id is minted BEFORE the row exists because the object key

@@ -27,6 +27,7 @@ ResponseFormat = Literal["json", "text", "verbose_json"]
 
 SAMPLE_HEADER = "X-IntelliAI-Sample"
 CLIENT_HEADER = "X-IntelliAI-Client"
+CONTRIBUTION_HEADER = "X-IntelliAI-Contribution"
 
 
 def _parse_client(header: str | None) -> tuple[ClientSource, str | None]:
@@ -45,6 +46,16 @@ def _parse_client(header: str | None) -> tuple[ClientSource, str | None]:
     return source, version_part.strip()[:64] or None
 
 
+def _wants_contribution(header: str | None) -> bool:
+    """Per-request training-data opt-out. Only the exact value ``off``
+    (case-insensitive) opts out; absent, unknown, or malformed values
+    preserve the existing behavior. Like the client label, this metadata
+    header can only NARROW collection and must never fail a request —
+    organization consent remains the ceiling enforced in the collection
+    service."""
+    return header is None or header.strip().lower() != "off"
+
+
 @router.post("/transcriptions")
 async def create_transcription(
     auth: CurrentAuth,
@@ -56,9 +67,11 @@ async def create_transcription(
     language: Annotated[str | None, Form()] = None,
     response_format: Annotated[ResponseFormat, Form()] = "json",
     client: Annotated[str | None, Header(alias=CLIENT_HEADER)] = None,
+    contribution: Annotated[str | None, Header(alias=CONTRIBUTION_HEADER)] = None,
 ) -> Response:
     started = time.monotonic()
     client_source, client_version = _parse_client(client)
+    contribute = _wants_contribution(contribution)
     audio = await file.read()
     outcome = await service.transcribe(
         auth=auth,
@@ -82,6 +95,7 @@ async def create_transcription(
         request_started=started,
         client_source=client_source,
         client_version=client_version,
+        contribute=contribute,
     )
     headers = {SAMPLE_HEADER: sample_id} if sample_id is not None else None
     result = outcome.result
