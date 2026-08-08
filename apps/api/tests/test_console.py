@@ -125,18 +125,115 @@ async def test_the_usage_page_is_served_as_html(settings: Settings, db_engine: A
     assert "Open STT Studio" in response.text
 
 
-async def test_usage_offers_exactly_the_three_periods(
+async def test_usage_offers_the_three_granularities(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
-    # Changing the period must re-ask the API — the window is the
-    # server's decision, never a client-side reslice of cached data.
+    # Granularity is a control of its own, independent of the period.
     async with client_with_db(settings, db_engine) as (client, _factory):
         page = (await client.get("/console/usage")).text
 
-    for days in (7, 30, 90):
-        assert f'data-days="{days}"' in page
-    assert 'data-days="30" aria-pressed="true"' in page  # the default
-    assert '"/v1/usage/summary?days=" + days' in page
+    for granularity in ("daily", "hourly", "minute"):
+        assert f'data-granularity="{granularity}"' in page
+    assert 'data-granularity="daily" aria-pressed="true"' in page  # the default
+    assert 'aria-label="Granularity"' in page
+
+
+async def test_usage_asks_the_api_by_range_and_granularity(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # Every selection re-asks the API with start/end/granularity — the
+    # window is the server's decision, never a client-side reslice, and
+    # the retired days-only flow is gone from the new UI.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert '"?start=" + state.start + "&end=" + state.end +' in page
+    assert '"&granularity=" + state.granularity' in page
+    assert '"/v1/usage/summary" + query' in page
+    # The compatibility field of the old contract is not the new source.
+    assert "body.daily" not in page
+    assert "renderTrend(body.series)" in page
+    # Latest-request-wins survives the upgrade.
+    assert "var ticket = ++requestSeq;" in page
+    assert "if (ticket !== requestSeq) return;" in page
+
+
+async def test_usage_offers_every_range_shortcut(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    for shortcut in (
+        '{ label: "Today", days: 1 }',
+        '{ label: "Last 7 Days", days: 7 }',
+        '{ label: "Last 14 Days", days: 14 }',
+        '{ label: "Last 30 Days", days: 30 }',
+        '{ label: "Last 60 Days", days: 60 }',
+        '{ label: "Last 90 Days", days: 90 }',
+    ):
+        assert shortcut in page
+    # A custom range is picked on a real calendar, with Cancel/Apply.
+    assert 'id="picker-cancel"' in page
+    assert 'id="picker-apply"' in page
+    assert 'id="months"' in page
+    assert 'role: "gridcell"' in page  # day cells are built by the page's own JS
+
+
+async def test_usage_guides_instead_of_sending_impossible_requests(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # The backend's ceilings, restated in the UI's own words, applied
+    # before a request is made — and never by silently rewriting the
+    # user's selection.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert "Daily view supports ranges up to 90 days." in page
+    assert "Hourly view supports ranges up to 30 days." in page
+    assert "Minute view supports ranges up to 48 hours." in page
+    # Incompatible shortcuts are unavailable rather than broken, and a
+    # too-long custom range cannot be applied.
+    assert "button.disabled = true;" in page
+    # Apply is refused both for an impossible range and for a range whose
+    # end has not been chosen yet.
+    assert 'document.getElementById("picker-apply").disabled = pending || tooLong;' in page
+    assert "note.textContent = pending" in page
+    assert '"Select an end date."' in page
+    # An impossible selection stops before the network call.
+    assert "if (exceeds(state.start, state.end, state.granularity)) {" in page
+
+
+async def test_usage_never_shows_stale_numbers_for_a_new_selection(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # A pending request dims what it is replacing; a failed one replaces
+    # the numbers with an error rather than leaving the previous
+    # period's figures under the new selection.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert 'analytics.classList.add("is-loading");' in page
+    assert 'analytics.classList.remove("is-loading");' in page
+    assert "Usage could not be loaded" in page
+    assert 'id="retry"' in page
+
+
+async def test_usage_keeps_the_chart_reachable_without_a_mouse(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # Per-bucket detail must not be mouse-only: one focus stop drives a
+    # cursor across every bucket, with the value written out in text.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert 'tabindex: "0"' in page
+    assert 'chart.addEventListener("keydown"' in page
+    assert "ArrowLeft: -1, ArrowRight: 1" in page
+    assert 'id="chart-readout"' in page
+    # The picker is keyboard-navigable and Escape closes it.
+    assert 'picker.addEventListener("keydown"' in page
+    assert 'if (event.key === "Escape" && !picker.classList.contains("hidden"))' in page
 
 
 async def test_usage_never_rounds_into_a_perfect_or_empty_record(
@@ -161,9 +258,11 @@ async def test_usage_distinguishes_a_quiet_window_from_a_new_account(
     async with client_with_db(settings, db_engine) as (client, _factory):
         page = (await client.get("/console/usage")).text
 
-    assert "No API requests in the last " in page
-    assert "Your organization has usage outside this period" in page
-    assert "/v1/usage/summary?days=90" in page
+    assert "No API usage in this period" in page
+    assert "Your organization has usage outside " in page
+    # The widest window it can ask about, in the new contract's terms.
+    assert "var widest = shortcutRange(90);" in page
+    assert '"/v1/usage/summary?start=" + widest.start + "&end=" + widest.end' in page
 
 
 async def test_usage_dates_are_formatted_in_the_platform_s_own_utc_days(
@@ -176,8 +275,12 @@ async def test_usage_dates_are_formatted_in_the_platform_s_own_utc_days(
         page = (await client.get("/console/usage")).text
 
     assert 'timeZone: "UTC"' in page
-    assert 'new Date(isoDate + "T00:00:00Z")' in page
-    assert '{ month: "short", day: "numeric"' in page
+    assert 'return new Date(iso + "T00:00:00Z");' in page
+    assert "function todayISO() { return new Date().toISOString().slice(0, 10); }" in page
+    # Hourly and minute axes read as clock times, and say which clock.
+    assert '{ hour: "numeric", timeZone: "UTC" }' in page
+    assert 'hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC"' in page
+    assert "times in UTC" in page
 
 
 async def test_usage_names_services_from_the_catalogue(

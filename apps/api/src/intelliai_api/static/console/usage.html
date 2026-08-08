@@ -20,10 +20,30 @@
           <h1>Usage</h1>
           <p class="sub">API consumption for your organization. Collected speech data lives on <a href="/console/samples">Speech Samples</a>.</p>
         </div>
-        <div class="segmented" role="group" aria-label="Period" id="period">
-          <button type="button" data-days="7" aria-pressed="false">7 days</button>
-          <button type="button" data-days="30" aria-pressed="true">30 days</button>
-          <button type="button" data-days="90" aria-pressed="false">90 days</button>
+        <div class="controls">
+          <div class="segmented" role="group" aria-label="Granularity" id="granularity">
+            <button type="button" data-granularity="daily" aria-pressed="true">Daily</button>
+            <button type="button" data-granularity="hourly" aria-pressed="false">Hourly</button>
+            <button type="button" data-granularity="minute" aria-pressed="false">Minute</button>
+          </div>
+          <div class="picker-anchor">
+            <button class="btn btn-sm range-btn" id="range-btn" type="button"
+                    data-picker-opener aria-haspopup="dialog" aria-expanded="false">
+              <span id="range-label">—</span> <span class="cal" aria-hidden="true">▦</span>
+            </button>
+            <div class="picker hidden" id="picker" role="dialog" aria-modal="false"
+                 aria-label="Select a date range">
+              <div class="picker-shortcuts" id="shortcuts"></div>
+              <div class="picker-body">
+                <div class="months" id="months"></div>
+                <div class="picker-foot">
+                  <span class="picker-note" id="picker-note"></span>
+                  <button class="btn btn-sm" id="picker-cancel" type="button">Cancel</button>
+                  <button class="btn btn-sm btn-primary" id="picker-apply" type="button">Apply</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -33,6 +53,24 @@
           <h3>Connect to see usage</h3>
           <p id="disconnected-reason">This console isn't connected to a workspace yet.</p>
           <a class="btn btn-primary" href="/console/home">Go to Home</a>
+        </div>
+      </section>
+
+      <!-- ── The selection cannot be answered: guide rather than fail ── -->
+      <section id="range-guidance" class="section hidden">
+        <div class="card empty">
+          <h3 id="guidance-title">Choose a shorter range</h3>
+          <p id="guidance-body"></p>
+          <button class="btn btn-primary" id="guidance-open" type="button" data-picker-opener>Change date range</button>
+        </div>
+      </section>
+
+      <!-- ── The request failed: say so, never show stale numbers ── -->
+      <section id="load-error" class="section hidden">
+        <div class="card empty">
+          <h3>Usage could not be loaded</h3>
+          <p id="load-error-body"></p>
+          <button class="btn btn-primary" id="retry" type="button">Try again</button>
         </div>
       </section>
 
@@ -78,6 +116,7 @@
           <div class="card">
             <p class="stat-note" id="trend-caption"></p>
             <div id="trend"></div>
+            <p class="chart-readout" id="chart-readout"></p>
           </div>
         </div>
 
@@ -102,20 +141,79 @@
 document.addEventListener("DOMContentLoaded", function () {
   var el = IntelliAI.el;
   var SVG_NS = "http://www.w3.org/2000/svg";
+  var DAY_MS = 86400000;
+
   var analytics = document.getElementById("analytics");
   var disconnected = document.getElementById("disconnected");
   var noUsage = document.getElementById("no-usage");
-  var periodGroup = document.getElementById("period");
+  var guidance = document.getElementById("range-guidance");
+  var loadError = document.getElementById("load-error");
+  var picker = document.getElementById("picker");
+  var rangeBtn = document.getElementById("range-btn");
 
   var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
-  var days = 30;
-  /* null = not yet known. Set the first time an empty window forces us
-   * to ask whether the ACCOUNT has any usage at all. */
+
+  /* The ledger buckets in UTC, so the calendar counts UTC days and the
+   * chart labels UTC times. Showing a local clock over UTC buckets would
+   * put a request in a box the platform never counted it in. */
+  var LIMITS = {
+    daily: { span: 90 * DAY_MS, text: "Daily view supports ranges up to 90 days." },
+    hourly: { span: 30 * DAY_MS, text: "Hourly view supports ranges up to 30 days." },
+    minute: { span: 48 * 3600000, text: "Minute view supports ranges up to 48 hours." }
+  };
+  var SHORTCUTS = [
+    { label: "Today", days: 1 },
+    { label: "Last 7 Days", days: 7 },
+    { label: "Last 14 Days", days: 14 },
+    { label: "Last 30 Days", days: 30 },
+    { label: "Last 60 Days", days: 60 },
+    { label: "Last 90 Days", days: 90 }
+  ];
+
+  /* ── UTC date helpers (calendar days are UTC days) ───────────── */
+  function todayISO() { return new Date().toISOString().slice(0, 10); }
+  function dateOf(iso) { return new Date(iso + "T00:00:00Z"); }
+  function isoOf(date) { return date.toISOString().slice(0, 10); }
+  function shiftDays(iso, delta) {
+    var date = dateOf(iso);
+    date.setUTCDate(date.getUTCDate() + delta);
+    return isoOf(date);
+  }
+  function shiftMonths(iso, delta) {
+    var date = dateOf(iso);
+    date.setUTCDate(1);
+    date.setUTCMonth(date.getUTCMonth() + delta);
+    return isoOf(date);
+  }
+  /* The real span the backend will see: the end day runs to its close,
+   * and the future is not reportable, so it stops at now. */
+  function spanMs(startISO, endISO) {
+    return Math.min(dateOf(endISO).getTime() + DAY_MS, Date.now()) - dateOf(startISO).getTime();
+  }
+  function shortcutRange(days) {
+    var today = todayISO();
+    return { start: shiftDays(today, -(days - 1)), end: today };
+  }
+  function fmtDay(iso) {
+    return dateOf(iso).toLocaleDateString(undefined, {
+      month: "short", day: "2-digit", year: "numeric", timeZone: "UTC"
+    });
+  }
+
+  var initial = shortcutRange(30);
+  var state = { granularity: "daily", start: initial.start, end: initial.end };
+  var draft = { start: state.start, end: state.end, viewMonth: shiftMonths(state.end, -1) };
   var accountHasUsage = null;
   /* Only the newest request may paint: a slower earlier response must
-   * never repaint the page under a period the user has since changed. */
+   * never repaint the page under a selection the user has moved on from. */
   var requestSeq = 0;
 
+  function limitFor(granularity) { return LIMITS[granularity]; }
+  function exceeds(startISO, endISO, granularity) {
+    return spanMs(startISO, endISO) > limitFor(granularity).span;
+  }
+
+  /* ── Formatting ───────────────────────────────────────────────── */
   function languageName(code) {
     if (!code) return "Not specified";
     return LANGUAGE_NAMES[code] || code.toUpperCase();
@@ -134,11 +232,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* Values the API reports as null are UNKNOWN, never zero: a rate over
    * no requests is undefined, and an em dash says so honestly. */
-  function setStat(id, value, empty) {
+  function setStat(id, value) {
     var node = document.getElementById(id);
     node.textContent = value === null || value === undefined ? "—" : value;
-    node.classList.toggle("is-empty", !!empty || value === null || value === undefined);
+    node.classList.toggle("is-empty", value === null || value === undefined);
   }
+
+  function utcDay(moment) {
+    return moment.toLocaleDateString(undefined, {
+      month: "short", day: "numeric", timeZone: "UTC"
+    });
+  }
+
+  function utcClock(moment, granularity) {
+    return granularity === "hourly"
+      ? moment.toLocaleTimeString(undefined, { hour: "numeric", timeZone: "UTC" })
+      : moment.toLocaleTimeString(undefined, {
+          hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC"
+        });
+  }
+
+  /* Axis labels answer the granularity's own question: which day, which
+   * hour, which minute — all in UTC, as the buckets are. A bare clock
+   * time is only unambiguous while the window stays inside one day;
+   * across days the tick carries its date, or "10 PM" appears repeatedly
+   * down the axis meaning a different day each time. */
+  function tickFormatter(series, granularity) {
+    var spansDays = series.length > 1 &&
+      series[0].timestamp.slice(0, 10) !== series[series.length - 1].timestamp.slice(0, 10);
+    return function (iso) {
+      var moment = new Date(iso);
+      if (granularity === "daily") return utcDay(moment);
+      if (!spansDays) return utcClock(moment, granularity);
+      return utcDay(moment) + " " + utcClock(moment, granularity);
+    };
+  }
+
+  function bucketFull(iso, granularity) {
+    var moment = new Date(iso);
+    var day = moment.toLocaleDateString(undefined, {
+      month: "short", day: "numeric", year: "numeric", timeZone: "UTC"
+    });
+    if (granularity === "daily") return day;
+    return day + ", " + moment.toLocaleTimeString(undefined, {
+      hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC"
+    }) + " UTC";
+  }
+
+  var BUCKET_NOUN = { daily: "day", hourly: "hour", minute: "minute" };
 
   function svg(name, attrs) {
     var node = document.createElementNS(SVG_NS, name);
@@ -148,35 +289,46 @@ document.addEventListener("DOMContentLoaded", function () {
     return node;
   }
 
-  /* The API's days are UTC calendar dates. Formatting them in UTC keeps
-   * "Aug 8" meaning the same day the platform counted — parsing them in
-   * local time would shift every label west of Greenwich by a day. */
-  function dayParts(isoDate, withYear) {
-    var options = { month: "short", day: "numeric", timeZone: "UTC" };
-    if (withYear) options.year = "numeric";
-    return new Date(isoDate + "T00:00:00Z").toLocaleDateString(undefined, options);
+  /* ── Trend chart ──────────────────────────────────────────────── */
+  var chartState = null;
+
+  function describeBucket(bucket) {
+    return bucketFull(bucket.timestamp, state.granularity) + " · " +
+      bucket.requests + (bucket.requests === 1 ? " request" : " requests") +
+      " · " + bucket.speech_minutes + " min";
   }
 
-  function formatRange(series) {
-    if (!series.length) return "";
-    var first = series[0].date;
-    var last = series[series.length - 1].date;
-    var sameYear = first.slice(0, 4) === last.slice(0, 4);
-    return dayParts(first, !sameYear) + " – " + dayParts(last, true);
+  function moveCursor(index) {
+    if (!chartState) return;
+    var series = chartState.series;
+    var at = Math.max(0, Math.min(series.length - 1, index));
+    chartState.index = at;
+    var x = chartState.pointX(at);
+    chartState.cursor.setAttribute("x1", x);
+    chartState.cursor.setAttribute("x2", x);
+    chartState.cursor.classList.remove("hidden");
+    chartState.dot.setAttribute("cx", x);
+    chartState.dot.setAttribute("cy", chartState.pointY(series[at].requests));
+    chartState.dot.classList.add("on");
+    document.getElementById("chart-readout").textContent = describeBucket(series[at]);
   }
 
-  /* Hand-drawn bar chart: no chart library, no external assets, themed
-   * entirely through Console Kit tokens. The viewBox matches the
-   * container's real pixel width so nothing is scaled non-uniformly —
-   * a stretched viewBox squashes the axis labels into unreadable
-   * slivers on a phone. */
+  function clearCursor() {
+    if (!chartState) return;
+    chartState.cursor.classList.add("hidden");
+    chartState.dot.classList.remove("on");
+    document.getElementById("chart-readout").textContent = chartState.summary;
+  }
+
   function renderTrend(series) {
     var host = document.getElementById("trend");
     host.replaceChildren();
-    var peak = series.reduce(function (max, day) { return Math.max(max, day.requests); }, 0);
+    chartState = null;
+    var peak = series.reduce(function (max, b) { return Math.max(max, b.requests); }, 0);
+    var total = series.reduce(function (sum, b) { return sum + b.requests; }, 0);
     if (!peak) {
-      host.appendChild(el("p", { class: "chart-empty" },
-        ["No requests in this period."]));
+      host.appendChild(el("p", { class: "chart-empty" }, ["No API usage in this period."]));
+      document.getElementById("chart-readout").textContent = "";
       return;
     }
 
@@ -187,23 +339,24 @@ document.addEventListener("DOMContentLoaded", function () {
     var padLeft = 34;
     var plotHeight = height - padTop - padBottom;
     var plotWidth = width - padLeft;
-    /* Scale to a ceiling divisible by the number of gridlines, so every
-     * axis label is the exact value at its own height — a rounded label
-     * at an unrounded position mislabels the axis. */
+    /* Scale to a ceiling divisible by the gridline count, so every axis
+     * label is the exact value at its own height. */
     var levels = peak <= 2 ? 2 : 4;
     var axisMax = peak <= 2 ? 2 : Math.ceil(peak / 4) * 4;
+    var noun = BUCKET_NOUN[state.granularity];
+    var summary = total + (total === 1 ? " request" : " requests") + " across " +
+      series.length + " " + noun + (series.length === 1 ? "" : "s") + ", peak " + peak +
+      ". Use the arrow keys to read each bucket.";
+
     var chart = svg("svg", {
       class: "chart",
       viewBox: "0 0 " + width + " " + height,
       height: height,
+      tabindex: "0",
       role: "img",
-      "aria-label": "Daily API requests for the selected period: " +
-        series.reduce(function (sum, day) { return sum + day.requests; }, 0) +
-        " requests across " + series.length + " days, peak " + peak + " in a day"
+      "aria-label": "Request trend. " + summary
     });
 
-    /* Dashed gridlines with an exact label each — a scale to read
-     * against, not a cage around the data. */
     for (var level = 0; level <= levels; level++) {
       var fraction = level / levels;
       var gridY = padTop + plotHeight - fraction * plotHeight;
@@ -225,8 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return padTop + plotHeight - (requests / axisMax) * plotHeight;
     }
 
-    /* Cubic segments with horizontal control points: smooth to read,
-     * and mathematically unable to bulge past the two days it joins —
+    /* Cubic segments with horizontal control points: smooth to read, and
+     * mathematically unable to bulge past the two buckets they join —
      * the curve never implies traffic that did not happen. */
     var line = "M " + pointX(0) + " " + pointY(series[0].requests);
     for (var index = 1; index < count; index++) {
@@ -253,46 +406,60 @@ document.addEventListener("DOMContentLoaded", function () {
     }));
     chart.appendChild(svg("path", { class: "trend-line", d: line }));
 
-    /* One hover target per day: the exact value stays discoverable even
-     * though the line itself draws no dots. */
-    series.forEach(function (day, index) {
-      var slot = count > 1 ? step : plotWidth;
-      var hit = svg("rect", {
-        class: "hit",
-        x: pointX(index) - slot / 2,
-        y: padTop,
-        width: slot,
-        height: plotHeight
-      });
-      var title = svg("title", {});
-      title.textContent = dayParts(day.date, false) + " · " + day.requests +
-        (day.requests === 1 ? " request" : " requests");
-      hit.appendChild(title);
-      chart.appendChild(hit);
-      chart.appendChild(svg("circle", {
-        class: "point", cx: pointX(index), cy: pointY(day.requests), r: 3.5
-      }));
+    var cursor = svg("line", {
+      class: "cursor-line hidden", x1: 0, x2: 0, y1: padTop, y2: baseline
     });
+    var dot = svg("circle", { class: "point", cx: 0, cy: 0, r: 4 });
+    chart.appendChild(cursor);
+    chart.appendChild(dot);
 
-    /* Evenly spaced date ticks, thinned to what the width can hold. */
+    /* Adaptive ticks: the series keeps every bucket, the axis only
+     * prints what the width can hold legibly — and dated clock labels
+     * are wider, so fewer of them fit. */
+    var formatTick = tickFormatter(series, state.granularity);
     var tickCount = width < 420 ? 3 : width < 700 ? 5 : 7;
+    if (state.granularity !== "daily" && formatTick(series[0].timestamp).length > 8) {
+      tickCount = Math.max(3, tickCount - 2);
+    }
     var seen = {};
     for (var tick = 0; tick < tickCount; tick++) {
       var at = Math.round((tick / (tickCount - 1)) * (count - 1));
       if (seen[at]) continue;
       seen[at] = true;
-      var anchor = at === 0 ? "start" : at === count - 1 ? "end" : "middle";
       var tickLabel = svg("text", {
         class: "axis-text",
         x: pointX(at),
         y: height - 8,
-        "text-anchor": anchor
+        "text-anchor": at === 0 ? "start" : at === count - 1 ? "end" : "middle"
       });
-      tickLabel.textContent = dayParts(series[at].date, false);
+      tickLabel.textContent = formatTick(series[at].timestamp);
       chart.appendChild(tickLabel);
     }
 
     host.appendChild(chart);
+    chartState = {
+      series: series, pointX: pointX, pointY: pointY, cursor: cursor, dot: dot,
+      index: count - 1, summary: summary, padLeft: padLeft, step: step, width: width
+    };
+    document.getElementById("chart-readout").textContent = summary;
+
+    /* Reachable by pointer AND by keyboard: one focus stop drives a
+     * cursor across every bucket, so the detail is never mouse-only. */
+    chart.addEventListener("mousemove", function (event) {
+      var box = chart.getBoundingClientRect();
+      var scale = width / box.width;
+      var x = (event.clientX - box.left) * scale;
+      moveCursor(step ? Math.round((x - padLeft) / step) : 0);
+    });
+    chart.addEventListener("mouseleave", clearCursor);
+    chart.addEventListener("focus", function () { moveCursor(chartState.index); });
+    chart.addEventListener("blur", clearCursor);
+    chart.addEventListener("keydown", function (event) {
+      var jump = { ArrowLeft: -1, ArrowRight: 1, PageUp: -10, PageDown: 10 }[event.key];
+      if (jump) { event.preventDefault(); moveCursor(chartState.index + jump); return; }
+      if (event.key === "Home") { event.preventDefault(); moveCursor(0); }
+      if (event.key === "End") { event.preventDefault(); moveCursor(count - 1); }
+    });
   }
 
   /* Proportions come from the API's own counts — never invented. */
@@ -326,12 +493,13 @@ document.addEventListener("DOMContentLoaded", function () {
     redrawTimer = setTimeout(function () { renderTrend(lastSeries); }, 150);
   });
 
-  /* The stat cards ALWAYS render, including for an empty window: that
-   * is where the mandated "—" for an undefined rate actually appears. */
+  /* ── Rendering a response ─────────────────────────────────────── */
+  function rangeText() { return fmtDay(state.start) + " – " + fmtDay(state.end); }
+
   function renderTotals(body) {
     var totals = body.totals;
     setStat("stat-requests", totals.requests.toLocaleString());
-    document.getElementById("stat-requests-note").textContent = formatRange(body.daily);
+    document.getElementById("stat-requests-note").textContent = rangeText();
     setStat("stat-minutes", totals.speech_minutes.toLocaleString());
     setStat("stat-average", totals.average_request_seconds === null
       ? null
@@ -343,10 +511,12 @@ document.addEventListener("DOMContentLoaded", function () {
     analytics.classList.remove("hidden");
     renderTotals(body);
 
+    var label = { daily: "Daily", hourly: "Hourly", minute: "Per-minute" }[body.granularity];
     document.getElementById("trend-caption").textContent =
-      "Daily API requests · " + formatRange(body.daily);
-    lastSeries = body.daily;
-    renderTrend(body.daily);
+      label + " API requests · " + rangeText() +
+      (body.granularity === "daily" ? "" : " · times in UTC");
+    lastSeries = body.series;
+    renderTrend(body.series);
 
     renderDistribution("languages", body.languages.map(function (entry) {
       return { name: languageName(entry.key), requests: entry.requests };
@@ -358,13 +528,11 @@ document.addEventListener("DOMContentLoaded", function () {
       return { name: IntelliAI.serviceName(entry.key), requests: entry.requests };
     }), "No services used in this period.");
 
-    /* The success-rate note names one service only while one service is
-     * responsible for the number it explains. */
-    if (body.models.length > 1) {
-      document.getElementById("stat-success-note").textContent =
-        "Accepted requests completed by IntelliAI services. " +
+    document.getElementById("stat-success-note").textContent = body.models.length > 1
+      ? "Accepted requests completed by IntelliAI services. " +
+        "Requests rejected as invalid before processing are excluded."
+      : "Accepted requests completed by IntelliAI STT. " +
         "Requests rejected as invalid before processing are excluded.";
-    }
   }
 
   function showEmptyWindow(body) {
@@ -379,68 +547,316 @@ document.addEventListener("DOMContentLoaded", function () {
     function word(neverUsed) {
       document.getElementById("no-usage-title").textContent = neverUsed
         ? "No API usage yet"
-        : "No API requests in the last " + body.period.days + " days";
+        : "No API usage in this period";
       document.getElementById("no-usage-body").textContent = neverUsed
         ? "Run your first IntelliAI STT request to see usage analytics here."
-        : "Your organization has usage outside this period — try a longer period.";
+        : "Your organization has usage outside " + rangeText() + " — try a wider range.";
     }
 
-    if (body.period.days >= 90) { accountHasUsage = false; word(true); return; }
     if (accountHasUsage !== null) { word(!accountHasUsage); return; }
-    IntelliAI.apiJSON("/v1/usage/summary?days=90").then(function (widest) {
-      accountHasUsage = widest.totals.requests > 0;
+    var widest = shortcutRange(90);
+    IntelliAI.apiJSON(
+      "/v1/usage/summary?start=" + widest.start + "&end=" + widest.end + "&granularity=daily"
+    ).then(function (all) {
+      accountHasUsage = all.totals.requests > 0;
       word(!accountHasUsage);
     }).catch(function () { word(true); });
   }
 
-  function showSections() {
-    document.getElementById("trend-section").classList.remove("hidden");
-    document.getElementById("distribution-section").classList.remove("hidden");
+  function only(section) {
+    [disconnected, guidance, loadError, analytics].forEach(function (node) {
+      node.classList.toggle("hidden", node !== section);
+    });
+    if (section === analytics) return;
     noUsage.classList.add("hidden");
   }
 
   function load() {
     if (!IntelliAI.getKey()) {
-      disconnected.classList.remove("hidden");
-      analytics.classList.add("hidden");
-      noUsage.classList.add("hidden");
+      only(disconnected);
       return;
     }
-    /* Every period change re-asks the API — the window is the server's
-     * decision, never recomputed from a cached client-side slice. The
-     * sequence number keeps a slow earlier answer from repainting the
-     * page under a period the user has already moved on from. */
+    var limit = limitFor(state.granularity);
+    if (exceeds(state.start, state.end, state.granularity)) {
+      /* Guide instead of firing a request the backend will refuse — and
+       * never quietly rewrite what the user asked for. */
+      only(guidance);
+      document.getElementById("guidance-body").textContent =
+        limit.text + " The selected range is " + rangeText() + ".";
+      return;
+    }
+
     var ticket = ++requestSeq;
-    IntelliAI.apiJSON("/v1/usage/summary?days=" + days).then(function (body) {
+    analytics.classList.add("is-loading");
+    var query = "?start=" + state.start + "&end=" + state.end +
+      "&granularity=" + state.granularity;
+    IntelliAI.apiJSON("/v1/usage/summary" + query).then(function (body) {
       if (ticket !== requestSeq) return;
-      disconnected.classList.add("hidden");
+      analytics.classList.remove("is-loading");
+      only(analytics);
+      document.getElementById("trend-section").classList.remove("hidden");
+      document.getElementById("distribution-section").classList.remove("hidden");
+      noUsage.classList.add("hidden");
       if (!body.totals.requests) {
         showEmptyWindow(body);
         return;
       }
-      showSections();
       render(body);
     }).catch(function (error) {
       if (ticket !== requestSeq) return;
-      analytics.classList.add("hidden");
-      noUsage.classList.add("hidden");
-      disconnected.classList.remove("hidden");
-      document.getElementById("disconnected-reason").textContent = error.status === 401
-        ? "Your saved API key was rejected — connect with a current one."
-        : "Could not reach the API: " + error.message;
+      analytics.classList.remove("is-loading");
+      if (error.status === 401) {
+        only(disconnected);
+        document.getElementById("disconnected-reason").textContent =
+          "Your saved API key was rejected — connect with a current one.";
+        return;
+      }
+      /* Never leave the previous period's numbers on screen pretending
+       * to belong to the new selection. */
+      only(loadError);
+      document.getElementById("load-error-body").textContent =
+        error.message + " (" + rangeText() + ", " + state.granularity + ")";
     });
   }
 
-  periodGroup.addEventListener("click", function (event) {
-    var button = event.target.closest("button[data-days]");
+  /* ── Granularity ──────────────────────────────────────────────── */
+  var granularityGroup = document.getElementById("granularity");
+  granularityGroup.addEventListener("click", function (event) {
+    var button = event.target.closest("button[data-granularity]");
     if (!button) return;
-    days = parseInt(button.dataset.days, 10);
-    Array.prototype.forEach.call(periodGroup.querySelectorAll("button"), function (node) {
+    state.granularity = button.dataset.granularity;
+    Array.prototype.forEach.call(granularityGroup.querySelectorAll("button"), function (node) {
       node.setAttribute("aria-pressed", node === button ? "true" : "false");
     });
     load();
   });
 
+  /* ── Date-range picker ────────────────────────────────────────── */
+  var WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+  function renderShortcuts() {
+    var host = document.getElementById("shortcuts");
+    host.replaceChildren();
+    SHORTCUTS.forEach(function (shortcut) {
+      var range = shortcutRange(shortcut.days);
+      var tooLong = exceeds(range.start, range.end, state.granularity);
+      var button = el("button", {
+        type: "button",
+        "aria-pressed": draft.start === range.start && draft.end === range.end ? "true" : "false"
+      }, [shortcut.label]);
+      if (tooLong) {
+        /* Unavailable rather than broken: this shortcut cannot be
+         * answered at the selected granularity, and the reason is on it. */
+        button.disabled = true;
+        button.title = limitFor(state.granularity).text;
+      }
+      button.addEventListener("click", function () {
+        draft.start = range.start;
+        draft.end = range.end;
+        draft.viewMonth = shiftMonths(draft.end, -1);
+        renderPicker();
+      });
+      host.appendChild(button);
+    });
+  }
+
+  function renderMonth(monthISO) {
+    var first = dateOf(monthISO);
+    first.setUTCDate(1);
+    var year = first.getUTCFullYear();
+    var month = first.getUTCMonth();
+    var title = first.toLocaleDateString(undefined, {
+      month: "long", year: "numeric", timeZone: "UTC"
+    });
+
+    var head = el("div", { class: "month-head" }, [el("span", { class: "month-title" }, [title])]);
+    var grid = el("div", { class: "days", role: "grid", "aria-label": title });
+    var weekdays = el("div", { class: "weekdays" });
+    WEEKDAYS.forEach(function (name) { weekdays.appendChild(el("span", {}, [name])); });
+
+    var leading = new Date(Date.UTC(year, month, 1)).getUTCDay();
+    for (var blank = 0; blank < leading; blank++) {
+      grid.appendChild(el("span", { class: "day blank", "aria-hidden": "true" }));
+    }
+    var today = todayISO();
+    var daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    for (var day = 1; day <= daysInMonth; day++) {
+      var iso = isoOf(new Date(Date.UTC(year, month, day)));
+      var future = iso > today;
+      var isStart = iso === draft.start;
+      var isEnd = !!draft.end && iso === draft.end;
+      var inside = !!draft.end && iso > draft.start && iso < draft.end;
+      var classes = "day" + (isStart || isEnd ? " edge" : inside ? " in-range" : "") +
+        (iso === today ? " today" : "");
+      var cell = el("button", {
+        type: "button",
+        class: classes,
+        role: "gridcell",
+        tabindex: iso === draft.start ? "0" : "-1",
+        "aria-label": fmtDay(iso),
+        "aria-selected": isStart || isEnd ? "true" : "false",
+        "data-iso": iso
+      }, [String(day)]);
+      if (future) {
+        cell.disabled = true;
+        cell.title = "Future dates have no usage to report.";
+      }
+      grid.appendChild(cell);
+    }
+    return el("div", { class: "month" }, [head, weekdays, grid]);
+  }
+
+  function renderCalendar() {
+    var host = document.getElementById("months");
+    host.replaceChildren();
+    var back = el("button", {
+      class: "month-nav", type: "button", "aria-label": "Previous month"
+    }, ["‹"]);
+    var forward = el("button", {
+      class: "month-nav", type: "button", "aria-label": "Next month"
+    }, ["›"]);
+    back.addEventListener("click", function () {
+      draft.viewMonth = shiftMonths(draft.viewMonth, -1);
+      renderPicker();
+    });
+    forward.addEventListener("click", function () {
+      draft.viewMonth = shiftMonths(draft.viewMonth, 1);
+      renderPicker();
+    });
+    /* The second month may not run past the current one: there is
+     * nothing to select there. */
+    forward.disabled = shiftMonths(draft.viewMonth, 1) >= shiftMonths(todayISO(), 0);
+
+    var left = renderMonth(draft.viewMonth);
+    var right = renderMonth(shiftMonths(draft.viewMonth, 1));
+    left.querySelector(".month-head").prepend(back);
+    right.querySelector(".month-head").appendChild(forward);
+    host.appendChild(left);
+    host.appendChild(right);
+  }
+
+  function pickDay(iso) {
+    /* First click starts a range and LEAVES THE END OPEN, so the second
+     * click can complete it; a click before the start begins again
+     * there. Setting both ends on the first click would make every
+     * second click restart, and a multi-day range unselectable. */
+    if (!draft.start || draft.end) {
+      draft.start = iso;
+      draft.end = null;
+    } else if (iso < draft.start) {
+      draft.start = iso;
+    } else {
+      draft.end = iso;
+    }
+    renderPicker();
+  }
+
+  function renderPicker() {
+    renderShortcuts();
+    renderCalendar();
+    var pending = !draft.end;
+    var tooLong = !pending && exceeds(draft.start, draft.end, state.granularity);
+    var note = document.getElementById("picker-note");
+    note.textContent = pending
+      ? "Select an end date."
+      : tooLong
+        ? limitFor(state.granularity).text
+        : fmtDay(draft.start) + " – " + fmtDay(draft.end) + " · UTC";
+    note.classList.toggle("err", tooLong);
+    /* A half-made or impossible selection cannot be applied. */
+    document.getElementById("picker-apply").disabled = pending || tooLong;
+  }
+
+  function openPicker() {
+    draft.start = state.start;
+    draft.end = state.end;
+    draft.viewMonth = shiftMonths(state.end, -1);
+    renderPicker();
+    picker.classList.remove("hidden");
+    rangeBtn.setAttribute("aria-expanded", "true");
+    var focusTarget = picker.querySelector(".day[tabindex='0']") ||
+      picker.querySelector(".picker-shortcuts button:not(:disabled)");
+    if (focusTarget) focusTarget.focus();
+  }
+
+  function closePicker(restoreFocus) {
+    picker.classList.add("hidden");
+    rangeBtn.setAttribute("aria-expanded", "false");
+    if (restoreFocus) rangeBtn.focus();
+  }
+
+  rangeBtn.addEventListener("click", function () {
+    if (picker.classList.contains("hidden")) openPicker();
+    else closePicker(true);
+  });
+  document.getElementById("picker-cancel").addEventListener("click", function () {
+    closePicker(true);
+  });
+  document.getElementById("picker-apply").addEventListener("click", function () {
+    state.start = draft.start;
+    state.end = draft.end;
+    updateRangeLabel();
+    closePicker(true);
+    load();
+  });
+  document.getElementById("guidance-open").addEventListener("click", openPicker);
+  document.getElementById("retry").addEventListener("click", load);
+
+  picker.addEventListener("click", function (event) {
+    var cell = event.target.closest(".day[data-iso]");
+    if (cell && !cell.disabled) pickDay(cell.dataset.iso);
+  });
+
+  /* Arrow keys walk the calendar without tabbing through sixty buttons. */
+  picker.addEventListener("keydown", function (event) {
+    var cell = event.target.closest(".day[data-iso]");
+    if (!cell) return;
+    var jump = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[event.key];
+    if (!jump) return;
+    event.preventDefault();
+    var target = shiftDays(cell.dataset.iso, jump);
+    if (target > todayISO()) return;
+    if (target < draft.viewMonth) {
+      draft.viewMonth = shiftMonths(draft.viewMonth, -1);
+      renderCalendar();
+    } else if (target >= shiftMonths(draft.viewMonth, 2)) {
+      draft.viewMonth = shiftMonths(draft.viewMonth, 1);
+      renderCalendar();
+    }
+    var next = picker.querySelector('.day[data-iso="' + target + '"]');
+    if (next) { next.setAttribute("tabindex", "0"); next.focus(); }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !picker.classList.contains("hidden")) closePicker(true);
+  });
+  /* Where the press STARTED decides whether this was an outside click.
+   * Choosing a shortcut or a day re-renders the picker, which detaches
+   * the very node that was clicked — testing the click target alone
+   * would read that as "outside" and close the picker mid-selection. */
+  function ownsClick(node) {
+    /* The picker itself, or any control whose whole job is to open it —
+     * without this, the click that opens the picker bubbles on to close
+     * it again in the same cycle. */
+    return picker.contains(node) ||
+      !!(node.closest && node.closest("[data-picker-opener]"));
+  }
+  var pressedInside = false;
+  document.addEventListener("pointerdown", function (event) {
+    pressedInside = ownsClick(event.target);
+  }, true);
+  document.addEventListener("click", function (event) {
+    if (picker.classList.contains("hidden")) return;
+    if (pressedInside || ownsClick(event.target)) return;
+    closePicker(false);
+  });
+
+  function updateRangeLabel() {
+    document.getElementById("range-label").textContent = rangeText();
+    rangeBtn.setAttribute("aria-label", "Date range: " + rangeText() + ". Change the range.");
+  }
+
+  updateRangeLabel();
   load();
 });
 </script>
