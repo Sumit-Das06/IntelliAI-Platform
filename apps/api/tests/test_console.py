@@ -127,6 +127,38 @@ async def test_the_datasets_page_is_served_as_html(
     assert "if (ticket !== drawerTicket) return;" in response.text
 
 
+async def test_the_datasets_page_prepares_training_data(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # Commit 12: every version card carries its Training Data verdict.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/datasets")).text
+
+    # The three honest states, in product words.
+    assert "Not prepared yet" in page
+    assert "Prepare Training Data" in page
+    assert "✓ Ready" in page
+    assert "Ready for future IntelliAI STT fine-tuning." in page
+    assert "⚠ Validation failed" in page
+    assert "no manifest was created." in page
+    assert "Retry Preparation" in page
+    # Failure reasons are named for humans, from the machine vocabulary.
+    for reason in (
+        "audio file unavailable",
+        "missing transcript",
+        "missing language",
+        "samples were erased after this version froze",
+    ):
+        assert reason in page
+    # The verdict comes from the preparation API — never a client recount.
+    assert '"/preparation"' in page
+    assert '"/prepare"' in page
+    # The next action is intentionally absent: preparation is where this
+    # milestone ends.
+    for absent in ("Train Model", "Fine-tune", "Deploy"):
+        assert absent not in page
+
+
 async def test_the_usage_page_is_served_as_html(settings: Settings, db_engine: AsyncEngine) -> None:
     async with client_with_db(settings, db_engine) as (client, _factory):
         response = await client.get("/console/usage")

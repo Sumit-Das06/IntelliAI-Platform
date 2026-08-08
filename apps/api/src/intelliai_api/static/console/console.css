@@ -517,6 +517,10 @@ audio.player.on { display: block; }
 .version-row { margin-bottom: 8px; }
 .version-row .row-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .version-row .row-time { color: var(--muted); font-size: 0.78rem; margin-left: auto; white-space: nowrap; }
+.version-row .prep { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+.version-row .prep-note { white-space: normal; margin: 6px 0; font-size: 0.85rem; }
+.version-row .prep-problems { margin: 4px 0 6px; padding-left: 20px; font-size: 0.85rem; }
+.version-row .prep-problems li { margin-bottom: 2px; }
 
 /* ── Detail drawer ──────────────────────────────────────────── */
 .drawer-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 50; }

@@ -477,10 +477,132 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  /* ── training data per version ─────────────────────────────── */
+  var REASON_NAMES = {
+    audio_missing: "audio file unavailable",
+    transcript_missing: "missing transcript",
+    language_missing: "missing language",
+    duration_invalid: "invalid duration",
+    foreign_sample: "sample belongs to another workspace",
+    membership_count_mismatch: "samples were erased after this version froze"
+  };
+
+  function reasonSummary(errors) {
+    var counts = {};
+    errors.forEach(function (entry) {
+      counts[entry.reason] = (counts[entry.reason] || 0) + 1;
+    });
+    return Object.keys(counts).map(function (reason) {
+      return counts[reason] + " × " + (REASON_NAMES[reason] || reason);
+    });
+  }
+
+  function languageSummary(languages) {
+    return Object.keys(languages).map(function (code) {
+      return languageName(code) + " — " + fmtCount(languages[code]);
+    }).join(" · ");
+  }
+
+  function renderPreparation(version, host, preparation) {
+    host.replaceChildren();
+    var canAct = drawerDataset && drawerDataset.status === "active";
+
+    function prepareButton(label) {
+      var button = el("button", { class: "btn btn-sm btn-primary", type: "button" }, [label]);
+      if (!canAct) button.disabled = true;
+      button.addEventListener("click", function () {
+        button.disabled = true;
+        button.textContent = "Validating…";
+        var dataset = drawerDataset;
+        IntelliAI.apiJSON(
+          "/v1/datasets/" + encodeURIComponent(dataset.id) +
+          "/versions/" + encodeURIComponent(version.id) + "/prepare",
+          { method: "POST" }
+        ).then(function (result) {
+          renderPreparation(version, host, result);
+        }).catch(function (error) {
+          button.disabled = false;
+          button.textContent = label;
+          host.appendChild(el("p", { class: "status-line err" }, [error.message]));
+        });
+      });
+      return button;
+    }
+
+    if (!preparation) {
+      host.appendChild(el("div", { class: "row-top" }, [
+        el("strong", {}, ["Training data"]),
+        el("span", { class: "cell-muted" }, ["Not prepared yet"])
+      ]));
+      host.appendChild(el("p", { class: "cell-muted prep-note" }, [
+        "Prepare this version to validate its audio and transcripts and create a training-ready manifest."
+      ]));
+      host.appendChild(prepareButton("Prepare Training Data"));
+      return;
+    }
+
+    if (preparation.status === "ready") {
+      host.appendChild(el("div", { class: "row-top" }, [
+        el("strong", {}, ["Training data"]),
+        el("span", { class: "badge badge-ok" }, ["✓ Ready"])
+      ]));
+      host.appendChild(el("p", { class: "cell-muted prep-note" }, [
+        fmtCount(preparation.valid_count) + " valid examples · " +
+        fmtDuration(preparation.duration_seconds) + " · " +
+        languageSummary(preparation.languages)
+      ]));
+      host.appendChild(el("p", { class: "cell-muted prep-note" }, [
+        "Manifest created " + fmtWhen(preparation.completed_at || preparation.created_at) +
+        " · Ready for future IntelliAI STT fine-tuning."
+      ]));
+      return;
+    }
+
+    /* failed: honest counts, named problems, a way forward */
+    host.appendChild(el("div", { class: "row-top" }, [
+      el("strong", {}, ["Training data"]),
+      el("span", { class: "badge badge-danger" }, ["⚠ Validation failed"])
+    ]));
+    host.appendChild(el("p", { class: "cell-muted prep-note" }, [
+      fmtCount(preparation.valid_count) + " valid · " +
+      fmtCount(preparation.invalid_count) + " invalid — no manifest was created."
+    ]));
+    var problems = el("ul", { class: "prep-problems" });
+    reasonSummary(preparation.errors).forEach(function (text) {
+      problems.appendChild(el("li", {}, [text]));
+    });
+    host.appendChild(problems);
+    host.appendChild(el("p", { class: "cell-muted prep-note" }, [
+      "Fix the underlying samples (or create a new version), then retry."
+    ]));
+    host.appendChild(prepareButton("Retry Preparation"));
+  }
+
+  function loadPreparation(version, host, ticket) {
+    var dataset = drawerDataset;
+    IntelliAI.apiJSON(
+      "/v1/datasets/" + encodeURIComponent(dataset.id) +
+      "/versions/" + encodeURIComponent(version.id) + "/preparation"
+    ).then(function (preparation) {
+      if (ticket !== drawerTicket) return;
+      renderPreparation(version, host, preparation);
+    }).catch(function (error) {
+      if (ticket !== drawerTicket) return;
+      if (error.status === 404) {
+        renderPreparation(version, host, null); /* honest: not prepared yet */
+      } else {
+        host.replaceChildren();
+        host.appendChild(el("span", { class: "cell-muted" },
+          ["Training data status could not be loaded."]));
+      }
+    });
+  }
+
   function renderVersions(versions) {
     var host = document.getElementById("drawer-versions");
     host.replaceChildren();
     document.getElementById("versions-empty").classList.toggle("hidden", versions.length !== 0);
+    var ticket = drawerTicket;
     versions.forEach(function (version) {
       var head = el("div", { class: "row-top" }, [
         el("strong", {}, ["v" + version.version_number]),
@@ -490,7 +612,11 @@ document.addEventListener("DOMContentLoaded", function () {
         el("span", { class: "cell-muted" }, [fmtCount(version.corrected_samples) + " corrected"]),
         el("span", { class: "row-time" }, ["Created " + fmtWhen(version.created_at)])
       ]);
-      host.appendChild(el("div", { class: "card version-row" }, [head]));
+      var prep = el("div", { class: "prep" }, [
+        el("span", { class: "cell-muted" }, ["Checking training data…"])
+      ]);
+      host.appendChild(el("div", { class: "card version-row" }, [head, prep]));
+      loadPreparation(version, prep, ticket);
     });
   }
 
