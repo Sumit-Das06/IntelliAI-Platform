@@ -20,9 +20,25 @@
     <string name="language_content_description">Dictation language: %1$s</string>
     <string name="setting_language_title">Dictation Language</string>
 
+    <!-- Contribution setting -->
+    <string name="setting_contribution_title">Improve IntelliAI STT</string>
+    <string name="setting_contribution_body">Allow eligible voice samples from this keyboard to be used to improve IntelliAI STT. Your organization\'s data consent must also be enabled — turning this off prevents your dictations from being collected.</string>
+    <string name="setting_contribution_on">Your dictations may be collected to improve IntelliAI STT (subject to your organization\'s consent).</string>
+    <string name="setting_contribution_off">Your dictations are not collected for training.</string>
+
     <!-- Dictation states -->
     <string name="dictation_listening">● Listening</string>
     <string name="dictation_processing">Processing…</string>
+
+    <!-- Correction offer + editor -->
+    <string name="correction_offer">Improve this transcription?</string>
+    <string name="correction_edit">Edit</string>
+    <string name="correction_dismiss">Dismiss</string>
+    <string name="correction_dialog_title">Correct transcript</string>
+    <string name="correction_save">Save correction</string>
+    <string name="correction_saved">Correction sent — thanks for improving IntelliAI STT.</string>
+    <string name="correction_failed">Couldn\'t save your correction. Please try again.</string>
+    <string name="correction_unavailable">This transcription is no longer available to correct.</string>
 
     <!-- Dictation errors — honest, human, never internal details -->
     <string name="error_no_api_key">Add your IntelliAI API key in Settings.</string>

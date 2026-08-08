@@ -48,7 +48,11 @@ class IntelliAIApiClient(
      * (13C's selector will pass "en"/"hi"/"ar" here — same client, no
      * rewrite.) Blocking; callers dispatch off the main thread.
      */
-    fun transcribe(wav: ByteArray, language: String? = null): ApiOutcome {
+    fun transcribe(
+        wav: ByteArray,
+        language: String? = null,
+        contribute: Boolean = true,
+    ): ApiOutcome {
         val key = apiKey()?.takeIf { it.isNotBlank() }
             ?: return ApiOutcome.Failure(FailureKind.NO_API_KEY)
         val base = baseUrl().trim().trimEnd('/')
@@ -68,6 +72,10 @@ class IntelliAIApiClient(
             .url("$base/v1/audio/transcriptions")
             .header("Authorization", "Bearer $key")
             .header("X-IntelliAI-Client", "keyboard/1.0")
+            // Opt out ONLY when contribution is off. Sending nothing when
+            // on preserves the server's existing behavior (and never
+            // widens collection beyond org consent).
+            .apply { if (!contribute) header("X-IntelliAI-Contribution", "off") }
             .post(body)
             .build()
 
@@ -136,6 +144,55 @@ class IntelliAIApiClient(
             else -> ApiOutcome.Failure(FailureKind.REJECTED)
         }
     }
+
+    /**
+     * Attach a human correction to a collected sample. Called only when a
+     * transcription returned a sample id (contribution on AND collected),
+     * so there is always something to correct. The corrected text is sent
+     * EXACTLY as the user entered it — the server keeps original_transcript
+     * immutable and evolves current_transcript. Blocking; off the main
+     * thread. No retry: a correction is a deliberate user act, not a
+     * background operation.
+     */
+    fun correct(sampleId: String, correctedText: String): CorrectionOutcome {
+        val key = apiKey()?.takeIf { it.isNotBlank() }
+            ?: return CorrectionOutcome.Failure(FailureKind.NO_API_KEY)
+        val base = baseUrl().trim().trimEnd('/')
+        if (base.isEmpty()) return CorrectionOutcome.Failure(FailureKind.NO_BASE_URL)
+
+        val payload = JSONObject().put("corrected_text", correctedText).toString()
+        val request = Request.Builder()
+            .url("$base/v1/audio/transcriptions/$sampleId/correction")
+            .header("Authorization", "Bearer $key")
+            .header("X-IntelliAI-Client", "keyboard/1.0")
+            .post(payload.toRequestBody("application/json".toMediaType()))
+            .build()
+        return try {
+            http.newCall(request).execute().use { response ->
+                interpretCorrection(response.code, response)
+            }
+        } catch (_: IOException) {
+            CorrectionOutcome.Failure(FailureKind.NETWORK)
+        }
+    }
+
+    private fun interpretCorrection(status: Int, response: okhttp3.Response): CorrectionOutcome {
+        if (status in 200..299) return CorrectionOutcome.Success
+        val error = runCatching {
+            JSONObject(response.body?.string().orEmpty()).getJSONObject("error")
+        }.getOrNull()
+        return when (error?.optString("type").orEmpty()) {
+            "authentication_error" -> CorrectionOutcome.Failure(FailureKind.BAD_API_KEY)
+            // The sample is gone or belongs to another org (404, never
+            // existence-disclosing): nothing here to correct.
+            "resource_not_found_error" -> CorrectionOutcome.Failure(FailureKind.SAMPLE_UNAVAILABLE)
+            "invalid_request_error" -> CorrectionOutcome.Failure(FailureKind.REJECTED)
+            "rate_limit_error" -> CorrectionOutcome.Failure(FailureKind.RATE_LIMITED)
+            else -> CorrectionOutcome.Failure(
+                if (status == 401) FailureKind.BAD_API_KEY else FailureKind.SERVER
+            )
+        }
+    }
 }
 
 /** What a transcription attempt produced, in product terms. */
@@ -149,6 +206,13 @@ sealed interface ApiOutcome {
     ) : ApiOutcome
 }
 
+/** What a correction attempt produced. */
+sealed interface CorrectionOutcome {
+    data object Success : CorrectionOutcome
+
+    data class Failure(val kind: FailureKind) : CorrectionOutcome
+}
+
 enum class FailureKind {
     NO_API_KEY, // no key configured / server saw none
     NO_BASE_URL, // release build with no server configured
@@ -158,6 +222,7 @@ enum class FailureKind {
     UNAVAILABLE, // 503 family — briefly retryable
     REJECTED, // the request itself was refused (validation, language…)
     NO_SPEECH, // 200 with empty text: nothing recognizable was said
+    SAMPLE_UNAVAILABLE, // the sample to correct no longer exists
     NETWORK, // could not reach IntelliAI at all
     SERVER, // 5xx without a parseable envelope
 }

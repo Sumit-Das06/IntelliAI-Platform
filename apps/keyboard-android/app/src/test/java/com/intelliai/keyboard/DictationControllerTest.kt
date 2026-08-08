@@ -53,11 +53,13 @@ class DictationControllerTest {
     private class FakeListener : DictationController.Listener {
         val states = mutableListOf<DictationState>()
         val transcripts = mutableListOf<String>()
+        val sampleIds = mutableListOf<String?>()
         override fun onStateChanged(state: DictationState) {
             states.add(state)
         }
-        override fun onTranscript(text: String) {
+        override fun onTranscript(text: String, sampleId: String?) {
             transcripts.add(text)
+            sampleIds.add(sampleId)
         }
         fun errors(): List<DictationError> =
             states.filterIsInstance<DictationState.IdleWithError>().map { it.error }
@@ -75,7 +77,7 @@ class DictationControllerTest {
         val controller = DictationController(
             scope = scope,
             recorder = recorder,
-            transcribe = { _, _ -> outcome },
+            transcribe = { _, _, _ -> outcome },
             permissions = gate,
             hasApiKey = { hasKey },
             listener = listener,
@@ -241,67 +243,78 @@ class DictationControllerTest {
         assertEquals(DictationState.Idle, controller.state)
     }
 
-    // ── Language capture (13C) ──────────────────────────────────────
+    // ── Language + contribution capture (13C / 13D) ─────────────────
 
-    /** A controller whose language provider is mutable and whose
-     *  transcribe calls are recorded, so we can prove what tag each
-     *  request carried. */
-    private fun languageHarness(scope: TestScope): LanguageHarness {
-        val captured = mutableListOf<String?>()
+    /** A record of what each request carried. */
+    private data class Captured(val language: String?, val contribute: Boolean)
+
+    /** A controller whose language AND contribution providers are mutable
+     *  and whose transcribe calls are recorded, proving what each request
+     *  carried and when it was locked. */
+    private fun captureHarness(scope: TestScope): CaptureHarness {
+        val captured = mutableListOf<Captured>()
         var currentTag: String? = null
+        var contribute = true
         val dispatcher = StandardTestDispatcher(scope.testScheduler)
         val controller = DictationController(
             scope = scope,
             recorder = FakeRecorder(),
-            transcribe = { _, language ->
-                captured.add(language)
+            transcribe = { _, language, contributeArg ->
+                captured.add(Captured(language, contributeArg))
                 ApiOutcome.Success("ok", sampleId = null)
             },
             permissions = FakeGate(granted = true),
             hasApiKey = { true },
             listener = FakeListener(),
             languageTag = { currentTag },
+            contributionEnabled = { contribute },
             ioDispatcher = dispatcher,
         )
-        return LanguageHarness(controller, captured) { currentTag = it }
+        return CaptureHarness(
+            controller,
+            captured,
+            setTag = { currentTag = it },
+            setContribute = { contribute = it },
+        )
     }
 
-    private class LanguageHarness(
+    private class CaptureHarness(
         val controller: DictationController,
-        val captured: List<String?>,
+        val captured: List<Captured>,
         val setTag: (String?) -> Unit,
+        val setContribute: (Boolean) -> Unit,
     )
 
     @Test
     fun `the request carries the selected language tag`() {
         val scope = TestScope()
-        val h = languageHarness(scope)
+        val h = captureHarness(scope)
         h.setTag("hi")
 
         h.controller.onMicTapped() // start (captures "hi")
         h.controller.onMicTapped() // stop → transcribe
         scope.advanceUntilIdle()
 
-        assertEquals(listOf("hi"), h.captured)
+        assertEquals(listOf("hi"), h.captured.map { it.language })
     }
 
     @Test
     fun `auto - a null tag - is passed through so the client omits the field`() {
         val scope = TestScope()
-        val h = languageHarness(scope)
+        val h = captureHarness(scope)
         h.setTag(null) // Auto
 
         h.controller.onMicTapped()
         h.controller.onMicTapped()
         scope.advanceUntilIdle()
 
-        assertEquals(listOf<String?>(null), h.captured)
+        assertEquals(listOf<String?>(null), h.captured.map { it.language })
     }
 
     @Test
     fun `changing the language mid-request does not change the in-flight request`() {
         val scope = TestScope()
-        val h = languageHarness(scope)
+        val h = captureHarness(scope)
 
         h.setTag("hi")
         h.controller.onMicTapped() // START locks "hi"
@@ -309,13 +322,13 @@ class DictationControllerTest {
         h.controller.onMicTapped() // stop → transcribe uses the LOCKED "hi"
         scope.advanceUntilIdle()
 
-        assertEquals(listOf("hi"), h.captured)
+        assertEquals(listOf("hi"), h.captured.map { it.language })
     }
 
     @Test
     fun `the next request uses the newly selected language`() {
         val scope = TestScope()
-        val h = languageHarness(scope)
+        val h = captureHarness(scope)
 
         h.setTag("hi")
         h.controller.onMicTapped()
@@ -327,6 +340,95 @@ class DictationControllerTest {
         h.controller.onMicTapped()
         scope.advanceUntilIdle()
 
-        assertEquals(listOf("hi", "ar"), h.captured)
+        assertEquals(listOf("hi", "ar"), h.captured.map { it.language })
+    }
+
+    @Test
+    fun `contribution is captured at dictation start`() {
+        val scope = TestScope()
+        val h = captureHarness(scope)
+        h.setContribute(false)
+
+        h.controller.onMicTapped()
+        h.controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf(false), h.captured.map { it.contribute })
+    }
+
+    @Test
+    fun `changing contribution mid-request does not change the in-flight request`() {
+        val scope = TestScope()
+        val h = captureHarness(scope)
+
+        h.setContribute(true)
+        h.controller.onMicTapped() // START locks contribute=true
+        h.setContribute(false) // user flips it off while recording…
+        h.controller.onMicTapped() // stop → request keeps the LOCKED true
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf(true), h.captured.map { it.contribute })
+    }
+
+    @Test
+    fun `the next request uses the new contribution choice`() {
+        val scope = TestScope()
+        val h = captureHarness(scope)
+
+        h.setContribute(true)
+        h.controller.onMicTapped()
+        h.controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        h.setContribute(false)
+        h.controller.onMicTapped()
+        h.controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf(true, false), h.captured.map { it.contribute })
+    }
+
+    @Test
+    fun `the sample id from the response is surfaced for correction`() {
+        val scope = TestScope()
+        val listener = FakeListener()
+        val dispatcher = StandardTestDispatcher(scope.testScheduler)
+        val controller = DictationController(
+            scope = scope,
+            recorder = FakeRecorder(),
+            transcribe = { _, _, _ -> ApiOutcome.Success("hello", sampleId = "smp_abc") },
+            permissions = FakeGate(granted = true),
+            hasApiKey = { true },
+            listener = listener,
+            ioDispatcher = dispatcher,
+        )
+
+        controller.onMicTapped()
+        controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf("smp_abc"), listener.sampleIds)
+    }
+
+    @Test
+    fun `no sample id is surfaced when nothing was collected`() {
+        val scope = TestScope()
+        val listener = FakeListener()
+        val dispatcher = StandardTestDispatcher(scope.testScheduler)
+        val controller = DictationController(
+            scope = scope,
+            recorder = FakeRecorder(),
+            transcribe = { _, _, _ -> ApiOutcome.Success("hello", sampleId = null) },
+            permissions = FakeGate(granted = true),
+            hasApiKey = { true },
+            listener = listener,
+            ioDispatcher = dispatcher,
+        )
+
+        controller.onMicTapped()
+        controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf<String?>(null), listener.sampleIds)
     }
 }

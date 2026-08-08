@@ -18,8 +18,26 @@ mid-request never affects the request already in flight. Selecting
 Arabic sets the dictation language only — it does not change the typing
 layout (still QWERTY).
 
-**Not yet implemented:** a contribution toggle ("Improve IntelliAI STT")
-and transcript-correction UI are deliberately deferred to later commits.
+**Improve IntelliAI STT (contribution).** Settings has an *Improve
+IntelliAI STT* toggle (on by default). When off, dictations send
+`X-IntelliAI-Contribution: off` and the backend collects no training
+sample for that request — an honest opt-out, not a cosmetic switch. The
+organization's data consent remains the real ceiling, enforced
+server-side: turning the toggle *on* can never opt in beyond what the
+organization consented to. The choice is captured at dictation start,
+like the language.
+
+**Correction.** When a dictation is actually collected (contribution on
+*and* org consent on), the backend returns a sample id and the keyboard
+offers "Improve this transcription? · Edit". Editing opens a small
+dialog prefilled with the transcript; saving sends the corrected text
+verbatim to `POST /v1/audio/transcriptions/{id}/correction`. The
+server keeps `original_transcript` immutable and updates
+`current_transcript`. The correction updates the IntelliAI sample only —
+it does **not** change the text already inserted in the host app. When
+no sample was collected, no correction is offered (there is nothing to
+correct). Correction state is held in memory and dropped when the field
+changes.
 Today, whether a dictation becomes a training sample is decided entirely
 by your organization's existing consent setting on the platform — the
 keyboard sends no contribution or correction signals of its own.

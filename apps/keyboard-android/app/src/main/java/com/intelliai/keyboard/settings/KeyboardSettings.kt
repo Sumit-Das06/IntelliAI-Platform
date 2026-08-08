@@ -38,6 +38,19 @@ class KeyboardSettings internal constructor(
         plain.putString(KEY_LANGUAGE, language.prefValue)
     }
 
+    // ── Contribution preference (non-secret) ────────────────────────
+    // Whether this keyboard offers its dictations for IntelliAI STT
+    // improvement. Default ON preserves 13B behavior; the ORGANIZATION's
+    // consent remains the real ceiling, enforced server-side — turning
+    // this off only NARROWS collection for this client's requests.
+
+    fun contributionEnabled(): Boolean =
+        plain.getString(KEY_CONTRIBUTION)?.let { it != "off" } ?: true
+
+    fun setContributionEnabled(enabled: Boolean) {
+        plain.putString(KEY_CONTRIBUTION, if (enabled) "on" else "off")
+    }
+
     // ── Server address (non-secret) ─────────────────────────────────
 
     fun baseUrl(): String =
@@ -75,6 +88,7 @@ class KeyboardSettings internal constructor(
         private const val KEY_API_KEY = "api_key"
         private const val KEY_BASE_URL = "base_url"
         private const val KEY_LANGUAGE = "dictation_language"
+        private const val KEY_CONTRIBUTION = "contribution"
 
         /** Always succeeds: plain prefs are always available, so
          *  language and server settings work regardless of Keystore

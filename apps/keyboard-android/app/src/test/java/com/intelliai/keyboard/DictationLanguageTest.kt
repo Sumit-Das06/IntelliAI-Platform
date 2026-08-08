@@ -99,4 +99,33 @@ class DictationLanguageTest {
         keyboardSide.setLanguage(DictationLanguage.ENGLISH)
         assertEquals(DictationLanguage.ENGLISH, settingsSide.language())
     }
+
+    // ── Contribution preference (13D) ───────────────────────────────
+
+    @Test
+    fun `contribution defaults to on for a fresh install`() {
+        assertEquals(true, KeyboardSettings(InMemoryStore(), secure = null).contributionEnabled())
+    }
+
+    @Test
+    fun `contribution off persists across instances`() {
+        val store = InMemoryStore()
+        KeyboardSettings(store, secure = null).setContributionEnabled(false)
+        assertEquals(false, KeyboardSettings(store, secure = null).contributionEnabled())
+
+        KeyboardSettings(store, secure = null).setContributionEnabled(true)
+        assertEquals(true, KeyboardSettings(store, secure = null).contributionEnabled())
+    }
+
+    @Test
+    fun `contribution and language are independent settings`() {
+        val store = InMemoryStore()
+        val settings = KeyboardSettings(store, secure = null)
+        settings.setContributionEnabled(false)
+        settings.setLanguage(DictationLanguage.HINDI)
+
+        val reopened = KeyboardSettings(store, secure = null)
+        assertEquals(false, reopened.contributionEnabled())
+        assertEquals(DictationLanguage.HINDI, reopened.language())
+    }
 }

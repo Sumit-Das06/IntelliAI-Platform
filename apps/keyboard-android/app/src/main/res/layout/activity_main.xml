@@ -205,6 +205,41 @@
                 android:text="@string/language_auto" />
         </LinearLayout>
 
+        <!-- Improve IntelliAI STT (contribution) -->
+        <LinearLayout
+            style="@style/SetupCard"
+            android:layout_marginTop="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/SetupCardTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/setting_contribution_title" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/contribution_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SetupCardBody"
+                android:layout_marginTop="6dp"
+                android:text="@string/setting_contribution_body" />
+
+            <TextView
+                android:id="@+id/contribution_state"
+                style="@style/SetupCardBody"
+                android:layout_marginTop="6dp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
         <!-- Try it -->
         <LinearLayout
             style="@style/SetupCard"

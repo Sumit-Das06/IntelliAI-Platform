@@ -96,23 +96,39 @@ class ScopeGuardsTest {
         assertTrue(debugConfig.readText().contains("10.0.2.2"))
     }
 
-    // ── Scope fences: 13D is not started, engines stay invisible ────
+    // ── Scope fences: 13E is not started, engines stay invisible ────
 
     @Test
-    fun `no contribution mechanics exist yet`() {
+    fun `no fine-tuning or model-lifecycle code exists in the client`() {
+        // 13D adds contribution + correction; it must not reach into the
+        // future ML pipeline. The keyboard is a client — it never trains,
+        // deploys, or names checkpoints.
+        val forbidden = listOf(
+            "fine-tun", "finetune", "training run", "train_model",
+            "checkpoint", "gpu", "model promotion", "evaluation run",
+        )
         val offenders = mainFiles("kt", "xml").filter { file ->
-            val text = file.readText()
-            text.contains("X-IntelliAI-Contribution") || text.contains("Improve IntelliAI")
+            val text = file.readText().lowercase()
+            forbidden.any { text.contains(it) }
         }.map { it.name }
-        assertEquals("contribution controls are Commit 13D", emptyList<String>(), offenders)
+        assertEquals(emptyList<String>(), offenders)
     }
 
     @Test
-    fun `no correction mechanics exist yet`() {
-        val offenders = mainFiles("kt")
-            .filter { it.readText().contains("/correction") }
-            .map { it.name }
-        assertEquals(emptyList<String>(), offenders)
+    fun `no analytics or advertising sdk is on the classpath`() {
+        for (forbidden in listOf(
+            "com.google.firebase.analytics.FirebaseAnalytics",
+            "com.google.android.gms.ads.MobileAds",
+            "com.amplitude.api.Amplitude",
+            "com.mixpanel.android.mpmetrics.MixpanelAPI",
+        )) {
+            try {
+                Class.forName(forbidden)
+                throw AssertionError("out-of-scope SDK present: $forbidden")
+            } catch (_: ClassNotFoundException) {
+                // exactly right
+            }
+        }
     }
 
     @Test

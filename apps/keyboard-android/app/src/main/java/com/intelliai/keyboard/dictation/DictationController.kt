@@ -29,13 +29,16 @@ import kotlinx.coroutines.withContext
 class DictationController(
     private val scope: CoroutineScope,
     private val recorder: Recorder,
-    private val transcribe: suspend (wav: ByteArray, language: String?) -> ApiOutcome,
+    private val transcribe: suspend (wav: ByteArray, language: String?, contribute: Boolean) -> ApiOutcome,
     private val permissions: PermissionGate,
     private val hasApiKey: () -> Boolean,
     private val listener: Listener,
     // The API language tag to use, read fresh at each dictation START and
     // then LOCKED for that request (null = Auto = omit the field).
     private val languageTag: () -> String? = { null },
+    // Whether to offer this dictation for training-data collection, also
+    // read at START and locked for the request.
+    private val contributionEnabled: () -> Boolean = { true },
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
@@ -49,8 +52,11 @@ class DictationController(
     interface Listener {
         fun onStateChanged(state: DictationState)
 
-        /** A non-blank transcript, ready for the InputConnection. */
-        fun onTranscript(text: String)
+        /** A non-blank transcript ready for the InputConnection.
+         *  ``sampleId`` is non-null only when the backend collected a
+         *  sample (contribution on AND org consent on) — the sole
+         *  condition under which a correction can be offered. */
+        fun onTranscript(text: String, sampleId: String?)
     }
 
     var state: DictationState = DictationState.Idle
@@ -58,9 +64,11 @@ class DictationController(
 
     private var tickerJob: Job? = null
 
-    // Locked when recording starts; changing the language selection
-    // afterward cannot alter the request already in flight.
+    // Locked when recording starts; changing the language or
+    // contribution selection afterward cannot alter the request already
+    // in flight.
     private var capturedLanguageTag: String? = null
+    private var capturedContribute: Boolean = true
 
     /** One button, state-dependent meaning: start, or stop. */
     fun onMicTapped() {
@@ -106,10 +114,11 @@ class DictationController(
             fail(DictationError.RECORDER_UNAVAILABLE)
             return
         }
-        // Lock the language at the moment dictation begins — the request
-        // will use THIS value even if the user changes the selection
-        // while it records or processes.
+        // Lock the language AND contribution choice at the moment
+        // dictation begins — the request uses THESE values even if the
+        // user changes a selection while it records or processes.
         capturedLanguageTag = languageTag()
+        capturedContribute = contributionEnabled()
         moveTo(DictationState.Recording(elapsedMs = 0))
         tickerJob = scope.launch {
             var elapsed = 0L
@@ -135,12 +144,13 @@ class DictationController(
         }
         moveTo(DictationState.Processing)
         val language = capturedLanguageTag
+        val contribute = capturedContribute
         scope.launch {
             val wav = WavEncoder.wrapPcm16(recording.pcm)
-            val outcome = withContext(ioDispatcher) { transcribe(wav, language) }
+            val outcome = withContext(ioDispatcher) { transcribe(wav, language, contribute) }
             when (outcome) {
                 is ApiOutcome.Success -> {
-                    listener.onTranscript(outcome.text)
+                    listener.onTranscript(outcome.text, outcome.sampleId)
                     moveTo(DictationState.Idle)
                 }
                 is ApiOutcome.Failure -> fail(
@@ -220,6 +230,9 @@ enum class DictationError {
             FailureKind.NO_SPEECH -> NO_SPEECH_RECOGNIZED
             FailureKind.NETWORK -> NETWORK
             FailureKind.SERVER -> SERVER
+            // Transcription never produces this (it's a correction-only
+            // outcome); fold it into the generic rejection for safety.
+            FailureKind.SAMPLE_UNAVAILABLE -> REQUEST_REJECTED
         }
     }
 }

@@ -42,6 +42,8 @@ class KeyboardView(
         fun onSwitchKeyboard()
         fun onMicTapped()
         fun onLanguageChipTapped()
+        fun onEditCorrection()
+        fun onDismissCorrection()
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -49,7 +51,9 @@ class KeyboardView(
     private val languageChip: TextView
     private val micButton: ImageButton
     private val rowsHost: LinearLayout
+    private val correctionBar: LinearLayout
     private var revertBrandRunnable: Runnable? = null
+    private var hideCorrectionRunnable: Runnable? = null
     private var dictationBrandActive = false
 
     private val keyHeight = dp(52)
@@ -116,6 +120,74 @@ class KeyboardView(
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         }
         addView(rowsHost)
+
+        // A transient correction offer, GONE by default and shown at the
+        // very top only after a dictation that actually produced a
+        // collectible sample. It never appears otherwise, so it can't
+        // clutter normal typing.
+        correctionBar = buildCorrectionBar()
+        addView(correctionBar, 0)
+    }
+
+    private fun buildCorrectionBar(): LinearLayout {
+        val bar = LinearLayout(context).apply {
+            orientation = HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            visibility = GONE
+            setBackgroundColor(color(R.color.kb_key_special))
+            setPadding(dp(12), dp(6), dp(8), dp(6))
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        }
+        bar.addView(
+            TextView(context).apply {
+                text = context.getString(R.string.correction_offer)
+                setTextColor(color(R.color.kb_key_text))
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+                layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
+            }
+        )
+        bar.addView(correctionAction(R.string.correction_edit, accent = true) {
+            listener.onEditCorrection()
+        })
+        bar.addView(correctionAction(R.string.correction_dismiss, accent = false) {
+            hideCorrectionOffer()
+            listener.onDismissCorrection()
+        })
+        return bar
+    }
+
+    private fun correctionAction(labelRes: Int, accent: Boolean, onTap: () -> Unit): TextView =
+        TextView(context).apply {
+            text = context.getString(labelRes)
+            gravity = Gravity.CENTER
+            setTextColor(color(if (accent) R.color.kb_brand_text else R.color.kb_key_text_muted))
+            setTypeface(typeface, Typeface.BOLD)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+            setPadding(dp(14), dp(6), dp(14), dp(6))
+            isClickable = true
+            isFocusable = true
+            background = ContextCompat.getDrawable(context, R.drawable.key_background)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+                .apply { marginStart = dp(6) }
+            setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                onTap()
+            }
+        }
+
+    /** Offer to correct the just-inserted transcript. Auto-dismisses so
+     *  a stale offer never lingers over unrelated typing. */
+    fun showCorrectionOffer() {
+        correctionBar.visibility = VISIBLE
+        hideCorrectionRunnable?.let(handler::removeCallbacks)
+        val hide = Runnable { correctionBar.visibility = GONE }
+        hideCorrectionRunnable = hide
+        handler.postDelayed(hide, 9_000L)
+    }
+
+    fun hideCorrectionOffer() {
+        hideCorrectionRunnable?.let(handler::removeCallbacks)
+        correctionBar.visibility = GONE
     }
 
     /** Rebuild all key rows for the given state. Rare (shift/layer
@@ -194,6 +266,7 @@ class KeyboardView(
         when (state) {
             is com.intelliai.keyboard.dictation.DictationState.Recording -> {
                 dictationBrandActive = true
+                hideCorrectionOffer() // a new dictation supersedes the last offer
                 revertBrandRunnable?.let(handler::removeCallbacks)
                 val seconds = state.elapsedMs / 1000
                 brandLabel.text = context.getString(R.string.dictation_listening) +

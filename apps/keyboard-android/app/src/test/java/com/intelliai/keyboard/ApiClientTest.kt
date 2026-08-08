@@ -1,6 +1,7 @@
 package com.intelliai.keyboard
 
 import com.intelliai.keyboard.api.ApiOutcome
+import com.intelliai.keyboard.api.CorrectionOutcome
 import com.intelliai.keyboard.api.FailureKind
 import com.intelliai.keyboard.api.IntelliAIApiClient
 import okhttp3.OkHttpClient
@@ -98,6 +99,29 @@ class ApiClientTest {
         val body = server.takeRequest().body.readUtf8()
         assertFalse(body.contains("name=\"prompt\""))
         assertFalse(body.contains("name=\"temperature\""))
+    }
+
+    // ── Contribution opt-out header (13D) ───────────────────────────
+
+    @Test
+    fun `contribution on omits the opt-out header`() {
+        enqueue(200, """{"text":"hi"}""")
+        client.transcribe(byteArrayOf(1), contribute = true)
+        assertNull(server.takeRequest().getHeader("X-IntelliAI-Contribution"))
+    }
+
+    @Test
+    fun `contribution off sends the opt-out header`() {
+        enqueue(200, """{"text":"hi"}""")
+        client.transcribe(byteArrayOf(1), contribute = false)
+        assertEquals("off", server.takeRequest().getHeader("X-IntelliAI-Contribution"))
+    }
+
+    @Test
+    fun `contribution defaults to on - no header - for existing callers`() {
+        enqueue(200, """{"text":"hi"}""")
+        client.transcribe(byteArrayOf(1))
+        assertNull(server.takeRequest().getHeader("X-IntelliAI-Contribution"))
     }
 
     // ── Success handling ────────────────────────────────────────────
@@ -247,5 +271,64 @@ class ApiClientTest {
             assertFalse("key leaked into $rendered", rendered.contains(testKey))
             assertFalse(rendered.contains("A".repeat(20)))
         }
+    }
+
+    // ── Correction (13D) ────────────────────────────────────────────
+
+    @Test
+    fun `correction posts to the sample endpoint with bearer auth and exact text`() {
+        enqueue(200, """{"id":"smp_abc","corrected_text":"Hello, IntelliAI!","last_modified_at":"2026-08-09T00:00:00Z"}""")
+        val outcome = client.correct("smp_abc", "Hello, IntelliAI!")
+
+        assertTrue(outcome is CorrectionOutcome.Success)
+        val request = server.takeRequest()
+        assertEquals("POST", request.method)
+        assertEquals("/v1/audio/transcriptions/smp_abc/correction", request.path)
+        assertEquals("Bearer $testKey", request.getHeader("Authorization"))
+        assertEquals("keyboard/1.0", request.getHeader("X-IntelliAI-Client"))
+        // The corrected text is sent EXACTLY — punctuation and casing
+        // preserved, never normalized by the client.
+        assertEquals("""{"corrected_text":"Hello, IntelliAI!"}""", request.body.readUtf8())
+    }
+
+    @Test
+    fun `a missing sample maps to SAMPLE_UNAVAILABLE`() {
+        enqueue(404, envelope("resource_not_found_error", "sample_not_found"))
+        val outcome = client.correct("smp_gone", "text") as CorrectionOutcome.Failure
+        assertEquals(FailureKind.SAMPLE_UNAVAILABLE, outcome.kind)
+    }
+
+    @Test
+    fun `correction with a bad key maps to BAD_API_KEY`() {
+        enqueue(401, envelope("authentication_error", "invalid_api_key"))
+        val outcome = client.correct("smp_abc", "text") as CorrectionOutcome.Failure
+        assertEquals(FailureKind.BAD_API_KEY, outcome.kind)
+    }
+
+    @Test
+    fun `correction validation error maps to REJECTED`() {
+        enqueue(400, envelope("invalid_request_error", "validation_error"))
+        val outcome = client.correct("smp_abc", "text") as CorrectionOutcome.Failure
+        assertEquals(FailureKind.REJECTED, outcome.kind)
+    }
+
+    @Test
+    fun `correction network failure maps to NETWORK`() {
+        val impatient = IntelliAIApiClient(
+            baseUrl = { server.url("/").toString() },
+            apiKey = { testKey },
+            client = OkHttpClient.Builder().callTimeout(300, TimeUnit.MILLISECONDS).build(),
+        )
+        server.enqueue(MockResponse().setHeadersDelay(2, TimeUnit.SECONDS))
+        val outcome = impatient.correct("smp_abc", "text") as CorrectionOutcome.Failure
+        assertEquals(FailureKind.NETWORK, outcome.kind)
+    }
+
+    @Test
+    fun `correction without a key never touches the network`() {
+        val keyless = IntelliAIApiClient(baseUrl = { server.url("/").toString() }, apiKey = { null })
+        val outcome = keyless.correct("smp_abc", "text") as CorrectionOutcome.Failure
+        assertEquals(FailureKind.NO_API_KEY, outcome.kind)
+        assertEquals(0, server.requestCount)
     }
 }

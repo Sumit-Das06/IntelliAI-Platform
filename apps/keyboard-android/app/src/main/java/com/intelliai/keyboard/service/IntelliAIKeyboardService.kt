@@ -12,8 +12,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.intelliai.keyboard.R
+import com.intelliai.keyboard.api.CorrectionOutcome
+import com.intelliai.keyboard.api.FailureKind
 import com.intelliai.keyboard.api.IntelliAIApiClient
 import com.intelliai.keyboard.audio.WavRecorder
+import com.intelliai.keyboard.dictation.CorrectionDialog
 import com.intelliai.keyboard.dictation.DictationController
 import com.intelliai.keyboard.dictation.DictationError
 import com.intelliai.keyboard.dictation.DictationLanguage
@@ -32,6 +35,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * The IntelliAI input method — a real Android IME.
@@ -60,19 +65,28 @@ class IntelliAIKeyboardService :
     private lateinit var scope: CoroutineScope
     private var settings: KeyboardSettings? = null
     private var controller: DictationController? = null
+    private var api: IntelliAIApiClient? = null
+
+    // The last collected dictation, held IN MEMORY only so the user can
+    // correct it. Never persisted; dropped when the input field changes
+    // or the service is destroyed. Carries no audio and no API key.
+    private data class CorrectionContext(val sampleId: String, val transcript: String)
+
+    private var lastCorrection: CorrectionContext? = null
 
     override fun onCreate() {
         super.onCreate()
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         settings = KeyboardSettings.open(this)
-        val api = IntelliAIApiClient(
+        val client = IntelliAIApiClient(
             baseUrl = { settings?.baseUrl().orEmpty() },
             apiKey = { settings?.apiKey() },
         )
+        api = client
         controller = DictationController(
             scope = scope,
             recorder = WavRecorder(),
-            transcribe = { wav, language -> api.transcribe(wav, language) },
+            transcribe = { wav, language, contribute -> client.transcribe(wav, language, contribute) },
             permissions = object : DictationController.PermissionGate {
                 override fun hasRecordPermission(): Boolean =
                     ContextCompat.checkSelfPermission(
@@ -95,6 +109,8 @@ class IntelliAIKeyboardService :
             // the controller locks it for that request. Auto (or no
             // settings) → null → the client omits the field.
             languageTag = { settings?.language()?.apiTag },
+            // Likewise for contribution: captured at dictation start.
+            contributionEnabled = { settings?.contributionEnabled() ?: true },
         )
     }
 
@@ -143,7 +159,7 @@ class IntelliAIKeyboardService :
         }
     }
 
-    override fun onTranscript(text: String) {
+    override fun onTranscript(text: String, sampleId: String?) {
         val ic = currentInputConnection
         if (ic == null) {
             // The field went away while IntelliAI was thinking. Say so;
@@ -152,6 +168,16 @@ class IntelliAIKeyboardService :
             return
         }
         ic.commitText(dictationCommitText(ic.getTextBeforeCursor(1, 0), text), 1)
+        // A correction can only be offered when the backend actually
+        // collected a sample (contribution on AND org consent on) — the
+        // sample id is the sole, honest signal that something exists to
+        // correct. No id → no offer.
+        if (sampleId != null) {
+            lastCorrection = CorrectionContext(sampleId, text)
+            keyboardView?.showCorrectionOffer()
+        } else {
+            lastCorrection = null
+        }
     }
 
     private fun messageFor(error: DictationError, serverMessage: String?): String = when (error) {
@@ -249,18 +275,57 @@ class IntelliAIKeyboardService :
         }
     }
 
+    override fun onEditCorrection() {
+        val view = keyboardView ?: return
+        val correction = lastCorrection ?: return
+        keyboardView?.hideCorrectionOffer()
+        CorrectionDialog.show(
+            context = ContextThemeWrapper(this, R.style.Theme_IntelliAI),
+            transcript = correction.transcript,
+            attachToken = view.windowToken,
+        ) { corrected ->
+            submitCorrection(correction.sampleId, corrected)
+        }
+    }
+
+    override fun onDismissCorrection() {
+        lastCorrection = null
+    }
+
+    private fun submitCorrection(sampleId: String, correctedText: String) {
+        val client = api ?: return
+        scope.launch {
+            val outcome = withContext(Dispatchers.IO) { client.correct(sampleId, correctedText) }
+            val message = when (outcome) {
+                is CorrectionOutcome.Success -> getString(R.string.correction_saved)
+                is CorrectionOutcome.Failure -> when (outcome.kind) {
+                    FailureKind.SAMPLE_UNAVAILABLE -> getString(R.string.correction_unavailable)
+                    FailureKind.BAD_API_KEY -> getString(R.string.error_bad_api_key)
+                    FailureKind.NETWORK -> getString(R.string.error_network)
+                    else -> getString(R.string.correction_failed)
+                }
+            }
+            keyboardView?.showTransientMessage(message)
+        }
+        lastCorrection = null
+    }
+
     // ── Lifecycle hygiene ───────────────────────────────────────────
 
     override fun onFinishInputView(finishingInput: Boolean) {
         // Keyboard hidden mid-recording: stop the hardware and drop the
-        // audio — a hidden keyboard must never keep listening.
+        // audio — a hidden keyboard must never keep listening. The
+        // pending correction context is for the field we're leaving.
         controller?.cancel()
+        lastCorrection = null
+        keyboardView?.hideCorrectionOffer()
         keyboardView?.releaseResources()
         super.onFinishInputView(finishingInput)
     }
 
     override fun onDestroy() {
         controller?.cancel()
+        lastCorrection = null
         keyboardView?.releaseResources()
         keyboardView = null
         scope.cancel()

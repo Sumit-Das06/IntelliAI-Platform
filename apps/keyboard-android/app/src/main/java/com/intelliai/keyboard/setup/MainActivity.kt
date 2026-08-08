@@ -46,6 +46,32 @@ class MainActivity : AppCompatActivity() {
 
         setUpApiSection()
         setUpLanguageSection()
+        setUpContributionSection()
+    }
+
+    /** "Improve IntelliAI STT" — the honest per-request opt-out. On is
+     *  the default (backward-compatible); the organization's data
+     *  consent remains the real ceiling, enforced by the server. */
+    private fun setUpContributionSection() {
+        val settings = KeyboardSettings.open(this)
+        val toggle = findViewById<com.google.android.material.materialswitch.MaterialSwitch>(
+            R.id.contribution_switch
+        )
+        val state = findViewById<TextView>(R.id.contribution_state)
+
+        fun renderState(enabled: Boolean) {
+            state.text = getString(
+                if (enabled) R.string.setting_contribution_on
+                else R.string.setting_contribution_off
+            )
+        }
+
+        toggle.isChecked = settings.contributionEnabled()
+        renderState(toggle.isChecked)
+        toggle.setOnCheckedChangeListener { _, checked ->
+            settings.setContributionEnabled(checked)
+            renderState(checked)
+        }
     }
 
     /** Dictation language — the same setting the keyboard's chip writes,
