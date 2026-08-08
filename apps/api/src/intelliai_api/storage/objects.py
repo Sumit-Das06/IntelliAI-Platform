@@ -106,12 +106,17 @@ class StorageObjectMissingError(StorageReadError):
 @runtime_checkable
 class ObjectStorage(Protocol):
     """What the platform needs from an object store: durable puts, reads
-    for the console's playback, and a clean shutdown. This protocol grew
-    ``get`` when the Speech Samples page needed it — never speculatively."""
+    for the console's playback, existence probes for dataset preparation,
+    and a clean shutdown. This protocol grew ``get`` when the Speech
+    Samples page needed it and ``head`` when training-data validation
+    needed to check a thousand objects without downloading a thousand
+    audio files — never speculatively."""
 
     async def put(self, *, key: str, data: bytes, content_type: str | None) -> None: ...
 
     async def get(self, *, key: str) -> bytes: ...
+
+    async def head(self, *, key: str) -> None: ...
 
     async def close(self) -> None: ...
 
@@ -178,6 +183,27 @@ class S3ObjectStorage:
             raise
         except Exception as exc:
             raise StorageReadError(f"get {key!r} failed: {type(exc).__name__}") from exc
+
+    async def head(self, *, key: str) -> None:
+        """Existence probe: returns silently when the object is there.
+
+        HEAD has no body, so S3 reports absence as a bare 404 ClientError
+        rather than ``NoSuchKey`` — mapped here to the same
+        ``StorageObjectMissingError`` the read path raises, so callers
+        distinguish "definitively absent" (a validation finding) from
+        "store unreachable" (an operational failure) by type alone.
+        """
+        from botocore.exceptions import ClientError
+
+        try:
+            await asyncio.to_thread(self._client.head_object, Bucket=self._bucket, Key=key)
+        except ClientError as exc:
+            status = exc.response.get("ResponseMetadata", {}).get("HTTPStatusCode")
+            if status == 404:
+                raise StorageObjectMissingError(f"object {key!r} does not exist") from exc
+            raise StorageReadError(f"head {key!r} failed: {type(exc).__name__}") from exc
+        except Exception as exc:
+            raise StorageReadError(f"head {key!r} failed: {type(exc).__name__}") from exc
 
     async def _ensure_bucket(self) -> None:
         """Create the bucket on first write if absent (dev MinIO has no

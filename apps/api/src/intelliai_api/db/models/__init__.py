@@ -10,9 +10,11 @@ new model module MUST be imported here.
 from intelliai_api.db.models.api_key import ApiKey
 from intelliai_api.db.models.dataset import (
     Dataset,
+    DatasetPreparation,
     DatasetStatus,
     DatasetVersion,
     DatasetVersionSample,
+    PreparationStatus,
 )
 from intelliai_api.db.models.membership import Membership, MembershipRole
 from intelliai_api.db.models.organization import Organization
@@ -37,12 +39,14 @@ __all__ = [
     "ClientSource",
     "CorrectionSource",
     "Dataset",
+    "DatasetPreparation",
     "DatasetStatus",
     "DatasetVersion",
     "DatasetVersionSample",
     "Membership",
     "MembershipRole",
     "Organization",
+    "PreparationStatus",
     "SampleStatus",
     "SpeechSample",
     "SpeechSampleEvent",

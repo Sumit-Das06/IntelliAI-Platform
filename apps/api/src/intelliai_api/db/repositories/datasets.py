@@ -52,8 +52,10 @@ from sqlalchemy.orm import InstrumentedAttribute, aliased
 from intelliai_api.db.models import (
     ClientSource,
     Dataset,
+    DatasetPreparation,
     DatasetVersion,
     DatasetVersionSample,
+    PreparationStatus,
     SampleStatus,
     SpeechSample,
     SpeechSampleEvent,
@@ -529,3 +531,61 @@ class DatasetRepository:
             .order_by(DatasetVersionSample.speech_sample_id)
         )
         return [int(sample_id) for sample_id in result.scalars().all()]
+
+    # ── Training-data preparation ────────────────────────────────────
+
+    async def members_with_samples(
+        self, version_id: int
+    ) -> Sequence[tuple[DatasetVersionSample, SpeechSample]]:
+        """The frozen membership joined to its canonical samples, in THE
+        deterministic preparation order: sample public_id ascending.
+
+        This ordering is a contract, not a convenience — the manifest's
+        line order (and therefore its checksum) derives from it, so it
+        must never depend on insertion order, join order, or vacuum
+        whims. Sample public ids are random and immutable, which makes
+        the order stable across every re-run forever.
+        """
+        rows = await self._session.execute(
+            select(DatasetVersionSample, SpeechSample)
+            .join(SpeechSample, DatasetVersionSample.speech_sample_id == SpeechSample.id)
+            .where(DatasetVersionSample.dataset_version_id == version_id)
+            .order_by(SpeechSample.public_id.asc())
+        )
+        return [(member, sample) for member, sample in rows.all()]
+
+    async def get_preparation_for_version(self, version_id: int) -> DatasetPreparation | None:
+        """At most one exists (unique constraint) — the singular artifact
+        a future fine-tuning run cites. Scoping arrives with the caller's
+        dataset→version resolution; this is the last link of that chain."""
+        result = await self._session.execute(
+            select(DatasetPreparation).where(DatasetPreparation.dataset_version_id == version_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def create_preparation(
+        self,
+        *,
+        organization_id: int,
+        dataset_id: int,
+        dataset_version_id: int,
+        created_by: str,
+    ) -> DatasetPreparation:
+        """The row in its birth state; the service fills the verdict and
+        artifact identity inside the same transaction."""
+        preparation = DatasetPreparation(
+            organization_id=organization_id,
+            dataset_id=dataset_id,
+            dataset_version_id=dataset_version_id,
+            status=PreparationStatus.PREPARING.value,
+            created_by=created_by,
+            sample_count=0,
+            valid_count=0,
+            invalid_count=0,
+            duration_seconds=Decimal("0"),
+            languages={},
+            errors=[],
+        )
+        self._session.add(preparation)
+        await self._session.flush()
+        return preparation

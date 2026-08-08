@@ -27,6 +27,7 @@ the future fine-tuning run tables, which will reference versions —
 never redefine them.
 """
 
+from datetime import datetime
 from decimal import Decimal
 from enum import StrEnum
 from functools import partial
@@ -34,6 +35,7 @@ from typing import Any
 
 from sqlalchemy import (
     BigInteger,
+    DateTime,
     Enum,
     ForeignKey,
     Identity,
@@ -143,6 +145,86 @@ class DatasetVersion(TimestampMixin, Base):
     criteria: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
 
     dataset: Mapped[Dataset] = relationship(back_populates="versions")
+
+
+class PreparationStatus(StrEnum):
+    """The preparation's lifecycle — stored as TEXT, not a native enum,
+    because the vocabulary is code-declarative and will grow (a future
+    background executor adds ``pending``/``preparing``) without a
+    migration — the same reasoning as ``organizations.plan``. Today's
+    synchronous implementation only ever persists the two terminal
+    states; the transient ones are reserved, documented vocabulary.
+    """
+
+    PENDING = "pending"  # reserved: queued for a future background executor
+    PREPARING = "preparing"  # reserved: a future executor is running it
+    READY = "ready"  # validated, manifest stored — immutable from here on
+    FAILED = "failed"  # validation found invalid members; retryable
+
+
+class DatasetPreparation(TimestampMixin, Base):
+    """One version's training-data preparation: validation verdict plus
+    the manifest's identity. At most ONE per version (unique below) —
+    the artifact a future fine-tuning run cites is singular, and READY
+    is terminal: once the manifest exists it is never rebuilt, so the
+    citation can never silently change meaning. A FAILED row may be
+    retried in place (same identity, same version-addressed key).
+
+    ``organization_id`` is denormalized from the dataset on purpose:
+    every tenant-owned table carries its own scope column so no query
+    ever infers isolation through a join (ADR-0010 discipline).
+    """
+
+    __tablename__ = "dataset_preparations"
+    __table_args__ = (UniqueConstraint("dataset_version_id"),)
+
+    id: Mapped[int] = mapped_column(BigInteger, Identity(), primary_key=True)
+    public_id: Mapped[str] = mapped_column(
+        String(40), unique=True, default=partial(generate_public_id, "prep")
+    )
+
+    organization_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("organizations.id", ondelete="CASCADE")
+    )
+    dataset_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("datasets.id", ondelete="CASCADE")
+    )
+    dataset_version_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("dataset_versions.id", ondelete="CASCADE")
+    )
+
+    status: Mapped[str] = mapped_column(String(16))
+
+    #: Who ran it: the acting API key's public id — the same identity
+    #: convention as versions' created_by.
+    created_by: Mapped[str] = mapped_column(String(64))
+
+    # ── Validation verdict ──────────────────────────────────────────────
+    #: The version's frozen membership size at preparation time.
+    sample_count: Mapped[int] = mapped_column(Integer)
+    valid_count: Mapped[int] = mapped_column(Integer)
+    invalid_count: Mapped[int] = mapped_column(Integer)
+    #: Sum over the VALID examples — the artifact's duration.
+    duration_seconds: Mapped[Decimal] = mapped_column(Numeric(14, 3))
+    #: {language_code: example_count} over the valid examples.
+    languages: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    #: [{"sample_id": "smp_…" | null, "reason": "audio_missing"}, …] —
+    #: machine-readable, empty when READY. sample_id is null only for
+    #: version-level findings (membership_count_mismatch after erasure).
+    errors: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+
+    # ── Artifact identity (set when READY, never mutated after) ────────
+    #: Version-addressed object key (datasets/{org}/{ds}/{dsv}/manifest.jsonl).
+    #: Internal reference — never leaves the platform through public APIs.
+    artifact_key: Mapped[str | None] = mapped_column(String(512))
+    #: sha256:<hex> of the manifest bytes — the content identity a future
+    #: fine-tuning run pins, so "same preparation" is verifiable.
+    manifest_checksum: Mapped[str | None] = mapped_column(String(80))
+    manifest_size_bytes: Mapped[int | None] = mapped_column(BigInteger)
+
+    #: When the run reached a terminal status. Equals created_at within a
+    #: breath today (synchronous); meaningful once an executor arrives.
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class DatasetVersionSample(Base):

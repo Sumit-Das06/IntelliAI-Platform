@@ -18,11 +18,11 @@ from typing import Annotated, Any
 from fastapi import APIRouter, status
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
-from intelliai_api.api.deps import CurrentAuth, SessionDep
-from intelliai_api.db.models import ClientSource, Dataset, DatasetVersion
+from intelliai_api.api.deps import CurrentAuth, ObjectStorageDep, SessionDep
+from intelliai_api.db.models import ClientSource, Dataset, DatasetPreparation, DatasetVersion
 from intelliai_api.db.repositories import DatasetRepository
 from intelliai_api.db.repositories.datasets import DatasetCriteria, EligibilityPreview
-from intelliai_api.services.datasets import DatasetService
+from intelliai_api.services.datasets import MANIFEST_FORMAT, DatasetService
 
 router = APIRouter(prefix="/datasets", tags=["datasets"])
 
@@ -125,6 +125,44 @@ class DatasetVersionResponse(BaseModel):
 
 class DatasetVersionListResponse(BaseModel):
     data: list[DatasetVersionResponse]
+
+
+class PreparationErrorEntry(BaseModel):
+    #: ``None`` only for version-level findings (membership shrank after
+    #: erasure); otherwise the offending sample's public id.
+    sample_id: str | None
+    #: Machine-readable, additive vocabulary: audio_missing,
+    #: transcript_missing, language_missing, duration_invalid,
+    #: foreign_sample, membership_count_mismatch.
+    reason: str
+
+
+class ManifestMetadata(BaseModel):
+    """The artifact's public identity — format, size, and content pin.
+    Storage keys and endpoints are internal and deliberately absent."""
+
+    format: str
+    example_count: int
+    size_bytes: int
+    checksum: str
+
+
+class PreparationResponse(BaseModel):
+    id: str
+    status: str
+    dataset_id: str
+    dataset_version_id: str
+    sample_count: int
+    valid_count: int
+    invalid_count: int
+    duration_seconds: float
+    languages: dict[str, int]
+    errors: list[PreparationErrorEntry]
+    #: Present only when status is ``ready``.
+    manifest: ManifestMetadata | None
+    created_at: datetime
+    completed_at: datetime | None
+    created_by: str
 
 
 def _version_summary(version: DatasetVersion) -> DatasetVersionSummary:
@@ -316,3 +354,69 @@ async def get_dataset_version(
     """One frozen version — ownership resolves through the dataset."""
     service = DatasetService(session)
     return _to_version_response(await service.get_version(auth, dataset_id, version_id))
+
+
+def _to_preparation_response(
+    preparation: DatasetPreparation, *, dataset_id: str, version_id: str
+) -> PreparationResponse:
+    ready = preparation.artifact_key is not None and preparation.manifest_checksum is not None
+    return PreparationResponse(
+        id=preparation.public_id,
+        status=preparation.status,
+        dataset_id=dataset_id,
+        dataset_version_id=version_id,
+        sample_count=preparation.sample_count,
+        valid_count=preparation.valid_count,
+        invalid_count=preparation.invalid_count,
+        duration_seconds=round(float(preparation.duration_seconds), 3),
+        languages={str(code): int(count) for code, count in preparation.languages.items()},
+        errors=[
+            PreparationErrorEntry(sample_id=entry.get("sample_id"), reason=entry["reason"])
+            for entry in preparation.errors
+        ],
+        manifest=ManifestMetadata(
+            format=MANIFEST_FORMAT,
+            example_count=preparation.valid_count,
+            size_bytes=preparation.manifest_size_bytes or 0,
+            checksum=preparation.manifest_checksum or "",
+        )
+        if ready
+        else None,
+        created_at=preparation.created_at,
+        completed_at=preparation.completed_at,
+        created_by=preparation.created_by,
+    )
+
+
+@router.post("/{dataset_id}/versions/{version_id}/prepare", status_code=status.HTTP_201_CREATED)
+async def prepare_dataset_version(
+    dataset_id: str,
+    version_id: str,
+    auth: CurrentAuth,
+    session: SessionDep,
+    storage: ObjectStorageDep,
+) -> PreparationResponse:
+    """Validate every frozen member and build the training manifest.
+
+    Reads ONLY the version's immutable membership and pinned transcripts
+    — never current eligibility. Synchronous by design: no job
+    infrastructure exists yet, and preparation is metadata reads plus
+    one existence probe per member, seconds at current scale. Idempotent
+    once ready; a failed preparation may be retried after the cause is
+    fixed. The result records the verdict either way — a version with
+    invalid members FAILS with named reasons, never a smaller artifact.
+    """
+    service = DatasetService(session, storage)
+    preparation = await service.prepare_version(auth, dataset_id, version_id)
+    return _to_preparation_response(preparation, dataset_id=dataset_id, version_id=version_id)
+
+
+@router.get("/{dataset_id}/versions/{version_id}/preparation")
+async def get_dataset_preparation(
+    dataset_id: str, version_id: str, auth: CurrentAuth, session: SessionDep
+) -> PreparationResponse:
+    """The version's preparation verdict and artifact identity — 404
+    until the first preparation has been run."""
+    service = DatasetService(session)
+    preparation = await service.get_preparation(auth, dataset_id, version_id)
+    return _to_preparation_response(preparation, dataset_id=dataset_id, version_id=version_id)

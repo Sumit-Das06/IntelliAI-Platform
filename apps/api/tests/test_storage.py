@@ -79,6 +79,9 @@ class FakeObjectStorage:
                 return data
         raise StorageObjectMissingError(f"object {key!r} does not exist")
 
+    async def head(self, *, key: str) -> None:
+        await self.get(key=key)
+
     async def close(self) -> None:
         self.closed = True
 
