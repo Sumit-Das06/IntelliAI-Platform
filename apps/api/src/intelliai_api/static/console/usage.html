@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Usage · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="usage">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>Usage</h1>
+          <p class="sub">API consumption for your organization. Collected speech data lives on <a href="/console/samples">Speech Samples</a>.</p>
+        </div>
+        <div class="segmented" role="group" aria-label="Period" id="period">
+          <button type="button" data-days="7" aria-pressed="false">7 days</button>
+          <button type="button" data-days="30" aria-pressed="true">30 days</button>
+          <button type="button" data-days="90" aria-pressed="false">90 days</button>
+        </div>
+      </div>
+
+      <!-- ── Not connected ── -->
+      <section id="disconnected" class="section hidden">
+        <div class="card empty">
+          <h3>Connect to see usage</h3>
+          <p id="disconnected-reason">This console isn't connected to a workspace yet.</p>
+          <a class="btn btn-primary" href="/console/home">Go to Home</a>
+        </div>
+      </section>
+
+      <!-- ── Analytics ── -->
+      <section id="analytics" class="section hidden">
+        <div class="stat-grid">
+          <div class="card stat-card">
+            <span class="stat-label">API Requests</span>
+            <span class="stat-value" id="stat-requests">—</span>
+            <span class="stat-note" id="stat-requests-note"></span>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-label">Speech Minutes</span>
+            <span class="stat-value" id="stat-minutes">—</span>
+            <span class="stat-note">Audio measured by the platform</span>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-label">Average Request Duration</span>
+            <span class="stat-value" id="stat-average">—</span>
+            <span class="stat-note">Mean length of the audio submitted, not processing time</span>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-label">Platform Success Rate</span>
+            <span class="stat-value" id="stat-success">—</span>
+            <span class="stat-note" id="stat-success-note">Accepted requests completed by IntelliAI STT. Requests rejected as invalid before processing are excluded.</span>
+          </div>
+        </div>
+
+        <!-- Shown instead of the charts when the SELECTED WINDOW has no
+             requests. The copy distinguishes "you have never used the
+             API" from "this period was quiet" — telling an established
+             customer they have never called us would be false. -->
+        <section id="no-usage" class="section hidden">
+          <div class="card empty">
+            <h3 id="no-usage-title">No API usage yet</h3>
+            <p id="no-usage-body">Run your first IntelliAI STT request to see usage analytics here.</p>
+            <a class="btn btn-primary" href="/console/playground">Open STT Studio</a>
+          </div>
+        </section>
+
+        <div class="section" id="trend-section">
+          <h2>Request Trend</h2>
+          <div class="card">
+            <p class="stat-note" id="trend-caption"></p>
+            <div id="trend"></div>
+          </div>
+        </div>
+
+        <div class="grid-2 section" id="distribution-section">
+          <div class="card">
+            <h3>Language Distribution</h3>
+            <div class="dist" id="languages" style="margin-top: 14px;"></div>
+          </div>
+          <div class="card">
+            <h3>Services Used</h3>
+            <div class="dist" id="services" style="margin-top: 14px;"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+"use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var el = IntelliAI.el;
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  var analytics = document.getElementById("analytics");
+  var disconnected = document.getElementById("disconnected");
+  var noUsage = document.getElementById("no-usage");
+  var periodGroup = document.getElementById("period");
+
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+  var days = 30;
+  /* null = not yet known. Set the first time an empty window forces us
+   * to ask whether the ACCOUNT has any usage at all. */
+  var accountHasUsage = null;
+  /* Only the newest request may paint: a slower earlier response must
+   * never repaint the page under a period the user has since changed. */
+  var requestSeq = 0;
+
+  function languageName(code) {
+    if (!code) return "Not specified";
+    return LANGUAGE_NAMES[code] || code.toUpperCase();
+  }
+
+  /* Rounding must never cross the 0% and 100% boundaries: a window that
+   * contains failures may not print a perfect record, and a window with
+   * successes may not print zero. */
+  function formatRate(rate) {
+    if (rate === null || rate === undefined) return null;
+    var text = (Math.round(rate * 1000) / 10).toFixed(1);
+    if (rate < 1 && text === "100.0") text = "99.9";
+    if (rate > 0 && text === "0.0") return "<0.1%";
+    return text + "%";
+  }
+
+  /* Values the API reports as null are UNKNOWN, never zero: a rate over
+   * no requests is undefined, and an em dash says so honestly. */
+  function setStat(id, value, empty) {
+    var node = document.getElementById(id);
+    node.textContent = value === null || value === undefined ? "—" : value;
+    node.classList.toggle("is-empty", !!empty || value === null || value === undefined);
+  }
+
+  function svg(name, attrs) {
+    var node = document.createElementNS(SVG_NS, name);
+    Object.keys(attrs || {}).forEach(function (key) {
+      node.setAttribute(key, attrs[key]);
+    });
+    return node;
+  }
+
+  /* Hand-drawn bar chart: no chart library, no external assets, themed
+   * entirely through Console Kit tokens. The viewBox matches the
+   * container's real pixel width so nothing is scaled non-uniformly —
+   * a stretched viewBox squashes the axis labels into unreadable
+   * slivers on a phone. */
+  function renderTrend(series) {
+    var host = document.getElementById("trend");
+    host.replaceChildren();
+    var peak = series.reduce(function (max, day) { return Math.max(max, day.requests); }, 0);
+    if (!peak) {
+      host.appendChild(el("p", { class: "chart-empty" },
+        ["No requests in this period."]));
+      return;
+    }
+
+    var width = Math.max(280, Math.round(host.clientWidth) || 720);
+    var height = width < 520 ? 170 : 220;
+    var padTop = 12;
+    var padBottom = 26;
+    var padLeft = 34;
+    var plotHeight = height - padTop - padBottom;
+    var plotWidth = width - padLeft;
+    /* Scale to an EVEN ceiling so the midpoint gridline's label is the
+     * exact value at that height — a rounded label at an unrounded
+     * position mislabels the axis. */
+    var axisMax = peak % 2 === 0 ? peak : peak + 1;
+    var chart = svg("svg", {
+      class: "chart",
+      viewBox: "0 0 " + width + " " + height,
+      height: height,
+      role: "img",
+      "aria-label": "Daily API requests for the selected period: " +
+        series.reduce(function (sum, day) { return sum + day.requests; }, 0) +
+        " requests across " + series.length + " days, peak " + peak + " in a day"
+    });
+
+    /* Gridlines at 0, half, top — enough to read a value, not a cage. */
+    [0, 0.5, 1].forEach(function (fraction) {
+      var y = padTop + plotHeight - fraction * plotHeight;
+      chart.appendChild(svg("line", {
+        class: "grid-line", x1: padLeft, x2: width, y1: y, y2: y
+      }));
+      var label = svg("text", { class: "axis-text", x: 0, y: y + 3 });
+      label.textContent = String(fraction * axisMax);
+      chart.appendChild(label);
+    });
+
+    var slot = plotWidth / series.length;
+    var barWidth = Math.max(1, slot * 0.62);
+    series.forEach(function (day, index) {
+      var barHeight = day.requests ? Math.max(2, (day.requests / axisMax) * plotHeight) : 0;
+      if (!barHeight) return;
+      var rect = svg("rect", {
+        class: "bar",
+        x: padLeft + index * slot + (slot - barWidth) / 2,
+        y: padTop + plotHeight - barHeight,
+        width: barWidth,
+        height: barHeight,
+        rx: Math.min(2, barWidth / 2)
+      });
+      var title = svg("title", {});
+      title.textContent = day.date + ": " + day.requests +
+        (day.requests === 1 ? " request" : " requests");
+      rect.appendChild(title);
+      chart.appendChild(rect);
+    });
+
+    /* First and last day only — dense tick labels are noise. */
+    [[0, "start"], [series.length - 1, "end"]].forEach(function (pair) {
+      var day = series[pair[0]];
+      if (!day) return;
+      var text = svg("text", {
+        class: "axis-text",
+        x: padLeft + pair[0] * slot + slot / 2,
+        y: height - 8,
+        "text-anchor": pair[1] === "start" ? "start" : "end"
+      });
+      text.textContent = day.date;
+      chart.appendChild(text);
+    });
+
+    host.appendChild(chart);
+  }
+
+  /* Proportions come from the API's own counts — never invented. */
+  function renderDistribution(hostId, rows, emptyText) {
+    var host = document.getElementById(hostId);
+    host.replaceChildren();
+    if (!rows.length) {
+      host.appendChild(el("p", { class: "chart-empty" }, [emptyText]));
+      return;
+    }
+    var total = rows.reduce(function (sum, row) { return sum + row.requests; }, 0);
+    rows.forEach(function (row) {
+      var share = total ? Math.round((row.requests / total) * 100) : 0;
+      var fill = el("div", { class: "dist-fill" });
+      fill.style.width = (total ? (row.requests / total) * 100 : 0) + "%";
+      host.appendChild(el("div", { class: "dist-row" }, [
+        el("span", { class: "dist-name", title: row.name }, [row.name]),
+        el("div", { class: "dist-track" }, [fill]),
+        el("span", { class: "dist-value" }, [row.requests + " · " + share + "%"])
+      ]));
+    });
+  }
+
+  /* The chart is drawn at the container's real width, so a resize (or a
+   * phone rotation) needs a redraw rather than a stretch. */
+  var lastSeries = null;
+  var redrawTimer = null;
+  window.addEventListener("resize", function () {
+    if (!lastSeries) return;
+    clearTimeout(redrawTimer);
+    redrawTimer = setTimeout(function () { renderTrend(lastSeries); }, 150);
+  });
+
+  /* The stat cards ALWAYS render, including for an empty window: that
+   * is where the mandated "—" for an undefined rate actually appears. */
+  function renderTotals(body) {
+    var totals = body.totals;
+    setStat("stat-requests", totals.requests.toLocaleString());
+    document.getElementById("stat-requests-note").textContent =
+      "Last " + body.period.days + " days";
+    setStat("stat-minutes", totals.speech_minutes.toLocaleString());
+    setStat("stat-average", totals.average_request_seconds === null
+      ? null
+      : totals.average_request_seconds.toFixed(1) + " s");
+    setStat("stat-success", formatRate(totals.success_rate));
+  }
+
+  function render(body) {
+    analytics.classList.remove("hidden");
+    renderTotals(body);
+
+    document.getElementById("trend-caption").textContent =
+      "Daily API requests · last " + body.period.days + " days";
+    lastSeries = body.daily;
+    renderTrend(body.daily);
+
+    renderDistribution("languages", body.languages.map(function (entry) {
+      return { name: languageName(entry.key), requests: entry.requests };
+    }), "No requests in this period.");
+    /* Services are named from the shared catalogue — the platform never
+     * shows a raw model id, and a service launched later is named
+     * correctly here without touching this page. */
+    renderDistribution("services", body.models.map(function (entry) {
+      return { name: IntelliAI.serviceName(entry.key), requests: entry.requests };
+    }), "No services used in this period.");
+
+    /* The success-rate note names one service only while one service is
+     * responsible for the number it explains. */
+    if (body.models.length > 1) {
+      document.getElementById("stat-success-note").textContent =
+        "Accepted requests completed by IntelliAI services. " +
+        "Requests rejected as invalid before processing are excluded.";
+    }
+  }
+
+  function showEmptyWindow(body) {
+    analytics.classList.remove("hidden");
+    renderTotals(body);
+    document.getElementById("trend-section").classList.add("hidden");
+    document.getElementById("distribution-section").classList.add("hidden");
+    noUsage.classList.remove("hidden");
+
+    /* "You have never used the API" is only true if the widest window we
+     * offer is also empty — otherwise this period was merely quiet. */
+    function word(neverUsed) {
+      document.getElementById("no-usage-title").textContent = neverUsed
+        ? "No API usage yet"
+        : "No API requests in the last " + body.period.days + " days";
+      document.getElementById("no-usage-body").textContent = neverUsed
+        ? "Run your first IntelliAI STT request to see usage analytics here."
+        : "Your organization has usage outside this period — try a longer period.";
+    }
+
+    if (body.period.days >= 90) { accountHasUsage = false; word(true); return; }
+    if (accountHasUsage !== null) { word(!accountHasUsage); return; }
+    IntelliAI.apiJSON("/v1/usage/summary?days=90").then(function (widest) {
+      accountHasUsage = widest.totals.requests > 0;
+      word(!accountHasUsage);
+    }).catch(function () { word(true); });
+  }
+
+  function showSections() {
+    document.getElementById("trend-section").classList.remove("hidden");
+    document.getElementById("distribution-section").classList.remove("hidden");
+    noUsage.classList.add("hidden");
+  }
+
+  function load() {
+    if (!IntelliAI.getKey()) {
+      disconnected.classList.remove("hidden");
+      analytics.classList.add("hidden");
+      noUsage.classList.add("hidden");
+      return;
+    }
+    /* Every period change re-asks the API — the window is the server's
+     * decision, never recomputed from a cached client-side slice. The
+     * sequence number keeps a slow earlier answer from repainting the
+     * page under a period the user has already moved on from. */
+    var ticket = ++requestSeq;
+    IntelliAI.apiJSON("/v1/usage/summary?days=" + days).then(function (body) {
+      if (ticket !== requestSeq) return;
+      disconnected.classList.add("hidden");
+      if (!body.totals.requests) {
+        showEmptyWindow(body);
+        return;
+      }
+      showSections();
+      render(body);
+    }).catch(function (error) {
+      if (ticket !== requestSeq) return;
+      analytics.classList.add("hidden");
+      noUsage.classList.add("hidden");
+      disconnected.classList.remove("hidden");
+      document.getElementById("disconnected-reason").textContent = error.status === 401
+        ? "Your saved API key was rejected — connect with a current one."
+        : "Could not reach the API: " + error.message;
+    });
+  }
+
+  periodGroup.addEventListener("click", function (event) {
+    var button = event.target.closest("button[data-days]");
+    if (!button) return;
+    days = parseInt(button.dataset.days, 10);
+    Array.prototype.forEach.call(periodGroup.querySelectorAll("button"), function (node) {
+      node.setAttribute("aria-pressed", node === button ? "true" : "false");
+    });
+    load();
+  });
+
+  load();
+});
+</script>
+</body>
+</html>

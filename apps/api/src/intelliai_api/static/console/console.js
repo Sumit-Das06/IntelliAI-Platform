@@ -28,7 +28,7 @@ window.IntelliAI = (function () {
       { id: "datasets", label: "Datasets", href: "/console/datasets", status: "soon" }
     ] },
     { title: "Monitor", items: [
-      { id: "usage", label: "Usage", href: "/console/usage", status: "soon" },
+      { id: "usage", label: "Usage", href: "/console/usage", status: "live" },
       { id: "logs", label: "Logs", href: "/console/logs", status: "soon" }
     ] },
     { title: "Organization", items: [
@@ -80,6 +80,19 @@ window.IntelliAI = (function () {
     span.className = "svc-icon";
     span.innerHTML = ICONS[name] || ICONS.spark;
     return span;
+  }
+
+  /* Public model id ("intelliai-stt") → the product name customers know.
+   * Driven by the catalogue above, so a service launched tomorrow is
+   * named correctly everywhere without touching a page. An id we do not
+   * recognise is shown verbatim rather than guessed at. */
+  function serviceName(publicModelId) {
+    if (!publicModelId) return "Unknown service";
+    var id = String(publicModelId).replace(/^intelliai-/, "");
+    for (var i = 0; i < SERVICES.length; i++) {
+      if (SERVICES[i].id === id) return SERVICES[i].name;
+    }
+    return publicModelId;
   }
 
   /* ── tiny DOM helper: attributes + children, no innerHTML ──── */
@@ -314,6 +327,7 @@ window.IntelliAI = (function () {
     NAV: NAV,
     SERVICES: SERVICES,
     icon: icon,
+    serviceName: serviceName,
     el: el,
     getKey: getKey,
     setKey: setKey,

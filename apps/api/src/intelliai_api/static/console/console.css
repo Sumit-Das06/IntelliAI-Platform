@@ -578,6 +578,83 @@ audio.player.on { display: block; }
 .timeline li.ghost .t-name { color: var(--muted); font-weight: 500; }
 .timeline .t-time { color: var(--muted); font-size: 0.75rem; }
 
+/* ── Usage analytics ────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+.stat-card { display: flex; flex-direction: column; gap: 4px; }
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.stat-value {
+  font-size: 1.7rem;
+  font-weight: 650;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.stat-value.is-empty { color: var(--muted); font-weight: 500; }
+.stat-note { font-size: 0.78rem; color: var(--muted); }
+
+/* Period selector: same visual family as .tabs, but a control. */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--card);
+  gap: 2px;
+}
+.segmented button {
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  min-height: 36px;
+}
+.segmented button:hover { color: var(--ink); }
+.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* Trend chart: inline SVG, no library, no external assets. */
+/* Height comes from the drawing code (it depends on width); the SVG
+ * viewBox matches real pixels, so nothing is scaled non-uniformly. */
+.chart { width: 100%; display: block; overflow: visible; }
+.chart .grid-line { stroke: var(--line); stroke-width: 1; }
+.chart .bar { fill: var(--accent); }
+.chart .bar:hover { fill: var(--ink); }
+.chart .axis-text { fill: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.chart-empty { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 30px 0; }
+
+/* Distribution rows: label, proportional bar, value. */
+.dist { display: flex; flex-direction: column; gap: 10px; }
+.dist-row { display: grid; grid-template-columns: minmax(90px, 22%) 1fr auto; gap: 12px; align-items: center; }
+.dist-name { font-size: 0.87rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dist-track { background: var(--hover); border-radius: 999px; height: 10px; overflow: hidden; }
+.dist-fill { background: var(--accent); height: 100%; border-radius: 999px; min-width: 2px; }
+.dist-value { font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 560px) {
+  /* Name and value share the first line, the bar spans beneath — named
+   * areas rather than a bare column change, which left an empty cell. */
+  .dist-row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "name value" "track track";
+    gap: 6px 12px;
+  }
+  .dist-name { grid-area: name; }
+  .dist-value { grid-area: value; }
+  .dist-track { grid-area: track; }
+}
+
 /* ── Empty state ────────────────────────────────────────────── */
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .empty h3 { color: var(--ink); margin: 0 0 4px; font-size: 1rem; }

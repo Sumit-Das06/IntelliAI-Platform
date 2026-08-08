@@ -99,6 +99,99 @@ async def test_the_samples_page_is_served_as_html(
     assert "Lifecycle" in response.text
 
 
+async def test_the_usage_page_is_served_as_html(settings: Settings, db_engine: AsyncEngine) -> None:
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        response = await client.get("/console/usage")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert 'data-page="usage"' in response.text
+    # The four stat cards, named exactly as the product names them.
+    for card in (
+        "API Requests",
+        "Speech Minutes",
+        "Average Request Duration",
+        "Platform Success Rate",
+    ):
+        assert card in response.text
+    # Success rate must state what it measures AND what it excludes.
+    assert "Accepted requests completed by IntelliAI STT" in response.text
+    assert "rejected as invalid before processing are excluded" in response.text
+    # Services, not models: the public product identity.
+    assert "Services Used" in response.text
+    assert "IntelliAI STT" in response.text
+    # Honest empty state with a way forward.
+    assert "No API usage yet" in response.text
+    assert "Open STT Studio" in response.text
+
+
+async def test_usage_offers_exactly_the_three_periods(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # Changing the period must re-ask the API — the window is the
+    # server's decision, never a client-side reslice of cached data.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    for days in (7, 30, 90):
+        assert f'data-days="{days}"' in page
+    assert 'data-days="30" aria-pressed="true"' in page  # the default
+    assert '"/v1/usage/summary?days=" + days' in page
+
+
+async def test_usage_never_rounds_into_a_perfect_or_empty_record(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # A window containing failures must never print 100%, and a window
+    # containing successes must never print 0% — rounding may not cross
+    # either boundary. The same honesty the API applies to null rates.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert 'if (rate < 1 && text === "100.0") text = "99.9";' in page
+    assert 'if (rate > 0 && text === "0.0") return "<0.1%";' in page
+
+
+async def test_usage_distinguishes_a_quiet_window_from_a_new_account(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # "No API usage yet" is a claim about the ACCOUNT. Telling an
+    # established customer that during a quiet week would be false, so
+    # the page only says it when the widest window is empty too.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert "No API requests in the last " in page
+    assert "Your organization has usage outside this period" in page
+    assert "/v1/usage/summary?days=90" in page
+
+
+async def test_usage_names_services_from_the_catalogue(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # Public product names come from the shared registry, so a service
+    # launched later is named correctly without editing this page — and
+    # a raw model id is never shown as a product name.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+        js = (await client.get("/console/assets/console.js")).text
+
+    assert "IntelliAI.serviceName(entry.key)" in page
+    assert 'id = String(publicModelId).replace(/^intelliai-/, "")' in js
+
+
+async def test_usage_reads_only_the_usage_api(settings: Settings, db_engine: AsyncEngine) -> None:
+    # The separation law from Commit 7, enforced on the page as well:
+    # Usage never derives its numbers from the dataset APIs.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        page = (await client.get("/console/usage")).text
+
+    assert "/v1/usage/summary" in page
+    assert "/v1/speech-samples" not in page
+    for dataset_word in ("Corrections", "Storage Used", "Dataset", "Consent"):
+        assert dataset_word not in page
+
+
 async def test_every_front_door_leads_to_home(settings: Settings, db_engine: AsyncEngine) -> None:
     # A platform whose front door 404s is not a platform — and both
     # roots land on Home, the page that answers "what should I do first?"
@@ -174,6 +267,7 @@ async def test_the_navigation_carries_the_whole_platform(
         '{ id: "playground", label: "Playground", href: "/console/playground", status: "live" }',
         '{ id: "services", label: "AI Services", href: "/console/services", status: "live" }',
         '{ id: "samples", label: "Speech Samples", href: "/console/samples", status: "live" }',
+        '{ id: "usage", label: "Usage", href: "/console/usage", status: "live" }',
     ):
         assert live_entry in js
 
@@ -187,6 +281,7 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
             (await client.get("/console/keys")).text,
             (await client.get("/console/services")).text,
             (await client.get("/console/samples")).text,
+            (await client.get("/console/usage")).text,
             (await client.get("/console/playground")).text,
             (await client.get("/console/assets/console.js")).text,
             (await client.get("/console/assets/console.css")).text,
@@ -218,6 +313,7 @@ def test_the_console_assets_ship_inside_the_package() -> None:
         "services.html",
         "studio.html",
         "samples.html",
+        "usage.html",
         "console.css",
         "console.js",
     ):
