@@ -41,10 +41,12 @@ class KeyboardView(
         fun onLayerToggle()
         fun onSwitchKeyboard()
         fun onMicTapped()
+        fun onLanguageChipTapped()
     }
 
     private val handler = Handler(Looper.getMainLooper())
     private val brandLabel: TextView
+    private val languageChip: TextView
     private val micButton: ImageButton
     private val rowsHost: LinearLayout
     private var revertBrandRunnable: Runnable? = null
@@ -73,6 +75,27 @@ class KeyboardView(
             setPadding(dp(10), 0, dp(10), 0)
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }
+        // The dictation-language chip: compact, tappable, between the
+        // brand and the mic (IntelliAI · Auto · 🎙). Starts at the
+        // default; the service sets the persisted value on attach.
+        languageChip = TextView(context).apply {
+            text = context.getString(R.string.language_auto)
+            setTextColor(color(R.color.kb_key_text))
+            setTypeface(typeface, Typeface.BOLD)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+            gravity = Gravity.CENTER
+            minWidth = dp(52)
+            background = ContextCompat.getDrawable(context, R.drawable.key_background_special)
+            setPadding(dp(12), dp(6), dp(12), dp(6))
+            isClickable = true
+            isFocusable = true
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+                .apply { marginEnd = dp(8) }
+            setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                listener.onLanguageChipTapped()
+            }
+        }
         micButton = ImageButton(context).apply {
             setImageResource(R.drawable.ic_mic)
             background = ContextCompat.getDrawable(context, R.drawable.key_background_accent)
@@ -84,6 +107,7 @@ class KeyboardView(
             }
         }
         bar.addView(brandLabel)
+        bar.addView(languageChip)
         bar.addView(micButton)
         addView(bar)
 
@@ -144,6 +168,13 @@ class KeyboardView(
         rowsHost.addView(row4)
     }
 
+    /** Update the language chip's label (compact, e.g. "Auto"/"HI") and
+     *  its accessibility description ("Dictation language: Hindi"). */
+    fun setLanguageIndicator(indicator: String, contentDescription: String) {
+        languageChip.text = indicator
+        languageChip.contentDescription = contentDescription
+    }
+
     /** Swap the brand label for a transient message (dictation errors),
      *  reverting after a beat — unless a dictation state owns the bar. */
     fun showTransientMessage(message: String, millis: Long = 2600L) {
@@ -171,6 +202,9 @@ class KeyboardView(
                 micButton.setImageResource(R.drawable.ic_stop)
                 micButton.contentDescription = context.getString(R.string.key_stop_description)
                 micButton.isEnabled = true
+                // The language is locked once dictation starts, so the
+                // chip is inert while recording or processing.
+                languageChip.isEnabled = false
             }
             is com.intelliai.keyboard.dictation.DictationState.Processing -> {
                 dictationBrandActive = true
@@ -179,6 +213,7 @@ class KeyboardView(
                 brandLabel.setTextColor(color(R.color.kb_key_text_muted))
                 micButton.setImageResource(R.drawable.ic_mic)
                 micButton.isEnabled = false
+                languageChip.isEnabled = false
             }
             else -> { // Idle, RequestingPermission, IdleWithError
                 dictationBrandActive = false
@@ -187,6 +222,7 @@ class KeyboardView(
                 micButton.setImageResource(R.drawable.ic_mic)
                 micButton.contentDescription = context.getString(R.string.key_mic_description)
                 micButton.isEnabled = true
+                languageChip.isEnabled = true
             }
         }
     }

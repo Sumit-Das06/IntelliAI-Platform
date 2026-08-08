@@ -3,12 +3,20 @@
 The first external client of the IntelliAI Platform: a real Android
 input method (IME) built on `InputMethodService`.
 
-**Current capabilities (Commit 13B):** installable keyboard,
+**Current capabilities (Commit 13C):** installable keyboard,
 enable/select onboarding, QWERTY typing through the real
-`InputConnection`, and **voice dictation** — tap the microphone, speak,
-and IntelliAI STT's transcript is inserted into whatever app you're
-typing in. Auto language detection. IntelliAI branding throughout; no
-internal engine names ever shown.
+`InputConnection`, **voice dictation** — tap the microphone, speak, and
+IntelliAI STT's transcript is inserted into whatever app you're typing
+in — and **dictation language selection** (Auto / English / Hindi /
+Arabic) from a chip on the keyboard or from Settings. IntelliAI
+branding throughout; no internal engine names ever shown.
+
+Dictation language maps to the API as: Auto → the `language` field is
+omitted (the server detects it); English → `en`; Hindi → `hi`; Arabic →
+`ar`. The choice is locked when a dictation starts, so changing it
+mid-request never affects the request already in flight. Selecting
+Arabic sets the dictation language only — it does not change the typing
+layout (still QWERTY).
 
 **Not yet implemented:** a contribution toggle ("Improve IntelliAI STT")
 and transcript-correction UI are deliberately deferred to later commits.

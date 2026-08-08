@@ -10,6 +10,16 @@
     <string name="key_mic_description">Start voice typing</string>
     <string name="key_stop_description">Stop recording</string>
 
+    <!-- Dictation language -->
+    <string name="language_picker_title">Dictation Language</string>
+    <string name="language_auto">Auto</string>
+    <string name="language_english">English</string>
+    <string name="language_hindi">Hindi</string>
+    <string name="language_arabic">Arabic</string>
+    <!-- Accessibility: spoken as e.g. "Dictation language: Hindi" -->
+    <string name="language_content_description">Dictation language: %1$s</string>
+    <string name="setting_language_title">Dictation Language</string>
+
     <!-- Dictation states -->
     <string name="dictation_listening">● Listening</string>
     <string name="dictation_processing">Processing…</string>

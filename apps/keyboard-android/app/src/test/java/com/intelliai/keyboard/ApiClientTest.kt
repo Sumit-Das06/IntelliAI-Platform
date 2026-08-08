@@ -80,12 +80,15 @@ class ApiClientTest {
     }
 
     @Test
-    fun `an explicit language is sent as a form field`() {
-        enqueue(200, """{"text":"hi"}""")
-        client.transcribe(byteArrayOf(1), language = "hi")
-        val body = server.takeRequest().body.readUtf8()
-        assertTrue(body.contains("name=\"language\""))
-        assertTrue(body.contains("hi"))
+    fun `each explicit language is sent as its own form field value`() {
+        for (tag in listOf("en", "hi", "ar")) {
+            enqueue(200, """{"text":"ok"}""")
+            client.transcribe(byteArrayOf(1), language = tag)
+            val body = server.takeRequest().body.readUtf8()
+            assertTrue("missing language field for $tag", body.contains("name=\"language\""))
+            // The value sits on its own line in the multipart part body.
+            assertTrue("wrong value for $tag", body.contains("\r\n\r\n$tag\r\n"))
+        }
     }
 
     @Test

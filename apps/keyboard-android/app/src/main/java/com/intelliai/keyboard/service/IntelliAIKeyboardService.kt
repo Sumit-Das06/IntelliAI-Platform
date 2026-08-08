@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.inputmethodservice.InputMethodService
 import android.os.Build
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -15,8 +16,11 @@ import com.intelliai.keyboard.api.IntelliAIApiClient
 import com.intelliai.keyboard.audio.WavRecorder
 import com.intelliai.keyboard.dictation.DictationController
 import com.intelliai.keyboard.dictation.DictationError
+import com.intelliai.keyboard.dictation.DictationLanguage
 import com.intelliai.keyboard.dictation.DictationState
+import com.intelliai.keyboard.dictation.LanguagePicker
 import com.intelliai.keyboard.dictation.PermissionActivity
+import com.intelliai.keyboard.dictation.contentDescription
 import com.intelliai.keyboard.keyboard.EnterBehavior
 import com.intelliai.keyboard.keyboard.KeyLayout
 import com.intelliai.keyboard.keyboard.KeyboardView
@@ -68,7 +72,7 @@ class IntelliAIKeyboardService :
         controller = DictationController(
             scope = scope,
             recorder = WavRecorder(),
-            transcribe = { wav -> api.transcribe(wav, language = null) }, // Auto in 13B
+            transcribe = { wav, language -> api.transcribe(wav, language) },
             permissions = object : DictationController.PermissionGate {
                 override fun hasRecordPermission(): Boolean =
                     ContextCompat.checkSelfPermission(
@@ -87,6 +91,21 @@ class IntelliAIKeyboardService :
             },
             hasApiKey = { settings?.hasApiKey() == true },
             listener = this,
+            // Read the persisted language at the moment dictation starts;
+            // the controller locks it for that request. Auto (or no
+            // settings) → null → the client omits the field.
+            languageTag = { settings?.language()?.apiTag },
+        )
+    }
+
+    private fun currentLanguage(): DictationLanguage =
+        settings?.language() ?: DictationLanguage.DEFAULT
+
+    private fun refreshLanguageIndicator() {
+        val language = currentLanguage()
+        keyboardView?.setLanguageIndicator(
+            language.indicator,
+            language.contentDescription(this),
         )
     }
 
@@ -94,6 +113,7 @@ class IntelliAIKeyboardService :
         KeyboardView(this, this).also {
             keyboardView = it
             it.render(shifted, layer)
+            refreshLanguageIndicator()
         }
 
     override fun onStartInputView(editorInfo: EditorInfo?, restarting: Boolean) {
@@ -102,6 +122,9 @@ class IntelliAIKeyboardService :
         shifted = wantsInitialCaps(editorInfo)
         keyboardView?.render(shifted, layer)
         controller?.let { keyboardView?.setDictationState(it.state) }
+        // The selection may have changed in Settings since the view was
+        // built — reflect the persisted value every time we show.
+        refreshLanguageIndicator()
     }
 
     private fun wantsInitialCaps(editorInfo: EditorInfo?): Boolean {
@@ -210,6 +233,20 @@ class IntelliAIKeyboardService :
 
     override fun onMicTapped() {
         controller?.onMicTapped()
+    }
+
+    override fun onLanguageChipTapped() {
+        val view = keyboardView ?: return
+        // Attach the picker to the IME window via the input view's token —
+        // an InputMethodService cannot host a plain activity dialog.
+        LanguagePicker.show(
+            context = ContextThemeWrapper(this, R.style.Theme_IntelliAI),
+            current = currentLanguage(),
+            attachToken = view.windowToken,
+        ) { chosen ->
+            settings?.setLanguage(chosen)
+            refreshLanguageIndicator()
+        }
     }
 
     // ── Lifecycle hygiene ───────────────────────────────────────────

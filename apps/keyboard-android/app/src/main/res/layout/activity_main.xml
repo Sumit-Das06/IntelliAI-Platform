@@ -185,6 +185,26 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Dictation language -->
+        <LinearLayout
+            android:id="@+id/language_row"
+            style="@style/SetupCard"
+            android:layout_marginTop="14dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/setting_language_title" />
+
+            <TextView
+                android:id="@+id/language_value"
+                style="@style/SetupCardBody"
+                android:layout_marginTop="4dp"
+                android:textSize="15sp"
+                android:text="@string/language_auto" />
+        </LinearLayout>
+
         <!-- Try it -->
         <LinearLayout
             style="@style/SetupCard"

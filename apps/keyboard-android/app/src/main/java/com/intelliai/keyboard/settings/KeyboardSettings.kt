@@ -5,21 +5,54 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.intelliai.keyboard.BuildConfig
+import com.intelliai.keyboard.dictation.DictationLanguage
 
 /**
- * The keyboard's two settings, stored in EncryptedSharedPreferences —
- * the API key is a bearer credential and must never sit in plaintext
- * prefs. Backed by an Android Keystore master key (AES256-GCM); if the
- * Keystore is unavailable the store reports itself unusable rather than
- * silently falling back to plaintext.
+ * The single source of truth for the keyboard's settings, split by
+ * sensitivity behind one facade:
  *
- * The full key is write-only from the UI's point of view: callers get
- * [apiKeyHint] (prefix + last four) for display and [apiKey] only at
- * request-building time. Nothing here logs.
+ * - **Secret** (the API key, a bearer credential) lives in
+ *   EncryptedSharedPreferences, Keystore-backed (AES256-GCM). If the
+ *   Keystore is unavailable the secret store is simply absent
+ *   ([secureStorageAvailable] is false) — never a silent plaintext
+ *   fallback.
+ * - **Non-secret** (dictation language, server address) lives in plain
+ *   SharedPreferences, so those settings work even when the Keystore
+ *   does not — the language is not a secret and does not belong in the
+ *   encrypted store.
+ *
+ * Both the keyboard and the settings screen read and write through this
+ * one class, so there is exactly one language state.
  */
-class KeyboardSettings private constructor(private val prefs: SharedPreferences) {
+class KeyboardSettings internal constructor(
+    private val plain: KeyValueStore,
+    private val secure: SharedPreferences?,
+) {
 
-    fun apiKey(): String? = prefs.getString(KEY_API_KEY, null)?.takeIf { it.isNotBlank() }
+    // ── Dictation language (non-secret) ─────────────────────────────
+
+    fun language(): DictationLanguage =
+        DictationLanguage.fromPref(plain.getString(KEY_LANGUAGE))
+
+    fun setLanguage(language: DictationLanguage) {
+        plain.putString(KEY_LANGUAGE, language.prefValue)
+    }
+
+    // ── Server address (non-secret) ─────────────────────────────────
+
+    fun baseUrl(): String =
+        plain.getString(KEY_BASE_URL)?.takeIf { it.isNotBlank() }
+            ?: BuildConfig.DEFAULT_BASE_URL
+
+    fun setBaseUrl(url: String) {
+        plain.putString(KEY_BASE_URL, url.trim().trimEnd('/'))
+    }
+
+    // ── API key (secret) ────────────────────────────────────────────
+
+    fun secureStorageAvailable(): Boolean = secure != null
+
+    fun apiKey(): String? = secure?.getString(KEY_API_KEY, null)?.takeIf { it.isNotBlank() }
 
     fun hasApiKey(): Boolean = apiKey() != null
 
@@ -31,39 +64,42 @@ class KeyboardSettings private constructor(private val prefs: SharedPreferences)
         "$prefix…${key.takeLast(4)}"
     }
 
-    fun setApiKey(key: String) {
-        prefs.edit().putString(KEY_API_KEY, key.trim()).apply()
-    }
-
-    fun baseUrl(): String =
-        prefs.getString(KEY_BASE_URL, null)?.takeIf { it.isNotBlank() }
-            ?: BuildConfig.DEFAULT_BASE_URL
-
-    fun setBaseUrl(url: String) {
-        prefs.edit().putString(KEY_BASE_URL, url.trim().trimEnd('/')).apply()
+    /** True if stored; false when the secure store is unavailable. */
+    fun setApiKey(key: String): Boolean {
+        val store = secure ?: return false
+        store.edit().putString(KEY_API_KEY, key.trim()).apply()
+        return true
     }
 
     companion object {
         private const val KEY_API_KEY = "api_key"
         private const val KEY_BASE_URL = "base_url"
+        private const val KEY_LANGUAGE = "dictation_language"
 
-        /** Null when the Keystore cannot back the store — callers show
-         *  an honest error instead of degrading to plaintext. */
-        fun open(context: Context): KeyboardSettings? = try {
-            val masterKey = MasterKey.Builder(context.applicationContext)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                .build()
-            KeyboardSettings(
+        /** Always succeeds: plain prefs are always available, so
+         *  language and server settings work regardless of Keystore
+         *  state. The secure store is best-effort — check
+         *  [secureStorageAvailable] before offering to save a key. */
+        fun open(context: Context): KeyboardSettings {
+            val app = context.applicationContext
+            val plain = SharedPrefsKeyValueStore(
+                app.getSharedPreferences("intelliai_keyboard_prefs", Context.MODE_PRIVATE)
+            )
+            val secure = try {
+                val masterKey = MasterKey.Builder(app)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build()
                 EncryptedSharedPreferences.create(
-                    context.applicationContext,
+                    app,
                     "intelliai_keyboard_secure",
                     masterKey,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
                 )
-            )
-        } catch (_: Exception) {
-            null
+            } catch (_: Exception) {
+                null
+            }
+            return KeyboardSettings(plain, secure)
         }
     }
 }

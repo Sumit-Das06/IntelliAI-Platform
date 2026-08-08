@@ -29,10 +29,13 @@ import kotlinx.coroutines.withContext
 class DictationController(
     private val scope: CoroutineScope,
     private val recorder: Recorder,
-    private val transcribe: suspend (wav: ByteArray) -> ApiOutcome,
+    private val transcribe: suspend (wav: ByteArray, language: String?) -> ApiOutcome,
     private val permissions: PermissionGate,
     private val hasApiKey: () -> Boolean,
     private val listener: Listener,
+    // The API language tag to use, read fresh at each dictation START and
+    // then LOCKED for that request (null = Auto = omit the field).
+    private val languageTag: () -> String? = { null },
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
@@ -54,6 +57,10 @@ class DictationController(
         private set
 
     private var tickerJob: Job? = null
+
+    // Locked when recording starts; changing the language selection
+    // afterward cannot alter the request already in flight.
+    private var capturedLanguageTag: String? = null
 
     /** One button, state-dependent meaning: start, or stop. */
     fun onMicTapped() {
@@ -99,6 +106,10 @@ class DictationController(
             fail(DictationError.RECORDER_UNAVAILABLE)
             return
         }
+        // Lock the language at the moment dictation begins — the request
+        // will use THIS value even if the user changes the selection
+        // while it records or processes.
+        capturedLanguageTag = languageTag()
         moveTo(DictationState.Recording(elapsedMs = 0))
         tickerJob = scope.launch {
             var elapsed = 0L
@@ -123,9 +134,10 @@ class DictationController(
             return
         }
         moveTo(DictationState.Processing)
+        val language = capturedLanguageTag
         scope.launch {
             val wav = WavEncoder.wrapPcm16(recording.pcm)
-            val outcome = withContext(ioDispatcher) { transcribe(wav) }
+            val outcome = withContext(ioDispatcher) { transcribe(wav, language) }
             when (outcome) {
                 is ApiOutcome.Success -> {
                     listener.onTranscript(outcome.text)

@@ -75,7 +75,7 @@ class DictationControllerTest {
         val controller = DictationController(
             scope = scope,
             recorder = recorder,
-            transcribe = { outcome },
+            transcribe = { _, _ -> outcome },
             permissions = gate,
             hasApiKey = { hasKey },
             listener = listener,
@@ -239,5 +239,94 @@ class DictationControllerTest {
         assertTrue(listener.transcripts.isEmpty())
         scope.advanceUntilIdle() // no zombie ticker fires afterwards
         assertEquals(DictationState.Idle, controller.state)
+    }
+
+    // ── Language capture (13C) ──────────────────────────────────────
+
+    /** A controller whose language provider is mutable and whose
+     *  transcribe calls are recorded, so we can prove what tag each
+     *  request carried. */
+    private fun languageHarness(scope: TestScope): LanguageHarness {
+        val captured = mutableListOf<String?>()
+        var currentTag: String? = null
+        val dispatcher = StandardTestDispatcher(scope.testScheduler)
+        val controller = DictationController(
+            scope = scope,
+            recorder = FakeRecorder(),
+            transcribe = { _, language ->
+                captured.add(language)
+                ApiOutcome.Success("ok", sampleId = null)
+            },
+            permissions = FakeGate(granted = true),
+            hasApiKey = { true },
+            listener = FakeListener(),
+            languageTag = { currentTag },
+            ioDispatcher = dispatcher,
+        )
+        return LanguageHarness(controller, captured) { currentTag = it }
+    }
+
+    private class LanguageHarness(
+        val controller: DictationController,
+        val captured: List<String?>,
+        val setTag: (String?) -> Unit,
+    )
+
+    @Test
+    fun `the request carries the selected language tag`() {
+        val scope = TestScope()
+        val h = languageHarness(scope)
+        h.setTag("hi")
+
+        h.controller.onMicTapped() // start (captures "hi")
+        h.controller.onMicTapped() // stop → transcribe
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf("hi"), h.captured)
+    }
+
+    @Test
+    fun `auto - a null tag - is passed through so the client omits the field`() {
+        val scope = TestScope()
+        val h = languageHarness(scope)
+        h.setTag(null) // Auto
+
+        h.controller.onMicTapped()
+        h.controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf<String?>(null), h.captured)
+    }
+
+    @Test
+    fun `changing the language mid-request does not change the in-flight request`() {
+        val scope = TestScope()
+        val h = languageHarness(scope)
+
+        h.setTag("hi")
+        h.controller.onMicTapped() // START locks "hi"
+        h.setTag("ar") // user switches while recording…
+        h.controller.onMicTapped() // stop → transcribe uses the LOCKED "hi"
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf("hi"), h.captured)
+    }
+
+    @Test
+    fun `the next request uses the newly selected language`() {
+        val scope = TestScope()
+        val h = languageHarness(scope)
+
+        h.setTag("hi")
+        h.controller.onMicTapped()
+        h.controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        h.setTag("ar") // changed after the first request finished
+        h.controller.onMicTapped()
+        h.controller.onMicTapped()
+        scope.advanceUntilIdle()
+
+        assertEquals(listOf("hi", "ar"), h.captured)
     }
 }

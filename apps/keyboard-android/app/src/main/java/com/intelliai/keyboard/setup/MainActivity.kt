@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.intelliai.keyboard.BuildConfig
 import com.intelliai.keyboard.R
+import com.intelliai.keyboard.dictation.LanguagePicker
+import com.intelliai.keyboard.dictation.friendlyName
 import com.intelliai.keyboard.settings.KeyboardSettings
 
 /**
@@ -42,6 +45,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         setUpApiSection()
+        setUpLanguageSection()
+    }
+
+    /** Dictation language — the same setting the keyboard's chip writes,
+     *  through the same KeyboardSettings (one source of truth). */
+    private fun setUpLanguageSection() {
+        val row = findViewById<View>(R.id.language_row)
+        val value = findViewById<TextView>(R.id.language_value)
+        val settings = KeyboardSettings.open(this)
+        value.text = settings.language().friendlyName(this)
+        row.setOnClickListener {
+            LanguagePicker.show(
+                context = this,
+                current = settings.language(),
+                attachToken = null,
+            ) { chosen ->
+                settings.setLanguage(chosen)
+                value.text = chosen.friendlyName(this)
+            }
+        }
     }
 
     /** The IntelliAI API card: key (write-only, encrypted at rest) and
@@ -53,13 +76,15 @@ class MainActivity : AppCompatActivity() {
         val keyInput = findViewById<EditText>(R.id.api_key_input)
         val feedback = findViewById<TextView>(R.id.api_feedback)
 
-        if (settings == null) {
-            feedback.text = getString(R.string.api_error_storage)
-            findViewById<Button>(R.id.api_save_button).isEnabled = false
-            return
-        }
         urlInput.setText(settings.baseUrl())
         refreshApiStatus(settings)
+
+        if (!settings.secureStorageAvailable()) {
+            // Language and server settings still work (plain prefs); only
+            // the secret key cannot be saved without the Keystore.
+            feedback.text = getString(R.string.api_error_storage)
+            keyInput.isEnabled = false
+        }
 
         findViewById<Button>(R.id.api_save_button).setOnClickListener {
             feedback.text = ""
