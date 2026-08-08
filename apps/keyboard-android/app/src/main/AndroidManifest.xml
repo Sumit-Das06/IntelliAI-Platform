@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 13A declares NO permission entries at all: no internet access
-     (nothing is sent anywhere) and no microphone access (dictation is
-     Commit 13B, which will need an Activity trampoline for the runtime
-     permission dialog — an IME cannot own that flow itself).
-     FoundationGuardsTest pins this file permission-free. -->
+<!-- Exactly two permissions, each earned by 13B's one feature:
+     microphone access for user-initiated dictation, internet access for
+     the IntelliAI STT request that dictation makes. Nothing else — no
+     storage, no contacts, no telephony — and ScopeGuardsTest pins the
+     set exactly. Audio is captured only while the user has explicitly
+     started dictation, lives only in memory, and is sent only to the
+     configured IntelliAI API. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
@@ -24,6 +29,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- The microphone-permission trampoline. An InputMethodService
+             cannot host the runtime permission dialog itself, so the
+             keyboard launches this invisible activity, which asks and
+             reports back. Never in recents, never in history. -->
+        <activity
+            android:name=".dictation.PermissionActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:theme="@style/Theme.IntelliAI.Invisible" />
 
         <!-- The real input method. BIND_INPUT_METHOD is what makes this
              a system keyboard rather than an app pretending to be one:

@@ -1,7 +1,8 @@
 # Version catalog — one place, one truth, for every dependency version.
 # Kept deliberately tiny: the keyboard is a thin client, and every
 # dependency is attack surface inside an IME (the most trusted app class
-# on a phone). 13A ships with ZERO networking libraries by design.
+# on a phone). 13B adds exactly three runtime dependencies, each with a
+# one-line justification in app/build.gradle.kts.
 
 [versions]
 agp = "8.7.3"
@@ -9,13 +10,22 @@ kotlin = "2.0.21"
 coreKtx = "1.15.0"
 appcompat = "1.7.0"
 material = "1.12.0"
+okhttp = "4.12.0"
+securityCrypto = "1.1.0-alpha06"
+coroutines = "1.9.0"
 junit = "4.13.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+json = { group = "org.json", name = "json", version = "20240303" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

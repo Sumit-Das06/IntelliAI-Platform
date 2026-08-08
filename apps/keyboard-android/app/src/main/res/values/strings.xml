@@ -7,8 +7,28 @@
 
     <!-- Keyboard surface -->
     <string name="brand_bar">IntelliAI</string>
-    <string name="voice_coming_soon">Voice typing with IntelliAI STT is coming next.</string>
-    <string name="key_mic_description">Voice typing (coming soon)</string>
+    <string name="key_mic_description">Start voice typing</string>
+    <string name="key_stop_description">Stop recording</string>
+
+    <!-- Dictation states -->
+    <string name="dictation_listening">● Listening</string>
+    <string name="dictation_processing">Processing…</string>
+
+    <!-- Dictation errors — honest, human, never internal details -->
+    <string name="error_no_api_key">Add your IntelliAI API key in Settings.</string>
+    <string name="error_no_base_url">Set the IntelliAI server address in Settings.</string>
+    <string name="error_permission_denied">Microphone permission is required for voice typing.</string>
+    <string name="error_recorder_unavailable">Microphone is unavailable right now.</string>
+    <string name="error_no_speech_recorded">No speech recorded.</string>
+    <string name="error_no_speech_recognized">No speech recognized. Please try again.</string>
+    <string name="error_bad_api_key">Your IntelliAI API key is invalid or expired.</string>
+    <string name="error_quota">You have reached your IntelliAI usage quota.</string>
+    <string name="error_rate_limited">Too many requests. Try again in a moment.</string>
+    <string name="error_service_unavailable">IntelliAI STT is temporarily unavailable. Please try again.</string>
+    <string name="error_request_rejected">IntelliAI couldn\'t process that recording.</string>
+    <string name="error_network">Unable to connect to IntelliAI.</string>
+    <string name="error_server">Something went wrong at IntelliAI. Please try again.</string>
+    <string name="error_no_input_connection">Text field is no longer available.</string>
     <string name="key_backspace_description">Backspace</string>
     <string name="key_enter_description">Enter</string>
     <string name="key_shift_description">Shift</string>
@@ -32,6 +52,20 @@
     <string name="status_not_selected">○ Keyboard enabled but not selected</string>
     <string name="setup_try_title">Try your keyboard</string>
     <string name="setup_try_hint">Tap here and type with IntelliAI…</string>
-    <string name="setup_about">IntelliAI Keyboard v0.1.0</string>
+    <string name="setup_about">IntelliAI Keyboard v0.2.0</string>
     <string name="setup_settings_unavailable">Couldn’t open keyboard settings on this device.</string>
+
+    <!-- IntelliAI API section -->
+    <string name="api_section_title">IntelliAI API</string>
+    <string name="api_section_body">Voice typing sends your dictation audio to IntelliAI STT using your own API key from the IntelliAI Console.</string>
+    <string name="api_key_label">API Key</string>
+    <string name="api_key_hint">ik_live_…</string>
+    <string name="api_url_label">API Server</string>
+    <string name="api_save">Save</string>
+    <string name="api_status_configured">✓ API key configured (%1$s)</string>
+    <string name="api_status_missing">○ No API key configured</string>
+    <string name="api_saved">Saved.</string>
+    <string name="api_error_storage">Secure storage is unavailable on this device.</string>
+    <string name="api_error_https_required">Release builds require an https:// server address.</string>
+    <string name="api_error_bad_url">Enter a valid http(s):// server address.</string>
 </resources>

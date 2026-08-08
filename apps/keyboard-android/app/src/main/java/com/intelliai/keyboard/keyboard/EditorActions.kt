@@ -31,6 +31,21 @@ fun enterBehavior(imeOptions: Int, inputType: Int): EnterBehavior {
 }
 
 /**
+ * The exact text a dictation result should commit, given what already
+ * sits before the cursor. Simple and predictable by design — no
+ * language-aware spacing engine: prepend ONE space iff the cursor sits
+ * directly after a non-space character and the transcript starts with a
+ * word character. The transcript itself is never modified — IntelliAI
+ * STT's own punctuation and casing are preserved.
+ */
+fun dictationCommitText(textBeforeCursor: CharSequence?, transcript: String): String {
+    if (transcript.isEmpty()) return transcript
+    val previous = textBeforeCursor?.lastOrNull() ?: return transcript
+    val needsSpace = !previous.isWhitespace() && transcript.first().isLetterOrDigit()
+    return if (needsSpace) " $transcript" else transcript
+}
+
+/**
  * How many characters backspace should delete before the cursor.
  *
  * One, except when the text ends in a surrogate pair (emoji and every

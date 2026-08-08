@@ -6,4 +6,14 @@
         <item name="colorOnPrimary">@color/intelliai_on_primary</item>
         <item name="android:windowBackground">@color/setup_background</item>
     </style>
+
+    <!-- The permission trampoline: fully transparent, no animation —
+         the user should see only the system permission dialog. -->
+    <style name="Theme.IntelliAI.Invisible">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>

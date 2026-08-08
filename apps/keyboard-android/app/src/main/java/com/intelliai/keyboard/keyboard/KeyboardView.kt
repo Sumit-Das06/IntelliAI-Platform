@@ -45,8 +45,10 @@ class KeyboardView(
 
     private val handler = Handler(Looper.getMainLooper())
     private val brandLabel: TextView
+    private val micButton: ImageButton
     private val rowsHost: LinearLayout
     private var revertBrandRunnable: Runnable? = null
+    private var dictationBrandActive = false
 
     private val keyHeight = dp(52)
     private val rowGap = dp(5)
@@ -71,7 +73,7 @@ class KeyboardView(
             setPadding(dp(10), 0, dp(10), 0)
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }
-        val mic = ImageButton(context).apply {
+        micButton = ImageButton(context).apply {
             setImageResource(R.drawable.ic_mic)
             background = ContextCompat.getDrawable(context, R.drawable.key_background_accent)
             contentDescription = context.getString(R.string.key_mic_description)
@@ -82,7 +84,7 @@ class KeyboardView(
             }
         }
         bar.addView(brandLabel)
-        bar.addView(mic)
+        bar.addView(micButton)
         addView(bar)
 
         rowsHost = LinearLayout(context).apply {
@@ -142,14 +144,51 @@ class KeyboardView(
         rowsHost.addView(row4)
     }
 
-    /** Swap the brand label for a transient message (the honest mic
-     *  placeholder in 13A), reverting after a beat. */
-    fun showTransientMessage(message: String, millis: Long = 2200L) {
+    /** Swap the brand label for a transient message (dictation errors),
+     *  reverting after a beat — unless a dictation state owns the bar. */
+    fun showTransientMessage(message: String, millis: Long = 2600L) {
         revertBrandRunnable?.let(handler::removeCallbacks)
         brandLabel.text = message
-        val revert = Runnable { brandLabel.text = context.getString(R.string.brand_bar) }
+        val revert = Runnable {
+            if (!dictationBrandActive) brandLabel.text = context.getString(R.string.brand_bar)
+        }
         revertBrandRunnable = revert
         handler.postDelayed(revert, millis)
+    }
+
+    /** Reflect the dictation state machine on the branding bar and the
+     *  mic button. The user must always know whether the microphone is
+     *  listening — the bar says so in words AND color. */
+    fun setDictationState(state: com.intelliai.keyboard.dictation.DictationState) {
+        when (state) {
+            is com.intelliai.keyboard.dictation.DictationState.Recording -> {
+                dictationBrandActive = true
+                revertBrandRunnable?.let(handler::removeCallbacks)
+                val seconds = state.elapsedMs / 1000
+                brandLabel.text = context.getString(R.string.dictation_listening) +
+                    " · %d:%02d".format(seconds / 60, seconds % 60)
+                brandLabel.setTextColor(color(R.color.kb_recording))
+                micButton.setImageResource(R.drawable.ic_stop)
+                micButton.contentDescription = context.getString(R.string.key_stop_description)
+                micButton.isEnabled = true
+            }
+            is com.intelliai.keyboard.dictation.DictationState.Processing -> {
+                dictationBrandActive = true
+                revertBrandRunnable?.let(handler::removeCallbacks)
+                brandLabel.text = context.getString(R.string.dictation_processing)
+                brandLabel.setTextColor(color(R.color.kb_key_text_muted))
+                micButton.setImageResource(R.drawable.ic_mic)
+                micButton.isEnabled = false
+            }
+            else -> { // Idle, RequestingPermission, IdleWithError
+                dictationBrandActive = false
+                brandLabel.text = context.getString(R.string.brand_bar)
+                brandLabel.setTextColor(color(R.color.kb_brand_text))
+                micButton.setImageResource(R.drawable.ic_mic)
+                micButton.contentDescription = context.getString(R.string.key_mic_description)
+                micButton.isEnabled = true
+            }
+        }
     }
 
     fun releaseResources() {

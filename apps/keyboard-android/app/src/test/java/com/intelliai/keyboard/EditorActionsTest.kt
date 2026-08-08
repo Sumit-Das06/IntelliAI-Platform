@@ -4,6 +4,7 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import com.intelliai.keyboard.keyboard.EnterBehavior
 import com.intelliai.keyboard.keyboard.deletionLengthBefore
+import com.intelliai.keyboard.keyboard.dictationCommitText
 import com.intelliai.keyboard.keyboard.enterBehavior
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -73,5 +74,28 @@ class EditorActionsTest {
     fun `backspace does nothing at the start of the field`() {
         assertEquals(0, deletionLengthBefore(""))
         assertEquals(0, deletionLengthBefore(null))
+    }
+
+    // ── Dictation spacing: simple and predictable, never clever ─────
+
+    @Test
+    fun `dictation after a word gets exactly one joining space`() {
+        assertEquals(" there", dictationCommitText("Hello", "there"))
+        assertEquals(" 42", dictationCommitText("answer:", "42"))
+    }
+
+    @Test
+    fun `dictation into an empty field or after whitespace is untouched`() {
+        assertEquals("Hello", dictationCommitText(null, "Hello"))
+        assertEquals("Hello", dictationCommitText("", "Hello"))
+        assertEquals("world", dictationCommitText("Hello ", "world"))
+        assertEquals("line", dictationCommitText("first\n", "line"))
+    }
+
+    @Test
+    fun `the transcript itself is never modified`() {
+        // IntelliAI STT's own punctuation, casing, and spacing survive.
+        assertEquals(" Hello, how are you?", dictationCommitText("Hi", "Hello, how are you?"))
+        assertEquals("", dictationCommitText("Hi", ""))
     }
 }
