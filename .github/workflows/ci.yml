@@ -152,8 +152,11 @@ jobs:
 
   android:
     # The IntelliAI Keyboard (apps/keyboard-android) — a self-contained
-    # Gradle project, not a uv workspace member. Unit tests + lint +
-    # debug APK on every keyboard change; docs/python-only changes skip.
+    # Gradle project, not a uv workspace member. Unit tests (debug AND
+    # release variants) + lint on both variants + both APKs on every
+    # keyboard change, so a release-only regression can never land
+    # unnoticed. The release APK is UNSIGNED (no keystore in CI — ever);
+    # signing is a local, deliberate act documented in the app README.
     name: Android Keyboard
     needs: changes
     if: needs.changes.outputs.android == 'true'
@@ -169,12 +172,18 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
-      - run: ./gradlew --no-daemon test lintDebug assembleDebug
+      - run: ./gradlew --no-daemon test lintDebug lintRelease assembleDebug assembleRelease
       - name: Keep the debug APK as a build artifact
         uses: actions/upload-artifact@v4
         with:
           name: intelliai-keyboard-debug-apk
           path: apps/keyboard-android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+      - name: Keep the unsigned release APK as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: intelliai-keyboard-release-unsigned-apk
+          path: apps/keyboard-android/app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 14
 
   ci-ok:

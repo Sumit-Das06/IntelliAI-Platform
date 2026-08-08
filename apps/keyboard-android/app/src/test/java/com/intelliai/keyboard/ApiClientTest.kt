@@ -34,6 +34,10 @@ class ApiClientTest {
         client = IntelliAIApiClient(
             baseUrl = { server.url("/").toString() },
             apiKey = { testKey },
+            // MockWebServer serves cleartext on localhost; these tests
+            // exercise the wire contract, not the release URL policy
+            // (ReleaseConfigGuardsTest owns that).
+            debugBuild = true,
         )
     }
 
@@ -235,6 +239,7 @@ class ApiClientTest {
         val impatient = IntelliAIApiClient(
             baseUrl = { server.url("/").toString() },
             apiKey = { testKey },
+            debugBuild = true,
             client = OkHttpClient.Builder()
                 .callTimeout(300, TimeUnit.MILLISECONDS)
                 .build(),
@@ -248,7 +253,11 @@ class ApiClientTest {
 
     @Test
     fun `missing key client-side never touches the network`() {
-        val keyless = IntelliAIApiClient(baseUrl = { server.url("/").toString() }, apiKey = { null })
+        val keyless = IntelliAIApiClient(
+            baseUrl = { server.url("/").toString() },
+            apiKey = { null },
+            debugBuild = true,
+        )
         assertEquals(
             FailureKind.NO_API_KEY,
             (keyless.transcribe(byteArrayOf(1)) as ApiOutcome.Failure).kind,
@@ -317,6 +326,7 @@ class ApiClientTest {
         val impatient = IntelliAIApiClient(
             baseUrl = { server.url("/").toString() },
             apiKey = { testKey },
+            debugBuild = true,
             client = OkHttpClient.Builder().callTimeout(300, TimeUnit.MILLISECONDS).build(),
         )
         server.enqueue(MockResponse().setHeadersDelay(2, TimeUnit.SECONDS))
@@ -326,7 +336,11 @@ class ApiClientTest {
 
     @Test
     fun `correction without a key never touches the network`() {
-        val keyless = IntelliAIApiClient(baseUrl = { server.url("/").toString() }, apiKey = { null })
+        val keyless = IntelliAIApiClient(
+            baseUrl = { server.url("/").toString() },
+            apiKey = { null },
+            debugBuild = true,
+        )
         val outcome = keyless.correct("smp_abc", "text") as CorrectionOutcome.Failure
         assertEquals(FailureKind.NO_API_KEY, outcome.kind)
         assertEquals(0, server.requestCount)

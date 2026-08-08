@@ -7,11 +7,12 @@ import org.junit.Test
 import java.io.File
 
 /**
- * 13B scope guards — the 13A guards, evolved. Networking and the
- * microphone are now DELIBERATE capabilities (asserted positively,
- * bounded exactly); everything beyond 13B's charter is still a red
- * build: heavyweight frameworks, telemetry, disk-resident audio,
- * logging, 13D's contribution mechanics, and internal engine names.
+ * The keyboard's scope guards, evolved milestone by milestone.
+ * Networking and the microphone are DELIBERATE capabilities (asserted
+ * positively, bounded exactly); everything beyond the keyboard's
+ * client charter is a red build: heavyweight frameworks, telemetry,
+ * disk-resident audio, logging, ML-lifecycle code, and internal
+ * engine names.
  */
 class ScopeGuardsTest {
 

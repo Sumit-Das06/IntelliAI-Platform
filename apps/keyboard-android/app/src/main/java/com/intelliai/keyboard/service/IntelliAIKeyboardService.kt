@@ -11,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import com.intelliai.keyboard.BuildConfig
 import com.intelliai.keyboard.R
 import com.intelliai.keyboard.api.CorrectionOutcome
 import com.intelliai.keyboard.api.FailureKind
@@ -81,6 +82,7 @@ class IntelliAIKeyboardService :
         val client = IntelliAIApiClient(
             baseUrl = { settings?.baseUrl().orEmpty() },
             apiKey = { settings?.apiKey() },
+            debugBuild = BuildConfig.DEBUG,
         )
         api = client
         controller = DictationController(
@@ -183,6 +185,7 @@ class IntelliAIKeyboardService :
     private fun messageFor(error: DictationError, serverMessage: String?): String = when (error) {
         DictationError.NO_API_KEY -> getString(R.string.error_no_api_key)
         DictationError.NO_BASE_URL -> getString(R.string.error_no_base_url)
+        DictationError.HTTPS_REQUIRED -> getString(R.string.api_error_https_required)
         DictationError.PERMISSION_DENIED -> getString(R.string.error_permission_denied)
         DictationError.RECORDER_UNAVAILABLE -> getString(R.string.error_recorder_unavailable)
         DictationError.NO_SPEECH_RECORDED -> getString(R.string.error_no_speech_recorded)

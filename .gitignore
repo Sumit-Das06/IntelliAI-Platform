@@ -62,6 +62,7 @@ local.properties
 *.aab
 *.jks
 *.keystore
+keystore.properties
 
 # ── IDE / OS ──────────────────────────────────────────────────
 .vscode/

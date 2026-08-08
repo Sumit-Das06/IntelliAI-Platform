@@ -1,5 +1,6 @@
 package com.intelliai.keyboard.api
 
+import com.intelliai.keyboard.settings.ServerAddress
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -26,6 +27,13 @@ import java.util.concurrent.TimeUnit
 class IntelliAIApiClient(
     private val baseUrl: () -> String,
     private val apiKey: () -> String?,
+    // BuildConfig.DEBUG at the wiring site. Release builds refuse to
+    // send a request to a cleartext or development address at all —
+    // defense in depth behind the settings-screen validation and the
+    // OS network-security config, and an HONEST error instead of the
+    // opaque connection failure the OS would produce. Required, not
+    // defaulted: no construction site may inherit permissiveness.
+    private val debugBuild: Boolean,
     client: OkHttpClient? = null,
 ) {
 
@@ -56,7 +64,11 @@ class IntelliAIApiClient(
         val key = apiKey()?.takeIf { it.isNotBlank() }
             ?: return ApiOutcome.Failure(FailureKind.NO_API_KEY)
         val base = baseUrl().trim().trimEnd('/')
-        if (base.isEmpty()) return ApiOutcome.Failure(FailureKind.NO_BASE_URL)
+        when (usableBase(base)) {
+            BaseVerdict.MISSING -> return ApiOutcome.Failure(FailureKind.NO_BASE_URL)
+            BaseVerdict.RELEASE_UNSAFE -> return ApiOutcome.Failure(FailureKind.HTTPS_REQUIRED)
+            BaseVerdict.OK -> Unit
+        }
 
         val body = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -94,6 +106,18 @@ class IntelliAIApiClient(
             return executeSafely(request)
         }
         return first
+    }
+
+    private enum class BaseVerdict { OK, MISSING, RELEASE_UNSAFE }
+
+    private fun usableBase(base: String): BaseVerdict = when {
+        base.isEmpty() -> BaseVerdict.MISSING
+        else -> when (ServerAddress.validate(base, debugBuild)) {
+            ServerAddress.Verdict.OK -> BaseVerdict.OK
+            // Not http(s) at all: as unusable as no address.
+            ServerAddress.Verdict.MALFORMED -> BaseVerdict.MISSING
+            ServerAddress.Verdict.RELEASE_UNSAFE -> BaseVerdict.RELEASE_UNSAFE
+        }
     }
 
     private fun executeSafely(request: Request): ApiOutcome = try {
@@ -158,7 +182,11 @@ class IntelliAIApiClient(
         val key = apiKey()?.takeIf { it.isNotBlank() }
             ?: return CorrectionOutcome.Failure(FailureKind.NO_API_KEY)
         val base = baseUrl().trim().trimEnd('/')
-        if (base.isEmpty()) return CorrectionOutcome.Failure(FailureKind.NO_BASE_URL)
+        when (usableBase(base)) {
+            BaseVerdict.MISSING -> return CorrectionOutcome.Failure(FailureKind.NO_BASE_URL)
+            BaseVerdict.RELEASE_UNSAFE -> return CorrectionOutcome.Failure(FailureKind.HTTPS_REQUIRED)
+            BaseVerdict.OK -> Unit
+        }
 
         val payload = JSONObject().put("corrected_text", correctedText).toString()
         val request = Request.Builder()
@@ -215,7 +243,8 @@ sealed interface CorrectionOutcome {
 
 enum class FailureKind {
     NO_API_KEY, // no key configured / server saw none
-    NO_BASE_URL, // release build with no server configured
+    NO_BASE_URL, // no (usable) server address configured
+    HTTPS_REQUIRED, // release build pointed at cleartext or a dev host
     BAD_API_KEY, // invalid, revoked, or expired
     QUOTA, // monthly allowance exhausted — retrying never helps
     RATE_LIMITED, // slow down; Retry-After says when

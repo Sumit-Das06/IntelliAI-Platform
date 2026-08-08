@@ -17,6 +17,7 @@ import com.intelliai.keyboard.R
 import com.intelliai.keyboard.dictation.LanguagePicker
 import com.intelliai.keyboard.dictation.friendlyName
 import com.intelliai.keyboard.settings.KeyboardSettings
+import com.intelliai.keyboard.settings.ServerAddress
 
 /**
  * Setup and onboarding — NOT the keyboard itself.
@@ -47,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         setUpApiSection()
         setUpLanguageSection()
         setUpContributionSection()
+
+        // The version users report bugs against — always the REAL build
+        // version, never a hardcoded string that can drift from Gradle.
+        findViewById<TextView>(R.id.about_version).text =
+            getString(R.string.setup_about, BuildConfig.VERSION_NAME)
     }
 
     /** "Improve IntelliAI STT" — the honest per-request opt-out. On is
@@ -115,14 +121,17 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.api_save_button).setOnClickListener {
             feedback.text = ""
             val url = urlInput.text.toString().trim()
+            val verdict = if (url.isEmpty()) null else ServerAddress.validate(url, BuildConfig.DEBUG)
             when {
                 url.isEmpty() && BuildConfig.DEFAULT_BASE_URL.isEmpty() ->
                     feedback.text = getString(R.string.api_error_bad_url)
-                url.isNotEmpty() && !url.startsWith("http://") && !url.startsWith("https://") ->
+                verdict == ServerAddress.Verdict.MALFORMED ->
                     feedback.text = getString(R.string.api_error_bad_url)
-                url.startsWith("http://") && !BuildConfig.DEBUG ->
-                    // Release builds never talk cleartext — the network
-                    // security config enforces it; this message explains it.
+                verdict == ServerAddress.Verdict.RELEASE_UNSAFE ->
+                    // Release builds never talk cleartext or to a
+                    // development host — the network security config and
+                    // the API client both enforce it; this message
+                    // explains it at the moment of entry.
                     feedback.text = getString(R.string.api_error_https_required)
                 else -> {
                     settings.setBaseUrl(url)

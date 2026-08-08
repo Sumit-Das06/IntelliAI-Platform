@@ -206,6 +206,7 @@ sealed interface DictationState {
 enum class DictationError {
     NO_API_KEY,
     NO_BASE_URL,
+    HTTPS_REQUIRED,
     PERMISSION_DENIED,
     RECORDER_UNAVAILABLE,
     NO_SPEECH_RECORDED,
@@ -222,6 +223,7 @@ enum class DictationError {
         fun fromApi(kind: FailureKind): DictationError = when (kind) {
             FailureKind.NO_API_KEY -> NO_API_KEY
             FailureKind.NO_BASE_URL -> NO_BASE_URL
+            FailureKind.HTTPS_REQUIRED -> HTTPS_REQUIRED
             FailureKind.BAD_API_KEY -> BAD_API_KEY
             FailureKind.QUOTA -> QUOTA_EXHAUSTED
             FailureKind.RATE_LIMITED -> RATE_LIMITED
