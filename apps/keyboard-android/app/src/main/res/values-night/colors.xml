@@ -1,0 +1,22 @@
+<resources>
+    <!-- Dark theme — same pine identity on a dark ground. -->
+    <color name="intelliai_primary">#4CC9B4</color>
+    <color name="intelliai_on_primary">#0B1614</color>
+
+    <color name="kb_background">#131D1A</color>
+    <color name="kb_key">#243230</color>
+    <color name="kb_key_pressed">#2F4440</color>
+    <color name="kb_key_special">#1A2523</color>
+    <color name="kb_key_special_pressed">#2A3733</color>
+    <color name="kb_key_text">#E5E9E5</color>
+    <color name="kb_key_text_muted">#93A29B</color>
+    <color name="kb_accent">#0D5C53</color>
+    <color name="kb_on_accent">#FFFFFF</color>
+    <color name="kb_brand_text">#4CC9B4</color>
+
+    <color name="setup_background">#131D1A</color>
+    <color name="setup_card">#1A2723</color>
+    <color name="setup_ink">#E5E9E5</color>
+    <color name="setup_muted">#93A29B</color>
+    <color name="setup_ok">#6FCE96</color>
+</resources>

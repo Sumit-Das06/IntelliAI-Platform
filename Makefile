@@ -5,7 +5,8 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help up down ps logs clean sync api test migrate migration downgrade build db-ui psql \
-        eval-fetch eval speech-eval bench manifest bootstrap-org bootstrap-benchmark-org
+        eval-fetch eval speech-eval bench manifest bootstrap-org bootstrap-benchmark-org \
+        keyboard-apk keyboard-test
 
 help: ## List available commands
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-24s\033[0m %s\n", $$1, $$2}'
@@ -154,6 +155,16 @@ session: ## Execute one campaign session: make session spec=... idle_by="Your Na
 	fi
 	uv run --package intelliai-evaluation python -m intelliai_evaluation session \
 	  --spec $(spec) --assert-idle-by "$(idle_by)"
+
+# ── Android keyboard (apps/keyboard-android) ─────────────────────────
+# A self-contained Gradle project — not a uv workspace member. Needs
+# JDK 17 and an Android SDK (local.properties or ANDROID_HOME).
+keyboard-apk: ## Build the IntelliAI Keyboard debug APK
+	cd apps/keyboard-android && ./gradlew assembleDebug
+	@echo "APK: apps/keyboard-android/app/build/outputs/apk/debug/app-debug.apk"
+
+keyboard-test: ## Run the keyboard's unit tests and lint
+	cd apps/keyboard-android && ./gradlew test lintDebug
 
 migrate: ## Apply database migrations to head
 	uv run --package intelliai-api alembic -c apps/api/alembic.ini upgrade head

@@ -1,0 +1,9 @@
+<resources>
+    <!-- DayNight so the setup screen and keyboard follow the system
+         theme with no extra code. -->
+    <style name="Theme.IntelliAI" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/intelliai_primary</item>
+        <item name="colorOnPrimary">@color/intelliai_on_primary</item>
+        <item name="android:windowBackground">@color/setup_background</item>
+    </style>
+</resources>

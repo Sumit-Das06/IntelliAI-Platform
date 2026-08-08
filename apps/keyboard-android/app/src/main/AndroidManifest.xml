@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 13A declares NO permission entries at all: no internet access
+     (nothing is sent anywhere) and no microphone access (dictation is
+     Commit 13B, which will need an Activity trampoline for the runtime
+     permission dialog — an IME cannot own that flow itself).
+     FoundationGuardsTest pins this file permission-free. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.IntelliAI">
+
+        <!-- Setup and onboarding — NOT the keyboard itself. -->
+        <activity
+            android:name=".setup.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- The real input method. BIND_INPUT_METHOD is what makes this
+             a system keyboard rather than an app pretending to be one:
+             only the system may bind, and Android lists the service
+             under Settings → Languages & input → On-screen keyboard. -->
+        <service
+            android:name=".service.IntelliAIKeyboardService"
+            android:exported="true"
+            android:label="@string/keyboard_name"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+        </service>
+
+    </application>
+
+</manifest>

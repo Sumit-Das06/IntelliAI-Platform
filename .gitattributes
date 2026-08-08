@@ -17,3 +17,9 @@
 *.onnx binary
 *.ckpt binary
 *.safetensors binary
+*.jar binary
+
+# The Gradle wrapper scripts must keep their native line endings: the
+# POSIX script is executed by sh on Linux CI, the .bat by cmd on Windows.
+gradlew text eol=lf
+*.bat text eol=crlf

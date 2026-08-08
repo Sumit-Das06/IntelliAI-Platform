@@ -30,6 +30,7 @@ Two rules hold everything together:
 |---|---|
 | `apps/api` | API gateway + control plane (FastAPI) |
 | `apps/console` | Developer console (Next.js) — arrives M6 |
+| `apps/keyboard-android` | IntelliAI Keyboard — Android IME client (Kotlin/Gradle) |
 | `services/` | Inference services, one per model/provider |
 | `packages/` | Shared libraries (runtime contract, Python SDK) |
 | `ml/` | Production ML: dataset pipelines, training, evaluation harness |

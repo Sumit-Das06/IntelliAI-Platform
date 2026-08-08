@@ -1,0 +1,37 @@
+<resources>
+    <!-- The public product name. Internal engine names must never
+         appear anywhere in this application — users see IntelliAI. -->
+    <string name="app_name">IntelliAI</string>
+    <string name="keyboard_name">IntelliAI Keyboard</string>
+    <string name="subtype_english">English</string>
+
+    <!-- Keyboard surface -->
+    <string name="brand_bar">IntelliAI</string>
+    <string name="voice_coming_soon">Voice typing with IntelliAI STT is coming next.</string>
+    <string name="key_mic_description">Voice typing (coming soon)</string>
+    <string name="key_backspace_description">Backspace</string>
+    <string name="key_enter_description">Enter</string>
+    <string name="key_shift_description">Shift</string>
+    <string name="key_globe_description">Switch keyboard</string>
+    <string name="key_space_label">IntelliAI</string>
+
+    <!-- Setup screen -->
+    <string name="setup_tagline">Your AI-powered keyboard</string>
+    <string name="setup_pitch">Type normally today. Voice typing with IntelliAI STT is coming next.</string>
+    <string name="setup_privacy">This version of the keyboard does not send anything you type anywhere.</string>
+    <string name="setup_step1_title">1 · Enable IntelliAI Keyboard</string>
+    <string name="setup_step1_body">Add IntelliAI to Android’s keyboard list so you can use it anywhere you type.</string>
+    <string name="setup_step1_button">Enable Keyboard</string>
+    <string name="setup_step2_title">2 · Select IntelliAI Keyboard</string>
+    <string name="setup_step2_body">Choose IntelliAI as your current keyboard.</string>
+    <string name="setup_step2_button">Select Keyboard</string>
+    <string name="setup_status_title">Status</string>
+    <string name="status_enabled">✓ IntelliAI Keyboard enabled</string>
+    <string name="status_not_enabled">○ Keyboard not enabled</string>
+    <string name="status_selected">✓ IntelliAI Keyboard selected</string>
+    <string name="status_not_selected">○ Keyboard enabled but not selected</string>
+    <string name="setup_try_title">Try your keyboard</string>
+    <string name="setup_try_hint">Tap here and type with IntelliAI…</string>
+    <string name="setup_about">IntelliAI Keyboard v0.1.0</string>
+    <string name="setup_settings_unavailable">Couldn’t open keyboard settings on this device.</string>
+</resources>

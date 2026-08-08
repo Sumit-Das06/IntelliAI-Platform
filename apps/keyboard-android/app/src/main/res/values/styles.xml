@@ -1,0 +1,26 @@
+<resources>
+    <!-- Setup-screen building blocks — one card language, reused. -->
+    <style name="SetupCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/setup_card_background</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="SetupCardTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/setup_ink</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SetupCardBody">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textColor">@color/setup_muted</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>

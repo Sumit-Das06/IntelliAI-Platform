@@ -1,0 +1,24 @@
+<resources>
+    <!-- IntelliAI palette — pine teal, matching the platform console. -->
+    <color name="intelliai_primary">#0D5C53</color>
+    <color name="intelliai_on_primary">#FFFFFF</color>
+
+    <!-- Keyboard surface (light) -->
+    <color name="kb_background">#ECEAE3</color>
+    <color name="kb_key">#FFFFFF</color>
+    <color name="kb_key_pressed">#D7E5E2</color>
+    <color name="kb_key_special">#D9D6CD</color>
+    <color name="kb_key_special_pressed">#C4C1B8</color>
+    <color name="kb_key_text">#1F2A27</color>
+    <color name="kb_key_text_muted">#5A6763</color>
+    <color name="kb_accent">#0D5C53</color>
+    <color name="kb_on_accent">#FFFFFF</color>
+    <color name="kb_brand_text">#0D5C53</color>
+
+    <!-- Setup screen -->
+    <color name="setup_background">#FAF9F5</color>
+    <color name="setup_card">#FFFFFF</color>
+    <color name="setup_ink">#212A27</color>
+    <color name="setup_muted">#66746F</color>
+    <color name="setup_ok">#2C7A4B</color>
+</resources>

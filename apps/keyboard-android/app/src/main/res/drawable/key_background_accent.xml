@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The microphone — the one accent-colored control on the keyboard.
+     Circular, visually distinct: the hero feature's future home. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/kb_on_accent">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/kb_accent" />
+        </shape>
+    </item>
+</ripple>

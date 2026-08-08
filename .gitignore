@@ -52,6 +52,17 @@ corpus-inbox/
 *.m4a
 *.ogg
 
+# ── Android (apps/keyboard-android) ──────────────────────────
+# build/ and .idea/ are already ignored above; these are the
+# Android-specific artifacts. Keystores are ignored defensively —
+# release signing, when it arrives, must never enter git.
+.gradle/
+local.properties
+*.apk
+*.aab
+*.jks
+*.keystore
+
 # ── IDE / OS ──────────────────────────────────────────────────
 .vscode/
 .idea/

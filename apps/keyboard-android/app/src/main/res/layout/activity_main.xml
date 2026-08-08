@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/setup_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Brand -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/intelliai_primary"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/setup_tagline"
+            android:textColor="@color/setup_ink"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/setup_pitch"
+            android:textColor="@color/setup_muted"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/setup_privacy"
+            android:textColor="@color/setup_muted"
+            android:textSize="13sp"
+            android:textStyle="italic" />
+
+        <!-- Step 1 -->
+        <LinearLayout
+            style="@style/SetupCard"
+            android:layout_marginTop="22dp">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/setup_step1_title" />
+
+            <TextView
+                style="@style/SetupCardBody"
+                android:text="@string/setup_step1_body" />
+
+            <Button
+                android:id="@+id/enable_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/setup_step1_button" />
+        </LinearLayout>
+
+        <!-- Step 2 -->
+        <LinearLayout
+            style="@style/SetupCard"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/setup_step2_title" />
+
+            <TextView
+                style="@style/SetupCardBody"
+                android:text="@string/setup_step2_body" />
+
+            <Button
+                android:id="@+id/select_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/setup_step2_button" />
+        </LinearLayout>
+
+        <!-- Live status, from the real system state -->
+        <LinearLayout
+            style="@style/SetupCard"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/setup_status_title" />
+
+            <TextView
+                android:id="@+id/status_enabled"
+                style="@style/SetupCardBody"
+                android:layout_marginTop="8dp"
+                android:textSize="15sp"
+                android:text="@string/status_not_enabled" />
+
+            <TextView
+                android:id="@+id/status_selected"
+                style="@style/SetupCardBody"
+                android:layout_marginTop="4dp"
+                android:textSize="15sp"
+                android:text="@string/status_not_selected" />
+        </LinearLayout>
+
+        <!-- Try it -->
+        <LinearLayout
+            style="@style/SetupCard"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/setup_try_title" />
+
+            <EditText
+                android:id="@+id/try_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/setup_try_hint"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="2"
+                android:textColor="@color/setup_ink"
+                android:textColorHint="@color/setup_muted" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/setup_about"
+            android:textColor="@color/setup_muted"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>
