@@ -513,6 +513,11 @@ audio.player.on { display: block; }
 }
 .sample-row audio { width: 100%; margin-top: 8px; }
 
+/* ── Dataset versions (Datasets page) ───────────────────────── */
+.version-row { margin-bottom: 8px; }
+.version-row .row-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.version-row .row-time { color: var(--muted); font-size: 0.78rem; margin-left: auto; white-space: nowrap; }
+
 /* ── Detail drawer ──────────────────────────────────────────── */
 .drawer-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 50; }
 .drawer {

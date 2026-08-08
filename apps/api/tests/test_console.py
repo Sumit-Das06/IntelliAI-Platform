@@ -99,6 +99,34 @@ async def test_the_samples_page_is_served_as_html(
     assert "Lifecycle" in response.text
 
 
+async def test_the_datasets_page_is_served_as_html(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        response = await client.get("/console/datasets")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert 'data-page="datasets"' in response.text
+    # Honest empty state with a way forward, and the product's purpose
+    # stated in product words — future IntelliAI STT fine-tuning.
+    assert "No datasets yet" in response.text
+    assert "future IntelliAI STT fine-tuning" in response.text
+    # The immutability promise is a product promise, not decoration: it
+    # must appear wherever a version can be created.
+    assert (
+        "immutable snapshot of the currently eligible samples. "
+        "Future corrections or new samples will not change this version."
+    ) in response.text
+    # The page reads ONLY the dataset APIs and the preview it renders is
+    # the server's answer — never a client-side recount.
+    assert "/v1/datasets" in response.text
+    assert "/preview" in response.text
+    # Latest-request-wins guards the drawer's async fills.
+    assert "var ticket = ++drawerTicket;" in response.text
+    assert "if (ticket !== drawerTicket) return;" in response.text
+
+
 async def test_the_usage_page_is_served_as_html(settings: Settings, db_engine: AsyncEngine) -> None:
     async with client_with_db(settings, db_engine) as (client, _factory):
         response = await client.get("/console/usage")
@@ -384,6 +412,7 @@ async def test_the_navigation_carries_the_whole_platform(
         '{ id: "playground", label: "Playground", href: "/console/playground", status: "live" }',
         '{ id: "services", label: "AI Services", href: "/console/services", status: "live" }',
         '{ id: "samples", label: "Speech Samples", href: "/console/samples", status: "live" }',
+        '{ id: "datasets", label: "Datasets", href: "/console/datasets", status: "live" }',
         '{ id: "usage", label: "Usage", href: "/console/usage", status: "live" }',
     ):
         assert live_entry in js
@@ -398,6 +427,7 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
             (await client.get("/console/keys")).text,
             (await client.get("/console/services")).text,
             (await client.get("/console/samples")).text,
+            (await client.get("/console/datasets")).text,
             (await client.get("/console/usage")).text,
             (await client.get("/console/playground")).text,
             (await client.get("/console/assets/console.js")).text,
@@ -430,6 +460,7 @@ def test_the_console_assets_ship_inside_the_package() -> None:
         "services.html",
         "studio.html",
         "samples.html",
+        "datasets.html",
         "usage.html",
         "console.css",
         "console.js",

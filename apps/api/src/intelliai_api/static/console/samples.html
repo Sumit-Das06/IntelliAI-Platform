@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
     validated: "Validated",
     accepted: "Accepted",
     rejected: "Rejected",
+    included_in_dataset: "Added to dataset",
     training: "Training",
     archived: "Archived"
   };
@@ -289,10 +290,16 @@ document.addEventListener("DOMContentLoaded", function () {
         el("div", { class: "t-time" }, ["Awaiting review"])
       ]));
     }
+    if (!seen.included_in_dataset) {
+      timeline.appendChild(el("li", { class: "ghost" }, [
+        el("div", { class: "t-name" }, ["Added to dataset"]),
+        el("div", { class: "t-time" }, ["When this sample joins a dataset version"])
+      ]));
+    }
     if (!seen.training) {
       timeline.appendChild(el("li", { class: "ghost" }, [
         el("div", { class: "t-name" }, ["Training"]),
-        el("div", { class: "t-time" }, ["Future — when this sample joins a training dataset"])
+        el("div", { class: "t-time" }, ["Future — when a fine-tuning run trains on this sample"])
       ]));
     }
   }

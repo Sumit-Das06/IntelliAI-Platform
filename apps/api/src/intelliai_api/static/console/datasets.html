@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Datasets · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="datasets">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>Datasets</h1>
+          <p class="sub">Create and manage curated speech datasets for future IntelliAI STT improvement.</p>
+        </div>
+        <button class="btn btn-primary" id="create-btn" type="button">Create Dataset</button>
+      </div>
+
+      <div class="section" style="margin-top: 18px;">
+        <div class="card">
+          <p>A dataset is a saved definition — language, client, correction state — over your organization's consented speech samples. Creating a <strong>version</strong> freezes exactly which samples match right now, so future fine-tuning can name its training data precisely and reproducibly.</p>
+        </div>
+      </div>
+
+      <!-- ── Not connected ── -->
+      <section id="disconnected" class="section hidden">
+        <div class="card empty">
+          <h3>Connect to manage datasets</h3>
+          <p id="disconnected-reason">This console isn't connected to a workspace yet.</p>
+          <a class="btn btn-primary" href="/console/home">Go to Home</a>
+        </div>
+      </section>
+
+      <!-- ── Datasets list ── -->
+      <section id="datasets-section" class="section hidden">
+        <h2 id="datasets-heading" tabindex="-1">Your datasets</h2>
+        <div id="datasets-empty" class="card empty hidden">
+          <h3>No datasets yet</h3>
+          <p>Create a dataset from your consented speech samples to prepare training-ready data for future IntelliAI STT fine-tuning.</p>
+          <button class="btn btn-primary" id="empty-create-btn" type="button">Create Dataset</button>
+        </div>
+        <div id="datasets-table-wrap" class="table-wrap hidden">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Criteria</th>
+                <th scope="col">Samples</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Status</th>
+                <th scope="col">Latest version</th>
+                <th scope="col">Updated</th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="datasets-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="notice">
+        Datasets reference your organization's consented speech samples. Audio is never
+        duplicated — every version points back to the original samples, and frozen
+        versions keep your future IntelliAI STT fine-tuning reproducible.
+      </p>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── Detail drawer ── -->
+<div class="drawer-overlay hidden" id="drawer-overlay"></div>
+<aside class="drawer hidden" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <div class="drawer-head">
+    <h2 id="drawer-title">Dataset</h2>
+    <span class="badge" id="drawer-status"></span>
+    <button class="btn btn-sm" id="drawer-close" type="button">Close</button>
+  </div>
+
+  <p id="drawer-description" class="cell-muted" style="white-space: normal; margin-bottom: 12px;"></p>
+
+  <div class="block-label">Criteria</div>
+  <div class="summary-row" id="drawer-criteria"></div>
+
+  <div class="block-label">Eligible right now</div>
+  <p class="cell-muted" id="eligibility-note" style="white-space: normal; margin-bottom: 8px;">
+    What a version created this moment would freeze — computed by the same rules that create versions.
+  </p>
+  <div class="summary-row" id="drawer-eligibility"></div>
+  <div class="block-label" style="font-weight: normal;">Languages</div>
+  <div class="dist" id="drawer-languages"></div>
+  <div class="block-label" style="font-weight: normal;">Client sources</div>
+  <div class="dist" id="drawer-clients"></div>
+
+  <div class="block-label">Versions</div>
+  <p class="cell-muted" id="versions-empty" style="white-space: normal;">No versions yet — the dataset is only a definition until you freeze one.</p>
+  <div id="drawer-versions"></div>
+
+  <div class="btn-row" style="margin-top: 14px;">
+    <button class="btn btn-primary" id="version-btn" type="button">Create Version</button>
+    <button class="btn" id="archive-btn" type="button">Archive</button>
+  </div>
+  <p class="notice" style="margin-top: 12px;">
+    Creating a version makes an immutable snapshot of the currently eligible samples.
+    Future corrections or new samples will not change this version.
+  </p>
+</aside>
+
+<!-- ── Create dataset modal ── -->
+<div class="modal-overlay hidden" id="create-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-title">
+    <h2 id="create-title">Create Dataset</h2>
+    <p class="modal-sub">Define which consented speech samples belong together — you freeze versions from it later.</p>
+    <label class="label" for="ds-name">Name</label>
+    <input class="input" id="ds-name" type="text" maxlength="120" placeholder="e.g. Hindi Keyboard Fine-tuning v1">
+    <label class="label" for="ds-desc">Description <span class="cell-muted">(optional)</span></label>
+    <input class="input" id="ds-desc" type="text" maxlength="500" placeholder="What is this dataset for?">
+    <div class="field-row" style="margin-top: 10px;">
+      <div class="grow">
+        <label class="label" for="ds-language">Language</label>
+        <select class="input" id="ds-language" style="width: 100%;">
+          <option value="">All languages</option>
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="ar">Arabic</option>
+        </select>
+      </div>
+      <div class="grow">
+        <label class="label" for="ds-client">Client</label>
+        <select class="input" id="ds-client" style="width: 100%;">
+          <option value="">All clients</option>
+          <option value="web">Web</option>
+          <option value="keyboard">Keyboard</option>
+          <option value="api">API</option>
+        </select>
+      </div>
+      <div class="grow">
+        <label class="label" for="ds-corrected">Corrections</label>
+        <select class="input" id="ds-corrected" style="width: 100%;">
+          <option value="">All samples</option>
+          <option value="true">Corrected only</option>
+          <option value="false">Uncorrected only</option>
+        </select>
+      </div>
+    </div>
+    <div class="status-line" id="create-status"></div>
+    <div class="modal-actions">
+      <button class="btn" id="create-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="create-submit" type="button">Create dataset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Create version confirm modal ── -->
+<div class="modal-overlay hidden" id="version-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="version-title">
+    <h2 id="version-title">Create an immutable version?</h2>
+    <p class="modal-sub" id="version-detail">Checking what is eligible right now…</p>
+    <p class="notice">This creates an immutable snapshot of the currently eligible samples. Future corrections or new samples will not change this version.</p>
+    <div class="status-line" id="version-status"></div>
+    <div class="modal-actions">
+      <button class="btn" id="version-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="version-confirm" type="button" disabled>Create version</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Archive confirm modal ── -->
+<div class="modal-overlay hidden" id="archive-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="archive-title">
+    <h2 id="archive-title">Archive this dataset?</h2>
+    <p class="modal-sub" id="archive-detail"></p>
+    <p class="notice">Frozen versions remain readable forever — archiving only retires the dataset from active work.</p>
+    <div class="status-line" id="archive-status"></div>
+    <div class="modal-actions">
+      <button class="btn" id="archive-cancel" type="button">Keep active</button>
+      <button class="btn btn-danger" id="archive-confirm" type="button">Archive dataset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var el = IntelliAI.el;
+  var section = document.getElementById("datasets-section");
+  var disconnected = document.getElementById("disconnected");
+  var emptyCard = document.getElementById("datasets-empty");
+  var tableWrap = document.getElementById("datasets-table-wrap");
+  var tbody = document.getElementById("datasets-tbody");
+
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+  var CLIENT_NAMES = { web: "Web", keyboard: "Keyboard", api: "API" };
+
+  var datasets = [];
+
+  function languageName(code) {
+    if (code === null || code === undefined || code === "") return "Unknown";
+    return LANGUAGE_NAMES[code] || String(code).toUpperCase();
+  }
+  function clientName(code) {
+    if (code === null || code === undefined || code === "") return "Unknown";
+    return CLIENT_NAMES[code] || code;
+  }
+  function fmtDuration(seconds) {
+    if (!seconds) return "0 min";
+    if (seconds >= 3600) return (Math.round(seconds / 360) / 10) + " hours";
+    if (seconds >= 60) return (Math.round(seconds / 6) / 10) + " min";
+    return (Math.round(seconds * 10) / 10) + " s";
+  }
+  function fmtCount(value) { return Number(value || 0).toLocaleString("en-US"); }
+  function fmtDate(value) {
+    return new Date(value).toLocaleDateString(undefined,
+      { year: "numeric", month: "short", day: "numeric" });
+  }
+  function fmtWhen(value) {
+    return new Date(value).toLocaleString(undefined,
+      { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  }
+  function updatedAt(dataset) {
+    var moments = [new Date(dataset.updated_at).getTime()];
+    if (dataset.latest_version) moments.push(new Date(dataset.latest_version.created_at).getTime());
+    return new Date(Math.max.apply(null, moments));
+  }
+
+  /* Criteria, spoken in product words. Empty criteria are said honestly. */
+  function criteriaChips(criteria) {
+    var chips = [];
+    if (criteria.language) chips.push("Language: " + languageName(criteria.language));
+    if (criteria.client_source) chips.push("Client: " + clientName(criteria.client_source));
+    if (criteria.corrected === true) chips.push("Corrected only");
+    if (criteria.corrected === false) chips.push("Uncorrected only");
+    if (criteria.collected_from) chips.push("From " + criteria.collected_from);
+    if (criteria.collected_until) chips.push("Until " + criteria.collected_until);
+    if (!chips.length) chips.push("All consented samples");
+    return chips;
+  }
+
+  /* ── modal plumbing: open/close, Escape, focus trap + return ── */
+  var lastTrigger = null;
+  var trapHandler = null;
+  function openModal(overlay, focusEl) {
+    lastTrigger = document.activeElement;
+    overlay.classList.remove("hidden");
+    trapHandler = function (event) {
+      if (event.key !== "Tab") return;
+      var nodes = overlay.querySelectorAll("button:not(:disabled), input, select, a[href]");
+      var visible = Array.prototype.filter.call(nodes, function (node) {
+        return node.offsetParent !== null;
+      });
+      if (!visible.length) return;
+      var first = visible[0];
+      var last = visible[visible.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", trapHandler);
+    if (focusEl) focusEl.focus();
+  }
+  function closeModal(overlay) {
+    overlay.classList.add("hidden");
+    if (trapHandler) {
+      document.removeEventListener("keydown", trapHandler);
+      trapHandler = null;
+    }
+    if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+  }
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    document.querySelectorAll(".modal-overlay:not(.hidden)").forEach(function (overlay) {
+      overlay.dispatchEvent(new CustomEvent("modal-close"));
+    });
+  });
+  document.querySelectorAll(".modal-overlay").forEach(function (overlay) {
+    var pressedOnBackdrop = false;
+    overlay.addEventListener("pointerdown", function (event) {
+      pressedOnBackdrop = event.target === overlay;
+    });
+    overlay.addEventListener("click", function (event) {
+      if (pressedOnBackdrop && event.target === overlay) {
+        overlay.dispatchEvent(new CustomEvent("modal-close"));
+      }
+      pressedOnBackdrop = false;
+    });
+  });
+
+  /* ── datasets table ────────────────────────────────────────── */
+  function statusBadge(dataset) {
+    var live = dataset.status === "active";
+    return el("span", { class: "badge " + (live ? "badge-ok" : "badge-soon") },
+      [live ? "Active" : "Archived"]);
+  }
+
+  function row(dataset) {
+    var nameCell = el("td", {}, [el("strong", {}, [dataset.name])]);
+    if (dataset.description) {
+      nameCell.appendChild(el("div", { class: "cell-muted", style: "white-space: normal;" },
+        [dataset.description]));
+    }
+    var latest = dataset.latest_version;
+    var actions = el("div", { class: "cell-actions" });
+    var viewBtn = el("button", { class: "btn btn-sm", type: "button" }, ["View"]);
+    viewBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      openDrawer(dataset);
+    });
+    actions.appendChild(viewBtn);
+
+    var tr = el("tr", {}, [
+      nameCell,
+      el("td", {}, [el("span", { class: "cell-muted", style: "white-space: normal;" },
+        [criteriaChips(dataset.criteria).join(" · ")])]),
+      el("td", {}, [latest ? fmtCount(latest.sample_count) : "—"]),
+      el("td", {}, [latest ? fmtDuration(latest.duration_seconds) : "—"]),
+      el("td", {}, [statusBadge(dataset)]),
+      el("td", {}, [latest ? "v" + latest.version_number : "—"]),
+      el("td", {}, [el("span", { class: "cell-muted" }, [fmtDate(updatedAt(dataset))])]),
+      el("td", {}, [actions])
+    ]);
+    tr.style.cursor = "pointer";
+    tr.setAttribute("tabindex", "0");
+    tr.addEventListener("click", function () { openDrawer(dataset); });
+    tr.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openDrawer(dataset);
+      }
+    });
+    return tr;
+  }
+
+  function showDisconnected(reason) {
+    section.classList.add("hidden");
+    disconnected.classList.remove("hidden");
+    document.getElementById("create-btn").disabled = true;
+    if (reason) document.getElementById("disconnected-reason").textContent = reason;
+  }
+
+  function load() {
+    if (!IntelliAI.getKey()) {
+      showDisconnected();
+      return Promise.resolve();
+    }
+    return IntelliAI.apiJSON("/v1/datasets").then(function (body) {
+      datasets = body.data || [];
+      disconnected.classList.add("hidden");
+      section.classList.remove("hidden");
+      document.getElementById("create-btn").disabled = false;
+      tbody.replaceChildren();
+      emptyCard.classList.toggle("hidden", datasets.length !== 0);
+      tableWrap.classList.toggle("hidden", datasets.length === 0);
+      datasets.forEach(function (dataset) { tbody.appendChild(row(dataset)); });
+    }).catch(function (error) {
+      showDisconnected(error.status === 401
+        ? "Your saved API key was rejected — connect with a current one."
+        : "Could not reach the API: " + error.message);
+    });
+  }
+
+  /* ── create dataset flow ───────────────────────────────────── */
+  var createOverlay = document.getElementById("create-overlay");
+  var createStatus = document.getElementById("create-status");
+  var createPending = false;
+
+  function openCreate() {
+    if (!IntelliAI.getKey()) return;
+    document.getElementById("ds-name").value = "";
+    document.getElementById("ds-desc").value = "";
+    document.getElementById("ds-language").value = "";
+    document.getElementById("ds-client").value = "";
+    document.getElementById("ds-corrected").value = "";
+    createStatus.textContent = "";
+    createStatus.className = "status-line";
+    openModal(createOverlay, document.getElementById("ds-name"));
+  }
+  function submitCreate() {
+    var name = document.getElementById("ds-name").value.trim();
+    if (!name) {
+      createStatus.textContent = "Give the dataset a name first.";
+      createStatus.className = "status-line err";
+      return;
+    }
+    if (createPending) return;
+    createPending = true;
+    var submit = document.getElementById("create-submit");
+    var cancel = document.getElementById("create-cancel");
+    submit.disabled = true;
+    cancel.disabled = true;
+    createStatus.textContent = "Creating…";
+    createStatus.className = "status-line";
+
+    var criteria = {};
+    var language = document.getElementById("ds-language").value;
+    var client = document.getElementById("ds-client").value;
+    var corrected = document.getElementById("ds-corrected").value;
+    if (language) criteria.language = language;
+    if (client) criteria.client_source = client;
+    if (corrected) criteria.corrected = corrected === "true";
+    var description = document.getElementById("ds-desc").value.trim();
+
+    IntelliAI.apiJSON("/v1/datasets", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name,
+        description: description || null,
+        criteria: criteria
+      })
+    }).then(function (created) {
+      closeModal(createOverlay);
+      return load().then(function () {
+        var fresh = datasets.filter(function (d) { return d.id === created.id; })[0];
+        if (fresh) openDrawer(fresh);
+      });
+    }).catch(function (error) {
+      createStatus.textContent = error.message;
+      createStatus.className = "status-line err";
+    }).finally(function () {
+      createPending = false;
+      submit.disabled = false;
+      cancel.disabled = false;
+    });
+  }
+  function closeCreate() {
+    if (createPending) return;
+    closeModal(createOverlay);
+  }
+  document.getElementById("create-btn").addEventListener("click", openCreate);
+  document.getElementById("empty-create-btn").addEventListener("click", openCreate);
+  document.getElementById("create-submit").addEventListener("click", submitCreate);
+  document.getElementById("ds-name").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") submitCreate();
+  });
+  document.getElementById("create-cancel").addEventListener("click", closeCreate);
+  createOverlay.addEventListener("modal-close", closeCreate);
+
+  /* ── detail drawer ─────────────────────────────────────────── */
+  var overlay = document.getElementById("drawer-overlay");
+  var drawer = document.getElementById("drawer");
+  var drawerDataset = null;   /* the dataset the drawer is showing */
+  var drawerPreview = null;   /* its latest eligibility answer */
+  var drawerTicket = 0;       /* latest-request-wins for async fills */
+  var drawerTrigger = null;
+
+  function chip(label, value) {
+    return el("span", { class: "summary-chip" }, [el("span", {}, [label]), el("b", {}, [value])]);
+  }
+
+  function renderDist(host, entries, nameOf) {
+    host.replaceChildren();
+    if (!entries || !entries.length) {
+      host.appendChild(el("span", { class: "cell-muted" }, ["None yet"]));
+      return;
+    }
+    var top = Math.max.apply(null, entries.map(function (e) { return e.samples; }));
+    entries.forEach(function (entry) {
+      var fill = el("div", { class: "dist-fill" });
+      fill.style.width = Math.max(2, Math.round((entry.samples / top) * 100)) + "%";
+      host.appendChild(el("div", { class: "dist-row" }, [
+        el("span", { class: "dist-name", title: nameOf(entry.key) }, [nameOf(entry.key)]),
+        el("div", { class: "dist-track" }, [fill]),
+        el("span", { class: "dist-value" },
+          [fmtCount(entry.samples) + " · " + fmtDuration(entry.duration_seconds)])
+      ]));
+    });
+  }
+
+  function renderVersions(versions) {
+    var host = document.getElementById("drawer-versions");
+    host.replaceChildren();
+    document.getElementById("versions-empty").classList.toggle("hidden", versions.length !== 0);
+    versions.forEach(function (version) {
+      var head = el("div", { class: "row-top" }, [
+        el("strong", {}, ["v" + version.version_number]),
+        el("span", { class: "badge badge-live" }, ["Immutable"]),
+        el("span", { class: "cell-muted" }, [fmtCount(version.sample_count) + " samples"]),
+        el("span", { class: "cell-muted" }, [fmtDuration(version.duration_seconds)]),
+        el("span", { class: "cell-muted" }, [fmtCount(version.corrected_samples) + " corrected"]),
+        el("span", { class: "row-time" }, ["Created " + fmtWhen(version.created_at)])
+      ]);
+      host.appendChild(el("div", { class: "card version-row" }, [head]));
+    });
+  }
+
+  function refreshDrawerData(dataset) {
+    var ticket = ++drawerTicket;
+    drawerPreview = null;
+    var versionBtn = document.getElementById("version-btn");
+    versionBtn.disabled = true;
+
+    var eligibility = document.getElementById("drawer-eligibility");
+    eligibility.replaceChildren();
+    eligibility.appendChild(el("span", { class: "cell-muted" }, ["Counting eligible samples…"]));
+    document.getElementById("drawer-languages").replaceChildren();
+    document.getElementById("drawer-clients").replaceChildren();
+
+    IntelliAI.apiJSON("/v1/datasets/" + encodeURIComponent(dataset.id) + "/preview")
+      .then(function (preview) {
+        if (ticket !== drawerTicket) return;
+        drawerPreview = preview;
+        eligibility.replaceChildren();
+        eligibility.appendChild(chip("Eligible", fmtCount(preview.eligible_samples)));
+        eligibility.appendChild(chip("Duration", fmtDuration(preview.duration_seconds)));
+        eligibility.appendChild(chip("Corrected", fmtCount(preview.corrected_samples)));
+        eligibility.appendChild(chip("Matching", fmtCount(preview.matching_samples)));
+        renderDist(document.getElementById("drawer-languages"), preview.languages, languageName);
+        renderDist(document.getElementById("drawer-clients"), preview.client_sources, clientName);
+        versionBtn.disabled = dataset.status !== "active" || preview.eligible_samples === 0;
+        var note = document.getElementById("eligibility-note");
+        note.textContent = preview.eligible_samples === 0
+          ? "Nothing is eligible right now — collect consented samples matching the criteria, then freeze a version."
+          : "What a version created this moment would freeze — computed by the same rules that create versions.";
+      })
+      .catch(function () {
+        if (ticket !== drawerTicket) return;
+        eligibility.replaceChildren();
+        eligibility.appendChild(el("span", { class: "cell-muted" }, ["Eligibility could not be loaded."]));
+      });
+
+    IntelliAI.apiJSON("/v1/datasets/" + encodeURIComponent(dataset.id) + "/versions")
+      .then(function (body) {
+        if (ticket !== drawerTicket) return;
+        renderVersions(body.data || []);
+      })
+      .catch(function () {
+        if (ticket !== drawerTicket) return;
+        document.getElementById("versions-empty").textContent = "Versions could not be loaded.";
+      });
+  }
+
+  function openDrawer(dataset) {
+    drawerTrigger = document.activeElement;
+    drawerDataset = dataset;
+    document.getElementById("drawer-title").textContent = dataset.name;
+    var statusEl = document.getElementById("drawer-status");
+    statusEl.className = "badge " + (dataset.status === "active" ? "badge-ok" : "badge-soon");
+    statusEl.textContent = dataset.status === "active" ? "Active" : "Archived";
+    var description = document.getElementById("drawer-description");
+    description.textContent = dataset.description || "";
+    description.classList.toggle("hidden", !dataset.description);
+
+    var criteria = document.getElementById("drawer-criteria");
+    criteria.replaceChildren();
+    criteriaChips(dataset.criteria).forEach(function (text) {
+      criteria.appendChild(el("span", { class: "summary-chip" }, [el("b", {}, [text])]));
+    });
+
+    document.getElementById("archive-btn").classList.toggle("hidden", dataset.status !== "active");
+    renderVersions([]);
+    refreshDrawerData(dataset);
+
+    overlay.classList.remove("hidden");
+    drawer.classList.remove("hidden");
+    document.getElementById("drawer-close").focus();
+  }
+  function closeDrawer() {
+    drawerTicket++;
+    drawerDataset = null;
+    overlay.classList.add("hidden");
+    drawer.classList.add("hidden");
+    if (drawerTrigger && drawerTrigger.focus) drawerTrigger.focus();
+  }
+  document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+  (function () {
+    var pressedOnOverlay = false;
+    overlay.addEventListener("pointerdown", function (event) {
+      pressedOnOverlay = event.target === overlay;
+    });
+    overlay.addEventListener("click", function (event) {
+      if (pressedOnOverlay && event.target === overlay) closeDrawer();
+      pressedOnOverlay = false;
+    });
+  })();
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape" || drawer.classList.contains("hidden")) return;
+    /* A modal above the drawer takes the Escape first. */
+    var modalOpen = document.querySelectorAll(".modal-overlay:not(.hidden)").length > 0;
+    if (!modalOpen) closeDrawer();
+  });
+
+  /* ── create version flow ───────────────────────────────────── */
+  var versionOverlay = document.getElementById("version-overlay");
+  var versionPending = false;
+
+  function openVersionModal() {
+    if (!drawerDataset) return;
+    var detail = document.getElementById("version-detail");
+    var status = document.getElementById("version-status");
+    var confirmBtn = document.getElementById("version-confirm");
+    status.textContent = "";
+    status.className = "status-line";
+    confirmBtn.disabled = true;
+    detail.textContent = "Checking what is eligible right now…";
+    openModal(versionOverlay, document.getElementById("version-cancel"));
+
+    /* Fresh numbers at the moment of asking — the drawer's could be stale. */
+    var dataset = drawerDataset;
+    IntelliAI.apiJSON("/v1/datasets/" + encodeURIComponent(dataset.id) + "/preview")
+      .then(function (preview) {
+        drawerPreview = preview;
+        if (preview.eligible_samples === 0) {
+          detail.textContent = "No samples are currently eligible — there is nothing to freeze yet.";
+          return;
+        }
+        var next = (dataset.latest_version ? dataset.latest_version.version_number : 0) + 1;
+        detail.textContent = "Version " + next + " of “" + dataset.name + "” will freeze " +
+          fmtCount(preview.eligible_samples) + " samples (" + fmtDuration(preview.duration_seconds) +
+          ", " + fmtCount(preview.corrected_samples) + " corrected).";
+        confirmBtn.disabled = false;
+      })
+      .catch(function (error) {
+        detail.textContent = "Could not check eligibility: " + error.message;
+      });
+  }
+  function closeVersionModal() {
+    if (versionPending) return;
+    closeModal(versionOverlay);
+  }
+  document.getElementById("version-btn").addEventListener("click", openVersionModal);
+  document.getElementById("version-cancel").addEventListener("click", closeVersionModal);
+  versionOverlay.addEventListener("modal-close", closeVersionModal);
+  document.getElementById("version-confirm").addEventListener("click", function () {
+    if (!drawerDataset || versionPending) return;
+    versionPending = true;
+    var status = document.getElementById("version-status");
+    var confirmBtn = document.getElementById("version-confirm");
+    var cancelBtn = document.getElementById("version-cancel");
+    confirmBtn.disabled = true;
+    cancelBtn.disabled = true;
+    status.textContent = "Freezing the eligible samples…";
+    status.className = "status-line";
+    var dataset = drawerDataset;
+    IntelliAI.apiJSON("/v1/datasets/" + encodeURIComponent(dataset.id) + "/versions", { method: "POST" })
+      .then(function () {
+        versionPending = false;
+        cancelBtn.disabled = false;
+        closeModal(versionOverlay);
+        return load().then(function () {
+          var fresh = datasets.filter(function (d) { return d.id === dataset.id; })[0];
+          if (fresh && drawerDataset && drawerDataset.id === dataset.id) openDrawer(fresh);
+        });
+      })
+      .catch(function (error) {
+        versionPending = false;
+        cancelBtn.disabled = false;
+        confirmBtn.disabled = false;
+        status.textContent = error.message;
+        status.className = "status-line err";
+      });
+  });
+
+  /* ── archive flow ──────────────────────────────────────────── */
+  var archiveOverlay = document.getElementById("archive-overlay");
+  var archivePending = false;
+
+  document.getElementById("archive-btn").addEventListener("click", function () {
+    if (!drawerDataset) return;
+    document.getElementById("archive-detail").textContent =
+      "“" + drawerDataset.name + "” stops appearing as an active dataset.";
+    var status = document.getElementById("archive-status");
+    status.textContent = "";
+    status.className = "status-line";
+    openModal(archiveOverlay, document.getElementById("archive-cancel"));
+  });
+  function closeArchive() {
+    if (archivePending) return;
+    closeModal(archiveOverlay);
+  }
+  document.getElementById("archive-cancel").addEventListener("click", closeArchive);
+  archiveOverlay.addEventListener("modal-close", closeArchive);
+  document.getElementById("archive-confirm").addEventListener("click", function () {
+    if (!drawerDataset || archivePending) return;
+    archivePending = true;
+    var confirmBtn = document.getElementById("archive-confirm");
+    confirmBtn.disabled = true;
+    var dataset = drawerDataset;
+    IntelliAI.apiJSON("/v1/datasets/" + encodeURIComponent(dataset.id) + "/archive", { method: "POST" })
+      .then(function () {
+        archivePending = false;
+        confirmBtn.disabled = false;
+        closeModal(archiveOverlay);
+        closeDrawer();
+        return load().then(function () {
+          document.getElementById("datasets-heading").focus();
+        });
+      })
+      .catch(function (error) {
+        archivePending = false;
+        confirmBtn.disabled = false;
+        var status = document.getElementById("archive-status");
+        status.textContent = error.message;
+        status.className = "status-line err";
+      });
+  });
+
+  load();
+});
+</script>
+</body>
+</html>

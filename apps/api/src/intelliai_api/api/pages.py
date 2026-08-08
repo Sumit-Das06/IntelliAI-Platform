@@ -71,6 +71,13 @@ async def console_samples() -> HTMLResponse:
     return HTMLResponse(_static_text("console", "samples.html"), headers=_NO_CACHE)
 
 
+@router.get("/console/datasets", include_in_schema=False)
+async def console_datasets() -> HTMLResponse:
+    """Curated datasets and their immutable versions — the training-data
+    foundation for future IntelliAI STT fine-tuning."""
+    return HTMLResponse(_static_text("console", "datasets.html"), headers=_NO_CACHE)
+
+
 @router.get("/console/usage", include_in_schema=False)
 async def console_usage() -> HTMLResponse:
     """API consumption analytics — never dataset statistics."""

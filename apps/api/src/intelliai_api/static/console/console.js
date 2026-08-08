@@ -25,7 +25,7 @@ window.IntelliAI = (function () {
     ] },
     { title: "Data", items: [
       { id: "samples", label: "Speech Samples", href: "/console/samples", status: "live" },
-      { id: "datasets", label: "Datasets", href: "/console/datasets", status: "soon" }
+      { id: "datasets", label: "Datasets", href: "/console/datasets", status: "live" }
     ] },
     { title: "Monitor", items: [
       { id: "usage", label: "Usage", href: "/console/usage", status: "live" },
