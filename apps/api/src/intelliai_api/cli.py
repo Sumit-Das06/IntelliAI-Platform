@@ -36,6 +36,7 @@ from intelliai_api.db.engine import create_engine, create_session_factory
 from intelliai_api.entitlements import BillingPeriod, period_for
 from intelliai_api.registry import default_registry
 from intelliai_api.registry.manifest import serving_manifest
+from intelliai_api.services.erasure import ErasureReport, ErasureService
 from intelliai_api.services.identity import (
     DEFAULT_TENANT_ORIGIN,
     TENANT_ORIGINS,
@@ -125,6 +126,73 @@ async def _set_consent(organization_id: str, *, grant: bool, reference: str | No
         print(f"  reference  : {organization.consent_reference or '(none recorded)'}")
     elif organization.data_consented_at is not None:
         print(f"  last grant : {organization.data_consented_at} (historical record, retained)")
+
+
+def _print_erasure_report(report: ErasureReport, *, heading: str) -> None:
+    print()
+    print("=" * 64)
+    print(heading)
+    print("-" * 64)
+    print(f"  organization        : {report.organization_public_id}")
+    print(f"  samples erased      : {report.samples_erased}")
+    print(f"  audio objects gone  : {report.audio_objects_deleted}")
+    print(f"  manifests revoked   : {report.manifests_revoked}")
+    if report.datasets_deleted:
+        print(f"  datasets deleted    : {report.datasets_deleted}")
+    if report.api_keys_revoked:
+        print(f"  api keys revoked    : {report.api_keys_revoked}")
+    if report.memberships_removed:
+        print(f"  memberships removed : {report.memberships_removed}")
+    if report.organization_anonymized:
+        print("  organization row    : anonymized and KEPT (usage ledger law)")
+    for sample_id in report.erased_sample_ids:
+        print(f"    erased: {sample_id}")
+    print("=" * 64)
+
+
+async def _erase(
+    *,
+    organization: str,
+    sample: str | None = None,
+    user_identifier: str | None = None,
+    whole_organization: bool = False,
+) -> None:
+    """Run one erasure verb against the configured database AND object
+    store. The storage seam is built unconditionally — the collection
+    kill switch gates NEW collection, never the ability to erase what an
+    earlier deployment already stored."""
+    from intelliai_api.storage import S3ObjectStorage
+
+    settings = get_settings()
+    configure_logging(settings)
+    engine = create_engine(settings)
+    storage = S3ObjectStorage(settings.storage)
+    try:
+        factory = create_session_factory(engine)
+        async with factory() as session:
+            service = ErasureService(session, storage)
+            if whole_organization:
+                report = await service.erase_organization(organization_public_id=organization)
+                heading = "Organization erased (data removed; ledger retained)."
+            elif sample is not None:
+                report = await service.erase_sample(
+                    organization_public_id=organization, sample_public_id=sample
+                )
+                heading = "Speech sample erased."
+            elif user_identifier is not None:
+                report = await service.erase_user_data(
+                    organization_public_id=organization, user_identifier=user_identifier
+                )
+                heading = f"User data erased ({user_identifier})."
+            else:  # pragma: no cover - argparse guarantees one mode
+                raise ValueError("erase requires a sample, a user identifier, or --org mode")
+            # Objects are already gone (irreversibly); committing the row
+            # deletions is what makes the database agree with the store.
+            await session.commit()
+        _print_erasure_report(report, heading=heading)
+    finally:
+        await storage.close()
+        await engine.dispose()
 
 
 async def _commercial_report(month: str | None) -> int:
@@ -306,6 +374,39 @@ def main(argv: list[str] | None = None) -> int:
     )
     revoke.add_argument("--org", required=True, help="organization public id (org_...)")
 
+    erase_sample = subcommands.add_parser(
+        "erase-sample",
+        help="Permanently erase one speech sample: audio object, row, events, memberships",
+    )
+    erase_sample.add_argument("--org", required=True, help="organization public id (org_...)")
+    erase_sample.add_argument("--sample", required=True, help="sample public id (smp_...)")
+
+    erase_user = subcommands.add_parser(
+        "erase-user-data",
+        help=(
+            "Erase every sample one identity contributed (a person's deletion "
+            "request under the one-key-per-person convention)"
+        ),
+    )
+    erase_user.add_argument("--org", required=True, help="organization public id (org_...)")
+    erase_user.add_argument(
+        "--user-identifier", required=True, help="the identity stamped on the samples (key_...)"
+    )
+
+    erase_org = subcommands.add_parser(
+        "erase-org",
+        help=(
+            "Erase a whole tenant's collected data and datasets; keys revoked, "
+            "org row anonymized and kept (usage ledger is retained by law)"
+        ),
+    )
+    erase_org.add_argument("--org", required=True, help="organization public id (org_...)")
+    erase_org.add_argument(
+        "--yes",
+        action="store_true",
+        help="required: tenant erasure is irreversible",
+    )
+
     report = subcommands.add_parser(
         "commercial-report",
         help="Reconcile the commercial plane; exits non-zero if anything disagrees",
@@ -330,6 +431,21 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "revoke-consent":
             asyncio.run(_set_consent(args.org, grant=False, reference=None))
+            return 0
+        if args.command == "erase-sample":
+            asyncio.run(_erase(organization=args.org, sample=args.sample))
+            return 0
+        if args.command == "erase-user-data":
+            asyncio.run(_erase(organization=args.org, user_identifier=args.user_identifier))
+            return 0
+        if args.command == "erase-org":
+            if not args.yes:
+                print(
+                    "erase-org is irreversible: re-run with --yes to confirm.",
+                    file=sys.stderr,
+                )
+                return 1
+            asyncio.run(_erase(organization=args.org, whole_organization=True))
             return 0
         asyncio.run(
             _bootstrap_org(args.org_name, args.owner_email, args.owner_name, args.usage_origin)

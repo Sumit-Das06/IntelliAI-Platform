@@ -3,9 +3,9 @@
 from collections.abc import Sequence
 from datetime import datetime
 from decimal import Decimal
-from typing import Any
+from typing import Any, cast
 
-from sqlalchemy import select
+from sqlalchemy import CursorResult, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from intelliai_api.core.time import utc_now
@@ -109,6 +109,49 @@ class SpeechSampleRepository:
             .limit(limit)
         )
         return result.scalars().all()
+
+    async def list_for_user_identifier(
+        self, organization_id: int, user_identifier: str
+    ) -> Sequence[SpeechSample]:
+        """Every sample this identity contributed, org-scoped.
+
+        The erasure unit for a person's deletion request: under the pilot's
+        one-key-per-person convention (docs/DATA_GOVERNANCE.md),
+        ``user_identifier`` IS the person, and this list is exactly their
+        data. Unbounded on purpose — erasure must see everything, and a
+        pilot tenant's sample count is CLI-scale, not pagination-scale.
+        """
+        result = await self._session.execute(
+            select(SpeechSample).where(
+                SpeechSample.organization_id == organization_id,
+                SpeechSample.user_identifier == user_identifier,
+            )
+        )
+        return result.scalars().all()
+
+    async def list_all_for_organization(self, organization_id: int) -> Sequence[SpeechSample]:
+        """The tenant's complete collected data — the org-erasure unit.
+        Unbounded like the per-person list, for the same reason."""
+        result = await self._session.execute(
+            select(SpeechSample).where(SpeechSample.organization_id == organization_id)
+        )
+        return result.scalars().all()
+
+    async def delete_by_ids(self, sample_ids: Sequence[int]) -> int:
+        """Hard-delete sample rows; events and dataset memberships follow
+        via the schema's ON DELETE CASCADE (the privacy topology).
+
+        A core DELETE on purpose: ORM-level deletion would try to manage
+        the children itself, and the children's non-nullable FKs make the
+        database's own cascade the only correct authority. Erasure is the
+        single caller — nothing else on the platform deletes samples.
+        """
+        if not sample_ids:
+            return 0
+        result = await self._session.execute(
+            delete(SpeechSample).where(SpeechSample.id.in_(list(sample_ids)))
+        )
+        return max(0, cast(CursorResult[Any], result).rowcount)
 
     async def list_events(self, sample_id: int) -> Sequence[SpeechSampleEvent]:
         """The sample's lifecycle history, oldest first — timeline order."""

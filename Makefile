@@ -215,6 +215,17 @@ grant-consent: ## Record a tenant's data-collection opt-in: make grant-consent o
 revoke-consent: ## Withdraw a tenant's data-collection consent: make revoke-consent org=org_...
 	uv run --package intelliai-api python -m intelliai_api.cli revoke-consent --org "$(org)"
 
+# Erasure is the right to be forgotten, made executable (docs/DATA_GOVERNANCE.md):
+# objects first, rows second, usage ledger retained by law. Irreversible.
+erase-sample: ## Permanently erase one speech sample: make erase-sample org=org_... sample=smp_...
+	uv run --package intelliai-api python -m intelliai_api.cli erase-sample --org "$(org)" --sample "$(sample)"
+
+erase-user-data: ## Erase every sample one identity contributed: make erase-user-data org=org_... user=key_...
+	uv run --package intelliai-api python -m intelliai_api.cli erase-user-data --org "$(org)" --user-identifier "$(user)"
+
+erase-org: ## Erase a tenant's data (ledger kept, org row anonymized): make erase-org org=org_...
+	uv run --package intelliai-api python -m intelliai_api.cli erase-org --org "$(org)" --yes
+
 up-tts: ## Also start the TTS runtime (V1 is STT-only by default)
 	docker compose --profile tts up -d
 

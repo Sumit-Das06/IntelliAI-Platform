@@ -52,6 +52,10 @@ corpus-inbox/
 *.m4a
 *.ogg
 
+# Backups hold the FULL database and consented audio — they leave the
+# box via rclone/rsync (docs/ops/backup.md), never via git.
+backups/
+
 # ── Android (apps/keyboard-android) ──────────────────────────
 # build/ and .idea/ are already ignored above; these are the
 # Android-specific artifacts. Keystores are ignored defensively —

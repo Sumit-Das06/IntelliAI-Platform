@@ -9,8 +9,9 @@ are not the authentication path, stop — you are probably writing a leak.
 
 from collections.abc import Sequence
 from datetime import datetime, timedelta
+from typing import Any, cast
 
-from sqlalchemy import or_, select, update
+from sqlalchemy import CursorResult, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -76,6 +77,19 @@ class ApiKeyRepository:
             )
         )
         return result.scalar_one_or_none()
+
+    async def revoke_all_for_organization(self, organization_id: int, *, now: datetime) -> int:
+        """Soft-revoke every live key of the tenant in one statement —
+        the credential half of organization erasure. Rows stay (audit
+        trail, ledger attribution); only the ability to authenticate
+        dies. Idempotent: already-revoked keys keep their original
+        timestamp."""
+        result = await self._session.execute(
+            update(ApiKey)
+            .where(ApiKey.organization_id == organization_id, ApiKey.revoked_at.is_(None))
+            .values(revoked_at=now)
+        )
+        return max(0, cast(CursorResult[Any], result).rowcount)
 
     async def touch_last_used(
         self, api_key_id: int, *, now: datetime, min_interval: timedelta

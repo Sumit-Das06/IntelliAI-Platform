@@ -68,6 +68,7 @@ class FakeObjectStorage:
 
     def __init__(self) -> None:
         self.puts: list[tuple[str, bytes, str | None]] = []
+        self.deletes: list[str] = []
         self.closed = False
 
     async def put(self, *, key: str, data: bytes, content_type: str | None) -> None:
@@ -81,6 +82,12 @@ class FakeObjectStorage:
 
     async def head(self, *, key: str) -> None:
         await self.get(key=key)
+
+    async def delete(self, *, key: str) -> None:
+        # S3 semantics, mirrored: deleting an absent key is a success —
+        # exactly what a retried erasure run needs.
+        self.deletes.append(key)
+        self.puts = [entry for entry in self.puts if entry[0] != key]
 
     async def close(self) -> None:
         self.closed = True

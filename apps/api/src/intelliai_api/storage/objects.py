@@ -107,16 +107,20 @@ class StorageObjectMissingError(StorageReadError):
 class ObjectStorage(Protocol):
     """What the platform needs from an object store: durable puts, reads
     for the console's playback, existence probes for dataset preparation,
-    and a clean shutdown. This protocol grew ``get`` when the Speech
-    Samples page needed it and ``head`` when training-data validation
-    needed to check a thousand objects without downloading a thousand
-    audio files — never speculatively."""
+    deletes for data erasure, and a clean shutdown. This protocol grew
+    ``get`` when the Speech Samples page needed it, ``head`` when
+    training-data validation needed to check a thousand objects without
+    downloading a thousand audio files, and ``delete`` when the erasure
+    policy (docs/DATA_GOVERNANCE.md) needed to actually remove a person's
+    audio — never speculatively."""
 
     async def put(self, *, key: str, data: bytes, content_type: str | None) -> None: ...
 
     async def get(self, *, key: str) -> bytes: ...
 
     async def head(self, *, key: str) -> None: ...
+
+    async def delete(self, *, key: str) -> None: ...
 
     async def close(self) -> None: ...
 
@@ -204,6 +208,20 @@ class S3ObjectStorage:
             raise StorageReadError(f"head {key!r} failed: {type(exc).__name__}") from exc
         except Exception as exc:
             raise StorageReadError(f"head {key!r} failed: {type(exc).__name__}") from exc
+
+    async def delete(self, *, key: str) -> None:
+        """Remove one object, idempotently.
+
+        S3 DELETE succeeds whether or not the key exists, and that is the
+        semantics erasure needs: a retried erasure run must sail through
+        the objects the first attempt already removed. Failures surface
+        as :class:`StorageWriteError` — erasure treats an unreachable
+        store as "abort, retry later", NEVER as "erased".
+        """
+        try:
+            await asyncio.to_thread(self._client.delete_object, Bucket=self._bucket, Key=key)
+        except Exception as exc:
+            raise StorageWriteError(f"delete {key!r} failed: {type(exc).__name__}") from exc
 
     async def _ensure_bucket(self) -> None:
         """Create the bucket on first write if absent (dev MinIO has no

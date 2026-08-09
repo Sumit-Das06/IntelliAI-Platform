@@ -33,13 +33,15 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta
 from decimal import Decimal
-from typing import Any
+from typing import Any, cast
 
 from sqlalchemy import (
     ColumnElement,
+    CursorResult,
     DateTime,
     Select,
     case,
+    delete,
     func,
     insert,
     literal,
@@ -562,6 +564,51 @@ class DatasetRepository:
             select(DatasetPreparation).where(DatasetPreparation.dataset_version_id == version_id)
         )
         return result.scalar_one_or_none()
+
+    # ── Erasure support (docs/DATA_GOVERNANCE.md) ────────────────────
+
+    async def preparations_referencing_samples(
+        self, sample_ids: Sequence[int]
+    ) -> Sequence[DatasetPreparation]:
+        """Every preparation whose frozen version contains one of these
+        samples. The erasure service must revoke the READY ones among
+        them BEFORE the rows die: their stored manifests carry the
+        erased person's transcript text and audio key."""
+        if not sample_ids:
+            return []
+        result = await self._session.execute(
+            select(DatasetPreparation)
+            .join(
+                DatasetVersionSample,
+                DatasetVersionSample.dataset_version_id == DatasetPreparation.dataset_version_id,
+            )
+            .where(DatasetVersionSample.speech_sample_id.in_(list(sample_ids)))
+            .distinct()
+        )
+        return result.scalars().all()
+
+    async def preparations_with_artifacts(
+        self, organization_id: int
+    ) -> Sequence[DatasetPreparation]:
+        """Every preparation of this tenant that has a stored manifest —
+        the object-deletion worklist for organization erasure."""
+        result = await self._session.execute(
+            select(DatasetPreparation).where(
+                DatasetPreparation.organization_id == organization_id,
+                DatasetPreparation.artifact_key.is_not(None),
+            )
+        )
+        return result.scalars().all()
+
+    async def delete_all_for_organization(self, organization_id: int) -> int:
+        """Hard-delete the tenant's dataset definitions; versions,
+        membership rows, and preparation rows follow via ON DELETE
+        CASCADE. Objects are the erasure service's job, deleted FIRST —
+        rows must never outlive their objects' index."""
+        result = await self._session.execute(
+            delete(Dataset).where(Dataset.organization_id == organization_id)
+        )
+        return max(0, cast(CursorResult[Any], result).rowcount)
 
     async def create_preparation(
         self,

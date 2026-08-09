@@ -1,6 +1,8 @@
 """Organization persistence — the tenant aggregate and the memberships it owns."""
 
-from sqlalchemy import select
+from typing import Any, cast
+
+from sqlalchemy import CursorResult, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from intelliai_api.db.models import Membership, MembershipRole, Organization, UsageOrigin
@@ -42,3 +44,13 @@ class OrganizationRepository:
         self._session.add(membership)
         await self._session.flush()
         return membership
+
+    async def remove_all_members(self, organization_id: int) -> int:
+        """Delete every person↔tenant link — the membership half of
+        organization erasure. User rows themselves stay (they may belong
+        to other tenants); per-user erasure is a separate, future verb
+        (docs/DATA_GOVERNANCE.md)."""
+        result = await self._session.execute(
+            delete(Membership).where(Membership.organization_id == organization_id)
+        )
+        return max(0, cast(CursorResult[Any], result).rowcount)
