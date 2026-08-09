@@ -240,8 +240,15 @@ prod-migrate: ## Apply database migrations inside the production stack
 prod-down: ## Stop the production stack (volumes are kept)
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml down
 
-backup: ## Postgres dump + MinIO snapshot into ./backups (see docs/ops/backup.md)
+backup: ## Full backup: pg dump + volume tar + object-level mirror (docs/ops/backup.md)
 	bash infra/backup.sh
+	bash infra/backup-objects.sh
+
+backup-objects: ## Object-level bucket snapshot only (the PRIMARY object backup)
+	bash infra/backup-objects.sh
+
+restore-objects: ## Mirror a snapshot into an explicit target: make restore-objects snapshot=backups/objects-... (target via INTELLIAI_RESTORE_S3_* env)
+	bash infra/restore-objects.sh "$(snapshot)"
 
 db-ui: ## Open a visual database browser (Adminer) at http://localhost:8081
 	docker compose --profile tools up -d adminer
