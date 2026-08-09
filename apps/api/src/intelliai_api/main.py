@@ -17,7 +17,7 @@ from intelliai_api.api.deps import enforce_limits
 from intelliai_api.api.edge import UnauthenticatedEdgeMiddleware
 from intelliai_api.api.errors import register_error_handlers
 from intelliai_api.api.health import router as health_router
-from intelliai_api.api.middleware import RequestContextMiddleware
+from intelliai_api.api.middleware import RequestBodySizeLimitMiddleware, RequestContextMiddleware
 from intelliai_api.api.pages import router as pages_router
 from intelliai_api.api.v1.router import router as v1_router
 from intelliai_api.core.config import Settings, get_settings
@@ -95,7 +95,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # Middleware runs outermost-last: the edge guard is added AFTER the
     # request-context middleware so it runs INSIDE it, and a refused
-    # request still gets a request id to quote.
+    # request still gets a request id to quote. The body ceiling is added
+    # FIRST — innermost — so its refusal travels the same handler path as
+    # a route exception and renders the standard envelope (with request
+    # id), while still guarding the read before any buffering happens.
+    app.add_middleware(RequestBodySizeLimitMiddleware, max_bytes=settings.limits.max_request_bytes)
     app.add_middleware(RequestContextMiddleware)
     app.add_middleware(UnauthenticatedEdgeMiddleware, controller=app.state.limits)
     register_error_handlers(app)

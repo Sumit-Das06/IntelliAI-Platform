@@ -6,6 +6,14 @@
 {$DOMAIN:localhost} {
 	encode gzip
 
+	# First line of the body-size defense (the gateway enforces the same
+	# ceiling at read time, the STT runtime validates the audio itself):
+	# an oversized upload is refused at the edge before it costs Python
+	# a byte of memory. Matches INTELLIAI_LIMITS_MAX_REQUEST_BYTES.
+	request_body {
+		max_size 30MB
+	}
+
 	# The gateway sets X-Request-ID itself; Caddy only forwards.
 	reverse_proxy api:8000
 }

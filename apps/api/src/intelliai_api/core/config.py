@@ -207,6 +207,12 @@ class LimitsSettings(BaseSettings):
     # rate limit.
     namespace: str = ""
     socket_timeout_seconds: float = 0.25
+    # Transport ceiling on any request body, enforced BEFORE the gateway
+    # buffers an upload (ADR: 14A). Above the STT runtime's 25 MiB audio
+    # cap by a deliberate margin — multipart framing costs bytes, and the
+    # runtime's own validation must stay the message customers see for
+    # oversized AUDIO; this ceiling only stops memory-pressure floods.
+    max_request_bytes: int = 30 * 1024 * 1024
     # How long an in-flight slot is held if the process never releases it.
     # Generously above the gateway's own runtime deadline, so a slow
     # request is never evicted while it is still legitimately running.
