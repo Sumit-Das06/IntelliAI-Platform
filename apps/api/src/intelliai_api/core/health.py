@@ -127,6 +127,42 @@ class StorageHealthCheck:
             await client.get(self._endpoint_url)
 
 
+class RuntimeHealthCheck:
+    """One inference deployment's own readiness, proxied.
+
+    The runtime already knows whether its models are loaded and warm —
+    its ``/health/ready`` says so — and the gateway's readiness must not
+    claim health while the product's main job is down. Cheap by
+    construction: one GET to a report the runtime keeps current; no
+    inference is ever performed on a probe.
+
+    Non-critical BY DESIGN: with STT down, transcription fails
+    per-request with an honest 503 while the control plane (keys,
+    consent, console, usage) still serves — so the aggregate reads
+    DEGRADED, not UNHEALTHY, and routers keep the gateway in rotation.
+    The operational consequence, documented in the runbook: an uptime
+    monitor must match on the word ``"healthy"``, never on the status
+    code alone — degraded is an alarm, not a pass.
+    """
+
+    critical = False
+
+    def __init__(
+        self,
+        name: str,
+        ready_url: str,
+        transport: httpx.AsyncBaseTransport | None = None,
+    ) -> None:
+        self.name = name
+        self._ready_url = ready_url
+        self._transport = transport  # test seam; None = real HTTP
+
+    async def check(self) -> None:
+        async with httpx.AsyncClient(transport=self._transport) as client:
+            response = await client.get(self._ready_url)
+            response.raise_for_status()
+
+
 class HealthService:
     """Runs registered checks concurrently and aggregates a report."""
 
@@ -186,9 +222,17 @@ class HealthService:
 
 
 def default_checks(settings: Settings, engine: AsyncEngine) -> list[HealthCheck]:
-    """The gateway's dependency roster. Future inference services register here."""
+    """The gateway's dependency roster. Future inference services register here.
+
+    Only the STT deployment is probed: V1 is STT-only and the TTS
+    runtime is deliberately absent (compose ``tts`` profile) — probing
+    it would report a permanent, meaningless DEGRADED that trains
+    operators to ignore the one signal that matters. When TTS returns,
+    its deployment registers here in the same line.
+    """
     return [
         DatabaseHealthCheck(engine),
         RedisHealthCheck(settings.redis.url.get_secret_value()),
         StorageHealthCheck(settings.storage.endpoint_url),
+        RuntimeHealthCheck("stt-runtime", f"{settings.runtimes.stt_url}/health/ready"),
     ]

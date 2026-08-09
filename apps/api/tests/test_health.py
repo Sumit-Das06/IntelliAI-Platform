@@ -93,3 +93,75 @@ def test_hanging_dependency_times_out_instead_of_blocking(
     report = response.json()["checks"]["database"]
     assert report["status"] == "unhealthy"
     assert "timed out" in report["error"]
+
+
+# ── 14B: the STT runtime joins the readiness roster ─────────────────────
+
+
+def test_the_default_roster_probes_database_redis_storage_and_stt(
+    settings: Settings,
+) -> None:
+    # The roster is the production readiness contract: database is the
+    # one critical dependency; redis, storage, and the STT runtime
+    # degrade the report without taking the gateway out of rotation.
+    # TTS is deliberately ABSENT while the tts profile is off — a
+    # permanently-degraded check would train operators to ignore the
+    # signal.
+    from intelliai_api.core.health import default_checks
+    from intelliai_api.db.engine import create_engine
+
+    checks = default_checks(settings, create_engine(settings))
+    roster = {check.name: check.critical for check in checks}
+    assert roster == {
+        "database": True,
+        "redis": False,
+        "storage": False,
+        "stt-runtime": False,
+    }
+
+
+def test_the_runtime_check_reads_the_runtimes_own_readiness() -> None:
+    # 200 passes, 503 fails — the runtime's self-report is the truth;
+    # the gateway never performs inference on a probe.
+    import httpx
+    import pytest as _pytest
+
+    from intelliai_api.core.health import RuntimeHealthCheck
+
+    def ready(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200)
+
+    def loading(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(503)
+
+    check_up = RuntimeHealthCheck(
+        "stt-runtime", "http://runtime/health/ready", transport=httpx.MockTransport(ready)
+    )
+    asyncio.get_event_loop_policy().new_event_loop().run_until_complete(check_up.check())
+
+    check_down = RuntimeHealthCheck(
+        "stt-runtime", "http://runtime/health/ready", transport=httpx.MockTransport(loading)
+    )
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    with _pytest.raises(httpx.HTTPStatusError):
+        loop.run_until_complete(check_down.check())
+
+
+def test_stt_runtime_down_degrades_but_gateway_still_serves(settings: Settings) -> None:
+    service = HealthService(
+        [
+            _PassingCheck("database", True),
+            _PassingCheck("redis", False),
+            _PassingCheck("storage", False),
+            _FailingCheck("stt-runtime", False),
+        ]
+    )
+    with _client(settings, service) as client:
+        response = client.get("/health/ready")
+
+    # HTTP 200 — the control plane serves; the WORD says degraded, which
+    # is what an uptime monitor must match on (runbook: keyword
+    # "healthy", never the status code alone).
+    assert response.status_code == 200
+    assert response.json()["status"] == "degraded"
+    assert response.json()["checks"]["stt-runtime"]["status"] == "unhealthy"
