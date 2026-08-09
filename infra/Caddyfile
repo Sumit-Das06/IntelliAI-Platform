@@ -3,6 +3,9 @@
 #   real domain  -> automatic Let's Encrypt certificates
 #   localhost    -> Caddy's internal CA (self-signed; used by the
 #                   from-scratch verification)
+# HTTP→HTTPS redirect and certificates are automatic: with a real DOMAIN
+# and DNS pointing here, Caddy obtains/renews Let's Encrypt on its own
+# and answers port 80 only with redirects (auto_https).
 {$DOMAIN:localhost} {
 	encode gzip
 
@@ -12,6 +15,17 @@
 	# a byte of memory. Matches INTELLIAI_LIMITS_MAX_REQUEST_BYTES.
 	request_body {
 		max_size 30MB
+	}
+
+	header {
+		# One year of HTTPS-only for browsers that have seen us once.
+		Strict-Transport-Security "max-age=31536000"
+		# The console serves user-influenced text (transcripts); never
+		# let a browser second-guess declared content types.
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# No server fingerprint in responses.
+		-Server
 	}
 
 	# The gateway sets X-Request-ID itself; Caddy only forwards.
