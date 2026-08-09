@@ -46,6 +46,16 @@
           </div>
           <input id="file" type="file" accept="audio/*" hidden>
           <audio id="player" class="player" controls></audio>
+          <!-- The same honest per-request opt-out the keyboard has (13D):
+               unchecked sends X-IntelliAI-Contribution: off and the
+               backend collects nothing for that request. The
+               organization's data consent remains the ceiling either
+               way — checking this can never widen collection. -->
+          <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; cursor: pointer;">
+            <input type="checkbox" id="contribute" checked>
+            <span class="label" style="margin: 0;">Contribute this recording to improve IntelliAI STT
+              (subject to your organization's consent)</span>
+          </label>
           <button class="btn btn-primary" id="transcribe" type="button" disabled
                   style="width: 100%; margin-top: 14px;">Transcribe</button>
           <div class="status-line" id="status"></div>
@@ -268,15 +278,22 @@ document.addEventListener("DOMContentLoaded", function () {
     form.append("response_format", "verbose_json");
     if (langSelect.value) form.append("language", langSelect.value);
 
+    // Captured at SUBMIT, exactly like the keyboard captures it at
+    // dictation start: toggling the box afterwards never changes the
+    // request already in flight.
+    var headers = {
+      "Authorization": "Bearer " + key,
+      "X-IntelliAI-Client": "web"
+    };
+    var contributing = document.getElementById("contribute").checked;
+    if (!contributing) headers["X-IntelliAI-Contribution"] = "off";
+
     transcribeBtn.disabled = true;
     setStatus("Transcribing…");
     var started = performance.now();
     fetch("/v1/audio/transcriptions", {
       method: "POST",
-      headers: {
-        "Authorization": "Bearer " + key,
-        "X-IntelliAI-Client": "web"
-      },
+      headers: headers,
       body: form
     }).then(function (response) {
       var elapsedMs = Math.round(performance.now() - started);
@@ -284,7 +301,8 @@ document.addEventListener("DOMContentLoaded", function () {
       var requestId = response.headers.get("X-Request-ID");
       return response.json().then(function (body) {
         document.getElementById("dev-request").textContent = requestId || "—";
-        document.getElementById("dev-sample").textContent = sampleId || "not stored (no consent)";
+        document.getElementById("dev-sample").textContent =
+          sampleId || (contributing ? "not stored (no consent)" : "not stored (contribution off)");
         document.getElementById("dev-response").textContent = JSON.stringify(body, null, 2);
         if (!response.ok) throw new Error(apiError(body, "Transcription failed."));
         transcript.value = body.text || "";

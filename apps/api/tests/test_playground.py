@@ -57,6 +57,23 @@ async def test_the_consent_notice_is_permanently_visible(
     assert "Do not record other people without permission" in response.text
 
 
+async def test_the_contribution_opt_out_matches_the_keyboard(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # 14A: the web client tells the same honest story the keyboard tells
+    # (13D) — a per-request opt-out that sends X-IntelliAI-Contribution:
+    # off when unchecked, with the organization's consent remaining the
+    # ceiling either way. Default is CHECKED: absent header preserves
+    # the server's existing behavior.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        response = await client.get("/console/playground")
+
+    assert 'id="contribute"' in response.text
+    assert "checked" in response.text
+    assert "X-IntelliAI-Contribution" in response.text
+    assert "subject to your organization's consent" in response.text
+
+
 async def test_the_openapi_schema_is_unchanged(settings: Settings, db_engine: AsyncEngine) -> None:
     async with client_with_db(settings, db_engine) as (client, _factory):
         schema = (await client.get("/openapi.json")).json()
