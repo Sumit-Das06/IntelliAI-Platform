@@ -24,6 +24,21 @@ to whom?"
 - Dev credentials (`.env`) are throwaway by design and still never reused
   anywhere else.
 
+### Accepted risk (14A, pilot scope): console key in localStorage
+
+The web console keeps the operator's API key in plaintext
+`localStorage`. Assessed and **accepted for the controlled pilot**, not
+overlooked: the console is an org-operator tool on our own origin with
+no third-party scripts, so the realistic exposure is an XSS we ship
+ourselves. Mitigations that bound the blast radius: one key per person
+(revoking one exposes one), instant soft-revocation, keys scoped to one
+tenant, and the pilot's small operator population. The Android keyboard
+is deliberately stronger (Keystore-encrypted) because a phone is a
+shared, lose-able device. **Re-decide before any consumer launch** —
+the identity milestone replaces browser-stored keys with sessions;
+until then, any new console page ships with zero external JS, same as
+today.
+
 ## Tenant isolation
 
 - Organization identity derives from the authenticated API key —

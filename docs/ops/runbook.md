@@ -29,8 +29,31 @@ make revoke-consent org=org_...                      # stops future collection i
 # then docker compose up -d api   (restart required; consent is untouched)
 ```
 
-## Deletion requests (until the console ships)
-Operator act: find the tenant's rows (`speech_samples` by organization), delete rows (events cascade), delete objects under `speech/{org_public_id}/` in MinIO, note the request date. Backups age out within the retention window (14 days).
+## Deletion requests
+First-class CLI verbs since 14A (policy: docs/DATA_GOVERNANCE.md — objects before rows, ledger retained, poisoned manifests revoked loudly):
+
+```bash
+make erase-sample org=org_... sample=smp_...   # one sample
+make erase-user-data org=org_... user=key_...  # one person (their key)
+make erase-org org=org_...                     # whole tenant's data
+```
+
+Note the request date alongside the printed report. Backups age erased data out within the retention window (14 days). If the store is unreachable the command aborts retryably — nothing is ever *recorded* as erased that might still exist.
+
+## Observability triage (launch minimum)
+External uptime monitor on `https://$DOMAIN/health/ready` (14C sets it up); everything else is the structured logs:
+
+```bash
+docker compose logs api --since 1h | grep -c '"status_code": 401'   # bad keys
+docker compose logs api --since 1h | grep -c '"status_code": 429'   # limits/quota
+docker compose logs api --since 1h | grep -c '"status_code": 503'   # runtime down
+docker compose logs api --since 1h | grep 'collection.failed\|collection.store_failed'
+docker compose logs api --since 1h | grep 'storage_unavailable'
+docker compose logs api --since 1h | grep '"event": "transcription.completed"' | grep -o '"latency_ms": [0-9.]*' | sort -t: -k2 -n | tail -5
+docker compose exec api sh -c 'test -s usage-fallback.jsonl && echo "LEDGER FALLBACK NON-EMPTY — investigate NOW" || echo ok'
+```
+
+A non-empty metering fallback file is a page-the-operator signal: the customer got a response the ledger could not record.
 
 ## Secrets
 Live only in `/opt/intelliai/.env` + your password manager. Rotating `INTELLIAI_AUTH_KEY_PEPPER` invalidates **every** API key — never casually. DB/MinIO password rotation: update `.env`, `make prod-up`.
