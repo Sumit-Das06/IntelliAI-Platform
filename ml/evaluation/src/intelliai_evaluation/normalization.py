@@ -325,6 +325,12 @@ PROFILES: Final = _build_registry()
 LANGUAGE_PROFILES: Final[Mapping[str, NormalizationProfile]] = {
     "en": UNICODE_GENERIC_V2,
     "hi": UNICODE_GENERIC_V2,
+    # Mandarin Chinese, bound at Milestone 15B (founder-ordered zh
+    # evaluation, 2026-08-11). The primary zh ruler is cer_unicode:
+    # the generic profile's character stream is honest for Han text.
+    # wer_unicode remains recordable but unsegmented zh text makes a
+    # whitespace "word" a sentence — never cite it for zh.
+    "zh": UNICODE_GENERIC_V2,
     # "No linguistic content" (probe clips). These slices measure
     # hallucination, and counting the words a system emitted requires a
     # tokenizer that is honest for ANY script it might emit them in — the

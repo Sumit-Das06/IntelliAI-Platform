@@ -1,6 +1,5 @@
 """The recognition accuracy family: one aligner, several rulers."""
 
-import json
 from pathlib import Path
 
 import pytest
@@ -13,6 +12,7 @@ from intelliai_evaluation.accuracy import (
     wer_ascii,
     wer_unicode,
 )
+from intelliai_evaluation.dataset import find_dataset
 from intelliai_evaluation.normalization import (
     ASCII_EN_V1,
     UNICODE_GENERIC_V2,
@@ -27,12 +27,22 @@ DATASETS = Path("ml/evaluation/stt/datasets")
 
 
 def _reproduce(path: Path) -> int:
-    """Recompute every referenced clip in a record; return how many matched."""
+    """Recompute every ascii-anchored clip in a record; return how many matched."""
     run = EvalRun.model_validate_json(path.read_text(encoding="utf-8"))
-    dataset = json.loads(
-        (DATASETS / f"stt-eval-v{run.dataset_version}.json").read_text(encoding="utf-8")
-    )
-    references = {clip["id"]: clip["reference_text"] for clip in dataset["clips"]}
+    # By IDENTITY, never by filename — records cite name@vN, and non-seed
+    # lineages (e.g. stt-hi-fleurs-eval) do not follow the seed's filename
+    # pattern.
+    dataset = find_dataset(DATASETS, run.dataset_name, run.dataset_version)
+    references = {clip.id: clip.reference_text for clip in dataset.clips}
+
+    # The anchor is English-only by construction: the runner emits
+    # wer_ascii solely for `en` slices, so a non-English record carries no
+    # ascii number to reproduce. (Its Devanagari references may still hold
+    # stray ASCII tokens — digits, Latin loanwords — which the ascii ruler
+    # would happily and wrongly "score".) Pinned count for such records: 0.
+    declared = run.execution.declared_language if run.execution is not None else None
+    if declared is not None and declared != "en":
+        return 0
 
     matched = 0
     for clip in run.clips:
@@ -71,6 +81,10 @@ _WITH_REFERENCE = {
     "2026-08-06-research-whisper-base-en-whisper-base-int8-stage1-replicate.json": 2,
     "2026-08-06-research-whisper-large-v3-en-whisper-large-v3-int8-stage1.json": 2,
     "2026-08-06-research-whisper-large-v3-en-whisper-large-v3-int8-stage1-replicate.json": 2,
+    # Milestone 15B (2026-08-11): the Hindi baseline record has natural
+    # speech but NO ascii-anchored clips (wer_ascii is en-only), so its
+    # reproduction count is 0 by construction, like the hi records above.
+    "2026-08-11-intelliai-stt-hi-whisper-small-int8-15b-fleurs.json": 0,
 }
 
 

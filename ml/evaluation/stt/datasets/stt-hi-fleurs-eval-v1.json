@@ -1,0 +1,1236 @@
+{
+  "name": "stt-hi-fleurs-eval",
+  "version": 1,
+  "capability": "transcription",
+  "description": "PROVISIONAL Hindi public evaluation set (Milestone 15B): 120 deterministic clips from the FLEURS hi_in TEST split (CC-BY-4.0, google/fleurs, read 2026-08-11) + the two hi probes carried byte-identical from stt-eval-seed@v2. Contamination: known_overlap - FLEURS is in most public models' training mixes; this is the COMPARABILITY ruler. The approved primary (speaker-disjoint IndicVoices slice) is access-blocked pending an HF account (gated:auto); it will release as its own dataset, not a new version of this one. Speaker disjointness vs training data is UNPROVABLE from FLEURS (no speaker ids); train/eval separation relies on FLEURS's official split boundary. Immutable on first citation.",
+  "clips": [
+    {
+      "id": "fleurs-hi_in-test-001660-2",
+      "language": "hi",
+      "reference_text": "रूमानियत में सांस्कृतिक नियतिवाद का बड़ा तत्व था, जो गोएथे, फिच्ते और श्लेगल जैसे लेखकों से लिया गया.",
+      "duration_seconds": 11.7,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001660-2.wav",
+      "sha256": "3c0b6d792308c18d5bdc0b34fd9b04d2f1896469a6c2ce62c8dcecc161ef8863",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001661-2",
+      "language": "hi",
+      "reference_text": "यह कहते हुए कि वे चीन के आर्थिक उत्पादन के आधार पर बनाए जाएँगे, उन्होंने कटौती के लिए कोई आँकड़ा निर्धारित नहीं किया.",
+      "duration_seconds": 8.4,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001661-2.wav",
+      "sha256": "18dd4f0efccf2a8a72da56dc4cd71c9f982085f6aa106861e6e2812fa54e33d3",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001668-2",
+      "language": "hi",
+      "reference_text": "वाइल्ड कार्ड खरीद लेना फ़ायदेमंद भी हो सकता है क्योंकि इससे आप दक्षिण अफ़्रीका के चुनिंदा पार्क या सभी दक्षिण अफ़्रीकी नेशनल पार्क देख सकते हैं.",
+      "duration_seconds": 10.92,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001668-2.wav",
+      "sha256": "21dabfcff5c181aaae783c811044366fac7f7ddde974d2dc05db48b3c7bdbdb7",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001670",
+      "language": "hi",
+      "reference_text": "उनका ऊष्मीय व्यवहार पृथ्वी की बड़ी गुफाओं जैसा स्थिर नहीं है जो अक्सर काफी स्थिर तापमान बनाए रखती हैं, लेकिन यह जमीन के इन गहरे छेद के अनुरूप है,” यूनाइटेड स्टेट्स जियोलॉजिकल सर्वे (यूएसजीएस) की भूगर्भीय टीम और फ्लैगस्टाफ, एरिजोना में स्थित उत्तरी एरिजोना विश्वविद्यालय के ग्लेन कुशिंग ने कहा।",
+      "duration_seconds": 19.62,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001670.wav",
+      "sha256": "017567d69ab240a6f4978bc5a5140fcf3f29ed6a69459549472b0d003fe2970d",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001672-3",
+      "language": "hi",
+      "reference_text": "सावधान रहें कि कपड़े को बहुत गर्म न होने दें (जो सिकुड़न का कारण बन सकता है, या बहुत गरम होने पर, जल सकता है)।",
+      "duration_seconds": 10.56,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001672-3.wav",
+      "sha256": "1dfd8a5ccc35e5d9c599cf7220a748e70f996d11afede9fdee910253d1d268a4",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001675",
+      "language": "hi",
+      "reference_text": "साई के साथ-साथ सभी संज्ञा शब्द हमेशा अंग्रेज़ी के बड़े अक्षर से ही शुरू होते हैं, भले ही वे वाक्य के बीच में ही क्यों न हों.",
+      "duration_seconds": 8.52,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001675.wav",
+      "sha256": "336aae6c7ff2402e3a791b168068e094de79200929a040cefa0e01431228f251",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001677",
+      "language": "hi",
+      "reference_text": "वर्तमान में, जो कीड़े अपने पंखों को वापस नहीं मोड़ सकते हैं उनमें केवल ड्रैगनफ़्लाई और मेफलीज़ हैं.",
+      "duration_seconds": 8.28,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001677.wav",
+      "sha256": "187abd301e18eecc4a77a738775f02841c323f5306f838df7c4b916f2665a6eb",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001677-2",
+      "language": "hi",
+      "reference_text": "वर्तमान में, जो कीड़े अपने पंखों को वापस नहीं मोड़ सकते हैं उनमें केवल ड्रैगनफ़्लाई और मेफलीज़ हैं.",
+      "duration_seconds": 8.46,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001677-2.wav",
+      "sha256": "020bc5862f6f9d3af590b18ba355382dd5849d553826c778d38de0e3bcc5f56c",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001679-2",
+      "language": "hi",
+      "reference_text": "एरोस्मिथ ने अपने दौरे के अपने शेष संगीत कार्यक्रमों को रद्द कर दिया है.",
+      "duration_seconds": 6.36,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001679-2.wav",
+      "sha256": "4085fc9443c3e4054cd56349cc5cc1f562bb6ff3fca6c584213bced76ed231d7",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001683",
+      "language": "hi",
+      "reference_text": "यहूदी और गैर-यहूदी की तरह, अभी भी ऐसे कई पुरुष और महिलाएं जीवित हैं जो उस समय बचने में सफल रहे और कई जिनके प्रियजनों को मार दिया गया या उनके मरने तक उनसे काम करवाया गया.",
+      "duration_seconds": 14.94,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001683.wav",
+      "sha256": "134f767fe059054225baba1b321694f8f115ad0db68b8eab3f39376bbaeae3b7",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001683-3",
+      "language": "hi",
+      "reference_text": "यहूदी और गैर-यहूदी की तरह, अभी भी ऐसे कई पुरुष और महिलाएं जीवित हैं जो उस समय बचने में सफल रहे और कई जिनके प्रियजनों को मार दिया गया या उनके मरने तक उनसे काम करवाया गया.",
+      "duration_seconds": 12.18,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001683-3.wav",
+      "sha256": "414c871cab879c4cb84f321895c8f055488a200343411b3c4741c664b8f156b5",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001684",
+      "language": "hi",
+      "reference_text": "आपिया समोआ की राजधानी है। यह शहर उपोलू द्वीप पर है और इसकी आबादी 40,000 से भी कम है।",
+      "duration_seconds": 9.42,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001684.wav",
+      "sha256": "2ff5e60cba9384caba396303b9c2744cd00fd06d00410b60c50be393763548c9",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001684-2",
+      "language": "hi",
+      "reference_text": "आपिया समोआ की राजधानी है। यह शहर उपोलू द्वीप पर है और इसकी आबादी 40,000 से भी कम है।",
+      "duration_seconds": 11.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001684-2.wav",
+      "sha256": "05ade165faa9c6f468b5bdf2bc8016a343fb3adb31a689d9fec4fad2cc7c1334",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001687",
+      "language": "hi",
+      "reference_text": "अलगाव और पुनर्संयोजन भिन्नता प्रत्येक पीढ़ी के साथ दो पूलों के बीच आगे-पीछे होती रहती है।",
+      "duration_seconds": 10.08,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001687.wav",
+      "sha256": "24e2f42d2e57c21e2e1910ade5bbb793bbcd508ff7c7f54586dfbde5d7984e4c",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001692-2",
+      "language": "hi",
+      "reference_text": "जापान की परमाणु एजेंसी के अनुसार, प्लांट में रेडियोधर्मी सीज़ियम और आयोडीन की पहचान की गई है.",
+      "duration_seconds": 7.62,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001692-2.wav",
+      "sha256": "10c9e131b70b309d5afdafd31e1fa1cbaee2dc456bf1078e2ca665ca630255ca",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001698-2",
+      "language": "hi",
+      "reference_text": "ब्रह्मांड की सभी वस्तुएँ पदार्थ से बनी हैं. सारे पदार्थ सूक्ष्तम कणों से बनें हैं, जिन्हें अणु कहा जाता है.",
+      "duration_seconds": 8.46,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001698-2.wav",
+      "sha256": "3268fb41aaa65b52b0dbd0a5fe4dfb3c07371d98d83319df27830d81bb8fbe08",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001700",
+      "language": "hi",
+      "reference_text": "यह समुद्र के नीचे पतला और ऊँचे क्षेत्रों के नीचे मोटा होता है।",
+      "duration_seconds": 4.86,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001700.wav",
+      "sha256": "0fbbc3fca6c84472af28d19d8615596d04b6fc1c7e5ac00819120de2867fa43d",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001700-2",
+      "language": "hi",
+      "reference_text": "यह समुद्र के नीचे पतला और ऊँचे क्षेत्रों के नीचे मोटा होता है।",
+      "duration_seconds": 6.0,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001700-2.wav",
+      "sha256": "2abf61ddf115d376c68fbc719a9ee8fd1217dc2ef714c01d71da2ac3a5423163",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001706",
+      "language": "hi",
+      "reference_text": "ज़्यादा परंपरागत चर्चों में ईस्टर सप्ताहांत में शनिवार रात को ईस्टर विजिल का आयोजन किया जाता है, जिसमें लोग क्रिस के पुनर्जन्म का उत्सव मनाने के लिए आधी रात के समय उत्सव मनाना शुरू करते हैं.",
+      "duration_seconds": 14.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001706.wav",
+      "sha256": "305a040a750e4628bad077b6f573acbed0152449abce621bd0516c8bdebcda6c",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001706-3",
+      "language": "hi",
+      "reference_text": "ज़्यादा परंपरागत चर्चों में ईस्टर सप्ताहांत में शनिवार रात को ईस्टर विजिल का आयोजन किया जाता है, जिसमें लोग क्रिस के पुनर्जन्म का उत्सव मनाने के लिए आधी रात के समय उत्सव मनाना शुरू करते हैं.",
+      "duration_seconds": 12.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001706-3.wav",
+      "sha256": "2091973e16fc04e83f9fb2287c0e8a3435f1bd12291848b8a2b76cd8a80a5a4c",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001709",
+      "language": "hi",
+      "reference_text": "यह रिपोर्ट इराक के प्रति प्रशासन की वर्तमान नीति के लगभग सभी पहलुओं के प्रति बेहद आलोचनात्मक है और यह इसकी दिशा में तत्काल परिवर्तन का आग्रह करती है।",
+      "duration_seconds": 10.86,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001709.wav",
+      "sha256": "3103d717d0fd7e6c9139f98b6861b7364f6974200f7cb59c84f332aeac791cff",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001711",
+      "language": "hi",
+      "reference_text": "ये सिद्धांत देखते हैं कि कुछ लोगों के बारे में ऐसी कौन-सी बातें हैं जो उन्हें वही चीज़ें करने के लिए कहती हैं जो वे चाहते हैं और उनके माहौल की कौनसी सी बाते हैं जो वे उन्हें कुछ चीज़ें करने या नहीं करने के लिए कहती हैं.",
+      "duration_seconds": 26.82,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001711.wav",
+      "sha256": "2ebe55375d901e99e2473e051a10d0e2f417bb007038f31e31c4304c92767ca5",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001714",
+      "language": "hi",
+      "reference_text": "उपग्रह को एक रॉकेट से अंतरिक्ष में भेजा गया था. वैज्ञानिक अंतरिक्ष में दूरबीनों का उपयोग करते हैं क्योंकि पृथ्वी का वायुमंडल हमारे कुछ प्रकाश और दृश्य को अशुद्ध करता है.",
+      "duration_seconds": 12.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001714.wav",
+      "sha256": "03895781d85d7c4c6937b806f9729943418e3b8d0a1ba008a94d962916f2c4c2",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001716",
+      "language": "hi",
+      "reference_text": "एंटरटेनमेंट न्यूज़ वेबसाइट TMZ का मानना है कि फ़ोटोग्राफर ने अपना वाहन सेपुलवेडा बुलेवार्ड की दूसरी तरफ रोका था और सड़क पार करने और जारी रखने से पहले पुलिस स्टॉप की फ़ोटो लेने की कोशिश की. कैलिफोर्निया हाईवे पेट्रोल पुलिस अधिकारी ने ट्रैफिक स्टॉप का संचालन करते हुए उसे रोकने के लिए दो बार आदेश दिया.",
+      "duration_seconds": 24.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001716.wav",
+      "sha256": "129708c431a0de8fa0235943534920bdc7b788f40bc07769b58b0ab944968b1b",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001719",
+      "language": "hi",
+      "reference_text": "गंभीर मौसम किसी भी खतरनाक मौसमी घटना के लिए वर्गीय शब्द है जिसमें नुकसान, गंभीर सामाजिक व्यवधान, या मानव जीवन की हानि की संभावना है।",
+      "duration_seconds": 10.5,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001719.wav",
+      "sha256": "18ec8f16df79b6c21c9607516bd8d34b42389cb6b0315ec8963ad551fdcd5d92",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001719-2",
+      "language": "hi",
+      "reference_text": "गंभीर मौसम किसी भी खतरनाक मौसमी घटना के लिए वर्गीय शब्द है जिसमें नुकसान, गंभीर सामाजिक व्यवधान, या मानव जीवन की हानि की संभावना है।",
+      "duration_seconds": 10.8,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001719-2.wav",
+      "sha256": "338188e629961ba9de3b918aa832e52d7d44d94518d63997f79419609e016dc8",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001722-2",
+      "language": "hi",
+      "reference_text": "इस साल की शुरुआत में 53 साल के कुओमो ने अपना शासनकाल शुरू किया और पिछले महीने समलैंगिक विवाह को वैध बनाने वाले बिल पर हस्ताक्षर किए.",
+      "duration_seconds": 13.08,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001722-2.wav",
+      "sha256": "230e6db04ecf027ba8e36a35e590e9608564185211aff5dc5d69dd7cccfdb25f",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001732",
+      "language": "hi",
+      "reference_text": "जिस समय घटनाएँ हुई उसके युग को सामान्य रूप से यूरोप के इतिहास में 11वीं, 12वीं और 13वीं सदी (AD 1000-1300) में यूरोपियन इतिहास के उच्च मध्य युग की अवधि के रूप में बताया जाता है.",
+      "duration_seconds": 17.76,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001732.wav",
+      "sha256": "0f28974f97613fb0a76eb2769d8c7da490c9f25a113be28feb62d803415d45bb",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001734",
+      "language": "hi",
+      "reference_text": "वैज्ञानिक यह निष्कर्ष निकालने में सक्षम थे कि काला पदार्थ अन्य काले पदार्थ को उसी तरह प्रभावित करता है जिस तरह से आम पदार्थ करता है।",
+      "duration_seconds": 10.32,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001734.wav",
+      "sha256": "445da5a998e8e46d23bd7bd34c0f5b045cb9e50136544d2fd7c73cb5490a94a3",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001737",
+      "language": "hi",
+      "reference_text": "शेर प्राइड नामक बड़े समूहों में रहने वाली सबसे बड़ी सामाजिक बिल्लियाँ हैं.",
+      "duration_seconds": 5.1,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001737.wav",
+      "sha256": "033957c7d7cbfcaf2217e0d73c620a0042cbfadaf1211e7e433f5741416ec449",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001740",
+      "language": "hi",
+      "reference_text": "बच्चों के लिए बनी जगह में पिरामिड साउंड एंड लाइट शो सबसे दिलचस्प चीज़ों में से एक है.",
+      "duration_seconds": 7.86,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001740.wav",
+      "sha256": "396a8de74389a9c77a888656ad522d53e0df7cf2a7275177a21cbc1004d65352",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001740-2",
+      "language": "hi",
+      "reference_text": "बच्चों के लिए बनी जगह में पिरामिड साउंड एंड लाइट शो सबसे दिलचस्प चीज़ों में से एक है.",
+      "duration_seconds": 5.88,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001740-2.wav",
+      "sha256": "25f246a03e03fdd5b48ce48cff9ca529978ca8ee14c119796dcc6be86eb79bdb",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001741",
+      "language": "hi",
+      "reference_text": "उत्तर की ओर के बड़े क्षेत्र में आबादी बहुत ही कम है और कुछ इलाकों में तो लगभग कोई इंसानी आबादी नहीं है.",
+      "duration_seconds": 7.62,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001741.wav",
+      "sha256": "2d57b1618f30f80987ca926a02281ec22fd957b6175ad54de17236aed3b1fb79",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001745",
+      "language": "hi",
+      "reference_text": "प्राकृतिक वातावरण में पौधे सबसे अच्छे दिखते हैं, इसलिए “सिर्फ एक” नमूने को भी हटाने के प्रलोभन को रोकें.",
+      "duration_seconds": 7.68,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001745.wav",
+      "sha256": "0a31411cbd57ca259c6f603ec4a2d39f34604dca6436f6cd73eaad7a43de6369",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001754",
+      "language": "hi",
+      "reference_text": "पपड़ी पतली होने के कारण आस-पास पर कई मारिया होंगी. लावा के लिए सतह पर बढ़ना आसान था.",
+      "duration_seconds": 9.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001754.wav",
+      "sha256": "1696fc58c7674775ff4dae61810ec43e679741574519ba7fd8a4e5f3baab2176",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001759",
+      "language": "hi",
+      "reference_text": "29 वर्षीय डॉ. मलार बालासुब्रमण्यम सिनसिनाटी के उत्तर में लगभग 15 मील की दूरी पर एक उपनगर ब्लू ऐश, ओहियो में मिले, जो एक टी-शर्ट और अंडरवियर में सड़क के किनारे बहुत अधिक नशे की हालत में जमीन पर पड़े थे।",
+      "duration_seconds": 24.0,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001759.wav",
+      "sha256": "294ddad0fca724c3f2c3aca3dee00a1339fb7f377620b57648c7eceded1e4c4c",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001764",
+      "language": "hi",
+      "reference_text": "मौजूद लोगों की संख्या इतनी बड़ी थी कि सेंट पीटर्स स्क्वायर में अंतिम संस्कार के लिए हर किसी के लिए पहुँच पाना मुमकिन नहीं था.",
+      "duration_seconds": 13.32,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001764.wav",
+      "sha256": "0c60952d30e0865a7a6622a01b89527ce8548b1441bd7190e474f8e8892e403d",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001765",
+      "language": "hi",
+      "reference_text": "1537 में असूनचिओन की स्थापना के बाद से, पैराग्वे अपने स्वदेशी चरित्र और पहचान को बनाए रखने में कामयाब रहा है।",
+      "duration_seconds": 9.72,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001765.wav",
+      "sha256": "0a9db458857a855cd68422a56a331ec767a528273fd827a90b471891f1147cb0",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001766",
+      "language": "hi",
+      "reference_text": "कुछ अणुओं में अस्थिर केंद्रक होता है, जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है,",
+      "duration_seconds": 9.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001766.wav",
+      "sha256": "217f3abbd8e9cd3767d6e8b87d49fbf82421fc920a103de026b4586d7e644dc5",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001766-2",
+      "language": "hi",
+      "reference_text": "कुछ अणुओं में अस्थिर केंद्रक होता है, जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है,",
+      "duration_seconds": 9.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001766-2.wav",
+      "sha256": "2d4d9d1e38f0314887fe191dbf5f4971a29439df3bdc4e73041679583d6ed174",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001769",
+      "language": "hi",
+      "reference_text": "तीसरी शताब्दी ईसा पूर्व में मिस्रियों द्वारा निर्मित, ग्रेट पिरामिड मृत फिरौन का सम्मान करने के लिए निर्मित कई बड़ी पिरामिड संरचनाओं में से एक है।",
+      "duration_seconds": 12.24,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001769.wav",
+      "sha256": "132993216eb66a3ccc956b3fde0f5add73a100c44b201c5c29cc9fbdd99eca19",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001776",
+      "language": "hi",
+      "reference_text": "रात के समय 150 और 200 के बीच प्रतियों बनती है , जिन्हे अब “डनलप ब्रॉडसाइड्स” के रूप में जाना जाता है।",
+      "duration_seconds": 9.06,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001776.wav",
+      "sha256": "3ce46cc2c571d7d5a08d10a61c42b8943862cd9d9bf8bd0d66e860264597a032",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001778-2",
+      "language": "hi",
+      "reference_text": "टेलीविजन रिपोर्टों में प्लांट से निकलने वाला सफेद धुआँ दिखाया गया है।",
+      "duration_seconds": 8.46,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001778-2.wav",
+      "sha256": "1e4ad068195482de032430ed43a0aebf2a44bc19809b669b1383236fa7eab1f8",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001779-2",
+      "language": "hi",
+      "reference_text": "तुर्की के राष्ट्रपति रजब तैयब इरदुगान के साथ ट्रंप की फ़ोन पर चर्चा होने के बाद घोषणा की गई थी.",
+      "duration_seconds": 11.34,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001779-2.wav",
+      "sha256": "3a2f423a86d2b25a912baaab5bb6fbadc3f9e4e36edd77fae5863f65a0f2a232",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001780",
+      "language": "hi",
+      "reference_text": "कुंडलिनी योग के द्वारा कुंडलिनी ऊर्जा (ज्ञान ऊर्जा) को योग मुद्राओं, श्वास अभ्यास, मंत्रों और मानसदर्शन के माध्यम से जागृत किया जाता है।",
+      "duration_seconds": 11.1,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001780.wav",
+      "sha256": "2e76ee1b907a2e7be0dce1bb5e5abacee34925a94eab9385c013b1a679720f84",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001785",
+      "language": "hi",
+      "reference_text": "स्कैफ़ोल्डिंग सीखने की एक विधि नहीं है, बल्कि ऐसे लोगों को मददगार होती है जो किसी नई चीज़ को सीख रहे हों जैसे नया कंप्यूटर प्रोग्राम चलना या एक नया प्रोजेक्ट शुरू करना.",
+      "duration_seconds": 14.1,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001785.wav",
+      "sha256": "42f647da904a9b782df487d6aed65994dc898cebd080e6e40e851b7b88865eb9",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001792",
+      "language": "hi",
+      "reference_text": "इसे केमिकल का pH कहा जाता है. आप लाल गोभी के जूस का इस्तेमाल करके एक संकेतक बना सकते हैं.",
+      "duration_seconds": 8.22,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001792.wav",
+      "sha256": "1627aac0f973d5bf25cbfe47cd0185538858b76c88a944fe9e7d7d89e068b932",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001794-2",
+      "language": "hi",
+      "reference_text": "ऐसी संस्कृति को सभ्यता कहते हैं जो लोगों के एक बड़े समूह में साझा की जाती है. यहाँ लोग आपसी सहयोग करते हुए समाज में रहते हैं और मिलकर काम करते हैं.",
+      "duration_seconds": 10.2,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001794-2.wav",
+      "sha256": "3c06a15fc1318060d908ec2ece9f2d10091e0a1e9aaf1f2adc383d86306b4da7",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001797-2",
+      "language": "hi",
+      "reference_text": "हर कोई समाज से जुड़ा होता है और ट्रांसपोर्ट सिस्टम का उपयोग करता है. लगभग सभी लोग ट्रांसपोर्ट सिस्टम के बारे में शिकायत करते हैं.",
+      "duration_seconds": 13.08,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001797-2.wav",
+      "sha256": "3d7af9589ac5d0d36b968cc7ed84748c5f05014631fe461754cae5c265bc811a",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001799",
+      "language": "hi",
+      "reference_text": "बुधवार के आयोजन के बाद, कारपानेडो ने चैंपियनशिप में दो इंडिविज़ुअल रेस में हिस्सा लिया.",
+      "duration_seconds": 9.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001799.wav",
+      "sha256": "29e7e8d121111badb101983cd4b7eab4504625ed0091ffbd96ad7fe72eeb42f5",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001806-2",
+      "language": "hi",
+      "reference_text": "चूँकि उनकी शुरुआती दिनों में प्रकाश प्रदूषण आज की तरह की समस्या नहीं थी, वे आमतौर पर शहरों में या परिसरों में स्थित हैं, जहाँ आधुनिक समय में निर्मित जगहों की तुलना में पहुँचना आसान होता हैं।",
+      "duration_seconds": 13.8,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001806-2.wav",
+      "sha256": "2caf9965060e6edb3cd1078a3ea9ea1cadc27100bd7f58f2d607c596262309c3",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001807",
+      "language": "hi",
+      "reference_text": "इटैलियन भी रोज़ाना इस्तेमाल होने वाली भाषा है जिसे राज्य में काम करने वाले अधिकांश लोग उपयोग में लाते हैं, जबकि लेटिन का धार्मिक रस्मों में इस्तेमाल किया जाता है.",
+      "duration_seconds": 18.36,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001807.wav",
+      "sha256": "274531327f4a250fa4e14abf3b9c6f338b91e9566fcad171c8f5d444a9f3863f",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001810",
+      "language": "hi",
+      "reference_text": "कैलिफोर्निया के गवर्नर अर्नोल्ड श्वार्ज़नेगर ने कानून में एक बिल पर हस्ताक्षर किए, जो नाबालिगों को हिंसक वीडियो गेम उन्हें बेचने या किराये पर देने से प्रतिबंध लगाता है।",
+      "duration_seconds": 23.28,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001810.wav",
+      "sha256": "3eb19f1c2dbbbd36b44d4ef0ad46edab130d0d50e1dc6e0848d90a43036a1453",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001815",
+      "language": "hi",
+      "reference_text": "विखंडन बम इस सिद्धांत पर काम करता है कि कई प्रोटॉन और न्यूट्रॉन वाले एक नाभिक को एक साथ रखने के लिए ऊर्जा लगती है।",
+      "duration_seconds": 12.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001815.wav",
+      "sha256": "2e7076e05a4489dacc33d099511e272b906401d2d1b28e9a8d3b53238fa29341",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001817-2",
+      "language": "hi",
+      "reference_text": "हालाँकि, शेंगेन ज़ोन इस मामले में कुछ हद तक एक देश की तरह काम करता है.",
+      "duration_seconds": 7.62,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001817-2.wav",
+      "sha256": "43461520b2a115f86ec3f6ba19bdd942446fdd09312281833d9ff24ca0dda19b",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001819",
+      "language": "hi",
+      "reference_text": "प्राचीन चीन में अलग-अलग समय अवधि दिखाने का एक अनूठा तरीका था; चीन का प्रत्येक चरण या प्रत्येक परिवार जो सत्ता में था, एक ख़ास राजवंश था.",
+      "duration_seconds": 15.6,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001819.wav",
+      "sha256": "398b60b6c84006fa3ba98728a898c7f47440f69e8eef9f1f52bb46cf50a0fb4c",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001824",
+      "language": "hi",
+      "reference_text": "गीज़ा पठार, “गीज़ा नेक्रोपोलिस” या मृतकों की मिस्र की घाटी में कई पिरामिड (जिनमें से द ग्रेट पिरामिड सबसे बड़ा है), कई छोटी कब्रें, कई मंदिर और महान स्फिंक्स हैं.",
+      "duration_seconds": 12.42,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001824.wav",
+      "sha256": "02ec2c01e824fcd0e528ee4f5de1282ad69e1c9af7abed8e4b7a390affcd778e",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001829",
+      "language": "hi",
+      "reference_text": "ज़्यादा टैक्स वाले देशों में रहने वाले पर्यटक कभी-कभी खास तौर पर मादक पेय और तम्बाकू जैसे उत्पादों पर काफ़ी बचत कर सकते हैं.",
+      "duration_seconds": 10.26,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001829.wav",
+      "sha256": "416e5b96a60940d6212da59d6ba7d8a058d0b3dba07db071f3950f72d4c7ba26",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001830",
+      "language": "hi",
+      "reference_text": "सत्ताधारी दल साउथ वेस्ट अफ्रीका पीपल आर्गेनाइजेशन (स्वापो) ने संसदीय चुनाव में बहुमत पाया.",
+      "duration_seconds": 8.16,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001830.wav",
+      "sha256": "19257ff990a3bf9899b8fc3d137f8db02eeb8257fb16a15d8c1b06f9579e4575",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001832",
+      "language": "hi",
+      "reference_text": "लोकप्रिय खेलों में फ़ुटबॉल, बास्केटबॉल, वॉलीबॉल, वाटर पोलो, तलवारबाज़ी, रग्बी, साइकिलिंग, आइस हॉकी, रोलर हॉकी और एफ़ 1 मोटर रेसिंग शामिल हैं.",
+      "duration_seconds": 15.72,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001832.wav",
+      "sha256": "06679cbbeaf4bfe83467e7ed596ecb7ae423a6f85eb95f6f09a49fa9a04cbe8a",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001833",
+      "language": "hi",
+      "reference_text": "अरस्तू, एक दार्शनिक, ने सिद्ध किया कि सब कुछ एक या चार तत्वों के मिश्रण से बना है. वे पृथ्वी, जल, वायु और अग्नि थे.",
+      "duration_seconds": 10.38,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001833.wav",
+      "sha256": "1f63d9d25a413c80f9b29c3024add4775d19ec93ea5b2922469c830d96b2b1a5",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001835",
+      "language": "hi",
+      "reference_text": "कोई सुनामी की चेतावनी जारी नहीं की गई है, और जकार्ता भूभौतिकी एजेंसी के अनुसार, कोई सुनामी की चेतावनी जारी भी नहीं की जाएगी क्योंकि भूकंप 6.5 की आवश्यकता को पूरा नहीं करता था।",
+      "duration_seconds": 22.26,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001835.wav",
+      "sha256": "1541b058ba8ce6115c2af0f6d9edbf143c7fb7b2ea69a8e93001d31844e5bc8b",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001840",
+      "language": "hi",
+      "reference_text": "इटली के कई अन्य शहरों और दुनिया के बाकी हिस्सों में, खासकर पोलैंड में, इस तरह के सेटअप बनाए गए थे, जिन्हें बड़ी संख्या में लोगों ने देखा था।",
+      "duration_seconds": 12.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001840.wav",
+      "sha256": "366399646fb7f11d1916f51ce01581e80e9e5a02af0744f4d389d61dd8749698",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001842",
+      "language": "hi",
+      "reference_text": "हालाँकि, डायनासोर के पंखों के शाफ्ट पूरी तरह से विकसित नहीं होते हैं और उन्हें रैचिस कहा जाता है. लेकिन उनके पंखों में बार्ब्स और बार्बुल्स जैसी अन्य खूबियाँ होती हैं. शोधकर्ताओं ने अनुमान लगाया है कि डायनासोर की अन्य खूबियों की तरह शायद रैचिस भी बाद में विकसित हुए होंगे.",
+      "duration_seconds": 24.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001842.wav",
+      "sha256": "3fddcd50fa8cdfd4204b06f2507bd35a51774f18ea4ec222682e12cec808e82d",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001844",
+      "language": "hi",
+      "reference_text": "चांद की सतह चट्टानों और धूल से बनी है. चांद की बाहरी परत को क्रस्ट कहते हैं.",
+      "duration_seconds": 6.24,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001844.wav",
+      "sha256": "40cd4e9af770008820c65546143069fee73876d6b6e1dffc98189ef7f6c5da8a",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001846",
+      "language": "hi",
+      "reference_text": "इस प्रारूप (सबसे सरल पूर्ण-संख्या अनुपात प्राप्त करने के लिए बारह से भाग देना) के अभिमुखता अनुपात को इसलिए 3:2 कहा जाता है।",
+      "duration_seconds": 9.24,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001846.wav",
+      "sha256": "16a08e0785ab2deb6a3e5b6eac7400ea8b8805edc60435b4e5af1e1f970c0521",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001851-2",
+      "language": "hi",
+      "reference_text": "चीर धाराएँ समुद्र तट पर लगकर लौटने वाली लहरों का प्रवाह होता है, अक्सर एक चट्टान या इसी तरह के पदार्थों पर।",
+      "duration_seconds": 10.38,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001851-2.wav",
+      "sha256": "1d8dccc74d4a9e0f203cc2909cdef147a090cdd8737509b7d82142608f1700fb",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001861",
+      "language": "hi",
+      "reference_text": "जिसके परिणामस्वरूप, मंच पर कलाकार गांजे भरी सिगरटें पीते हैं और ये थिएटर खुद दर्शकों को भी इसमें साथ शामिल होने के लिए प्रेरित करते हैं.",
+      "duration_seconds": 11.34,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001861.wav",
+      "sha256": "1517fc94b69def8ae4b67d3938ad8bf61a7c61f8cbba2701660869252de3a4c7",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001861-2",
+      "language": "hi",
+      "reference_text": "जिसके परिणामस्वरूप, मंच पर कलाकार गांजे भरी सिगरटें पीते हैं और ये थिएटर खुद दर्शकों को भी इसमें साथ शामिल होने के लिए प्रेरित करते हैं.",
+      "duration_seconds": 12.72,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001861-2.wav",
+      "sha256": "087f0bae275f3feca5e0b090984e3fdb8ded5b49bdfb52c10d0d0cf9ad0e22f8",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001862",
+      "language": "hi",
+      "reference_text": "नेक्स्टजेन प्रणाली बारे में एफएए का दावा है कि इससे विमान को छोटे मार्गों से उड़ाना और हर साल लाखों गैलन ईंधन बचाना संभव होगा और इससे कार्बन उत्सर्जन में भी कमी आएगी।",
+      "duration_seconds": 18.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001862.wav",
+      "sha256": "425716f350745f5a254e8a3a51300f5eecf01c4551ad074515425f7586d11796",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001867",
+      "language": "hi",
+      "reference_text": "पौधे ऑक्सीजन बनाते हैं जिसका उपयोग मनुष्य साँस लेने में करते हैं और वे कार्बन-डाइऑक्साइड लेते हैं जो मनुष्य साँस से छोड़ते हैं (यानी साँस छोड़ते हैं).",
+      "duration_seconds": 15.54,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001867.wav",
+      "sha256": "14dbdc2681b49ff5bcc3f09f6ff17af64bf8b669b1df048fadc9e795c5a84dc4",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001870",
+      "language": "hi",
+      "reference_text": "पिरामिडों पर दृश्य प्रदर्शित किए जाते हैं और विभिन्न पिरामिड दिखाये जाते हैं",
+      "duration_seconds": 6.72,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001870.wav",
+      "sha256": "1ec82cc846775c314fe63d0c8de9dadd49dab6e6aac05aa82a1ea8f1f5e21069",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001871-2",
+      "language": "hi",
+      "reference_text": "मध्यपूर्व की गर्म जलवायु में घर उतना ज़रूरी नहीं था.",
+      "duration_seconds": 6.18,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001871-2.wav",
+      "sha256": "019c74eaf98ce27e647e0d915f32a4a15ae43d7c24cc4df5f85b1edf815c0670",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001873",
+      "language": "hi",
+      "reference_text": "पुरुषों को दृढ़ता से नकारें और अपनी बात पर बेहिचक अड़ी रहें (सांस्कृतिक अंतरों के होने या नहीं होने से यह सही नहीं हो जाता!).",
+      "duration_seconds": 10.32,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001873.wav",
+      "sha256": "11c99b95593890923d190a247a4ce72b1987f7b290d75359a99d8afb098160e6",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001876-2",
+      "language": "hi",
+      "reference_text": "उत्तरी मैरिएनस इमरजेंसी प्रबंधन कार्यलय की ओर से कहा गया कि राष्ट्र में नुकसान की कोई सूचना प्राप्त नहीं हुई थी.",
+      "duration_seconds": 9.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001876-2.wav",
+      "sha256": "042248dfef59e31629cdcd53392862af9222201078a5511a2e9c208da7e34fed",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001881",
+      "language": "hi",
+      "reference_text": "असल में फील्ड ट्रिप साझा करना यात्रा पर विचार करने और भविष्य की कक्षाओं के साथ अनुभव करने का एक शानदार तरीका है.",
+      "duration_seconds": 9.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001881.wav",
+      "sha256": "187fca73f58c026ece70c0419f94e9045bf2beeea6d3cfe65c4fc2e4216d70ff",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001887",
+      "language": "hi",
+      "reference_text": "अस्पताल में काम करते हुए, लिगिन्स ने अपने खाली समय के दौरान समय से पहले प्रसव की जाँच शुरू कर दी.",
+      "duration_seconds": 9.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001887.wav",
+      "sha256": "24d89d845734837f6007b01fa7cdda92c1457840238521336511c591164144d2",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001890",
+      "language": "hi",
+      "reference_text": "अधिकांश आधुनिक अनुसंधान दूरबीनों में अनुकूल वायुमंडलीय परिस्थितियों के साथ दूरदराज के क्षेत्रों में काम करने के लिए बहुत सुविधाएँ हैं.",
+      "duration_seconds": 11.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001890.wav",
+      "sha256": "3e6d415fe9c7ee5ebd908c8abe31ef3ce32a9d16e1579fb70b4368ddc4d51af0",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001893",
+      "language": "hi",
+      "reference_text": "सुंदरबन दुनिया का सबसे बड़ा तटीय मैंग्रोव क्षेत्र है, जो तट से बांग्लादेशी और भारतीय पहाड़ी क्षेत्र में 80 किमी (50 मील) तक फैला हुआ है।",
+      "duration_seconds": 12.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001893.wav",
+      "sha256": "0e318a2560a40084468712def0a08a0c9dbe134809128dcd6b98265adb8c2d2e",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001896",
+      "language": "hi",
+      "reference_text": "यूएसए जिमनास्टिक्स और यूएसओसी का एक ही लक्ष्य है — एथलीटों को सुरक्षित, सकारात्मक और सशक्त वातावरण में अपने सपनों का अनुसरण करने के लिए जिमनास्टिक्स और अन्य लोगों के खेल को जितना संभव हो सके उतना सुरक्षित बनाना.",
+      "duration_seconds": 19.44,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001896.wav",
+      "sha256": "0416aead5cd5c201284d912a324d269127dc7c644c1745196cdff990fed49eb2",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001897-2",
+      "language": "hi",
+      "reference_text": "उत्तर में यह क्षेत्र साहेल और दक्षिण और पश्चिम में अटलांटिक महासागर से घिरा है.",
+      "duration_seconds": 9.72,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001897-2.wav",
+      "sha256": "0d2a2fe6ac824e2d99e6584404267a3a9650ade7d8e124a22271fb8e5a177234",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001899",
+      "language": "hi",
+      "reference_text": "मोहम्मद इस सांसारिक जीवन से परे मामलों में गहरी रुचि रखते थे। वे अक्सर चिंतन के लिए एक गुफा का उपयोग करते थे जिसे “नूर” (प्रकाश) के पर्वत पर “हीरा” के रूप में जाना जाता है।",
+      "duration_seconds": 16.92,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001899.wav",
+      "sha256": "317ac38415056fc28e0addb209f5e293b7ae4ec2b5d595c9bfb298d45db6ba86",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001910-2",
+      "language": "hi",
+      "reference_text": "ऐसा माना जाता है कि पेरिस के निवासी अहंकारी, असभ्य और अभिमानी होते हैं।",
+      "duration_seconds": 5.94,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001910-2.wav",
+      "sha256": "1e87cb62538d7afb94b76074fd1d851907ef0819570260c1f07756c3734d046f",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001912",
+      "language": "hi",
+      "reference_text": "अधिकांश छोटे द्वीप स्वतंत्र राष्ट्र हैं, या फ़्रांस से संबंधित हैं और लग्ज़री बीच रिसॉर्ट के रूप में जाने जाते हैं.",
+      "duration_seconds": 11.7,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001912.wav",
+      "sha256": "39e85dcaec2b90ed48d5a9999fe6f3d5935bd3d06f81b6c56bc8d91d7de1a8fc",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001913-2",
+      "language": "hi",
+      "reference_text": "बाघ की दहाड़ किसी शेर की तेज़ आवाज़ वाली दहाड़ की तरह नहीं होती है, लेकिन उसकी बँधी हुई, चिल्लाने जैसी होती है.",
+      "duration_seconds": 9.06,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001913-2.wav",
+      "sha256": "147c146bd49cb49046b64ced83ea700d9afb23237c6d98457533c2dfb2eac3c7",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001917",
+      "language": "hi",
+      "reference_text": "रोम में अलग-अलग जगहों पर कई बड़े टेलीविज़न स्क्रीन लगाए गए ताकि लोग समारोह देख सकें.",
+      "duration_seconds": 9.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001917.wav",
+      "sha256": "2c938193002d1ee78d716e917b45b0721d84af4b680024b430116a34693723a9",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001917-2",
+      "language": "hi",
+      "reference_text": "रोम में अलग-अलग जगहों पर कई बड़े टेलीविज़न स्क्रीन लगाए गए ताकि लोग समारोह देख सकें.",
+      "duration_seconds": 8.94,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001917-2.wav",
+      "sha256": "0b103ece4f02b538e25d930bc9294682c8a82bffd68d25456e99bac1dacb5c7d",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001918",
+      "language": "hi",
+      "reference_text": "सुंदरबन को यूनेस्को द्वारा विश्व धरोहर घोषित किया है। जंगल का वह हिस्सा जो भारत में है उसको सुंदरबन नेशनल पार्क कहा जाता है।",
+      "duration_seconds": 8.88,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001918.wav",
+      "sha256": "13d41cec0d011103be33d4509d61a4d94865129a8747d7ef8e1a291b65fc6bdd",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001922",
+      "language": "hi",
+      "reference_text": "बेशक इस परंपरा के पीछे ईसाई धर्मशास्त्र के स्पष्टीकरण दिए जाते हैं, लेकिन एक प्री-क्रिश्चयन स्प्रिंग और फ़र्टिलिटी रस्म भी हो सकती है.",
+      "duration_seconds": 12.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001922.wav",
+      "sha256": "0632532f51fe0d4a16bac729c8a7432926f211f0f64f6cdf69e5b6ea4a9871ab",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001925",
+      "language": "hi",
+      "reference_text": "किया गया अधिकांश काम सैद्धांतिक था, लेकिन सैजिटेरियस गैलेक्सी से बने ऑब्ज़र्वेशन को सिम्युलेट करने के लिए प्रोग्राम को लिखा गया था.",
+      "duration_seconds": 9.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001925.wav",
+      "sha256": "03d18d6f470b7adaf44845e0a2e5f39719642713cb675728da2ad317a39b0db8",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001932",
+      "language": "hi",
+      "reference_text": "प्रदर्शन चालू होने के पाँच मिनट में हवा शुरू हो जाती है, लगभग एक मिनट बाद, हवा 70 किमी/घंटा तक पहुँच रही है... फिर बारिश आती है, लेकिन इतनी तेज़ और इतनी बड़ी बूँदें कि यह आपकी त्वचा को सुई की तरह चुभती है, फिर आकाश से ओले गिरते हैं, लोग घबराते हैं, चिल्लाते हैं और अफरातफरी मच जाती है।",
+      "duration_seconds": 20.76,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001932.wav",
+      "sha256": "2d6c3e3b71ee08f58b4b4a40c20c045a91a7cdde5377d6ef46cc586fe68083bb",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001934",
+      "language": "hi",
+      "reference_text": "आमतौर पर आप हमेशा पर्यटकों और बेचने वालों की आवाज़ सुनते हैं. ध्वनि और प्रकाश की कहानी स्टोरी बुक जैसी है.",
+      "duration_seconds": 9.0,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001934.wav",
+      "sha256": "06d210c74487f5dee14ab8259059d87e0a42a0bcda1fd0624a20468f1127d216",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001940-2",
+      "language": "hi",
+      "reference_text": "अगर हमारे अपने पूर्वजों ने अपनी “प्रोटीन की समस्या” को कुछ हद तक उसी तरह सुलझाया, तो हमें आश्चर्यचकित नहीं होना चाहिए, जैसे कि आज के समय में चिंपाजी करते हैं।",
+      "duration_seconds": 14.16,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001940-2.wav",
+      "sha256": "06af65b2851f49eb343f10ee72abc232cfa5e61324ba3a72f4309f7c2abb74af",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001941",
+      "language": "hi",
+      "reference_text": "ये जोड़े अपने बच्चे के लिए गोद लेने की योजना बनाने का विकल्प चुन सकते हैं.",
+      "duration_seconds": 5.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001941.wav",
+      "sha256": "068709646a1d999685083714925e9faecb0e97852f1e4783f86e36b143cc1eac",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001943-2",
+      "language": "hi",
+      "reference_text": "जितनी कम चिंता, उतनी ज़्यादा सकारात्मक जीवन ऊर्जा का संचार. हर इंसान परम शांति और संतोष पा सकता है.",
+      "duration_seconds": 7.32,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001943-2.wav",
+      "sha256": "301339e8431406bc6391f0bd559d694fd970ac152f387ea7dcc7ba12ad27fb7a",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001953",
+      "language": "hi",
+      "reference_text": "बाद में उन्हें कैम्ब्रिज में एडेनब्रुक के अस्पताल में स्थानांतरित कर दिया गया.",
+      "duration_seconds": 8.4,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001953.wav",
+      "sha256": "34a5c2bf970c96e7df47cbc837d5e5f101494cf354538105ad44e0f7610d84e4",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001953-2",
+      "language": "hi",
+      "reference_text": "बाद में उन्हें कैम्ब्रिज में एडेनब्रुक के अस्पताल में स्थानांतरित कर दिया गया.",
+      "duration_seconds": 6.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001953-2.wav",
+      "sha256": "3234945e4dda4db44dec82948e9cb4fe0736b8c9d8daf935c22e923b832ec22c",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001955",
+      "language": "hi",
+      "reference_text": "MS, बीमारी केंद्रीय तंत्रिका तंत्र पर असर करती है, जिसमें दिमाग, स्पाइनल कॉर्ड और ऑप्टिक नर्व शामिल हैं.",
+      "duration_seconds": 9.0,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001955.wav",
+      "sha256": "381a20dc20bbd9cbff15e6bfde3495ae40124f545e540db1362bc68ae8dc2b66",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001956",
+      "language": "hi",
+      "reference_text": "सामान के ट्रांसपोर्ट के लिए जहाज़ों का इस्तेमाल करना समुद्रों के एक सिरे से दूसरे सिरे तक बड़ी मात्रा में लोगों और सामान को लाने और ले जाने का बहुत ज़्यादा प्रभावी तरीका है.",
+      "duration_seconds": 16.92,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001956.wav",
+      "sha256": "356147305d9e4d1ce17338da158d585a8f8611847398278909e5c749b40b39f4",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001960",
+      "language": "hi",
+      "reference_text": "कहा जाता है कि वह 20 साल की उम्र में ही जीर्ण हो गया था। एक बयान में बीबर ने कहा, “हांलांकि मैं मौजूद नहीं था और न ही सीधे इस दुखद दुर्घटना से जुड़ा हुआ था, मेरी संवेदनाएं और प्रार्थनाएं पीड़ित के परिवार के साथ हैं।”",
+      "duration_seconds": 18.06,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001960.wav",
+      "sha256": "0335f1934206346af4e4aafcf02385a17c28fe17300d0a76e1b64eb6601a8601",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001966",
+      "language": "hi",
+      "reference_text": "अक्टूबर में शुरू हुए व्यापक शासन विरोधी प्रदर्शनों के लिए आयोग का गठन मार्टेली की प्रतिक्रिया स्वरूप हुआ था.",
+      "duration_seconds": 9.66,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001966.wav",
+      "sha256": "139ae820d137e967ad300e306063d8efb2d4bc30bd266e877cd92926dccde366",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001967-2",
+      "language": "hi",
+      "reference_text": "लेटन ने पीएम से मुलाकात के दौरान कंज़र्वेटिव पार्टी के पर्यावरण बिल में बदलाव के लिए कहा था. अब कंज़र्वेटिव पार्टी के पर्यावरण बिल को “पूरी तरह से फिर से लिखने” के लिए कहा जा रहा है.",
+      "duration_seconds": 15.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001967-2.wav",
+      "sha256": "358313f6d9f4fcf065623edcc692c06e1b2ad01469f1f394ce723734b39f07d9",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001970-2",
+      "language": "hi",
+      "reference_text": "हम पक्के तौर पर नहीं जानते हैं, लेकिन इसकी कांटेदार जीभ हो सकती है. इसके आहार में कछुए, बड़ी मछली, दूसरे मोसासॉर शामिल थे और ये एक नरभक्षी भी हो सकता है.",
+      "duration_seconds": 14.16,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001970-2.wav",
+      "sha256": "3a6a032e419c5a7fa22b5a039084ed0aae31e118d711b9a208b6c88c3457194c",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001971",
+      "language": "hi",
+      "reference_text": "तूफान और बवंडर की तरह आंधी, ओले, भारी बारिश, और जंगल की आग तीव्र मौसम का हिस्सा और असर हैं.",
+      "duration_seconds": 12.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001971.wav",
+      "sha256": "1ec8916625f4f2ca5d422fc50047384d281e79a2ed8ee82104e6a1d3058e808f",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001972",
+      "language": "hi",
+      "reference_text": "उनके पंख और उड़ने की वजह से कई लोग उनको डायनासोर नहीं मानते.",
+      "duration_seconds": 8.04,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001972.wav",
+      "sha256": "2d4e9af753a0a413ef1a95456a6d7784130e947cd1997e01dd6fde7589b0e910",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001973",
+      "language": "hi",
+      "reference_text": "लेकिन भूमध्य रेखा के कुछ ही डिग्री उत्तर में मौजूद “अत्यधिक उष्णकटिबंध” में होने की वजह से, आपको गर्मी (हमेशा) और तेज़ धूप (जब आसमान साफ़ हो, जो कि ज़्यादातर होता है) का सामना करना पड़ेगा.",
+      "duration_seconds": 18.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001973.wav",
+      "sha256": "43077a26db3d6397d6cbaeb706ea2883d89ac50acbef8bd35010b0fa180d47c2",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001974",
+      "language": "hi",
+      "reference_text": "इसी तरह, पुरुषों के लिए घुटनों को ढँकने वाले ट्राउज़र पहनना ज़रूरी है.",
+      "duration_seconds": 5.82,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001974.wav",
+      "sha256": "24f87eef8895e201f960f591e11d81435d4afef87c2bc9c0f99f6ddfd2a2f2db",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001974-2",
+      "language": "hi",
+      "reference_text": "इसी तरह, पुरुषों के लिए घुटनों को ढँकने वाले ट्राउज़र पहनना ज़रूरी है.",
+      "duration_seconds": 5.76,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001974-2.wav",
+      "sha256": "3eeac341e9acbf11d0407093ce38caf0bd0142feaa70883cd20eedd6a73e3245",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001977",
+      "language": "hi",
+      "reference_text": "शेरों का समूह वयस्क नर के साथ-साथ तीस से ज़्यादा मादा और शावकों के साथ एक से तीन तक का बना होता है.",
+      "duration_seconds": 9.06,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001977.wav",
+      "sha256": "36b03eefa9458baab8ecda9f72fc4e0c3672c06b96fab8ab5ec9238907e2337a",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001978",
+      "language": "hi",
+      "reference_text": "स्प्रिंगबोक्स के लिए, इसने पांच-मैचों की हार का सिलसिला समाप्त कर दिया.",
+      "duration_seconds": 6.36,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001978.wav",
+      "sha256": "41ade150250d4bf3758f347c4b7b90510af3c0d984ffcee8acb977884b854880",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001981",
+      "language": "hi",
+      "reference_text": "यदि आप केवल शिपबोर्ड भ्रमण का उपयोग करके किनारे तक जाते हैं तो आपको एक अलग वीज़ा की आवश्यकता नहीं होगी (2009 तक).",
+      "duration_seconds": 12.78,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001981.wav",
+      "sha256": "1605965817d43610ebfbf3c4751915a1a630b4ca92fca45fa5f819ae560086d5",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001982",
+      "language": "hi",
+      "reference_text": "महिलाएँ: यह अनुशंसा की जाती है कि कोई भी महिला यात्री वास्तविक वैवाहिक स्थिति के बावजूद कहती है कि वह विवाहित है.",
+      "duration_seconds": 8.52,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001982.wav",
+      "sha256": "4414d16859eba786f71de09179c490fb1e00f83dc9386fbbb0f9c43e52e84074",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001982-2",
+      "language": "hi",
+      "reference_text": "महिलाएँ: यह अनुशंसा की जाती है कि कोई भी महिला यात्री वास्तविक वैवाहिक स्थिति के बावजूद कहती है कि वह विवाहित है.",
+      "duration_seconds": 7.8,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001982-2.wav",
+      "sha256": "2ccc207059e8f090129d6e003cda55a6858a423629a3867d3f19dfd9872b2c14",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001985-2",
+      "language": "hi",
+      "reference_text": "यह संबंधित है, लेकिन आम तौर पर इसमें अल्पाइन शैली की स्की टूरिंग या माउंटेनीयरिंग शामिल नहीं होती है, जिसे खड़े इलाकों में किया जाता है और जिसके लिए बहुत कड़ी स्की और बूट की ज़रूरत होती है.",
+      "duration_seconds": 13.44,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001985-2.wav",
+      "sha256": "1118d9f82d906e1cddb3d2f8fa99641d913c7c5885fcb2b21b435e24d500a4dd",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001990-2",
+      "language": "hi",
+      "reference_text": "ब्लॉग से छात्र लेखन में सुधार करने में भी मदद मिल सकती है. जहां छात्र अपने ब्लॉग अनुभव की शुरुआत अक्सर बेतरतीब व्याकरण और वर्तनी के साथ करते हैं, वहीं दर्शकों की मौजूदगी से इसमें आम तौर पर बदलाव आता है.",
+      "duration_seconds": 20.4,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001990-2.wav",
+      "sha256": "0364d19eca860ebaf77a7a56611d083bed2319e691d075591e3f19e35cf7767c",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-001992",
+      "language": "hi",
+      "reference_text": "विशेष रूप से सवाना पर बेहतरीन अफ़्रीकी वन्य जीवन को संपूर्ण रूप से देखने के लिए आमतौर पर सफ़ारी शब्द का उपयोग किया जाता है.",
+      "duration_seconds": 8.88,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001992.wav",
+      "sha256": "23d926578c057874785f2e2727d0e9eaf1c27b65e9141c27fcf8282a17fde046",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001995",
+      "language": "hi",
+      "reference_text": "वर्चुअल स्कैफ़ोल्ड सॉफ़्टवेयर का ही अंदरूनी हिस्सा होते हैं और वे ऐसी प्रक्रियाओं पर सवाल उठाते हैं, उनका संकेत देते हैं और उनके बारे में जानकारी देते हैं जो छात्र के लिए अकेले संभालने में चुनौती भरी होती हैं.",
+      "duration_seconds": 19.68,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001995.wav",
+      "sha256": "2369b23daf50e1e911023e8bf77da486aa7533ac57232937dbcc931ccf061c37",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-001995-2",
+      "language": "hi",
+      "reference_text": "वर्चुअल स्कैफ़ोल्ड सॉफ़्टवेयर का ही अंदरूनी हिस्सा होते हैं और वे ऐसी प्रक्रियाओं पर सवाल उठाते हैं, उनका संकेत देते हैं और उनके बारे में जानकारी देते हैं जो छात्र के लिए अकेले संभालने में चुनौती भरी होती हैं.",
+      "duration_seconds": 18.3,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-001995-2.wav",
+      "sha256": "1d73650dbd92bc93d544879d64e3df8cdf9f85177d01d199fd29163cd7d1c433",
+      "notes": "FLEURS hi_in/test; gender=1"
+    },
+    {
+      "id": "fleurs-hi_in-test-002007",
+      "language": "hi",
+      "reference_text": "यू.एस. कॉर्प्स ऑफ़ इंजीनियर्स ने अंदाजा लगाया कि 6 इंच बारिश पहले से क्षतिग्रस्त बांधों को तोड़ सकती है.",
+      "duration_seconds": 7.8,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-002007.wav",
+      "sha256": "362c71a473839d3bf8e9e0701d819527152ebe2d196783da87a84e896fba3809",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "fleurs-hi_in-test-002009",
+      "language": "hi",
+      "reference_text": "पौधों से सबसे आसानी से मिलने वाले संसाधनों में पत्तियों और फलियों में मिलने वाले प्रोटीन होते, लेकिन हम जैसे प्राइमेट्स के लिए उसे पकाए बिना पचाना मुश्किल होता है.",
+      "duration_seconds": 19.74,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/hi_in/test/fleurs-hi_in-test-002009.wav",
+      "sha256": "1fca0e7c2cb0bf8c29d48862415234cf1810e64b1a2965585f20e98dd808a0bb",
+      "notes": "FLEURS hi_in/test; gender=0"
+    },
+    {
+      "id": "hi-silence-10s",
+      "language": "hi",
+      "reference_text": "",
+      "duration_seconds": 10.0,
+      "license": "Generated (IntelliAI, deterministic)",
+      "synthetic": {
+        "kind": "silence",
+        "duration_seconds": 10.0,
+        "sample_rate_hz": 16000,
+        "frequency_hz": 440.0
+      },
+      "notes": "Carried forward byte-identical from stt-eval-seed@v2."
+    },
+    {
+      "id": "hi-tone-440hz-5s",
+      "language": "hi",
+      "reference_text": "",
+      "duration_seconds": 5.0,
+      "license": "Generated (IntelliAI, deterministic)",
+      "synthetic": {
+        "kind": "tone",
+        "duration_seconds": 5.0,
+        "sample_rate_hz": 16000,
+        "frequency_hz": 440.0
+      },
+      "notes": "Carried forward byte-identical from stt-eval-seed@v2."
+    }
+  ]
+}

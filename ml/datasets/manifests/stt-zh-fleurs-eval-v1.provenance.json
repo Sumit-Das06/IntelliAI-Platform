@@ -1,0 +1,52 @@
+{
+  "manifest": {
+    "path": "ml/evaluation/stt/datasets/stt-zh-fleurs-eval-v1.json",
+    "sha256": "8fdbe0986d5ec88de59b488327dbbf07c71acd47458ec6b4516e24afae50b7a0",
+    "samples": 102,
+    "duration_seconds": 1229.46
+  },
+  "created": "2026-08-11",
+  "language": "zh",
+  "sources": [
+    {
+      "name": "fleurs",
+      "reference": "google/fleurs",
+      "language": "multi",
+      "license": "CC-BY-4.0",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/google/fleurs",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "",
+      "speaker_ids": false,
+      "official_splits": true,
+      "contamination_risk": "known_overlap",
+      "notes": "Read speech (FLoRes sentences). Train/dev/test official splits; authors describe splits as speaker-aware [CLAIM]. Widely used in public model training/benchmarks since 2022 — treat every FLEURS number as comparability, never as the primary product ruler."
+    }
+  ],
+  "source_splits": [
+    "test"
+  ],
+  "normalization": "unicode_generic@v2",
+  "primary_ruler": "cer_unicode",
+  "contamination_risk": "known_overlap",
+  "speaker_ids_available": false,
+  "speaker_disjointness": "UNPROVABLE from this source: no per-clip speaker ids published; train/eval separation relies on the source's official split boundary (publisher claim, not our verification).",
+  "curation": "deterministic: validation in ingestion order, then ascending sha256 order, first 100 accepted natural-speech clips; probes appended",
+  "validation": {
+    "source": "fleurs",
+    "language": "zh",
+    "split": "test",
+    "candidates": 945,
+    "accepted": 944,
+    "rejections": [
+      {
+        "sample_id": "fleurs-cmn_hans_cn-test-001795-3",
+        "reason": "duration_too_long",
+        "detail": "31.12s > 30.0s"
+      }
+    ],
+    "accepted_duration_seconds": 11034.06
+  },
+  "notes": ""
+}

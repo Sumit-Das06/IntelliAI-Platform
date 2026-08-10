@@ -30,7 +30,15 @@ class SyntheticSpec(BaseModel):
 
 
 class EvalClip(BaseModel):
-    """One clip: exactly one source (pinned URL or synthetic spec)."""
+    """One clip: exactly one source (pinned URL, local path, or synthetic spec).
+
+    A ``path`` source is a file that already exists on the machine —
+    ingested public data or self-recorded audio — relative to the data
+    directory the run materializes into. Local files carry the same
+    SHA-256 pin as downloads: the hash is the identity, and a path clip
+    that does not match its pin is refused exactly like a bad download.
+    Audio is never committed; only the manifest (path + pin) is.
+    """
 
     model_config = ConfigDict(frozen=True)
 
@@ -40,18 +48,31 @@ class EvalClip(BaseModel):
     duration_seconds: float
     license: str
     url: str | None = None
+    path: str | None = None  # relative to the run's data directory
     sha256: str | None = None
     synthetic: SyntheticSpec | None = None
     notes: str = ""
 
     @model_validator(mode="after")
     def _exactly_one_source(self) -> EvalClip:
-        if (self.url is None) == (self.synthetic is None):
-            msg = f"clip {self.id!r}: exactly one of url/synthetic is required"
+        sources = sum(x is not None for x in (self.url, self.path, self.synthetic))
+        if sources != 1:
+            msg = f"clip {self.id!r}: exactly one of url/path/synthetic is required"
             raise ValueError(msg)
         if self.url is not None and self.sha256 is None:
             msg = f"clip {self.id!r}: url clips require a sha256 pin"
             raise ValueError(msg)
+        if self.path is not None:
+            if self.sha256 is None:
+                msg = f"clip {self.id!r}: path clips require a sha256 pin"
+                raise ValueError(msg)
+            candidate = Path(self.path)
+            if candidate.is_absolute() or ".." in candidate.parts:
+                msg = (
+                    f"clip {self.id!r}: path must be relative to the data "
+                    "directory and must not escape it"
+                )
+                raise ValueError(msg)
         return self
 
     @property
@@ -59,6 +80,8 @@ class EvalClip(BaseModel):
         if self.url is not None:
             suffix = Path(self.url).suffix or ".bin"
             return f"{self.id}{suffix}"
+        if self.path is not None:
+            return self.path
         return f"{self.id}.wav"
 
 

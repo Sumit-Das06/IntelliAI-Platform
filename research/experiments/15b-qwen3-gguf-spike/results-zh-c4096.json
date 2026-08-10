@@ -1,0 +1,429 @@
+{
+  "spike": "15b-qwen3-asr-0.6b-gguf-cpu",
+  "NOT_LEDGER_EVIDENCE": "research-sandbox spike; no MeasurementRoute; never difference against EvalRun records",
+  "run_at": "2026-08-10T20:59:01.188809+00:00",
+  "manifest": {
+    "name": "stt-zh-fleurs-eval",
+    "version": 1,
+    "sha256": "8fdbe0986d5ec88de59b488327dbbf07c71acd47458ec6b4516e24afae50b7a0"
+  },
+  "artifacts": {
+    "model": {
+      "path": "weights\\qwen3-asr-spike\\Qwen3-ASR-0.6B-Q8_0.gguf",
+      "sha256": "bca259818b50ca7c4c05e9bdb35a5dc04fa039653a6d6f3f0f331f96f6aa1971"
+    },
+    "mmproj": {
+      "path": "weights\\qwen3-asr-spike\\mmproj-Qwen3-ASR-0.6B-Q8_0.gguf",
+      "sha256": "41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d"
+    },
+    "llama_cpp": "b10344 win-cpu-x64 (zip sha256 c0cec8825843957cae6620f927eb6eb9f7f4680da3206910932ea9075f91b405)"
+  },
+  "environment": {
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "machine": "AMD64",
+    "os": "Windows 11",
+    "python": "3.12.10",
+    "prompt": "Transcribe the audio."
+  },
+  "method": {
+    "per_clip_process": "each clip pays one full CLI invocation (model load included)",
+    "overhead_probe_walls": [
+      1.243,
+      1.205,
+      1.2
+    ],
+    "overhead_median_seconds": 1.205,
+    "net_rtf_definition": "(wall - overhead_median) / audio_duration, per clip",
+    "context_tokens": 4096
+  },
+  "aggregates": {
+    "clips_scored": 30,
+    "clips_failed": 0,
+    "cer_unicode_char_weighted": 0.1313,
+    "gross_rtf": 0.179,
+    "net_rtf_est": 0.086,
+    "peak_rss_mib_first_clip": 1512.9
+  },
+  "probes": [
+    {
+      "clip_id": "zh-silence-10s",
+      "hallucinated_words": 0,
+      "wall_seconds": 1.853,
+      "hypothesis": "",
+      "emitted_language": "None",
+      "returncode": 0,
+      "peak_rss_mib": null
+    },
+    {
+      "clip_id": "zh-tone-440hz-5s",
+      "hallucinated_words": 0,
+      "wall_seconds": 1.505,
+      "hypothesis": "",
+      "emitted_language": "None",
+      "returncode": 0,
+      "peak_rss_mib": null
+    }
+  ],
+  "clips": [
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001661-2",
+      "duration_seconds": 12.96,
+      "wall_seconds": 2.233,
+      "hypothesis": "他没有设定削减数额，只是表示将根据中国的经济产出来决定数额。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": 1512.9,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 1.028
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001663",
+      "duration_seconds": 13.38,
+      "wall_seconds": 2.352,
+      "hypothesis": "智利首选登山目的地科查莫山谷，被称为南美洲的优美圣地。这里有各式各样的花岗岩大石壁和峭壁。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.3971,
+      "wer_unicode": 0.8333,
+      "net_seconds_est": 1.147
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001665",
+      "duration_seconds": 15.1,
+      "wall_seconds": 2.398,
+      "hypothesis": "据透露，这份文件将提及边界争端。巴勒斯坦希望以1967年中东战争前的边界为基础。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 1.193
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001668-3",
+      "duration_seconds": 13.68,
+      "wall_seconds": 2.263,
+      "hypothesis": "买一张万能卡也有不少好处。带着这张卡，你可以进入南非的一些公园，或全部的国家公园。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.24,
+      "wer_unicode": 1.0,
+      "net_seconds_est": 1.058
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001673",
+      "duration_seconds": 8.58,
+      "wall_seconds": 2.014,
+      "hypothesis": "在独立战争期间，十三个州根据联邦条例组成了弱小的中央政府，国会是其唯一的组成部分。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0909,
+      "wer_unicode": 0.6,
+      "net_seconds_est": 0.809
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001675-2",
+      "duration_seconds": 11.38,
+      "wall_seconds": 2.155,
+      "hypothesis": "除去表示您的S.I.E.之外的所有名词，都应以大写字母开头，即使在句子中间也应如此。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1026,
+      "wer_unicode": 1.25,
+      "net_seconds_est": 0.95
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001676-2",
+      "duration_seconds": 14.26,
+      "wall_seconds": 2.243,
+      "hypothesis": "与所有南非国家公园一样，该公园每天都收取养护费和门票费。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 1.038
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001677",
+      "duration_seconds": 7.98,
+      "wall_seconds": 1.864,
+      "hypothesis": "如今，唯一不能向后折叠翅膀的昆虫是蜻蜓和蜉蝣。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 0.659
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001678",
+      "duration_seconds": 17.58,
+      "wall_seconds": 2.756,
+      "hypothesis": "奥利弗·萨克斯（Oliver Sacks）在他的论文《总统的演讲》中指出，那些因为脑损伤而无法理解语言的人，仍然能够准确地判断说话人是否有诚意。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0143,
+      "wer_unicode": 0.25,
+      "net_seconds_est": 1.551
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001688-2",
+      "duration_seconds": 18.78,
+      "wall_seconds": 2.669,
+      "hypothesis": "从传统意义上讲，海军的任务是确保国家保持输运输人员和货物的能力，同时干扰敌人运输、弃人员和货物的能力。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0816,
+      "wer_unicode": 0.75,
+      "net_seconds_est": 1.464
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001689",
+      "duration_seconds": 17.1,
+      "wall_seconds": 2.643,
+      "hypothesis": "欧洲是片面积相对较小，但有着许多独立国家的大陆。在通常情况下，穿越多个国家旅行意味着必须多次经历签证申请和护照检查。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0179,
+      "wer_unicode": 0.6667,
+      "net_seconds_est": 1.438
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001689-2",
+      "duration_seconds": 14.64,
+      "wall_seconds": 2.576,
+      "hypothesis": "欧洲是片面积相对较小，但有着许多独立国家的大陆。但在通常情况下，穿越多个国家旅行意味着必须多次申请、经历签证申请和护照检查。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0893,
+      "wer_unicode": 1.6667,
+      "net_seconds_est": 1.371
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001693-2",
+      "duration_seconds": 12.82,
+      "wall_seconds": 2.424,
+      "hypothesis": "但在队长输掉三注门后，印度在结束这一局比赛的时，只得了三十六分，输掉了七个三注门。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.2927,
+      "wer_unicode": 1.0,
+      "net_seconds_est": 1.219
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001693-3",
+      "duration_seconds": 14.0,
+      "wall_seconds": 2.452,
+      "hypothesis": "但在队长输掉三注门后，印度在结束这一局的比赛时只得了三十六分，输掉了七个三注门。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.2195,
+      "wer_unicode": 1.0,
+      "net_seconds_est": 1.247
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001695-2",
+      "duration_seconds": 15.82,
+      "wall_seconds": 2.492,
+      "hypothesis": "Parmigiano-Reggiano是是一种在夏天尤为流行的简单晚餐，面包搭配橄榄油、番茄，手上任何佐料都可以加入，比如奶酪、金枪鱼等。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.2881,
+      "wer_unicode": 0.5556,
+      "net_seconds_est": 1.287
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001697-3",
+      "duration_seconds": 11.08,
+      "wall_seconds": 2.009,
+      "hypothesis": "他一直无法用药物来缓解疼痛，因为比赛禁止参赛者服用这些药物。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 0.804
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001704",
+      "duration_seconds": 7.26,
+      "wall_seconds": 1.832,
+      "hypothesis": "1990年，由于沙漠的威胁，它被列入了濒危世界遗产名录。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0357,
+      "wer_unicode": 0.5,
+      "net_seconds_est": 0.627
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001705-3",
+      "duration_seconds": 9.54,
+      "wall_seconds": 1.981,
+      "hypothesis": "一九四零年八月十五日，盟军攻入法国南部，这次行动被称为“龙骑兵行动”。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.3684,
+      "wer_unicode": 0.7778,
+      "net_seconds_est": 0.776
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001707",
+      "duration_seconds": 6.48,
+      "wall_seconds": 1.738,
+      "hypothesis": "它是南非的主要景点之一，被认为是南非国家公园体系的主打景点。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.2564,
+      "wer_unicode": 0.75,
+      "net_seconds_est": 0.533
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001717-3",
+      "duration_seconds": 15.24,
+      "wall_seconds": 2.362,
+      "hypothesis": "水下的地形造成回流集中于几处较深的区域，那里可能会形成流向深水的急流。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 1.157
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001724-2",
+      "duration_seconds": 12.84,
+      "wall_seconds": 2.12,
+      "hypothesis": "它作为奢侈品中心的声誉始于公元四百年左右，一直延续到公元一千一百年左右。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.275,
+      "wer_unicode": 1.0,
+      "net_seconds_est": 0.915
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001726",
+      "duration_seconds": 13.2,
+      "wall_seconds": 2.286,
+      "hypothesis": "实地考察是任何教学活动的重要组成部分。通常，老师会很乐意带学生去那些公交车无法到达的地方。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 1.081
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001734-2",
+      "duration_seconds": 6.6,
+      "wall_seconds": 1.804,
+      "hypothesis": "科学家们可以得出结论：暗物质对其他暗物质的影响方式与普通物质相同。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 0.599
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001735-2",
+      "duration_seconds": 21.96,
+      "wall_seconds": 3.268,
+      "hypothesis": "来自美国普林斯顿大学和瑞典乌普拉乌普萨拉大学的研究人员报告称，由于当地特有的达尔文雀中的永地雀和外来的千人掌大嘴地雀之间的繁殖，这个新物种只进化了两代。尽管人们认为这一过程需要更长的时间。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0556,
+      "wer_unicode": 0.5,
+      "net_seconds_est": 2.063
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001735-3",
+      "duration_seconds": 18.54,
+      "wall_seconds": 3.125,
+      "hypothesis": "来自美国普林斯顿大学和瑞典乌普萨拉大学的研究人员报告称，由于当地特有的达尔文雀中的永地雀和外来的仙人掌大嘴地雀之间的繁殖，这个新物种只进化了两代。尽管人们认为这一过程需要更长的时间。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0111,
+      "wer_unicode": 0.25,
+      "net_seconds_est": 1.92
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001738-2",
+      "duration_seconds": 8.28,
+      "wall_seconds": 1.998,
+      "hypothesis": "它会攻击任何进入水中的东西，即使像霸王龙之类的巨型恐龙也不是它的对手。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 0.793
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001739-2",
+      "duration_seconds": 8.7,
+      "wall_seconds": 1.959,
+      "hypothesis": "该洞穴坐落在麦加北部的一座山顶上，与外界完全隔绝。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.2258,
+      "wer_unicode": 0.75,
+      "net_seconds_est": 0.754
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001743-3",
+      "duration_seconds": 15.12,
+      "wall_seconds": 2.742,
+      "hypothesis": "大多数对于技术决定论的解释都包括这两个总体思路：一是技术本身的发展在很大程度上超越了文化或政治的影响；二是技术反过来会对社会产生不受社会条件制约的内在影响。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0395,
+      "wer_unicode": 1.0,
+      "net_seconds_est": 1.537
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001753-3",
+      "duration_seconds": 17.58,
+      "wall_seconds": 2.878,
+      "hypothesis": "虽然这通常只是一种不准确的刻板印象，但在巴黎生活的最佳方式仍然是尽量举止得当，表现得像一个有教养良好的人。这会让参加社会活动变得容易得多。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1605,
+      "wer_unicode": 0.625,
+      "net_seconds_est": 1.673
+    },
+    {
+      "clip_id": "fleurs-cmn_hans_cn-test-001758",
+      "duration_seconds": 12.06,
+      "wall_seconds": 2.437,
+      "hypothesis": "该群群岛位于南极半岛以北一百二十公里处，最大的岛屿是乔治国王岛，这里是繁星村的定居点。",
+      "emitted_language": "Chinese",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.4375,
+      "wer_unicode": 0.9,
+      "net_seconds_est": 1.232
+    }
+  ]
+}

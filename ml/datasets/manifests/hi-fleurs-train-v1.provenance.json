@@ -1,0 +1,72 @@
+{
+  "manifest": {
+    "path": "ml/datasets/manifests/hi-fleurs-train-v1.jsonl",
+    "sha256": "93426dffa97b355a9676c1f1331f1b681decd0b26881501e1a41721a1a2ba3d6",
+    "samples": 2115,
+    "duration_seconds": 23798.34
+  },
+  "created": "2026-08-11",
+  "language": "hi",
+  "sources": [
+    {
+      "name": "fleurs",
+      "reference": "google/fleurs",
+      "language": "multi",
+      "license": "CC-BY-4.0",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/google/fleurs",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "",
+      "speaker_ids": false,
+      "official_splits": true,
+      "contamination_risk": "known_overlap",
+      "notes": "Read speech (FLoRes sentences). Train/dev/test official splits; authors describe splits as speaker-aware [CLAIM]. Widely used in public model training/benchmarks since 2022 — treat every FLEURS number as comparability, never as the primary product ruler."
+    }
+  ],
+  "source_splits": [
+    "train"
+  ],
+  "normalization": "unicode_generic@v2",
+  "primary_ruler": "cer_unicode",
+  "contamination_risk": "known_overlap",
+  "speaker_ids_available": false,
+  "speaker_disjointness": "UNPROVABLE from this source: no per-clip speaker ids published; content-hash disjointness against the frozen eval IS enforced.",
+  "curation": "deterministic: ascending sha256 order until 10.0h budget met (first crossing clip included); eval disjointness enforced by content hash against stt-hi-fleurs-eval@v1",
+  "validation": {
+    "source": "fleurs",
+    "language": "hi",
+    "split": "train",
+    "candidates": 2120,
+    "accepted": 2115,
+    "rejections": [
+      {
+        "sample_id": "fleurs-hi_in-train-000074",
+        "reason": "duration_too_long",
+        "detail": "30.84s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-hi_in-train-001382",
+        "reason": "duration_too_long",
+        "detail": "32.10s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-hi_in-train-000953-2",
+        "reason": "duration_too_long",
+        "detail": "30.12s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-hi_in-train-000731",
+        "reason": "duration_too_long",
+        "detail": "36.36s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-hi_in-train-001391",
+        "reason": "duration_too_long",
+        "detail": "32.88s > 30.0s"
+      }
+    ],
+    "accepted_duration_seconds": 23798.34
+  },
+  "notes": ""
+}

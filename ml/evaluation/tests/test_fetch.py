@@ -7,8 +7,16 @@ logic with local files.
 import wave
 from pathlib import Path
 
-from intelliai_evaluation.dataset import SyntheticSpec
-from intelliai_evaluation.fetch import generate_synthetic, sha256_file
+import httpx
+import pytest
+
+from intelliai_evaluation.dataset import EvalClip, SyntheticSpec
+from intelliai_evaluation.fetch import (
+    ClipIntegrityError,
+    generate_synthetic,
+    materialize_clip,
+    sha256_file,
+)
 
 
 class TestSyntheticGeneration:
@@ -48,6 +56,52 @@ class TestSyntheticGeneration:
         with wave.open(str(target), "rb") as reader:
             frames = reader.readframes(reader.getnframes())
         assert any(byte != 0 for byte in frames)
+
+
+class TestPathMaterialization:
+    """Path clips verify identity; they never create or download."""
+
+    def _clip(self, path: str, sha256: str) -> EvalClip:
+        return EvalClip(
+            id="p",
+            language="hi",
+            reference_text="नमस्ते",
+            duration_seconds=1.0,
+            license="CC-BY-4.0",
+            path=path,
+            sha256=sha256,
+        )
+
+    def test_matching_pin_is_returned(self, tmp_path: Path) -> None:
+        audio = tmp_path / "hi" / "clip.wav"
+        audio.parent.mkdir(parents=True)
+        audio.write_bytes(b"pcm-bytes")
+        clip = self._clip("hi/clip.wav", sha256_file(audio))
+        with httpx.Client() as client:
+            resolved = materialize_clip(clip, tmp_path, client)
+        assert resolved == audio
+
+    def test_missing_file_is_refused(self, tmp_path: Path) -> None:
+        clip = self._clip("hi/absent.wav", "0" * 64)
+        with httpx.Client() as client, pytest.raises(ClipIntegrityError, match="does not exist"):
+            materialize_clip(clip, tmp_path, client)
+
+    def test_mismatched_pin_is_refused(self, tmp_path: Path) -> None:
+        audio = tmp_path / "clip.wav"
+        audio.write_bytes(b"tampered")
+        clip = self._clip("clip.wav", "0" * 64)
+        with httpx.Client() as client, pytest.raises(ClipIntegrityError, match="SHA-256 mismatch"):
+            materialize_clip(clip, tmp_path, client)
+
+    def test_mismatched_local_file_is_not_deleted(self, tmp_path: Path) -> None:
+        # A bad download is discarded; a bad LOCAL file is somebody's
+        # data and materialization must not destroy it.
+        audio = tmp_path / "clip.wav"
+        audio.write_bytes(b"tampered")
+        clip = self._clip("clip.wav", "0" * 64)
+        with httpx.Client() as client, pytest.raises(ClipIntegrityError):
+            materialize_clip(clip, tmp_path, client)
+        assert audio.exists()
 
 
 class TestHashing:

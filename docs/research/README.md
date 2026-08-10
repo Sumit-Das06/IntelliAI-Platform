@@ -32,6 +32,10 @@ ever touches them.
   — small-model / modular multilingual strategy across EN·HI·AR·TA·ML·ZH:
   hybrid-pool architecture, TA/ML/ZH model+dataset screens, routing and
   call-center concurrency analysis, two-arm first experiment.
+  [2026-08-11-15b-ingestion-baseline-report.md](2026-08-11-15b-ingestion-baseline-report.md)
+  — Milestone 15B close-out: frozen public-data manifests, the first
+  Hindi baseline (whisper-small CER 0.2919), Qwen3-ASR 0.6B CPU spike
+  readings, blocked-evaluation verdicts, and the 15C/15D recommendation.
 
 How this directory relates to its neighbors:
 

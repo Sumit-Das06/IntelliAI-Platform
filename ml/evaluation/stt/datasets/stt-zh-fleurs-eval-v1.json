@@ -1,0 +1,1036 @@
+{
+  "name": "stt-zh-fleurs-eval",
+  "version": 1,
+  "capability": "transcription",
+  "description": "PROVISIONAL Mandarin evaluation set (Milestone 15B): 100 deterministic clips from the FLEURS cmn_hans_cn TEST split (CC-BY-4.0, google/fleurs, read 2026-08-11) + two zh-declared probes. The APPROVED zh eval (Common Voice 26.0 zh-CN test) is access-blocked pending a Mozilla Data Collective account; this slice exists to answer the Qwen3-ASR 0.6B CPU-viability question and for a whisper zh comparability read. Contamination: known_overlap. Primary ruler cer_unicode; wer_unicode is recorded but NOT meaningful for unsegmented zh text. Immutable on first citation.",
+  "clips": [
+    {
+      "id": "fleurs-cmn_hans_cn-test-001661-2",
+      "language": "zh",
+      "reference_text": "他没有设定削减数额，只是表示将根据中国的经济产出来决定数额。",
+      "duration_seconds": 12.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001661-2.wav",
+      "sha256": "0df04ad2bbc1abe94168b100b85b8bf374b5b2b527bf5ee1980d0bcf48c8c68e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001663",
+      "language": "zh",
+      "reference_text": "智利首选登山目的地科茶莫山谷 (Cochamó Valley) 被称为南美洲的优胜美地 (Yosemite)，这里有各式各样的花岗岩大石壁和峭壁。",
+      "duration_seconds": 13.38,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001663.wav",
+      "sha256": "0b242eb4c06512556915e53463bb712beaffc56bcee751865c7461d79e93e95c",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001665",
+      "language": "zh",
+      "reference_text": "据透露，这份文件将提及边界争端，巴勒斯坦希望以1967年中东战争前的边界为基础。",
+      "duration_seconds": 15.1,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001665.wav",
+      "sha256": "01ef9680f388c6254fb0f5c83800b063c9197d99a403cd92337e91560d579f4d",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001668-3",
+      "language": "zh",
+      "reference_text": "买一张万能卡（Wild Card）也有不少好处。带着这张卡，你可以进入南非的一些公园或全部的国家公园。",
+      "duration_seconds": 13.68,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001668-3.wav",
+      "sha256": "0e8c32d9290201ece8c221747ca2e67bb15602ede81a61b1a17c63e5696bc5ea",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001673",
+      "language": "zh",
+      "reference_text": "在独立战争期间，十三个州最初根据《联邦条例》组成了弱小的中央政府（国会是其唯一的组成部分）。",
+      "duration_seconds": 8.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001673.wav",
+      "sha256": "0513421059b64bafbb0587fdfa72ac706e4f1e303a79b6d226b2dd9db43b2c41",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001675-2",
+      "language": "zh",
+      "reference_text": "除去表示您的“Sie”之外的所有名词都应以大写字母开头，即使在句子中间也应如此。",
+      "duration_seconds": 11.38,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001675-2.wav",
+      "sha256": "161a19c28d8401c6c600176e1203cc556d421e973cf61b8add7d2d06b71d4ef9",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001676-2",
+      "language": "zh",
+      "reference_text": "与所有南非国家公园一样，该公园每天都收取养护费和门票费。",
+      "duration_seconds": 14.26,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001676-2.wav",
+      "sha256": "1572f3600b58b4735cbff9115e262950821dd82bba237f735d2b63217dc9275f",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001677",
+      "language": "zh",
+      "reference_text": "如今，唯一不能向后折叠翅膀的昆虫是蜻蜓和蜉蝣。",
+      "duration_seconds": 7.98,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001677.wav",
+      "sha256": "04940c7dca3b3189eb51f410f514673259dd9b35243a9a7e3d3472de1c5f0c81",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001678",
+      "language": "zh",
+      "reference_text": "奥利弗·萨克斯 (Oliver Sacks) 在他的论文《总统的演讲》中指出，那些因为脑损伤而无法理解语言的人仍然能够准确地判断说话人是否有诚意。",
+      "duration_seconds": 17.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001678.wav",
+      "sha256": "07ffccbe5c1fa2e1ee942770abfdb23ad8e3d450b0a1a9eed5d9e039233082e4",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001688-2",
+      "language": "zh",
+      "reference_text": "从传统意义上讲，海军的任务是确保国家保持运输人员和货物的能力，同时，干扰敌人运输其人员和货物的能力。",
+      "duration_seconds": 18.78,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001688-2.wav",
+      "sha256": "1092423bdd8e0c525e09de8065c71324ff8c09a8c90aadbad451f721eceed8e3",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001689",
+      "language": "zh",
+      "reference_text": "欧洲是片面积相对较小但有着许多独立国家的大陆。在通常情况下，穿越多个国家旅行意味着必须多次经历签证申请和护照检查。",
+      "duration_seconds": 17.1,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001689.wav",
+      "sha256": "105296861cdbd5e882f448b367d2ce134254bc661100ca4c59e797d1fa6b99cb",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001689-2",
+      "language": "zh",
+      "reference_text": "欧洲是片面积相对较小但有着许多独立国家的大陆。在通常情况下，穿越多个国家旅行意味着必须多次经历签证申请和护照检查。",
+      "duration_seconds": 14.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001689-2.wav",
+      "sha256": "0a73b0d311e1edbdbc9f86bd938deec0bf35761d91a561e2f57401d765c99feb",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001693-2",
+      "language": "zh",
+      "reference_text": "但在队长输掉三柱门后，印度在结束这一局的比赛时只得了 36 分，输掉 7 个三柱门。",
+      "duration_seconds": 12.82,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001693-2.wav",
+      "sha256": "09fcd0524525d12da109fb6b35646c4aeef113ccb989cb243ef90dcacfe8442e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001693-3",
+      "language": "zh",
+      "reference_text": "但在队长输掉三柱门后，印度在结束这一局的比赛时只得了 36 分，输掉 7 个三柱门。",
+      "duration_seconds": 14.0,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001693-3.wav",
+      "sha256": "0d35ad8107c45333e6151b0061731d2269b9032347ae3fe3d8494e4b745b85ae",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001695-2",
+      "language": "zh",
+      "reference_text": "Pa amb Oli 是一种在夏天尤为流行的简单晚餐：面包搭配橄榄油、番茄，手头上任何佐料都可加入，比如奶酪、金枪鱼等。",
+      "duration_seconds": 15.82,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001695-2.wav",
+      "sha256": "1106f0fa48c4793728d4573c3b48ce47221900c8edfac231d158c70b417fce4b",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001697-3",
+      "language": "zh",
+      "reference_text": "他一直无法用药物来缓解疼痛，因为比赛禁止参赛者服用这些药物。",
+      "duration_seconds": 11.08,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001697-3.wav",
+      "sha256": "0289d1da390cb5fa6337679153ebe14be768c4d838e226681d77777231fcc32a",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001704",
+      "language": "zh",
+      "reference_text": "1990 年，由于沙漠的威胁，它被列入了濒危世界遗产名录。",
+      "duration_seconds": 7.26,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001704.wav",
+      "sha256": "176682a242f28a78265a65b5e8656b663fd01efe64544a106b0748d841a42b38",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001705-3",
+      "language": "zh",
+      "reference_text": "1940 年 8 月 15 日，盟军攻入法国南部，这次进攻被称为“龙骑兵行动”。",
+      "duration_seconds": 9.54,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001705-3.wav",
+      "sha256": "11c4c9cb787c66ff44cd386befaca50a03da90eccb4e2d1730f1e60a63fa3141",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001707",
+      "language": "zh",
+      "reference_text": "它是南非的主要景点之一，被认为是南非国家公园体系 (SANParks) 的主打景点。",
+      "duration_seconds": 6.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001707.wav",
+      "sha256": "16a97f34779581ba901264b32854f5f0a1d2dd5cb174ad4e31bb2b85ffa89e16",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001717-3",
+      "language": "zh",
+      "reference_text": "水下的地形造成回流集中于几处较深的区域，那里可能会形成流向深水的急流。",
+      "duration_seconds": 15.24,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001717-3.wav",
+      "sha256": "0514edf549394b8a50e6b4b305779e71da2324f2803f662c8f950bbcaa0295f3",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001724-2",
+      "language": "zh",
+      "reference_text": "它作为奢侈品中心的声誉始于公元 400 年左右，一直延续到公元 1100 年左右。",
+      "duration_seconds": 12.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001724-2.wav",
+      "sha256": "0d112efb0c1ca3471ccb5d0b49e3cf59d5968aa9e32b8b2af6e5ac7daf000022",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001726",
+      "language": "zh",
+      "reference_text": "实地考察是任何教学活动的重要组成部分。通常，老师会很乐意带学生去那些公交车无法到达的地方。",
+      "duration_seconds": 13.2,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001726.wav",
+      "sha256": "11e0d4fda3ad7894c0f9985a56376be709c06d8536c1f1cdf91c224d7158f2bb",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001734-2",
+      "language": "zh",
+      "reference_text": "科学家们可以得出结论，暗物质对其他暗物质的影响方式与普通物质相同。",
+      "duration_seconds": 6.6,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001734-2.wav",
+      "sha256": "172e6fe466e9001bf58e6ea64e22a5f87df5a15b1a91949ef6ebebbb918c5a02",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001735-2",
+      "language": "zh",
+      "reference_text": "来自美国普林斯顿大学和瑞典乌普萨拉大学的研究人员报告称，由于当地特有的达尔文雀中的勇地雀和外来的仙人掌大嘴地雀之间的繁殖，这个新物种只进化了两代，尽管人们认为这一过程需要更长的时间。",
+      "duration_seconds": 21.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001735-2.wav",
+      "sha256": "136cb6fe6c12cde7c0b873041af0ebb8f9cb82574b455ae2dce0e81e90fccc90",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001735-3",
+      "language": "zh",
+      "reference_text": "来自美国普林斯顿大学和瑞典乌普萨拉大学的研究人员报告称，由于当地特有的达尔文雀中的勇地雀和外来的仙人掌大嘴地雀之间的繁殖，这个新物种只进化了两代，尽管人们认为这一过程需要更长的时间。",
+      "duration_seconds": 18.54,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001735-3.wav",
+      "sha256": "113ccd863935e24754b0a966343244e42650be62bd77361b7e48a10a92c96e63",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001738-2",
+      "language": "zh",
+      "reference_text": "它会攻击任何进入水中的东西；即使像霸王龙之类的巨型恐龙也不是它的对手。",
+      "duration_seconds": 8.28,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001738-2.wav",
+      "sha256": "0fb889798202ce00d030e7935b9f8200efe66f5fe82a395bb6078db0736a5a46",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001739-2",
+      "language": "zh",
+      "reference_text": "该洞穴坐落在麦加 (Mecca) 北部的一座山顶上，与外界完全隔绝。",
+      "duration_seconds": 8.7,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001739-2.wav",
+      "sha256": "17dfafe820fa15a165dc35f82d61ae35dd312211d3759cdb3be3da25227c8d9a",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001743-3",
+      "language": "zh",
+      "reference_text": "大多数对技术决定论的解释都包括这两个总体思路：一是技术本身的发展在很大程度上超越了文化或政治影响，二是技术反过来会对社会产生不受社会条件制约的内在“影响”。",
+      "duration_seconds": 15.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001743-3.wav",
+      "sha256": "04872950f05a602d6a120a00ab74dc1060047971b5e7b14e43645a1e8066d1af",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001753-3",
+      "language": "zh",
+      "reference_text": "虽然这通常只是一种不准确的刻板印象，但在巴黎生活的最佳方式仍然是尽量举止得当，表现得像一个有 “bien élevé”（教养良好）的人。这会让参加社会活动变得容易得多。",
+      "duration_seconds": 17.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001753-3.wav",
+      "sha256": "17e33539fb1145ac0ef37592551d3805cf6ceeedc77e31d103b323684dafb248",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001758",
+      "language": "zh",
+      "reference_text": "该群岛位于南极半岛以北 120 公里处。最大的岛屿是乔治国王岛，这里是“繁星村（Villa Las Estrellas）”的定居点。",
+      "duration_seconds": 12.06,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001758.wav",
+      "sha256": "11b528d480a7744bb1ab02013540c1b754ca59c257873fc202d47d9d5872bcaf",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001760",
+      "language": "zh",
+      "reference_text": "沧龙是那个时代的顶级掠食者，除了同类它什么都不怕。",
+      "duration_seconds": 5.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001760.wav",
+      "sha256": "0d7b18dc1a0b82345cfcb16ee8ace1c6208cd7c7deff40842ad9d0fcc1b32f16",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001765",
+      "language": "zh",
+      "reference_text": "自从 1537 年亚松森（Asunción）建成以来，巴拉圭一直设法保留了这座城的许多本土特色和特性。",
+      "duration_seconds": 13.14,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001765.wav",
+      "sha256": "01589f4ba1036a4bf505e5ccd8f5a153877bbfd3747527d39dd7a207510e0673",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001769-3",
+      "language": "zh",
+      "reference_text": "大金字塔是埃及人在公元前三世纪的杰作，它是众多向已故法老表示敬意的大型金字塔的其中之一。",
+      "duration_seconds": 8.28,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001769-3.wav",
+      "sha256": "0da2306a5051461bef43e778c1382963a05e085a27a91fc74e8769aee921492a",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001775",
+      "language": "zh",
+      "reference_text": "录像的使用为阐释微表情（持续几毫秒的面部运动）带来了重大发现。",
+      "duration_seconds": 8.22,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001775.wav",
+      "sha256": "0b7dbaa3d2f0517f16e5c32212df1edf2b8d71733e3c82d44298d4ee031a1ff8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001781-3",
+      "language": "zh",
+      "reference_text": "马达加斯加是目前为止最大的岛屿，对野生动物来说还是一片独立的大陆。",
+      "duration_seconds": 6.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001781-3.wav",
+      "sha256": "13f80e5e140996a5760d4cbbfc11511889ef4ee2e859a52c0a8a9d772a9c0c78",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001782",
+      "language": "zh",
+      "reference_text": "同样，历朝历代更迭期间都是一段小国分立的不稳定时代。其中最有名的便是长达 60 年的三国时期，该时期处于汉晋两代的更迭之间。",
+      "duration_seconds": 13.38,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001782.wav",
+      "sha256": "19888ac67d7b02405f77312ca9836f4402f982c14029a4c60892d640bb5f9d22",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001785-3",
+      "language": "zh",
+      "reference_text": "支架式教学不是一种学习方法，而是一种辅助刚学习使用新电脑程序或启动新项目的人的手段。",
+      "duration_seconds": 16.88,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001785-3.wav",
+      "sha256": "0fb6b0f9c673358f287433cca966100cd117fddd3dd150a9077b72141e134bb8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001787",
+      "language": "zh",
+      "reference_text": "写博客是一种能够激发合作的工具，还能鼓励学生把学习延伸到传统的学校授课之外。",
+      "duration_seconds": 9.66,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001787.wav",
+      "sha256": "018b8c2ca55e74e8769d982f86b0955ec54aa11e20946d0df3df9b3cc94a6420",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001790",
+      "language": "zh",
+      "reference_text": "他的作品极具辨识度，拥有高质量和丰富的细节，这也使得他成为了极少数在集邮人士中“家喻户晓”的人物之一。有些人专门收集他的作品。",
+      "duration_seconds": 19.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001790.wav",
+      "sha256": "08499486f09bfeea85313efbcbf99f56c0c838534691bd08243775d31fd7cff8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001792-2",
+      "language": "zh",
+      "reference_text": "这被称为化学物质的 pH 值。你可以使用红甘蓝汁制作指示剂。",
+      "duration_seconds": 15.5,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001792-2.wav",
+      "sha256": "0c453d6c3d050dddd283f7e26384f3514addb6a6a79e7c631e7da158276da516",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001792-3",
+      "language": "zh",
+      "reference_text": "这被称为化学物质的 pH 值。你可以使用红甘蓝汁制作指示剂。",
+      "duration_seconds": 9.96,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001792-3.wav",
+      "sha256": "03c460c733d2c1b9f1dcaf90d950b2263068e3d8340fdb4787328c894398890f",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001796",
+      "language": "zh",
+      "reference_text": "这种沉积物是形成沙洲和海滩的必要条件，而沙洲和海滩是野生动物的栖息地。",
+      "duration_seconds": 6.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001796.wav",
+      "sha256": "18b2b67d6ebc3b1443201a391d0f51d3dcb0692398cf934cfcb897bd134fcbeb",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001796-3",
+      "language": "zh",
+      "reference_text": "这种沉积物是形成沙洲和海滩的必要条件，而沙洲和海滩是野生动物的栖息地。",
+      "duration_seconds": 12.56,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001796-3.wav",
+      "sha256": "0a88b210064cb277e0fe652dd5174ef803219b06bff01d890e3244a02960ba1e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001798-3",
+      "language": "zh",
+      "reference_text": "早年，该节目仅在运营已久的互联网广播网站TogiNet Radio上播出，TogiNet Radio是一个专注于谈话广播的网站。",
+      "duration_seconds": 10.32,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001798-3.wav",
+      "sha256": "15b165b6c731a7995ee9f918c421e44bb717809ea41e9036dba687af11d1a291",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001800-2",
+      "language": "zh",
+      "reference_text": "大桥预计将于 2017 年 9 月全面投入使用，届时巴西海关检查站预计也将完工。",
+      "duration_seconds": 8.46,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001800-2.wav",
+      "sha256": "091e6d8f2fe84ea8e11cf65c4e1ba289e8cde8e3ae965ff745b4c0433c8d089f",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001805-2",
+      "language": "zh",
+      "reference_text": "Scotturb 403 路公共汽车定期发车前往辛特拉 (Sintra)，在罗卡角停靠。",
+      "duration_seconds": 12.18,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001805-2.wav",
+      "sha256": "045233559ac43042647f4dc6ff8661bf57ea0f62c6af2094d50f042b845202ca",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001808",
+      "language": "zh",
+      "reference_text": "战争结束两年后，曾经的盟友如今成了敌人，冷战随即开始。",
+      "duration_seconds": 6.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001808.wav",
+      "sha256": "0ef43439120f6e482ad8e496822f4934dc53d8a171303021d60a10b1028abce2",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001816-2",
+      "language": "zh",
+      "reference_text": "杜瓦尔已婚，有两个已经成年的孩子，他并没有给故事的讲述者米勒留下太大印象。",
+      "duration_seconds": 10.8,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001816-2.wav",
+      "sha256": "0949a78b335a0a3cbc7bb9f84b8dfa8967aff011e39273e46ded3699049424bd",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001818",
+      "language": "zh",
+      "reference_text": "人们可能想不到，旅行者在回程中也需要耐心和理解。",
+      "duration_seconds": 7.92,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001818.wav",
+      "sha256": "0430ff06050d7af27bac3515dfc28020229b31f3351cf6981f20e22641d2d991",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001818-3",
+      "language": "zh",
+      "reference_text": "人们可能想不到，旅行者在回程中也需要耐心和理解。",
+      "duration_seconds": 8.4,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001818-3.wav",
+      "sha256": "02f7d620191337407a09ab7f1c2d7dba61009f891465365e41155fa558200892",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001823",
+      "language": "zh",
+      "reference_text": "交通流量研究的是驾驶员和车辆在两点之间的运动，以及它们之间的相互作用。",
+      "duration_seconds": 9.18,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001823.wav",
+      "sha256": "114f4ac6719ab363c66d2ba0d6415831a31eb29c9a5e7687567c9e3900b2b909",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001823-2",
+      "language": "zh",
+      "reference_text": "交通流量研究的是驾驶员和车辆在两点之间的运动，以及它们之间的相互作用。",
+      "duration_seconds": 14.86,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001823-2.wav",
+      "sha256": "037f711c48902ffa4d644f1af1a00e77ad027c5c504546880b16a29f7e253667",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001828",
+      "language": "zh",
+      "reference_text": "在互联网上搜索“应对敌对环境课程”，也许能找到提供培训的当地公司的地址。",
+      "duration_seconds": 8.22,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001828.wav",
+      "sha256": "0112b2415c6faae2fe8d15791c2cce32d119c8c087f54275fbafa4b3ab299e78",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001832-2",
+      "language": "zh",
+      "reference_text": "流行的运动项目包括足球、篮球、排球、水球、击剑、橄榄球、自行车、冰球、轮滑曲棍球和一级方程式赛车。",
+      "duration_seconds": 8.76,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001832-2.wav",
+      "sha256": "04786633073ba1f45a50e182f97d1860b884bac779a206a04afc4f35e866e347",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001836-3",
+      "language": "zh",
+      "reference_text": "人们自古以来就知道金、银、铜等基本化学元素，因为这些元素都能以自然形态在自然界中发现，而且比较容易使用原始工具进行开采。",
+      "duration_seconds": 15.0,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001836-3.wav",
+      "sha256": "051aee426e0520b66fa9f5c2fd029f0a50eb649ada1abf974679bf18e2e0bb83",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001838-2",
+      "language": "zh",
+      "reference_text": "吉萨大金字塔是七大奇迹中唯一至今仍屹立不倒的建筑。",
+      "duration_seconds": 7.32,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001838-2.wav",
+      "sha256": "14a0fcd6f8e4d42e16d29ab48beff25ffc4ef6a26298ef52d5dde1ab666e739e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001839",
+      "language": "zh",
+      "reference_text": "把滑雪路线想象成类似的徒步路线。",
+      "duration_seconds": 6.24,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001839.wav",
+      "sha256": "0595789d9d4dc38ac2b5aff9a4cd94e69d47635d5a552df9bf7fb522e4dbd847",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001851-2",
+      "language": "zh",
+      "reference_text": "离岸流是海浪从海滩快速回流到海中的回流，通常发生在暗礁或类似的地方。",
+      "duration_seconds": 13.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001851-2.wav",
+      "sha256": "0c478e5afacf9ef1f66bdd438090062c17bb11ccdc3fd1ea1776c12c705cf6b8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001855-2",
+      "language": "zh",
+      "reference_text": "狮群的行为与狼群或狗群非常类似。这些动物与狮子的行为惊人地相似（但与其他大型猫科动物不同），而且这些行为对它们的猎物来说也是非常致命的。",
+      "duration_seconds": 14.4,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001855-2.wav",
+      "sha256": "05c29be37b4ddecb0111bb2ad5e4940973d93d57b5e22b6555c780a85872c902",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001858-2",
+      "language": "zh",
+      "reference_text": "研究该疾病的联合国专家丹妮尔·拉塔涅 (Danielle Lantagne) 表示，疫情爆发很可能是由维和人员引起的。",
+      "duration_seconds": 10.98,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001858-2.wav",
+      "sha256": "09279482fe917a249ffdfa03b965b2a5e253a87840834a5f7a376a55c43902a7",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001863",
+      "language": "zh",
+      "reference_text": "西藏冥想的核心活动是天瑜伽。通过把不同的神形象化，净化能量通道，激活轮穴，从而达到顿悟的境界。",
+      "duration_seconds": 9.54,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001863.wav",
+      "sha256": "03b9a85a164b03b81f964d144bac7b8758b229e897b4d4779528b48c0f892a5d",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001864",
+      "language": "zh",
+      "reference_text": "基什内尔女士在阿根廷大剧院宣布她有意参加总统竞选，2005 年也是在这里，她作为布宜诺斯艾利斯省代表开始竞选参议员。",
+      "duration_seconds": 12.36,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001864.wav",
+      "sha256": "109c6651fff976d75b3cca872e00492d6ab082c4b33ca13ce15a21440e9281a3",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001864-2",
+      "language": "zh",
+      "reference_text": "基什内尔女士在阿根廷大剧院宣布她有意参加总统竞选，2005 年也是在这里，她作为布宜诺斯艾利斯省代表开始竞选参议员。",
+      "duration_seconds": 16.26,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001864-2.wav",
+      "sha256": "0821bb28559e6549910b88f4aa946f9d2d70fce1a0a5cb28a8594fa0447f6891",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001868-2",
+      "language": "zh",
+      "reference_text": "在另一种极端情况下，这个人会变成一个与之前迥然不同的个体，觉得他/她必须改变团队所做的一切，并把成果据为己有。",
+      "duration_seconds": 17.18,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001868-2.wav",
+      "sha256": "10cee74ebdf0bb517cafb50111a3078f06948c00f95d9b6035f52304c03639e8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001868-3",
+      "language": "zh",
+      "reference_text": "在另一种极端情况下，这个人会变成一个与之前迥然不同的个体，觉得他/她必须改变团队所做的一切，并把成果据为己有。",
+      "duration_seconds": 18.46,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001868-3.wav",
+      "sha256": "01eb7426e7002326c09f8d91733479babf4ec319f892859ca35a75c0faee946a",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001882",
+      "language": "zh",
+      "reference_text": "科学家希望了解自从彗星很久以前与地球相撞以来，行星是如何形成的，尤其是地球的形成方式。",
+      "duration_seconds": 12.78,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001882.wav",
+      "sha256": "075ce96e1b6f42ee75cce2142012011eda7041258df3e652bf0fb9c400e9ec7c",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001883-3",
+      "language": "zh",
+      "reference_text": "桥下垂直净空 15 米。该项目于 2011 年 8 月完工，但直到 2017 年 3 月才开始通车。",
+      "duration_seconds": 13.58,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001883-3.wav",
+      "sha256": "1980a55f880a2b1f5b08fc91a950540b3df44ec5c10f27417430b529b9d97b9e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001886",
+      "language": "zh",
+      "reference_text": "古代文明和部落开始驯养它们，食用和使用它们的奶、肉、毛和皮。",
+      "duration_seconds": 10.22,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001886.wav",
+      "sha256": "0d7d955272540ea0fcc2560ec147d7e99840fc866f24ef06fc3d90cb6d41d6bd",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001886-3",
+      "language": "zh",
+      "reference_text": "古代文明和部落开始驯养它们，食用和使用它们的奶、肉、毛和皮。",
+      "duration_seconds": 14.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001886-3.wav",
+      "sha256": "147f3e5fe057089c931c988577f4f5c8720e7a19909736c42f65fcf2846354de",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001889",
+      "language": "zh",
+      "reference_text": "有了它，我们才有了火车、汽车和许多其他交通工具。",
+      "duration_seconds": 10.6,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001889.wav",
+      "sha256": "1966b67660dc516465a82ed630fc482132a13aedb08f1073e3aa5ea1ca8a42f8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001891",
+      "language": "zh",
+      "reference_text": "拉卡·辛格 (Lakkha Singh) 还介绍了 chhappan bhog bhajan。歌手 Raju Khandelwal 陪同他身边。",
+      "duration_seconds": 20.74,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001891.wav",
+      "sha256": "0c50d33efce4ad18c796cf991c9aeb5d937624fb37c6b9d6540b282bc6155ef5",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001895-2",
+      "language": "zh",
+      "reference_text": "随着希腊知识的衰落，西方脱离了其希腊哲学和科学根源。",
+      "duration_seconds": 6.3,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001895-2.wav",
+      "sha256": "06649cceb6f4f752c6e3d668e92296a38e386247382998e0eb1a0605c5bc7c82",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001899-2",
+      "language": "zh",
+      "reference_text": "穆罕默德对尘世生活之外的事十分感兴趣。他以前经常到“努尔”（光明）山上一个叫做”希拉“的山洞里去冥想。",
+      "duration_seconds": 15.72,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001899-2.wav",
+      "sha256": "09cc580dcf33265814da2f351258606f9bf37e4669b0fbd35683c9f6ef5c1796",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001901",
+      "language": "zh",
+      "reference_text": "人工智能有很强的科幻色彩，但它其实是计算机科学非常重要的一个分支，研究的是机器的行为、学习和智能适应。",
+      "duration_seconds": 11.16,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001901.wav",
+      "sha256": "001787a4c1a5d3fa4d7f9502eb93a7c684801a2bed2bf6c3bea6aa44d0de8724",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001904",
+      "language": "zh",
+      "reference_text": "然而，由于文化交流迟缓，西方的时尚可能落后 25 到 30 年。",
+      "duration_seconds": 8.16,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001904.wav",
+      "sha256": "11250f993966d3258f3f885cd32cc11ea1ffbdf32c82f4b878be72e4677d6d39",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001911",
+      "language": "zh",
+      "reference_text": "同理，有了申根签证，你就不必分别向每个申根成员国申请签证，从而节省了时间、金钱和手续。",
+      "duration_seconds": 9.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001911.wav",
+      "sha256": "0b47fd56578b7bff25e9c3b90f3de5319a0cf8d1bb27ffe623e5586502625a7d",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001915-3",
+      "language": "zh",
+      "reference_text": "你可以乘坐 boda-boda（出租的摩托车）游览戈马（Goma）。短途车程的正常（当地）价格是 500 刚果法郎。",
+      "duration_seconds": 17.66,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001915-3.wav",
+      "sha256": "01b1356a68011f204eeee080239291f8e49add0f2cbc93fc17fb79cf4d762afc",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001919-3",
+      "language": "zh",
+      "reference_text": "这座城市也是攀登尼拉贡戈火山（Nyiragongo）以及非洲最便宜的山地大猩猩追踪项目的基地。",
+      "duration_seconds": 11.7,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001919-3.wav",
+      "sha256": "0e89f6f0a14a81fa9cc2cf5e8234c5d67de3de276ef0b434b67c384b6acf6ddd",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001921-2",
+      "language": "zh",
+      "reference_text": "另一方面，冰雪天气在很多国家都十分常见，全年交通也几乎不会中断。",
+      "duration_seconds": 8.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001921-2.wav",
+      "sha256": "05bb82dff04723336ce50340613ff62034f840bf5c05c713e8d6730097a6a97b",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001925-2",
+      "language": "zh",
+      "reference_text": "完成的工作大多是理论性的，但编写程序的目的，是为了模拟对人马座星系的观测。",
+      "duration_seconds": 8.94,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001925-2.wav",
+      "sha256": "075358c16b4bee406a054e26e717274267bb2668adb123e0cf8480411cd2b0dc",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001931",
+      "language": "zh",
+      "reference_text": "该服务经常用于航运，包括游艇以及有远程数据和语音需求的探险。",
+      "duration_seconds": 6.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001931.wav",
+      "sha256": "057a57232823a56a2df3f775eb62d1e60b058017af5471b7a54e6c487accf27a",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001936",
+      "language": "zh",
+      "reference_text": "佩里表示，他会“返回得克萨斯，评估今晚党团会议的结果，明确自己在这次较量中是否有胜算的余地”。但后来他又表示会继续参加竞选，并参加于 1 月 21 日在南卡罗莱纳州举行的初选。",
+      "duration_seconds": 21.18,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001936.wav",
+      "sha256": "07b5f3b35436ed2ac8699aa8829db14c16edfb4e9e792ee069c56a7fac83f7b2",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001936-3",
+      "language": "zh",
+      "reference_text": "佩里表示，他会“返回得克萨斯，评估今晚党团会议的结果，明确自己在这次较量中是否有胜算的余地”。但后来他又表示会继续参加竞选，并参加于 1 月 21 日在南卡罗莱纳州举行的初选。",
+      "duration_seconds": 22.5,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001936-3.wav",
+      "sha256": "0c7779cf5607ae00dfb99fa7486379c76f07ca40c6069a3c816ca2796665c07f",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001937",
+      "language": "zh",
+      "reference_text": "然而，这些计划几乎在一夜之间被弃如敝履，在违反《里加和平条约》、《苏联波兰互不侵犯条约》及其他双边及多边国际条约，入侵波兰的东部地区之后，超过 80 万名苏联红军入境，并在白俄罗斯和乌克兰筑起阵地。",
+      "duration_seconds": 21.12,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001937.wav",
+      "sha256": "06ad435587de722afbf18bc0ec467e22bfa6ebdfdfafe7ead43943c5d7d14f99",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001937-2",
+      "language": "zh",
+      "reference_text": "然而，这些计划几乎在一夜之间被弃如敝履，在违反《里加和平条约》、《苏联波兰互不侵犯条约》及其他双边及多边国际条约，入侵波兰的东部地区之后，超过 80 万名苏联红军入境，并在白俄罗斯和乌克兰筑起阵地。",
+      "duration_seconds": 23.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001937-2.wav",
+      "sha256": "0e6c5ddd003f96e5e165c61ea66dcfc80fafca9b921523fba177b71279b1d6db",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001943",
+      "language": "zh",
+      "reference_text": "压力越小，生命力就表现得越积极。每个人都有可能找到绝对的平静和满足。",
+      "duration_seconds": 6.84,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001943.wav",
+      "sha256": "10d3eb9eb5453a54e24471151459882a5bab76877da4eadf7125c07c6d80adc8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001947",
+      "language": "zh",
+      "reference_text": "在军队到来之前，海地自 19 世纪初以来从未遇到过与该疾病有关的问题。",
+      "duration_seconds": 10.5,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001947.wav",
+      "sha256": "0a6b80656a65604fb8cf3ecd5e9fdebfab2c157a1f13c43dc1c5effe01b1f3ed",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001956-2",
+      "language": "zh",
+      "reference_text": "迄今为止，船运是跨洋运输大量人员和货物的最有效方式。",
+      "duration_seconds": 14.42,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001956-2.wav",
+      "sha256": "01e5e811708918cbc396b27d702f8e64b304157d31cc3ed11815007a2f24ec47",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001959-2",
+      "language": "zh",
+      "reference_text": "尽管如此，还是要听从有关部门的建议，遵守所有的标志并密切注意安全警告。",
+      "duration_seconds": 8.7,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001959-2.wav",
+      "sha256": "018a13f390a0308b76a6180cf4681df7dfd112079c15ba3f8ebdab2a0a76712a",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001960",
+      "language": "zh",
+      "reference_text": "报道称他年仅 20 多岁。比伯发表声明表示：“虽然我当时并不在场，也没有直接经历这起悲惨事故，但我仍为死者家属感到悲伤，为他们祈祷。”",
+      "duration_seconds": 10.98,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001960.wav",
+      "sha256": "0b362a92acd15606e261916f9d19b8ccae59b7b6887359367b584ed65d7abc2e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001970-2",
+      "language": "zh",
+      "reference_text": "它的舌头有可能是分叉的，对此我们尚不确定。它的食物包括海龟、大型鱼类、其他沧龙，甚至会吃人。",
+      "duration_seconds": 14.64,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001970-2.wav",
+      "sha256": "065f4d987227c2eaccab2f3ec25940a49e58e896331dd3575b4c170ada00bfb6",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001975",
+      "language": "zh",
+      "reference_text": "梵蒂冈城的人口大约有 800 人。它是世界上最小的独立国家，也是人口最少的国家。",
+      "duration_seconds": 7.02,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001975.wav",
+      "sha256": "0d74e3e0d9b49f3e8cd3c9bed1131a204b79321c6e3460933cd561dfcbf8775d",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001981",
+      "language": "zh",
+      "reference_text": "如果只是在乘船游览的情况下登岸，则不需要单独的签证（规定截至 2009 年）。",
+      "duration_seconds": 9.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001981.wav",
+      "sha256": "005da859fcead4b9b5cbf2c74c8310bf8709bc0a9b9c9ea16ade5ea97d71d9c8",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001994",
+      "language": "zh",
+      "reference_text": "毋庸置疑的是，如果你会讲一门罗曼语，那么学习葡萄牙语会更加容易。",
+      "duration_seconds": 11.62,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001994.wav",
+      "sha256": "17a8a46af733169f105f79c2a6d49257739ff54d2c5712cced15f50947f4d4e6",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-001999",
+      "language": "zh",
+      "reference_text": "20 世纪 60 年代，布热津斯基先是为约翰·福特·肯尼迪效力，担任他的顾问，后来又为林登·贝恩斯·约翰逊政府工作。",
+      "duration_seconds": 13.98,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-001999.wav",
+      "sha256": "16c35cae5218ea7bdcb9eb6c6ba3d869a95b0ade50b56d05afbb7f409868669e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-002001-3",
+      "language": "zh",
+      "reference_text": "强烈建议旅客注意所在地的恶劣天气风险，它们可能会影响旅行计划。",
+      "duration_seconds": 6.9,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-002001-3.wav",
+      "sha256": "05a2f5e1c01ae7e32e832fcbd94f6acba23b81f2517a61b9371a777a2e4d66fa",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-002002-3",
+      "language": "zh",
+      "reference_text": "它让玩家可以通过在空中移动设备来控制电子游戏中的运动和操作。",
+      "duration_seconds": 14.14,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-002002-3.wav",
+      "sha256": "05dd8c2ca49b90782b30d860d0771846e438a5f5ae7fd628a804e098c256af04",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-002004",
+      "language": "zh",
+      "reference_text": "同一个月，又有一架客机冲出马什哈德的跑道，撞上一堵墙，造成 17 人死亡。",
+      "duration_seconds": 10.2,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-002004.wav",
+      "sha256": "10e8e48d2cf432a8f7db5ebf73781389c32b0fa60d93fe72d145d7673f56686e",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-002008-2",
+      "language": "zh",
+      "reference_text": "巴厘岛会议议程中的其他议题还包括拯救世界上现存的森林，分享技术以帮助发展中国家以污染较少的方式发展。",
+      "duration_seconds": 16.48,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-002008-2.wav",
+      "sha256": "06ee41c36612aca45900bd6382872becaa8c467016881709c13b2b2699f96111",
+      "notes": "FLEURS cmn_hans_cn/test; gender=0"
+    },
+    {
+      "id": "fleurs-cmn_hans_cn-test-002009",
+      "language": "zh",
+      "reference_text": "最容易获得的植物性资源应该是叶子和豆科植物中的蛋白质，但像我们这样的灵长类动物很难消化这种蛋白质，除非是煮熟的。",
+      "duration_seconds": 11.76,
+      "license": "CC-BY-4.0",
+      "path": "fleurs/cmn_hans_cn/test/fleurs-cmn_hans_cn-test-002009.wav",
+      "sha256": "0d75fb8fc9bead9fad907c7a75d23b0bb3e8c91eb194d76bbd6bd5c1dcae5dfd",
+      "notes": "FLEURS cmn_hans_cn/test; gender=1"
+    },
+    {
+      "id": "zh-silence-10s",
+      "language": "zh",
+      "reference_text": "",
+      "duration_seconds": 10.0,
+      "license": "Generated (IntelliAI, deterministic)",
+      "synthetic": {
+        "kind": "silence",
+        "duration_seconds": 10.0,
+        "sample_rate_hz": 16000,
+        "frequency_hz": 440.0
+      },
+      "notes": "Same probe spec as the hi/en probes; zh-declared."
+    },
+    {
+      "id": "zh-tone-440hz-5s",
+      "language": "zh",
+      "reference_text": "",
+      "duration_seconds": 5.0,
+      "license": "Generated (IntelliAI, deterministic)",
+      "synthetic": {
+        "kind": "tone",
+        "duration_seconds": 5.0,
+        "sample_rate_hz": 16000,
+        "frequency_hz": 440.0
+      },
+      "notes": "Same probe spec as the hi/en probes; zh-declared."
+    }
+  ]
+}

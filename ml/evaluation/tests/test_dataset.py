@@ -72,3 +72,44 @@ class TestSchemaRefusals:
             self._clip(synthetic={"kind": "silence", "duration_seconds": 1.0})
         )
         assert synth.filename == "x.wav"
+
+
+class TestPathSource:
+    """Local-path clips: same pin discipline as downloads."""
+
+    def _clip(self, **overrides: object) -> dict[str, object]:
+        base: dict[str, object] = {
+            "id": "p",
+            "language": "hi",
+            "reference_text": "नमस्ते",
+            "duration_seconds": 2.0,
+            "license": "CC-BY-4.0",
+        }
+        base.update(overrides)
+        return base
+
+    def test_path_clip_is_valid_with_pin(self) -> None:
+        clip = EvalClip.model_validate(self._clip(path="hi/fleurs/000123.wav", sha256="0" * 64))
+        assert clip.filename == "hi/fleurs/000123.wav"
+
+    def test_path_clip_without_sha256_is_refused(self) -> None:
+        with pytest.raises(ValidationError, match="sha256 pin"):
+            EvalClip.model_validate(self._clip(path="a.wav"))
+
+    def test_absolute_path_is_refused(self) -> None:
+        with pytest.raises(ValidationError, match="relative"):
+            EvalClip.model_validate(self._clip(path="C:/audio/a.wav", sha256="0" * 64))
+
+    def test_escaping_path_is_refused(self) -> None:
+        with pytest.raises(ValidationError, match="escape"):
+            EvalClip.model_validate(self._clip(path="../a.wav", sha256="0" * 64))
+
+    def test_path_plus_url_is_refused(self) -> None:
+        with pytest.raises(ValidationError, match="exactly one"):
+            EvalClip.model_validate(
+                self._clip(
+                    path="a.wav",
+                    url="https://example.com/a.wav",
+                    sha256="0" * 64,
+                )
+            )

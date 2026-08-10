@@ -63,6 +63,30 @@ def materialize_clip(clip: EvalClip, data_dir: Path, client: httpx.Client) -> Pa
             generate_synthetic(clip.synthetic, target)
         return target
 
+    if clip.path is not None:
+        # A path clip is never downloaded: it was placed by ingestion (or a
+        # recording pipeline) before the run. Missing or mismatched is a
+        # hard failure — materialization verifies identity, it does not
+        # create it.
+        if clip.sha256 is None:  # unreachable: model validator guarantees
+            msg = f"clip {clip.id!r}: path clip without sha256 pin"
+            raise ClipIntegrityError(msg)
+        if not target.exists():
+            msg = (
+                f"clip {clip.id!r}: local file {target} does not exist; "
+                "run the ingestion that produced this manifest first"
+            )
+            raise ClipIntegrityError(msg)
+        actual = sha256_file(target)
+        if actual != clip.sha256.lower():
+            msg = (
+                f"clip {clip.id!r}: SHA-256 mismatch — expected "
+                f"{clip.sha256.lower()}, got {actual}; refusing to score "
+                "unverified audio"
+            )
+            raise ClipIntegrityError(msg)
+        return target
+
     if clip.url is None or clip.sha256 is None:  # unreachable: model validator guarantees
         msg = f"clip {clip.id!r}: url clip without url/sha256 pin"
         raise ClipIntegrityError(msg)

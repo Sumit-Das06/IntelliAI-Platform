@@ -133,6 +133,13 @@ class TestLanguageBindingIsPolicyNotIdentity:
         # can ever be scored under this binding.
         assert profile_for("zxx") is UNICODE_GENERIC_V2
 
+    def test_mandarin_is_bound_to_the_generic_ruler(self) -> None:
+        # Bound at 15B (founder-ordered zh evaluation). cer_unicode is the
+        # primary zh ruler; the generic character stream is honest for Han
+        # text. wer_unicode stays recordable but a whitespace "word" in
+        # unsegmented zh is a sentence — never cite it for zh.
+        assert profile_for("zh") is UNICODE_GENERIC_V2
+
     def test_an_unbound_language_refuses_rather_than_defaulting(self) -> None:
         # Defaulting is how a Devanagari reference gets scored by an ASCII
         # ruler and committed to an append-only ledger.

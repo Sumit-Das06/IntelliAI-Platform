@@ -1,0 +1,177 @@
+"""The source registry: one dated, license-verdict record per public source.
+
+A source that cannot be used is still registered — BLOCKED is a status
+with a reason, never an omission. License verdicts are facts read at a
+source URL on a date; they decay and must be re-verified before any new
+load-bearing use (RESEARCH_FRAMEWORK §2).
+"""
+
+from __future__ import annotations
+
+import enum
+from typing import Final
+
+from pydantic import BaseModel, ConfigDict
+
+
+class Access(enum.StrEnum):
+    """Can this machine fetch the source right now?"""
+
+    OPEN = "open"  # anonymous download works
+    GATED = "gated"  # requires an authenticated, terms-accepted account
+    BLOCKED = "blocked"  # unusable until a named condition is resolved
+
+
+class CommercialVerdict(enum.StrEnum):
+    YES = "yes"
+    CONDITIONAL = "conditional"  # named condition (counsel/confirmation)
+    NO = "no"
+
+
+class SourceRecord(BaseModel):
+    """Provenance of one public source, recorded before any byte is used."""
+
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    reference: str  # canonical URL or HF id
+    language: str  # primary language this record covers
+    license: str  # verbatim license name as read at the source
+    license_verified_on: str  # ISO date the license was read at source
+    license_source_url: str
+    commercial: CommercialVerdict
+    access: Access
+    access_detail: str = ""  # why gated/blocked, and what unblocks it
+    speaker_ids: bool = False
+    official_splits: bool = False
+    contamination_risk: str = "undeterminable"  # none_known|possible|known_overlap|undeterminable
+    notes: str = ""
+
+
+# The registry for Milestone 15B. Every verdict below was read at source
+# on the date shown, in the 2026-08-10/11 research sweeps or during 15B
+# itself; the reports under docs/research/ carry the full evidence.
+SOURCES: Final[tuple[SourceRecord, ...]] = (
+    SourceRecord(
+        name="fleurs",
+        reference="google/fleurs",
+        language="multi",
+        license="CC-BY-4.0",
+        license_verified_on="2026-08-11",
+        license_source_url="https://huggingface.co/datasets/google/fleurs",
+        commercial=CommercialVerdict.YES,
+        access=Access.OPEN,
+        speaker_ids=False,
+        official_splits=True,
+        contamination_risk="known_overlap",
+        notes=(
+            "Read speech (FLoRes sentences). Train/dev/test official splits; "
+            "authors describe splits as speaker-aware [CLAIM]. Widely used in "
+            "public model training/benchmarks since 2022 — treat every FLEURS "
+            "number as comparability, never as the primary product ruler."
+        ),
+    ),
+    SourceRecord(
+        name="indicvoices",
+        reference="ai4bharat/IndicVoices",
+        language="hi",
+        license="CC-BY-4.0",
+        license_verified_on="2026-08-11",
+        license_source_url="https://huggingface.co/datasets/ai4bharat/IndicVoices",
+        commercial=CommercialVerdict.YES,
+        access=Access.GATED,
+        access_detail=(
+            "HF gated:auto — requires an authenticated HF account that accepted "
+            "the dataset terms, plus a token on this machine. No token present "
+            "(verified 2026-08-11). Unblocks with a ~5-minute founder action."
+        ),
+        speaker_ids=True,
+        official_splits=True,
+        contamination_risk="possible",
+        notes="APPROVED PRIMARY train backbone + eval source; spontaneous-heavy.",
+    ),
+    SourceRecord(
+        name="kathbath",
+        reference="ai4bharat/Kathbath",
+        language="hi",
+        license="CC0 (explicit waiver on card)",
+        license_verified_on="2026-08-11",
+        license_source_url="https://huggingface.co/datasets/ai4bharat/Kathbath",
+        commercial=CommercialVerdict.YES,
+        access=Access.GATED,
+        access_detail="Same HF gated:auto condition as IndicVoices.",
+        speaker_ids=True,
+        official_splits=True,
+        contamination_risk="possible",
+        notes="APPROVED train source (clean read speech, speaker IDs).",
+    ),
+    SourceRecord(
+        name="common-voice-hi",
+        reference="Mozilla Common Voice Scripted 26.0 (hi)",
+        language="hi",
+        license="CC0 (+ Mozilla Data Collective terms: no re-hosting)",
+        license_verified_on="2026-08-10",
+        license_source_url="https://github.com/common-voice/cv-dataset",
+        commercial=CommercialVerdict.YES,
+        access=Access.BLOCKED,
+        access_detail=(
+            "Downloads moved exclusively to the Mozilla Data Collective; "
+            "requires an MDC account. No account available this session."
+        ),
+        speaker_ids=True,
+        official_splits=True,
+        contamination_risk="known_overlap",
+        notes="APPROVED train source; 54.32 validated hi hours in 26.0.",
+    ),
+    SourceRecord(
+        name="lahaja",
+        reference="ai4bharat/Lahaja",
+        language="hi",
+        license=(
+            "MIT (HF card tag, 2026-08-11; an earlier page read reported "
+            "CC-BY-4.0 — both recorded, either is permissive)"
+        ),
+        license_verified_on="2026-08-11",
+        license_source_url="https://huggingface.co/datasets/ai4bharat/Lahaja",
+        commercial=CommercialVerdict.YES,
+        access=Access.GATED,
+        access_detail="Same HF gated:auto condition as IndicVoices.",
+        speaker_ids=True,
+        official_splits=False,
+        contamination_risk="none_known",
+        notes="APPROVED dialect-diverse hi eval set (12.5 h, 132 speakers).",
+    ),
+    SourceRecord(
+        name="common-voice-zh-cn",
+        reference="Mozilla Common Voice Scripted 26.0 (zh-CN test)",
+        language="zh",
+        license="CC0 (+ MDC terms)",
+        license_verified_on="2026-08-11",
+        license_source_url="https://github.com/common-voice/cv-dataset",
+        commercial=CommercialVerdict.YES,
+        access=Access.BLOCKED,
+        access_detail="MDC account required (same as common-voice-hi).",
+        speaker_ids=True,
+        official_splits=True,
+        contamination_risk="none_known",
+        notes=(
+            "APPROVED zh eval (26.0 test cut of 2026-06-12 post-dates most "
+            "published models' training). FLEURS zh is the provisional stand-in."
+        ),
+    ),
+)
+
+
+def source(name: str) -> SourceRecord:
+    """Look a source up by name; unknown sources are refused loudly."""
+    for record in SOURCES:
+        if record.name == name:
+            return record
+    known = ", ".join(sorted(r.name for r in SOURCES))
+    msg = f"unknown source {name!r}; registered: {known}"
+    raise KeyError(msg)
+
+
+def usable_now(record: SourceRecord) -> bool:
+    """A source may feed ingestion only if open AND commercially usable."""
+    return record.access is Access.OPEN and record.commercial is CommercialVerdict.YES

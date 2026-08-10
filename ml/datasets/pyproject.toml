@@ -1,0 +1,24 @@
+[project]
+name = "intelliai-datasets"
+version = "0.1.0"
+description = "Public-data ingestion, validation, curation, and dataset manifests"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.10",
+    "httpx>=0.28",
+    "pyarrow>=18",
+    "intelliai-evaluation",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv.sources]
+intelliai-evaluation = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intelliai_datasets"]

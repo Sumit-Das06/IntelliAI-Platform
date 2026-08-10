@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-11 (small-model strategy sweep: TA/ML/ZH universe intake) |
+| **Last entry** | 2026-08-11 (Milestone 15B: first Hindi baseline evidence + Qwen3 CPU spike) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -581,6 +581,51 @@ entry here is research pending the founder's policy decision.
 ### Report recommendation (research → founder; no status change)
 
 - 2026-08-11 — The report recommends the **hybrid pool** (small multilingual default + evidence-won per-language specialist slots — the in-force target architecture at full width) and a **two-arm first experiment**: E1 Hindi LoRA on whisper-small (unchanged) + a zero-shot CPU bracket (whisper-small vs Qwen3-ASR 0.6B GGUF vs IndicConformer on the frozen Hindi eval; Qwen3 0.6B on CV26 zh-CN test). Founder decisions required: TA/ML/ZH policy extension; experiment approval — evidence: [2026-08-11-small-asr-model-strategy.md](2026-08-11-small-asr-model-strategy.md)
+
+---
+
+---
+
+## Milestone 15B — first Hindi evidence + candidate spikes (appended 2026-08-11)
+
+Full report: [2026-08-11-15b-ingestion-baseline-report.md](2026-08-11-15b-ingestion-baseline-report.md).
+**No status changes.** Dated evidence appended below; frozen manifests
+`stt-hi-fleurs-eval@v1` (sha256 `5b2c8396…`), `hi-fleurs-train@v1`
+(`93426dff…`, 6.61 h), `stt-zh-fleurs-eval@v1` (`8fdbe098…`) — FLEURS,
+CC-BY-4.0, contamination `known_overlap` recorded (comparability rulers;
+the approved primaries remain access-blocked pending an HF/MDC account).
+
+**Whisper Small (faster-whisper) — first natural-speech Hindi measurement**
+- 2026-08-11 — *status unchanged (Approved for Adoption)* — **[EVIDENCE]**
+  Named baseline `2026-08-11-intelliai-stt-hi-whisper-small-int8-fleurs`,
+  product path, 120 clips / 3,042 ref words: **cer_unicode 0.2919 ·
+  wer_unicode 0.5624** (S/I/D 0.412/0.036/0.114) · recognition_rtf 0.347 ·
+  0 hallucinated words on both probes · 0 failures. The Hindi wedge gap is
+  now measured, not anecdotal. Real-speech `hi` RTF 0.347 bounds the 9.4×
+  declaration figure as a non-speech artifact — evidence:
+  [EvalRun](../../ml/evaluation/stt/results/2026-08-11-intelliai-stt-hi-whisper-small-int8-15b-fleurs.json)
+
+**Qwen3-ASR 0.6B — first CPU measurements (research-sandbox spike, NOT ledger-grade)**
+- 2026-08-11 — *status unchanged (Researching)* — **[SPIKE — no
+  MeasurementRoute; read beside EvalRuns, never differenced]** Official
+  GGUF (Q8_0, sha256 `bca25981…` + mmproj `41a342b5…`), llama.cpp b10344
+  CPU, ctx 4096, identical frozen-eval clips: **Hindi CER 0.0796 vs the
+  incumbent's 0.2515 on the same 30 clips (~3.6×)**, net RTF 0.184;
+  **Chinese CER 0.1313, net RTF 0.086**; **peak RSS 1,515 MiB at ctx 4096**
+  (default 32k ctx allocates 8,238 MiB — configurational, not fundamental);
+  0 hallucinated words on all probes; language tag self-reported correctly
+  30/30 in both languages. Consequence: the conditional Qwen3 engine-adapter
+  milestone is now evidence-justified — a switching test requires the
+  product path, which requires an adapter — evidence:
+  [spike records](../../research/experiments/15b-qwen3-gguf-spike/)
+
+**IndicConformer — evaluation blocked (recorded verdict)**
+- 2026-08-11 — *status unchanged (Researching)* — **[BLOCKED]** Two
+  independent grounds, verified at source 2026-08-11: repos `gated: auto`
+  with anonymous fetch 401 (no HF token on the machine), and the 600M
+  card's `custom_code` requirement meets the unruled remote-code
+  security-review prerequisite (5.3). A ~5-minute founder HF action clears
+  the first; the review must clear the second before any in-process run.
 
 ---
 

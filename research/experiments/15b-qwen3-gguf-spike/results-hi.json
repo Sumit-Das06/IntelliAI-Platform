@@ -1,0 +1,428 @@
+{
+  "spike": "15b-qwen3-asr-0.6b-gguf-cpu",
+  "NOT_LEDGER_EVIDENCE": "research-sandbox spike; no MeasurementRoute; never difference against EvalRun records",
+  "run_at": "2026-08-10T20:53:00.535041+00:00",
+  "manifest": {
+    "name": "stt-hi-fleurs-eval",
+    "version": 1,
+    "sha256": "5b2c8396e3a13511dfeb58af1c6f2bbfbfe6b8a872074015366b0ff8556b6d02"
+  },
+  "artifacts": {
+    "model": {
+      "path": "weights\\qwen3-asr-spike\\Qwen3-ASR-0.6B-Q8_0.gguf",
+      "sha256": "bca259818b50ca7c4c05e9bdb35a5dc04fa039653a6d6f3f0f331f96f6aa1971"
+    },
+    "mmproj": {
+      "path": "weights\\qwen3-asr-spike\\mmproj-Qwen3-ASR-0.6B-Q8_0.gguf",
+      "sha256": "41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d"
+    },
+    "llama_cpp": "b10344 win-cpu-x64 (zip sha256 c0cec8825843957cae6620f927eb6eb9f7f4680da3206910932ea9075f91b405)"
+  },
+  "environment": {
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "machine": "AMD64",
+    "os": "Windows 11",
+    "python": "3.12.10",
+    "prompt": "Transcribe the audio."
+  },
+  "method": {
+    "per_clip_process": "each clip pays one full CLI invocation (model load included)",
+    "overhead_probe_walls": [
+      3.291,
+      3.232,
+      3.129
+    ],
+    "overhead_median_seconds": 3.232,
+    "net_rtf_definition": "(wall - overhead_median) / audio_duration, per clip"
+  },
+  "aggregates": {
+    "clips_scored": 30,
+    "clips_failed": 0,
+    "cer_unicode_char_weighted": 0.0796,
+    "gross_rtf": 0.455,
+    "net_rtf_est": 0.176,
+    "peak_rss_mib_first_clip": 8238.3
+  },
+  "probes": [
+    {
+      "clip_id": "hi-silence-10s",
+      "hallucinated_words": 0,
+      "wall_seconds": 3.616,
+      "hypothesis": "",
+      "emitted_language": "None",
+      "returncode": 0,
+      "peak_rss_mib": null
+    },
+    {
+      "clip_id": "hi-tone-440hz-5s",
+      "hallucinated_words": 0,
+      "wall_seconds": 3.279,
+      "hypothesis": "",
+      "emitted_language": "None",
+      "returncode": 0,
+      "peak_rss_mib": null
+    }
+  ],
+  "clips": [
+    {
+      "clip_id": "fleurs-hi_in-test-001660-2",
+      "duration_seconds": 11.7,
+      "wall_seconds": 4.912,
+      "hypothesis": "रूमानियत में शासनक्रितिक नियतिवाद का बड़ा तत्व था, जो गोएँथे, फिच्च्थे और स्लेगल जैसे लेखों से लिया गया.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": 8238.3,
+      "cer_unicode": 0.1224,
+      "wer_unicode": 0.2778,
+      "net_seconds_est": 1.68
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001661-2",
+      "duration_seconds": 8.4,
+      "wall_seconds": 4.781,
+      "hypothesis": "यह कहते हुए कि वे चीन के आर्थिक उत्पादन के आधार पर बनाए जाएंगे, उन्होंने कटौती के लिए कोई आंकड़ा निर्धारित नहीं किया.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0174,
+      "wer_unicode": 0.087,
+      "net_seconds_est": 1.549
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001668-2",
+      "duration_seconds": 10.92,
+      "wall_seconds": 5.066,
+      "hypothesis": "Wide card खरीद लेना फायदेमंद भी हो सकता है क्योंकि इससे आप दक्षिण अफ्रीका के चुनंदा पार्क या सभी दक्षिण अफ्रीकी नेशनल पार्क देख सकते हैं.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1049,
+      "wer_unicode": 0.2308,
+      "net_seconds_est": 1.834
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001670",
+      "duration_seconds": 19.62,
+      "wall_seconds": 7.337,
+      "hypothesis": "उनका उष्मीय व्यवहार प्रत्येक की बड़ी गुफाओं जैसे स्थित नहीं हैं जो अक्सर काफी स्थित तापमान बनाए रखती हैं। लेकिन यह जमीन के इन गहरे छेद के अनुरूप है। United States Geological Survey की भूगर्भीय टीम और फ्लैग स्टाफ आरिज़ोना में स्थित उत्तरी आरिज़ोना विश्वविद्यालय के ग्लेन कुशिंग ने कहा,",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1923,
+      "wer_unicode": 0.3,
+      "net_seconds_est": 4.105
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001672-3",
+      "duration_seconds": 10.56,
+      "wall_seconds": 4.842,
+      "hypothesis": "सावधान रहें कि कपड़े को बहुत गरम न होने दें, जो सिकुड़ने का कारण बन सकता है या बहुत गरम होने पर जल सकता है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.019,
+      "wer_unicode": 0.08,
+      "net_seconds_est": 1.61
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001675",
+      "duration_seconds": 8.52,
+      "wall_seconds": 4.897,
+      "hypothesis": "साई के साथ साथ सभी संग्याशब्द हमेशा अंग्रेजी के बड़े अक्षर से ही शुरू होते हैं, बल्कि ही व्यक्ति के बीच में ही क्यों ना हो।",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1311,
+      "wer_unicode": 0.2857,
+      "net_seconds_est": 1.665
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001677",
+      "duration_seconds": 8.28,
+      "wall_seconds": 4.493,
+      "hypothesis": "वर्तमान में जो किड़े अपने पंखों को वापस नहीं मोड़ सकते हैं उनमें केवल ड्रैगनफ्लाई की मैफ़लीज है",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0825,
+      "wer_unicode": 0.2778,
+      "net_seconds_est": 1.261
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001677-2",
+      "duration_seconds": 8.46,
+      "wall_seconds": 4.621,
+      "hypothesis": "पर तमान में जो कीड़े अपने पंखों को वापस नहीं मोड़ सकते हैं उनमें केवल ड्रैगनफ्लाई और मैफ्लीज हैं",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0619,
+      "wer_unicode": 0.2222,
+      "net_seconds_est": 1.389
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001679-2",
+      "duration_seconds": 6.36,
+      "wall_seconds": 4.137,
+      "hypothesis": "एरोस्मिथ ने अपने दौरे के अपने शेष संगीत कार्यक्रमों को रद्द कर दिया है",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0,
+      "wer_unicode": 0.0,
+      "net_seconds_est": 0.905
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001683",
+      "duration_seconds": 14.94,
+      "wall_seconds": 5.8,
+      "hypothesis": "यहूदी और गैर-यहूदी की तरह, अभी भी ऐसे कई पुरुष और महिलाएं जीवित हैं, जो उस समय बचने में सफल रहे और कई जिनके प्रयाजनों को मार दिया गया या उनके मरने तक उनसे काम करवाया गया।",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.012,
+      "wer_unicode": 0.0263,
+      "net_seconds_est": 2.568
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001683-3",
+      "duration_seconds": 12.18,
+      "wall_seconds": 5.638,
+      "hypothesis": "यहूदी और गैर-यहूदी की तरह अभी भी ऐसे कई पुरुष महिलाएं जीवित हैं जो उस समय बचने में सफल रहे और कई जिनके प्रियजनों को मार दिया गया या उनके मरने तक उनसे काम करवाया गया",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.018,
+      "wer_unicode": 0.0263,
+      "net_seconds_est": 2.406
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001684",
+      "duration_seconds": 9.42,
+      "wall_seconds": 4.522,
+      "hypothesis": "आपिया समोवा की राजधानी है यह शहर उपोलू द्वीप पर है और इसकी आबादी 40 हजार से भी कम है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0732,
+      "wer_unicode": 0.1,
+      "net_seconds_est": 1.29
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001684-2",
+      "duration_seconds": 11.58,
+      "wall_seconds": 4.638,
+      "hypothesis": "अप्यासमूह की राजधानी है यह शहर अपोलो द्वीप पर है और इसकी आबादी 40 हजार से भी कम है",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1341,
+      "wer_unicode": 0.2,
+      "net_seconds_est": 1.406
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001687",
+      "duration_seconds": 10.08,
+      "wall_seconds": 4.588,
+      "hypothesis": "अलगाव और पुनर संयोजन बिन्नता प्रत्येक पीढ़ी के साथ दो पूलों के बीच आगे पीछे होती रहती है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0227,
+      "wer_unicode": 0.1765,
+      "net_seconds_est": 1.356
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001692-2",
+      "duration_seconds": 7.62,
+      "wall_seconds": 4.464,
+      "hypothesis": "जापान की परमाणु एजेंसी के अनुसार प्लांट में रेडियोधर्मी सीज़म और आयोडिन की पहचान की गई है",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.033,
+      "wer_unicode": 0.1176,
+      "net_seconds_est": 1.232
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001698-2",
+      "duration_seconds": 8.46,
+      "wall_seconds": 4.732,
+      "hypothesis": "ब्रह्मार्ध की सभी वस्तुएं पदार्थ से बनी हैं, सारे पदार्थ सुखस्तुम कड़ों से बने हैं, जिन्हें अड़ू कहा जाता है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1442,
+      "wer_unicode": 0.3,
+      "net_seconds_est": 1.5
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001700",
+      "duration_seconds": 4.86,
+      "wall_seconds": 4.056,
+      "hypothesis": "यह समुद्र के नीचे पतला और ऊंचे क्षेत्रों में नीचा मोटा होता है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0656,
+      "wer_unicode": 0.2308,
+      "net_seconds_est": 0.824
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001700-2",
+      "duration_seconds": 6.0,
+      "wall_seconds": 4.127,
+      "hypothesis": "यह समुद्र के नीचे, पतला और ऊंचे क्षेत्रों के नीचे मोटा होता है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0164,
+      "wer_unicode": 0.0769,
+      "net_seconds_est": 0.895
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001706",
+      "duration_seconds": 14.64,
+      "wall_seconds": 6.166,
+      "hypothesis": "ज्यादा परंपरागत चर्चों में इंश्टर सप्ताह हन्न में शनिवार रात को इंश्टर विजिल का एजेंट किया जाता है, जिसमें लोग क्रिस के पून जर्नल का उत्सव मनाने के लिए आधी रात के समय उत्सव मनाना शुरू करते हैं.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1223,
+      "wer_unicode": 0.2222,
+      "net_seconds_est": 2.934
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001706-3",
+      "duration_seconds": 12.84,
+      "wall_seconds": 5.906,
+      "hypothesis": "ज्यादा परंपरागत चर्चों में इष्ट सप्ताह हंत में शनिवार रात को इष्ट विजिल का आयोजन किया जाता है, जिसमें लोग क्रिस के पुनर्जन्म का उत्सव मनाने के लिए आधिरात के समय उत्सव मनाना शुरू करते हैं.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0585,
+      "wer_unicode": 0.1944,
+      "net_seconds_est": 2.674
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001709",
+      "duration_seconds": 10.86,
+      "wall_seconds": 5.441,
+      "hypothesis": "यह रिपोर्ट इराक के प्रति प्रशासन की वर्तमान नीतियों के लगभग सभी पहलुओं के प्रति बेहद आलोचनात्मक है, और यह इसकी दिशामंत्र तत्काल परिवर्तन का आग्रह करती है।",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0541,
+      "wer_unicode": 0.1034,
+      "net_seconds_est": 2.209
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001711",
+      "duration_seconds": 26.82,
+      "wall_seconds": 7.321,
+      "hypothesis": "यह सिद्धांत देखते हैं कि कुछ लोगों के बारे में ऐसी कौन सी बातें हैं जो उन्हें वही चीज़ करने के लिए कहती हैं, वो वही चाहते हैं और उनके माहौल को कौन सी भी बातें हैं जो उन्हें कुछ चीज़ करने या नहीं करने के लिए कहती हैं.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0688,
+      "wer_unicode": 0.2041,
+      "net_seconds_est": 4.089
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001714",
+      "duration_seconds": 12.12,
+      "wall_seconds": 5.903,
+      "hypothesis": "उपग्रह को एक रॉकेट से अंतरिक्ष में भेजा गया था। वैज्ञानिक अंतरिक्ष में दूर बिनों का उपयोग करते हैं क्योंकि पृथ्वी का वायुमंडल हमारे कुछ प्रकाश और दृश्य को अशुद्ध कर सकता है।",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0299,
+      "wer_unicode": 0.129,
+      "net_seconds_est": 2.671
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001716",
+      "duration_seconds": 24.12,
+      "wall_seconds": 7.934,
+      "hypothesis": "Entertainment news website TMZ का मानना है कि फोटोग्राफर ने अपना वाहन सुपल वेडा बुलवार की दूसरी तरफ रोका था और सड़क पार करने और जारी रखने से पहले पुलिस टॉप की फोटो लेने की कोशिश की। कैलिफोर्निया हाइवे पेट्रोल पुलिस अधिकारी ने ट्रैफिक स्टॉप का संचालन करते हुए उसे रोकने के लिए दो बार आदेश दिया।",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.1208,
+      "wer_unicode": 0.1786,
+      "net_seconds_est": 4.702
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001719",
+      "duration_seconds": 10.5,
+      "wall_seconds": 5.316,
+      "hypothesis": "गंभीर मौसम किसी भी खतरनाक मौसमी घटना के लिए वर्गीय सबद है, जिसमें नुकसान, गंभीर सामाजिक व्यवधान या मानव जीवन की हानि की संभावना है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0155,
+      "wer_unicode": 0.04,
+      "net_seconds_est": 2.084
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001719-2",
+      "duration_seconds": 10.8,
+      "wall_seconds": 5.221,
+      "hypothesis": "गंभीर मौसम किसी भी खतरनाक मौसमी घटना के लिए वर्गीय शब्द है जिसमें नुकसान, गंभीर सामाजिक प्रवधान या मानव जीवन की हानि की संभावना है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0155,
+      "wer_unicode": 0.04,
+      "net_seconds_est": 1.989
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001722-2",
+      "duration_seconds": 13.08,
+      "wall_seconds": 5.467,
+      "hypothesis": "इस साल की शुरुआत में त्रिपन साल के कुओमो ने अपना शासनकाल शुरू किया और पिछले महीने समलैंगिक विवाह को वैद्य बनाने वाले बिल पर हस्ताक्षर किए.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0687,
+      "wer_unicode": 0.0741,
+      "net_seconds_est": 2.235
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001732",
+      "duration_seconds": 17.76,
+      "wall_seconds": 6.017,
+      "hypothesis": "जिस समय घटनाएं हुए, उसके युग को सामान्य रूप से यूरोप के इतिहास में ग्यारवी, बारवी और तेरवी सदी में European इतिहास के उच्च मध्य युग की अवधि के रूप में बताया जाता है.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.2139,
+      "wer_unicode": 0.2432,
+      "net_seconds_est": 2.785
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001734",
+      "duration_seconds": 10.32,
+      "wall_seconds": 5.205,
+      "hypothesis": "वैज्ञानिकों निष्कर्ष निकालने में सक्षम थे कि काला पदार्थ अन्य काले पदार्थ को ऐसी तरह प्रभावित करता है जिस तरह से आम पदार्थ करता है",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0305,
+      "wer_unicode": 0.1154,
+      "net_seconds_est": 1.973
+    },
+    {
+      "clip_id": "fleurs-hi_in-test-001737",
+      "duration_seconds": 5.1,
+      "wall_seconds": 4.33,
+      "hypothesis": "शेर प्राइड नाम के बड़े समूह में रहने वाली सबसे बड़ी सामाजिक बिल्लियाँ हैं.",
+      "emitted_language": "Hindi",
+      "returncode": 0,
+      "peak_rss_mib": null,
+      "cer_unicode": 0.0548,
+      "wer_unicode": 0.2308,
+      "net_seconds_est": 1.098
+    }
+  ]
+}

@@ -25,6 +25,7 @@ package = false
 [tool.uv.workspace]
 members = [
     "apps/api",
+    "ml/datasets",
     "ml/evaluation",
     "packages/runtime-contract",
     "packages/runtime-core",
@@ -39,6 +40,8 @@ target-version = "py312"
 src = [
     "apps/api/src",
     "apps/api/tests",
+    "ml/datasets/src",
+    "ml/datasets/tests",
     "ml/evaluation/src",
     "ml/evaluation/tests",
     "packages/runtime-contract/src",
@@ -74,6 +77,7 @@ select = [
     "S603", "S607",  # tests spawn fixture subprocesses (ffmpeg encodes): fixed argv, PATH lookup
 ]
 "**/cli.py" = ["T201"]  # the CLI's job is printing to a human
+"research/**" = ["T201"]  # sandbox experiment scripts report to a human
 "**/alembic/versions/*" = ["F401"]  # template imports kept for future revisions
 
 # ── Types: mypy strict ──────────────────────────────────────────────────
@@ -84,6 +88,8 @@ plugins = ["pydantic.mypy"]
 files = [
     "apps/api/src",
     "apps/api/tests",
+    "ml/datasets/src",
+    "ml/datasets/tests",
     "ml/evaluation/src",
     "ml/evaluation/tests",
     "packages/runtime-contract/src",
@@ -105,4 +111,11 @@ enable_error_code = ["ignore-without-code"]
 # override is the one sanctioned exception to strict imports — engines only.
 [[tool.mypy.overrides]]
 module = ["faster_whisper.*", "numpy.*", "kokoro.*", "misaki.*", "torch.*"]
+ignore_missing_imports = true
+
+# pyarrow ships no usable type stubs; it is confined to ml/datasets ingestion
+# (never a production dependency) and every value crossing out of the reader
+# is validated into typed pydantic models at the boundary.
+[[tool.mypy.overrides]]
+module = ["pyarrow.*"]
 ignore_missing_imports = true
