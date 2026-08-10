@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-10 (fine-tuning experiment research: Meta-lineage intake + landscape corrections) |
+| **Last entry** | 2026-08-11 (small-model strategy sweep: TA/ML/ZH universe intake) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -43,6 +43,14 @@ entries is ordered by the living priorities
 | Zipformer / sherpa-onnx (Next-gen Kaldi) | transcription | per-recipe; varies | Apache-2.0 (claimed) | Researching | 2026-08-05 |
 | XLS-R 300m/1b/2b (Meta) | transcription (SSL encoder, CTC base) | 128-lang pretraining incl. HI+AR; ASR only after per-language fine-tune | **Apache-2.0 (source, 2026-08-10, all three cards)** | Researching | 2026-08-10 |
 | w2v-BERT 2.0 (Meta) | transcription (SSL encoder, CTC base) | 143-lang pretraining incl. HI+AR; ASR only after fine-tune | **MIT (source, 2026-08-10)** | Researching | 2026-08-10 |
+| IndicConformer ta / ml per-language (AI4Bharat) | transcription | Tamil / Malayalam specialists, ~120M each | **MIT (source, 2026-08-11)** | Researching | 2026-08-11 |
+| Dolphin base/small (DataoceanAI) | transcription | claims zh + 40 Eastern langs + 22 zh dialects | **Apache-2.0 (source, code+weights, 2026-08-11)** | Researching | 2026-08-11 |
+| OWSM v3.1/v4 (CMU/ESPnet) | transcription | claims 151 langs; our six unenumerated | **CC-BY-4.0 (source, 2026-08-11)** | Researching | 2026-08-11 |
+| FireRedASR-AED-L (FireRedTeam) | transcription | zh(+en) specialist, 1.1B | **Apache-2.0 (source, 2026-08-11)** | Researching | 2026-08-11 |
+| Paraformer-zh (FunASR/Alibaba) | transcription | zh (+en code-switch) | **contradictory** — HF mirror `apache-2.0` vs FunASR Model License at origin (2026-08-11) | Researching — work halted pending clarification | 2026-08-11 |
+| SenseVoice-Small (FunAudioLLM) | transcription | zh/yue/en/ja/ko | **FunASR Model License (source, 2026-08-11)** — no express commercial grant | Rejected | 2026-08-11 |
+| TeleSpeech-ASR (Tele-AI) | transcription | zh + dialects | custom community licence; commercial use requires written approval (source, 2026-08-11) | Rejected | 2026-08-11 |
+| ECAPA VoxLingua107 LID (SpeechBrain) | serving-chain component (audio LID) | 107 langs incl. our six | **Apache-2.0 (source, 2026-08-11)** | Researching | 2026-08-11 |
 | Canary 1B (NVIDIA) | transcription | — | CC-BY-NC (2026-07-31) | Rejected | 2026-08-04 |
 | ArTST (MBZUAI) | transcription | Arabic specialist | **CC-BY-NC-4.0 (source, 2026-08-05)** | Rejected | 2026-08-05 |
 | SeamlessM4T v2 (Meta) | transcription | — | **CC-BY-NC-4.0 (source, 2026-08-05; re-verified unchanged 2026-08-10)** | Rejected | 2026-08-05 |
@@ -519,6 +527,60 @@ corrections below; every licence was read at source on 2026-08-10.
 ### Report recommendation (research → founder; no status change)
 
 - 2026-08-10 — The report recommends **whisper-small (LoRA, Hindi, ≤10 h commercially-clean public data)** as the first fine-tuning experiment base, **Qwen3-ASR 0.6B** as second choice, and a staged (not balanced-mixture) language order: Hindi now, Arabic after its ruler exists, English closed per Stage 2. The experiment proves Ladder Stage 0→1 machinery and feeds the Stage 3 gate a ready remedy; it proposes **no serving change**. Founder decision pending — evidence: [2026-08-10-first-finetuning-experiment.md](2026-08-10-first-finetuning-experiment.md)
+
+---
+
+---
+
+## Small-model strategy sweep — appended 2026-08-11
+
+Trigger: management directive to investigate a small-model / modular
+multilingual STT architecture across EN·HI·AR·TA·ML·ZH. Full report:
+[2026-08-11-small-asr-model-strategy.md](2026-08-11-small-asr-model-strategy.md).
+**Statuses of prior candidates unchanged.** All licences below read at
+source 2026-08-11. TA/ML/ZH are **not yet product languages** — every
+entry here is research pending the founder's policy decision.
+
+### New intakes (Gate 0 + licence screen, same day)
+
+**IndicConformer ta / ml per-language checkpoints (AI4Bharat)**
+- 2026-08-11 — **Researching** *(Gate 0 intake)* — Trigger: TA/ML slot candidates for the modular strategy. **MIT verified at source on both cards**; ~120M each, Conformer hybrid CTC+RNNT, AI4Bharat NeMo fork (`nemo-v2`) required, repos gated (contact-info). Publisher benchmark (IndicVoices spontaneous, 600M sibling): ta 31.2 / ml 40.5 WER vs Whisper ta 78.4 / ml 148.6 [CLAIM, ACL 2024 paper]. ONNX/CPU export undocumented — the named spike before any adoption. Same remote-code condition as the 600M row.
+
+**Dolphin base 140M / small 372M (DataoceanAI)**
+- 2026-08-11 — **Researching** *(Gate 0 intake)* — Trigger: permissive zh backup. **Apache-2.0 verified at source for code AND weights** (prior NC suspicion was wrong for this artifact). CTC-attention, 40 Eastern languages + 22 zh dialects claimed; zh-specific WER not published; 2026 streaming variants noted. No Arabic.
+
+**OWSM v3.1 / v4 (CMU/ESPnet)**
+- 2026-08-11 — **Researching** *(Gate 0 intake)* — Trigger: fully-public-data Whisper-style lineage, 102M–1B. **CC-BY-4.0 verified at source.** Coverage of our six languages unenumerated on cards; ESPnet serving; per-language numbers Unknown. Attribution condition (CC-BY class) applies.
+
+**FireRedASR-AED-L (FireRedTeam)**
+- 2026-08-11 — **Researching** *(Gate 0 intake)* — Trigger: near-SOTA permissive zh (AISHELL-1 CER 0.55 [CLAIM, repo]). **Apache-2.0 verified at source.** 1.1B — outside the small class; no streaming/timestamps/FT scripts/CPU story documented; ≤60 s audio cap. Registered for completeness of the zh universe.
+
+**Paraformer-zh (FunASR/Alibaba)**
+- 2026-08-11 — **Researching — work halted** *(Gate 0 intake; licence contradiction)* — HF mirror card tags `apache-2.0`, but the canonical ModelScope/FunASR distribution binds weights to the FunASR Model License Agreement. A mirror tag is not a grant. *Clarification required:* an Alibaba-published permissive licence on the distribution we would pin. Until then no Gate 2 work.
+
+**SenseVoice-Small (FunAudioLLM)**
+- 2026-08-11 — **Rejected** *(Gate 0 intake; licence alone)* — Weights under the **FunASR Model Open Source License** (read at source): "provided for reference and learning purposes only", mandatory naming/attribution, conduct clause with automatic forfeiture, unilateral revision, **no express commercial grant**. Code MIT; weights are not. Fails ADR-0005. Re-entry on a permissive re-licence only.
+
+**TeleSpeech-ASR (Tele-AI)**
+- 2026-08-11 — **Rejected** *(Gate 0 intake; licence alone)* — TeleSpeech Community License: commercial use requires application and **written approval** from China Telecom. An approval-gated grant is not a permissive licence. Fails ADR-0005.
+
+**ECAPA VoxLingua107 LID (SpeechBrain)** *(serving-chain component)*
+- 2026-08-11 — **Researching** *(Gate 0 intake)* — Trigger: router/LID component for the hybrid-pool architecture (needed only if undeclared-traffic volume ever justifies acoustic LID; declaration-first law stands). **Apache-2.0 verified at source**; 107 languages incl. all six targets; 6.7% VoxLingua dev error [CLAIM]; utterance-level only — code-switch routing law applies. Alternative recorded: whisper-tiny `detect_language` (39M, MIT). facebook/mms-lid is **CC-BY-NC-4.0 (source, 2026-08-11)** — excluded without registration.
+
+### Evidence appended to existing entries
+
+**Whisper — per-language paper numbers now on record [CLAIM, OpenAI paper Appendix D, read 2026-08-11]**
+- 2026-08-11 — *status unchanged* — FLEURS WER by size: **ta** small 35.2 / large-v2 17.5; **ml** ~100+ at every size (small 100.9, large-v2 100.7) — **Malayalam is effectively unsupported by the entire Whisper family**; **zh** small 20.8 / medium 12.1; CV9: ta small 28.7, ml small 225.8, zh small 29.4. Product consequence: Whisper can be the ta floor and is a weak zh engine, but **the ml slot cannot be served by this lineage** — the strongest single piece of evidence for the modular architecture.
+
+**Qwen3-ASR 0.6B/1.7B — coverage boundary + small-variant facts [FACT, official card/repo/tech report, 2026-08-11]**
+- 2026-08-11 — *status unchanged (Researching)* — Full official language list obtained: 30 languages + 22 zh dialects; **Tamil and Malayalam absent** — the lineage cannot be the sole engine for a six-language product. FLEURS WER (0.6B/1.7B): zh 2.88/2.41 · hi 19.12/17.15 · ar 25.51/16.98; LID 96.8%/97.9%. **Official GGUF exists (ggml-org, Q8_0 805 MB)** — first credible CPU path; RTF unmeasured. Fine-tuning recipe is **full-FT only, no LoRA documented**; VRAM figures Unknown. ForcedAligner's 11 languages **exclude hi, ar, ta** — timestamp gap on exactly our slot languages except zh.
+
+**Omnilingual ASR — six-language coverage + product cap [FACT, official repo, 2026-08-11]**
+- 2026-08-11 — *status unchanged (Researching)* — `tam_Taml`, `mal_Mlym`, `cmn_Hans/Hant` confirmed in the official language list alongside eng/hin/arb(+dialects): **the only permissive lineage covering all six targets**. But CTC/LLM variants accept **audio < 40 s** (vs our 600 s product ceiling) and no CPU path is documented — long-tail asset, not a slot candidate today.
+
+### Report recommendation (research → founder; no status change)
+
+- 2026-08-11 — The report recommends the **hybrid pool** (small multilingual default + evidence-won per-language specialist slots — the in-force target architecture at full width) and a **two-arm first experiment**: E1 Hindi LoRA on whisper-small (unchanged) + a zero-shot CPU bracket (whisper-small vs Qwen3-ASR 0.6B GGUF vs IndicConformer on the frozen Hindi eval; Qwen3 0.6B on CV26 zh-CN test). Founder decisions required: TA/ML/ZH policy extension; experiment approval — evidence: [2026-08-11-small-asr-model-strategy.md](2026-08-11-small-asr-model-strategy.md)
 
 ---
 

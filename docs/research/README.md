@@ -28,6 +28,10 @@ ever touches them.
   [2026-08-10-first-finetuning-experiment.md](2026-08-10-first-finetuning-experiment.md)
   — fine-tuning base + public-dataset research, recommendation
   (whisper-small · Hindi · LoRA), and the E1 experiment design.
+  [2026-08-11-small-asr-model-strategy.md](2026-08-11-small-asr-model-strategy.md)
+  — small-model / modular multilingual strategy across EN·HI·AR·TA·ML·ZH:
+  hybrid-pool architecture, TA/ML/ZH model+dataset screens, routing and
+  call-center concurrency analysis, two-arm first experiment.
 
 How this directory relates to its neighbors:
 
