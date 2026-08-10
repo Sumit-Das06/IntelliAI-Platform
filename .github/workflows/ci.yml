@@ -176,13 +176,13 @@ jobs:
           cache: gradle
       - run: ./gradlew --no-daemon test lintDebug lintRelease assembleDebug assembleRelease
       - name: Keep the debug APK as a build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: intelliai-keyboard-debug-apk
           path: apps/keyboard-android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
       - name: Keep the unsigned release APK as a build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: intelliai-keyboard-release-unsigned-apk
           path: apps/keyboard-android/app/build/outputs/apk/release/app-release-unsigned.apk
