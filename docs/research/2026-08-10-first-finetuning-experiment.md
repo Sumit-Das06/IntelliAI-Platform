@@ -321,9 +321,11 @@ future serving decision.
   postmortem]; silence-hallucination worsening after LoRA [FACT,
   arXiv:2606.07608] → our silence/tone probes are mandatory gates and
   our VAD short-circuit contains engine-level regressions.
-- **GPU**: training only, rented, single card. No GPU serving tier is
-  proposed (roadmap: "does not run on our CPU" is a recordable result,
-  not a criterion).
+- **GPU**: training only, single card — the founder's local RTX 5070
+  Laptop GPU (8 GB) covers the recommended LoRA arm (§16); rental is a
+  fallback, not a requirement. No GPU serving tier is proposed
+  (roadmap: "does not run on our CPU" is a recordable result, not a
+  criterion).
 
 ## 10. Public dataset comparison (licenses read at source 2026-08-10)
 
@@ -477,16 +479,33 @@ base.
 
 ## 16. GPU / resource requirements (E1)
 
-| Item | Requirement | Source |
-|---|---|---|
-| Training | 1× 16 GB GPU (T4/L4/A10G class), rented, hours-class job | LoRA large-v2 documented <8 GB; small full-FT runs in Colab [FACT] — small LoRA is comfortably inside 16 GB [INFERENCE] |
-| Est. wall clock | ~4,000–5,000 steps ≈ 5–10 GPU-hours at small scale [INFERENCE — pilot will measure] | blog trains 4k steps in a Colab session |
-| Storage | ~15 GB (data + checkpoints) | [INFERENCE] |
-| Cost class | single-GPU-days = Ladder Stage 1 investment class, as designed | FINE_TUNING_STRATEGY Part 2 |
-| Serving | **unchanged** — CPU int8, same runtime | §9 |
+**Local hardware finding [FACT, measured 2026-08-10 via `nvidia-smi` on
+the founder's machine]:** NVIDIA GeForce RTX 5070 Laptop GPU, **8 GB
+VRAM** (8,151 MiB, idle), driver 591.91, CUDA 13.1 — alongside the
+Intel UHD iGPU that handles the display, leaving the RTX free for
+compute.
 
-No GPU infrastructure is added; a rented instance for the run is a
-founder-approved line item at 15D.
+| Item | Requirement | Fits local 8 GB? | Source |
+|---|---|---|---|
+| **E1 LoRA arm (whisper-small, fp16, batch 16)** | ~3–5 GB [INFERENCE] | **YES — runs locally, zero rental cost** | LoRA on whisper-large-v2 (6× our base) documented <8 GB [FACT] |
+| Optional full-FT comparison arm (small) | ~7–9 GB at batch 16 [INFERENCE] | Borderline — batch 4–8 + grad checkpointing + accumulation, or rent | small full-FT ran in a Colab (~16 GB class) at batch 16 [FACT] |
+| Future medium LoRA (E2/E3 base candidate) | ~5–7 GB [INFERENCE]; QLoRA halves the frozen base if tight | Likely | PEFT int8 workflow [FACT] |
+| Future medium/large full-FT | 16–24 GB+ | **No — rented 24 GB card, decided after E1 results** | large-v2 full-FT ~24 GB [FACT] |
+| Est. wall clock | ~4,000–5,000 steps ≈ 5–10 GPU-hours per arm [INFERENCE — pilot will measure]; laptop thermal throttling may stretch, not break, the run | overnight job | blog trains 4k steps in a Colab session |
+| Storage | ~15 GB (data + checkpoints) | — | [INFERENCE] |
+| Serving | **unchanged** — CPU int8, same runtime | — | §9 |
+
+Two local-run conditions [FACT]: RTX 50-series (Blackwell, sm_120)
+requires a PyTorch build for CUDA 12.8+ — the training environment must
+pin a current torch; and multi-hour runs at the 115 W laptop power cap
+want mains power and airflow (throttling costs wall clock only).
+
+Gradient accumulation preserves the effective batch at any per-device
+size, so the smaller card never compromises the result — only the
+speed. **Consequence for 15D: no GPU spend is required for the
+recommended experiment.** No GPU infrastructure is added; rental
+re-enters only if the optional full-FT arm is wanted or a later
+experiment moves to a medium+ base.
 
 ## 17. Recommended model for the first experiment — ONE
 
@@ -556,7 +575,7 @@ timestamp/long-form breakage.)
 | 7 | Transcript normalization | verbatim Devanagari; script-follows-word for code-mix; numerals as spoken; punctuation retained in training text (Whisper is punctuation-capable); *evaluation* normalization only via `unicode_generic@v2` at scoring |
 | 8 | Split | speaker-disjoint by speaker metadata (client_id / speaker id); datasets lacking speaker IDs are train-only; eval slice frozen and hash-pinned **first** |
 | 9 | Framework | transformers `Seq2SeqTrainer` + PEFT LoRA (r=32, α=64, q/v_proj, dropout 0.05); language="hi", task="transcribe" tokens forced |
-| 10 | GPU | 1× 16 GB rented (T4/L4/A10G class) |
+| 10 | GPU | founder's local RTX 5070 Laptop (8 GB) for the LoRA arms; rented 16–24 GB only if the optional full-FT arm is added (§16) |
 | 11 | Epochs/steps | ~4,000–5,000 steps, eval every 500, early-stop on eval CER |
 | 12 | Batch | effective 32 via per-device 16 × grad-accum 2, fp16 (halve on OOM — documented guidance) |
 | 13 | LR | LoRA 1e-3 vs 5e-4 micro-sweep (2 runs); full-FT comparison arm optional at 1e-5 if budget allows — exact hyperparameters cannot be responsibly fixed pre-pilot, so this small sweep IS the plan |
@@ -578,10 +597,10 @@ research project, which is exactly the roadmap's dormant-LoRA trigger
 
 | Milestone | Content | Gate to next |
 |---|---|---|
-| **15A** (this document) | Research, screening, recommendation, experiment design | founder approval of base + datasets + budget class |
+| **15A** (this document) | Research, screening, recommendation, experiment design | founder approval of base + datasets (GPU budget: none — E1 runs on the local RTX 5070, §16) |
 | **15B** | Public dataset ingestion: download, license/provenance records (framework §12 intake), filtering, 16 kHz normalization, frozen train/eval manifests (eval frozen first), dedup + contamination declarations | manifests hash-pinned; dataset ledger seeded with first *Collected* entries |
 | **15C** | Baseline: `EvalClip` local-path source (~1 day, shared with Stage 3), zero-shot whisper-small on `stt-hi-public-eval@v1` (+ optional large-v3 ceiling read), committed EvalRuns | baseline records committed |
-| **15D** | The E1 run: rented GPU, LoRA sweep (2 arms), checkpoints registered | training complete, artifacts registered |
+| **15D** | The E1 run: local RTX 5070 (8 GB), LoRA sweep (2 arms), checkpoints registered — no rental needed for the recommended arms (§16) | training complete, artifacts registered |
 | **15E** | Post-training evaluation on the identical corpus/ruler/hardware; before/after comparison; probe + English no-regression + long-form checks; verdict vs the falsifiable hypothesis | founder review of results |
 | **15F** | IntelliAI dataset adapter: manifest v2 additive fields (`speaker_id`, `mime_type`, `sample_rate`, `corrected`), deterministic derived split rule, thin `ml/training/` loader consuming platform manifests — the bridge from public-data machinery to the consented flywheel | adapter consumes a real platform preparation in a dry run |
 | **15G** | Candidate packaging: merge → CT2 → int8 → pinned artifact; promotion-pipeline dry run to *Candidate* status only — **no route change, no production exposure** | founder decision on next step (E2 Arabic prep / E3 scale-up / Stage 3 alignment) |
