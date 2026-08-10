@@ -104,6 +104,12 @@ class Provenance(BaseModel):
     curation: str  # the deterministic recipe, in words
     validation: ValidationReport
     notes: str = ""
+    # Additive (15C): the dataset repo revision(s) the bytes were retrieved
+    # at, the frozen speaker roster (the disjointness enforcement input for
+    # every future training freeze), and descriptive statistics.
+    source_revisions: dict[str, str] = {}
+    speaker_roster: tuple[str, ...] = ()
+    statistics: dict[str, dict[str, int]] = {}
 
 
 def sha256_file(path: Path) -> str:

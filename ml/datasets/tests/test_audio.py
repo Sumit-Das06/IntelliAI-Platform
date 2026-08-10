@@ -6,7 +6,12 @@ import wave
 
 import pytest
 
-from intelliai_datasets.audio import UnreadableAudioError, probe_wav, sha256_bytes
+from intelliai_datasets.audio import (
+    UnreadableAudioError,
+    probe_audio,
+    probe_wav,
+    sha256_bytes,
+)
 
 
 def make_wav(seconds: float = 1.0, rate: int = 16000, channels: int = 1) -> bytes:
@@ -53,6 +58,33 @@ class TestProbe:
     def test_non_riff_bytes_are_refused(self) -> None:
         with pytest.raises(UnreadableAudioError, match="RIFF"):
             probe_wav(b"fLaC not a wav" + b"\x00" * 16)
+
+    def test_flac_streaminfo_is_probed(self) -> None:
+        # Minimal FLAC: marker + STREAMINFO(34 bytes) carrying 16 kHz mono,
+        # 32000 total samples (= 2.0 s). Field packing per the FLAC spec.
+        rate, total, bps = 16000, 32000, 16
+        info = bytearray(34)
+        info[10] = (rate >> 12) & 0xFF
+        info[11] = (rate >> 4) & 0xFF
+        # byte 12: rate low nibble | (channels-1)<<1 | top bit of (bps-1)
+        info[12] = ((rate & 0xF) << 4) | ((1 - 1) << 1) | (((bps - 1) >> 4) & 1)
+        # byte 13: low nibble of (bps-1) | top nibble of the 36-bit total
+        info[13] = (((bps - 1) & 0xF) << 4) | ((total >> 32) & 0xF)
+        info[14:18] = (total & 0xFFFFFFFF).to_bytes(4, "big")
+        payload = b"fLaC" + bytes([0x00]) + (34).to_bytes(3, "big") + bytes(info)
+        probe = probe_audio(payload)
+        assert probe.container == "flac"
+        assert probe.sample_rate_hz == rate
+        assert probe.channels == 1
+        assert probe.duration_seconds == pytest.approx(2.0)
+
+    def test_probe_audio_dispatches_wav(self) -> None:
+        probe = probe_audio(make_wav(seconds=1.0))
+        assert probe.container == "wav"
+
+    def test_unknown_container_is_refused(self) -> None:
+        with pytest.raises(UnreadableAudioError, match="unrecognized container"):
+            probe_audio(b"OggS" + b"\x00" * 64)
 
     def test_unsupported_format_code_is_refused(self) -> None:
         fmt = struct.pack("<HHIIHH", 6, 1, 8000, 8000, 1, 8)  # A-law

@@ -9,6 +9,7 @@ human bias a hand-picked subset would carry.
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Sequence
 
 from intelliai_datasets.samples import CandidateSample
@@ -50,3 +51,54 @@ def curate_count(
 
 def total_duration(samples: Sequence[CandidateSample]) -> float:
     return sum(s.duration_seconds for s in samples)
+
+
+def curate_speakers(
+    samples: Sequence[CandidateSample],
+    *,
+    target_clips: int,
+    max_per_speaker: int,
+) -> list[CandidateSample]:
+    """Whole-speaker selection: the unit of choice is a SPEAKER, not a clip.
+
+    Speakers are taken in ascending order of sha256(speaker_id) — stable,
+    content-independent, bias-free — and each contributes at most
+    ``max_per_speaker`` clips (its clips ordered by their own sha256).
+    Selection stops once ``target_clips`` is reached; the crossing
+    speaker's clips are included whole (up to the cap), so the roster is
+    always a set of complete speaker contributions, never a split one.
+
+    Every selected sample is guaranteed to carry a speaker id: samples
+    without one cannot join a speaker-disjoint set by definition and are
+    refused loudly here rather than silently dropped (validation should
+    have rejected them first).
+    """
+    missing = [s.id for s in samples if s.speaker_id is None]
+    if missing:
+        msg = (
+            f"{len(missing)} sample(s) without speaker_id cannot enter a "
+            f"speaker-curated set (first: {missing[0]!r}); reject them in "
+            "validation first"
+        )
+        raise ValueError(msg)
+
+    def speaker_key(speaker: str) -> str:
+        return hashlib.sha256(speaker.encode("utf-8")).hexdigest()
+
+    by_speaker: dict[str, list[CandidateSample]] = {}
+    for sample in samples:
+        assert sample.speaker_id is not None  # noqa: S101 — guarded above
+        by_speaker.setdefault(sample.speaker_id, []).append(sample)
+
+    selected: list[CandidateSample] = []
+    for speaker in sorted(by_speaker, key=speaker_key):
+        clips = sorted(by_speaker[speaker], key=lambda s: s.sha256.lower())
+        selected.extend(clips[:max_per_speaker])
+        if len(selected) >= target_clips:
+            break
+    return selected
+
+
+def speaker_roster(samples: Sequence[CandidateSample]) -> tuple[str, ...]:
+    """The sorted, deduplicated speaker ids of a selection."""
+    return tuple(sorted({s.speaker_id for s in samples if s.speaker_id is not None}))

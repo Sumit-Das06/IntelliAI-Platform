@@ -31,6 +31,7 @@ class RejectionReason(enum.StrEnum):
     DUPLICATE_AUDIO = "duplicate_audio"
     EVAL_CONTAMINATION = "eval_contamination"
     SPEAKER_IN_EVAL = "speaker_in_eval"
+    MISSING_SPEAKER_ID = "missing_speaker_id"
 
 
 class Rejection(BaseModel):
@@ -76,12 +77,15 @@ def validate_samples(
     data_root: Path,
     eval_sha256: Iterable[str] = (),
     eval_speakers: Iterable[str] = (),
+    require_speaker_ids: bool = False,
 ) -> tuple[list[CandidateSample], list[Rejection]]:
     """Validate in stable input order; return (accepted, rejections).
 
     ``eval_sha256`` / ``eval_speakers``: the frozen evaluation set's
     content hashes and speaker roster — training candidates matching
     either are rejected (contamination / speaker leakage).
+    ``require_speaker_ids``: a speaker-disjoint destination cannot admit
+    an unattributable sample — set for speaker-curated eval builds.
     """
     frozen_hashes = {h.lower() for h in eval_sha256}
     frozen_speakers = set(eval_speakers)
@@ -97,6 +101,7 @@ def validate_samples(
             frozen_hashes=frozen_hashes,
             frozen_speakers=frozen_speakers,
             seen_hashes=seen_hashes,
+            require_speaker_ids=require_speaker_ids,
         )
         if reason is None:
             seen_hashes.add(sample.sha256.lower())
@@ -114,6 +119,7 @@ def _reject_reason(
     frozen_hashes: set[str],
     frozen_speakers: set[str],
     seen_hashes: set[str],
+    require_speaker_ids: bool = False,
 ) -> Rejection | None:
     target = data_root / sample.path
     if not target.exists():
@@ -166,5 +172,11 @@ def _reject_reason(
             sample_id=sample.id,
             reason=RejectionReason.SPEAKER_IN_EVAL,
             detail=sample.speaker_id,
+        )
+    if require_speaker_ids and sample.speaker_id is None:
+        return Rejection(
+            sample_id=sample.id,
+            reason=RejectionReason.MISSING_SPEAKER_ID,
+            detail="speaker-disjoint destination requires an attributable speaker",
         )
     return None

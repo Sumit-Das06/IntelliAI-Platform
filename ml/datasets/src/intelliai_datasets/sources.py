@@ -81,14 +81,21 @@ SOURCES: Final[tuple[SourceRecord, ...]] = (
         commercial=CommercialVerdict.YES,
         access=Access.GATED,
         access_detail=(
-            "HF gated:auto — requires an authenticated HF account that accepted "
-            "the dataset terms, plus a token on this machine. No token present "
-            "(verified 2026-08-11). Unblocks with a ~5-minute founder action."
+            "HF gated:auto. UNBLOCKED 2026-08-11: founder account accepted the "
+            "terms; read token present on this machine (never committed). "
+            "Ingest via the `ingest-hf` preset with the token discovered from "
+            "the environment/HF token file."
         ),
         speaker_ids=True,
         official_splits=True,
         contamination_risk="possible",
-        notes="APPROVED PRIMARY train backbone + eval source; spontaneous-heavy.",
+        notes=(
+            "APPROVED PRIMARY eval source (+ future train backbone); "
+            "spontaneous-heavy. Schema verified 2026-08-11: speaker_id, "
+            "verbatim/normalized transcripts, scenario/gender/age/district. "
+            "hindi/valid = 5,530 rows (~518 MB); hindi/train = 445,160 rows "
+            "(~49 GB, NOT ingested — 15D concern)."
+        ),
     ),
     SourceRecord(
         name="kathbath",
@@ -99,11 +106,19 @@ SOURCES: Final[tuple[SourceRecord, ...]] = (
         license_source_url="https://huggingface.co/datasets/ai4bharat/Kathbath",
         commercial=CommercialVerdict.YES,
         access=Access.GATED,
-        access_detail="Same HF gated:auto condition as IndicVoices.",
+        access_detail=(
+            "HF gated:auto. UNBLOCKED 2026-08-11 (terms accepted, token "
+            "present). Ingestion deferred: audio ships as M4A (fname "
+            "'…-f.m4a'), outside the WAV-only probe — a recorded adapter "
+            "gap for 15D, not a partial ingest."
+        ),
         speaker_ids=True,
         official_splits=True,
         contamination_risk="possible",
-        notes="APPROVED train source (clean read speech, speaker IDs).",
+        notes=(
+            "APPROVED train source (clean read speech; speaker_id int64, "
+            "schema verified 2026-08-11). Role: training (15D)."
+        ),
     ),
     SourceRecord(
         name="common-voice-hi",
@@ -135,11 +150,19 @@ SOURCES: Final[tuple[SourceRecord, ...]] = (
         license_source_url="https://huggingface.co/datasets/ai4bharat/Lahaja",
         commercial=CommercialVerdict.YES,
         access=Access.GATED,
-        access_detail="Same HF gated:auto condition as IndicVoices.",
+        access_detail=(
+            "HF gated:auto. UNBLOCKED 2026-08-11 (terms accepted, token "
+            "present). Preset `lahaja-test` exists; freeze deferred — the "
+            "15C primary is IndicVoices, one ruler at a time."
+        ),
         speaker_ids=True,
         official_splits=False,
         contamination_risk="none_known",
-        notes="APPROVED dialect-diverse hi eval set (12.5 h, 132 speakers).",
+        notes=(
+            "APPROVED dialect-diverse hi eval set (12.5 h, 132 speakers; "
+            "sp_id + normalized/verbatim, schema verified 2026-08-11). "
+            "Role: evaluation (secondary, future freeze)."
+        ),
     ),
     SourceRecord(
         name="common-voice-zh-cn",

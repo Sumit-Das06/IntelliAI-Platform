@@ -2,10 +2,16 @@
 
 Ingestion stores ORIGINAL bytes exactly as received (the same law the
 platform applies to collected speech) and records what those bytes are.
-The probe is a minimal RIFF/WAVE header reader: integer PCM (format 1)
-and IEEE float (format 3, what FLEURS parquet ships) are accepted —
-anything else is refused rather than guessed. The serving pipeline's
-ffmpeg canonicalizes either encoding identically.
+Two containers are probed natively, header-only, stdlib-only:
+
+- RIFF/WAVE — integer PCM (format 1) and IEEE float (format 3, what
+  FLEURS parquet ships);
+- FLAC — via the mandatory STREAMINFO block (what IndicVoices ships;
+  the serving pipeline already decodes FLAC — the canonical `jfk-flac`
+  evaluation clip exercises that path in production).
+
+Anything else is refused rather than guessed, and every refusal is a
+recorded problem.
 """
 
 from __future__ import annotations
@@ -34,11 +40,52 @@ class AudioProbe(BaseModel):
 
 
 class UnreadableAudioError(RuntimeError):
-    """The bytes are not a decodable PCM/float WAV file."""
+    """The bytes are not a decodable WAV or FLAC file."""
 
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def probe_audio(data: bytes) -> AudioProbe:
+    """Sniff the container and probe it; refuse anything unrecognized."""
+    if data[:4] == b"fLaC":
+        return probe_flac(data)
+    if data[:4] == b"RIFF":
+        return probe_wav(data)
+    raise UnreadableAudioError("unrecognized container (not RIFF/WAVE, not FLAC)")
+
+
+def probe_flac(data: bytes) -> AudioProbe:
+    """Read the mandatory STREAMINFO block (always the first metadata block).
+
+    Layout after the 4-byte marker: 1 byte block header (last-flag +
+    type, type 0 = STREAMINFO) + 3 bytes length, then 34 bytes:
+    min/max block size (16+16), min/max frame size (24+24), then a
+    packed field — sample rate (20 bits), channels-1 (3), bits-1 (5),
+    total samples (36) — followed by the MD5.
+    """
+    if len(data) < 4 + 4 + 34:
+        raise UnreadableAudioError("FLAC too short for a STREAMINFO block")
+    block_type = data[4] & 0x7F
+    (length,) = struct.unpack_from(">I", b"\x00" + data[5:8])
+    if block_type != 0 or length < 34:
+        raise UnreadableAudioError("FLAC does not start with a STREAMINFO block")
+    info = data[8 : 8 + 34]
+    sample_rate = (info[10] << 12) | (info[11] << 4) | (info[12] >> 4)
+    channels = ((info[12] >> 1) & 0x07) + 1
+    # 36-bit total_samples = low nibble of byte 13 (the high nibble is the
+    # tail of bits-per-sample) followed by bytes 14-17.
+    total_samples = ((info[13] & 0x0F) << 32) | int.from_bytes(info[14:18], "big")
+    if sample_rate <= 0 or total_samples <= 0:
+        raise UnreadableAudioError("FLAC STREAMINFO reports no audio")
+    return AudioProbe(
+        container="flac",
+        duration_seconds=total_samples / sample_rate,
+        sample_rate_hz=sample_rate,
+        channels=channels,
+        sha256=sha256_bytes(data),
+    )
 
 
 def probe_wav(data: bytes) -> AudioProbe:
