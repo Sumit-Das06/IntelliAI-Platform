@@ -176,13 +176,18 @@ class KeyboardView(
         }
 
     /** Offer to correct the just-inserted transcript. Auto-dismisses so
-     *  a stale offer never lingers over unrelated typing. */
+     *  a stale offer never lingers over unrelated typing.
+     *
+     *  30 seconds, not the original 9: on a physical device the user has
+     *  to READ the inserted text, judge it wrong, and reach for Edit —
+     *  which took longer than 9s in real use (10 Aug 2026). The old
+     *  value was tuned against a script that tapped instantly. */
     fun showCorrectionOffer() {
         correctionBar.visibility = VISIBLE
         hideCorrectionRunnable?.let(handler::removeCallbacks)
         val hide = Runnable { correctionBar.visibility = GONE }
         hideCorrectionRunnable = hide
-        handler.postDelayed(hide, 9_000L)
+        handler.postDelayed(hide, CORRECTION_OFFER_MS)
     }
 
     fun hideCorrectionOffer() {
@@ -424,4 +429,11 @@ class KeyboardView(
         (value * resources.displayMetrics.density).toInt()
 
     private fun color(res: Int): Int = ContextCompat.getColor(context, res)
+
+    companion object {
+        /** How long the "Improve this transcription?" offer stays up.
+         *  Long enough for a human to read, judge, and reach — measured
+         *  on a physical device, not on a script. */
+        const val CORRECTION_OFFER_MS = 30_000L
+    }
 }

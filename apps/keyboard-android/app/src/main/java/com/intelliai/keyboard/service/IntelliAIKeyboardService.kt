@@ -10,6 +10,7 @@ import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.intelliai.keyboard.BuildConfig
 import com.intelliai.keyboard.R
@@ -17,7 +18,7 @@ import com.intelliai.keyboard.api.CorrectionOutcome
 import com.intelliai.keyboard.api.FailureKind
 import com.intelliai.keyboard.api.IntelliAIApiClient
 import com.intelliai.keyboard.audio.WavRecorder
-import com.intelliai.keyboard.dictation.CorrectionDialog
+import com.intelliai.keyboard.dictation.CorrectionActivity
 import com.intelliai.keyboard.dictation.DictationController
 import com.intelliai.keyboard.dictation.DictationError
 import com.intelliai.keyboard.dictation.DictationLanguage
@@ -279,15 +280,17 @@ class IntelliAIKeyboardService :
     }
 
     override fun onEditCorrection() {
-        val view = keyboardView ?: return
         val correction = lastCorrection ?: return
         keyboardView?.hideCorrectionOffer()
-        CorrectionDialog.show(
-            context = ContextThemeWrapper(this, R.style.Theme_IntelliAI),
-            transcript = correction.transcript,
-            attachToken = view.windowToken,
-        ) { corrected ->
-            submitCorrection(correction.sampleId, corrected)
+        // A real activity, not a dialog on the IME window: an
+        // InputMethodService cannot host its own EDITABLE dialog (see
+        // CorrectionActivity's header for the physical-device failure
+        // this replaced). The sample id is captured HERE, because
+        // launching the editor takes focus away and onFinishInputView
+        // will clear lastCorrection before the user presses Save.
+        val sampleId = correction.sampleId
+        CorrectionActivity.start(this, correction.transcript) { corrected ->
+            submitCorrection(sampleId, corrected)
         }
     }
 
@@ -308,7 +311,11 @@ class IntelliAIKeyboardService :
                     else -> getString(R.string.correction_failed)
                 }
             }
-            keyboardView?.showTransientMessage(message)
+            // A Toast, not the keyboard's brand bar: the correction
+            // editor is a separate activity, so when the result arrives
+            // the keyboard may not be on screen at all. The user must
+            // learn the outcome either way.
+            Toast.makeText(this@IntelliAIKeyboardService, message, Toast.LENGTH_SHORT).show()
         }
         lastCorrection = null
     }

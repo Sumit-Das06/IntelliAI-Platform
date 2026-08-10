@@ -41,6 +41,20 @@
             android:noHistory="true"
             android:theme="@style/Theme.IntelliAI.Invisible" />
 
+        <!-- The correction editor. Also an activity, and for the same
+             reason as the trampoline above: an InputMethodService cannot
+             host its own EDITABLE dialog — a dialog on the IME window
+             cannot summon a keyboard for its own text field, and dies
+             when the input view is torn down. An activity owns its
+             window and any IME can serve it. Not in recents; single
+             instance so a second Edit tap reuses the open editor. -->
+        <activity
+            android:name=".dictation.CorrectionActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+
         <!-- The real input method. BIND_INPUT_METHOD is what makes this
              a system keyboard rather than an app pretending to be one:
              only the system may bind, and Android lists the service
