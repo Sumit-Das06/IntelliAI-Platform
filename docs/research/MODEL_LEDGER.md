@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-11 (Milestone 15B: first Hindi baseline evidence + Qwen3 CPU spike) |
+| **Last entry** | 2026-08-11 (Milestone 15C: official speaker-disjoint Hindi baseline) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -626,6 +626,37 @@ the approved primaries remain access-blocked pending an HF/MDC account).
   card's `custom_code` requirement meets the unruled remote-code
   security-review prerequisite (5.3). A ~5-minute founder HF action clears
   the first; the review must clear the second before any in-process run.
+
+---
+
+---
+
+## Milestone 15C — the official Hindi ruler and baseline (appended 2026-08-11)
+
+Full report: [2026-08-11-15c-hindi-eval-baseline.md](2026-08-11-15c-hindi-eval-baseline.md).
+**No status changes.** Gated access unblocked by the founder (HF terms
+accepted; read token held outside the repository). Frozen:
+**`stt-hi-public-eval@v1`** (sha256 `cf643146…`), 151 IndicVoices
+hindi/valid clips + 2 probes, **speaker-disjoint by construction**
+(32-speaker frozen roster, enforced on every future training freeze),
+revision-pinned (`c96f9088…`), byte-reproducible (ingest ×2 identical,
+freeze ×2 identical).
+
+**Whisper Small (faster-whisper) — OFFICIAL Hindi baseline**
+- 2026-08-11 — *status unchanged (Approved for Adoption)* — **[EVIDENCE]**
+  Named baseline `2026-08-11-intelliai-stt-hi-whisper-small-int8-public`,
+  product path, 151 spontaneous-heavy clips / 3,258 ref words:
+  **cer_unicode 0.3629 · wer_unicode 0.6590** (S/I/D 0.476/0.033/0.150) ·
+  recognition_rtf 0.785 · 0 hallucinated words · 0 failures. Replicate
+  committed: CER 0.3772 — **documented engine variance** (34/153
+  hypotheses differ across identical runs; temperature-fallback
+  sampling), so a 15D improvement claim must exceed ΔCER ≈ 0.015 to
+  clear the noise band. The FLEURS comparability baseline (CER 0.2919)
+  is retained and is a different ruler — never differenced. The official
+  corpus is harder (93% spontaneous/conversational): the Hindi wedge gap
+  at product scale is now **CER 0.36 / WER 0.66** — evidence:
+  [official](../../ml/evaluation/stt/results/2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public.json) ·
+  [replicate](../../ml/evaluation/stt/results/2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public-replicate.json)
 
 ---
 

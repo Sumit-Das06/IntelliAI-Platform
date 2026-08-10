@@ -36,6 +36,10 @@ ever touches them.
   — Milestone 15B close-out: frozen public-data manifests, the first
   Hindi baseline (whisper-small CER 0.2919), Qwen3-ASR 0.6B CPU spike
   readings, blocked-evaluation verdicts, and the 15C/15D recommendation.
+  [2026-08-11-15c-hindi-eval-baseline.md](2026-08-11-15c-hindi-eval-baseline.md)
+  — Milestone 15C close-out: gated access unblocked, the speaker-disjoint
+  primary `stt-hi-public-eval@v1`, and the OFFICIAL Hindi baseline
+  (whisper-small CER 0.3629) with documented engine variance.
 
 How this directory relates to its neighbors:
 

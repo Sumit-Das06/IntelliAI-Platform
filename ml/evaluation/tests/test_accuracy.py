@@ -85,6 +85,10 @@ _WITH_REFERENCE = {
     # speech but NO ascii-anchored clips (wer_ascii is en-only), so its
     # reproduction count is 0 by construction, like the hi records above.
     "2026-08-11-intelliai-stt-hi-whisper-small-int8-15b-fleurs.json": 0,
+    # Milestone 15C (2026-08-11): the official Hindi baseline + replicate
+    # on stt-hi-public-eval@v1 — hi records, no ascii anchor, 0 by law.
+    "2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public.json": 0,
+    "2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public-replicate.json": 0,
 }
 
 

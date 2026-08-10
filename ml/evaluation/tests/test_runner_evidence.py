@@ -503,6 +503,8 @@ class TestNoFlagDuplicatesAnObservableFact:
 def test_every_historical_record_still_parses() -> None:
     # B4b changes no schema: it fills fields B3 already defined.
     committed = sorted(Path("ml/evaluation/stt/results").glob("*.json"))
-    assert len(committed) == 15  # 3 pre-methodology + 4 PH0 + 7 Stage 1 + 1 15B hi baseline
+    assert (
+        len(committed) == 17
+    )  # 3 pre-methodology + 4 PH0 + 7 Stage 1 + 1 15B + 2 15C (official hi baseline + replicate)
     for path in committed:
         assert EvalRun.model_validate_json(path.read_text(encoding="utf-8"))
