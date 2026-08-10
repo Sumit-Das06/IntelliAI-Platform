@@ -10,7 +10,7 @@ Released manifests are immutable; changes create the next version.
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
@@ -66,8 +66,19 @@ class EvalClip(BaseModel):
             if self.sha256 is None:
                 msg = f"clip {self.id!r}: path clips require a sha256 pin"
                 raise ValueError(msg)
-            candidate = Path(self.path)
-            if candidate.is_absolute() or ".." in candidate.parts:
+            # Judged under BOTH path flavors, so a manifest means the same
+            # thing on every machine: "C:/x" must be refused on Linux CI
+            # exactly as it is on a Windows workstation.
+            as_windows = PureWindowsPath(self.path)
+            as_posix = PurePosixPath(self.path)
+            escapes = (
+                as_windows.is_absolute()
+                or as_posix.is_absolute()
+                or as_windows.drive != ""
+                or ".." in as_windows.parts
+                or ".." in as_posix.parts
+            )
+            if escapes:
                 msg = (
                     f"clip {self.id!r}: path must be relative to the data "
                     "directory and must not escape it"
