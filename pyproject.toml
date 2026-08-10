@@ -13,7 +13,7 @@ requires-python = ">=3.12"
 # Workspace-wide engineering tooling. Application dependencies live in each
 # member's own pyproject; this group is the standards machinery.
 dev = [
-    "ruff>=0.9",
+    "ruff>=0.16.2",
     "mypy>=1.14",
     "pre-commit>=4",
     "boto3-stubs[s3]>=1.34",
