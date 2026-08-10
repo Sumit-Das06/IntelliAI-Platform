@@ -24,7 +24,10 @@ ever touches them.
   [environment recording](STT_BENCHMARK_HARDWARE.md) ·
   [corpus specification](STT_BENCHMARK_CORPORA.md).
 - Benchmark plans and adoption recommendations land here as standalone
-  documents, cited from ledger entries.
+  documents, cited from ledger entries. Current standalone reports:
+  [2026-08-10-first-finetuning-experiment.md](2026-08-10-first-finetuning-experiment.md)
+  — fine-tuning base + public-dataset research, recommendation
+  (whisper-small · Hindi · LoRA), and the E1 experiment design.
 
 How this directory relates to its neighbors:
 

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-05 (STT Gate 4 campaign planning) |
+| **Last entry** | 2026-08-10 (fine-tuning experiment research: Meta-lineage intake + landscape corrections) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -41,9 +41,12 @@ entries is ordered by the living priorities
 | Moonshine (Useful Sensors) | transcription | EN-centric | MIT (claimed) | Researching | 2026-08-05 |
 | Kyutai STT | transcription | EN/FR only | CC-BY-4.0 (claimed) | Researching | 2026-08-05 |
 | Zipformer / sherpa-onnx (Next-gen Kaldi) | transcription | per-recipe; varies | Apache-2.0 (claimed) | Researching | 2026-08-05 |
+| XLS-R 300m/1b/2b (Meta) | transcription (SSL encoder, CTC base) | 128-lang pretraining incl. HI+AR; ASR only after per-language fine-tune | **Apache-2.0 (source, 2026-08-10, all three cards)** | Researching | 2026-08-10 |
+| w2v-BERT 2.0 (Meta) | transcription (SSL encoder, CTC base) | 143-lang pretraining incl. HI+AR; ASR only after fine-tune | **MIT (source, 2026-08-10)** | Researching | 2026-08-10 |
 | Canary 1B (NVIDIA) | transcription | — | CC-BY-NC (2026-07-31) | Rejected | 2026-08-04 |
 | ArTST (MBZUAI) | transcription | Arabic specialist | **CC-BY-NC-4.0 (source, 2026-08-05)** | Rejected | 2026-08-05 |
-| SeamlessM4T v2 (Meta) | transcription | — | **CC-BY-NC-4.0 (source, 2026-08-05)** | Rejected | 2026-08-05 |
+| SeamlessM4T v2 (Meta) | transcription | — | **CC-BY-NC-4.0 (source, 2026-08-05; re-verified unchanged 2026-08-10)** | Rejected | 2026-08-05 |
+| MMS 1b-all / 1b-fl102 (Meta) | transcription | claims 1,162 langs incl. HI+AR | **CC-BY-NC-4.0 (source, 2026-08-10, both cards)** | Rejected | 2026-08-10 |
 | Kokoro-82M | speech_synthesis | EN shipped · HI gated (license) · AR none | Apache-2.0 (2026-08-03) | **Approved for Adoption** — incumbent, in production (EN only) | 2026-08-04 |
 | Chatterbox (Resemble) | speech_synthesis | claims 23 langs incl. HI; unmeasured | MIT (2026-07-31) | Researching | 2026-08-04 |
 | Qwen3-TTS | speech_synthesis | no Indic yet (claim) | Apache-2.0 (2026-07-31) | Researching | 2026-08-04 |
@@ -474,6 +477,48 @@ Material findings against the campaign documents, since corrected:
   Promising review first.
 - `P<n>` was overloaded across **three** meanings (campaign phase, hardware profile,
   prerequisite item) inside single matrix rows, in identifiers the plan declares permanent.
+
+---
+
+---
+
+## Fine-tuning experiment research — appended 2026-08-10
+
+Trigger: founder directive to research and recommend the pretrained base
+for IntelliAI's first fine-tuning experiment and design a public-data
+experiment. Full report:
+[2026-08-10-first-finetuning-experiment.md](2026-08-10-first-finetuning-experiment.md).
+**Statuses of existing candidates unchanged.** New intakes and
+corrections below; every licence was read at source on 2026-08-10.
+
+### New intakes (Gate 0 + Gate 1 licence screen, same day)
+
+**XLS-R 300m / 1b / 2b (Meta)**
+- 2026-08-10 — **Researching** *(Gate 0 intake)* — Trigger: founder-named candidate family for the fine-tuning-base decision. **Licence `apache-2.0` verified at source on all three HF cards 2026-08-10.** wav2vec 2.0 SSL encoders (436K h, 128 languages, HI+AR in pretraining tags); ASR requires per-language CTC fine-tune (official HF recipe). Screened as fine-tuning base: structurally regressive for our product — lowercase, unpunctuated, vocab-bound output, no timestamps; best documented community Hindi fine-tunes WER 0.34–0.46 (with/without LM), an order weaker than in-lineage Whisper fine-tune evidence. FOUNDATION_MODELS §1 score 6.9 (report §4) — evidence: report §§3–4, §15, §19
+
+**w2v-BERT 2.0 (Meta)**
+- 2026-08-10 — **Researching** *(Gate 0 intake)* — Trigger: same decision; the Seamless-era encoder released permissively where SeamlessM4T itself is NC. **Licence `mit` verified at source 2026-08-10.** ~600M Conformer encoder, 4.5M h / 143 languages incl. HI+AR; official `Wav2Vec2BertForCTC` recipe (14 h → 32% WER Mongolian on a 16 GB V100 — publisher blog claim). Same CTC product regressions as XLS-R; **not in the Optimum ONNX supported list** (verified 2026-08-10). Strongest permissive SSL encoder on pretraining scale; not a first base. Score 6.7 — evidence: report §§3–4, §15
+
+**MMS 1b-all / 1b-fl102 (Meta)**
+- 2026-08-10 — **Rejected** *(Gate 0 intake; licence alone)* — Registered and rejected in the same sweep, the ArTST pattern. **Licence `cc-by-nc-4.0` verified at source on both cards 2026-08-10** — fails [ADR-0005](../adr/0005-permissive-model-licensing-policy.md) regardless of its 1,162-language coverage (HI+AR both in scope). No dossier (cheapest-kill-first). Re-entry only on a permissive re-release.
+
+### Corrections and landscape evidence appended to existing entries
+
+**Whisper (all sizes) — licence record correction**
+- 2026-08-10 — *status unchanged (Approved for Adoption / Researching per row)* — **Per-artifact licence correction [FACT]:** the HF cards our ArtifactStore pins (`openai/whisper-small`, `-medium`, `-large-v3`) read **`apache-2.0`**; `-large-v3-turbo` reads **`mit`**; the OpenAI GitHub repository is MIT; faster-whisper/CTranslate2 MIT (unchanged from Gate 1). Prior ledger rows say "MIT" from the repo-chain read. Both grants are permissive with derivative rights — **no verdict changes** — recorded because verdicts bind per artifact distribution. Additional fine-tuning evidence recorded (external claims, sources in report §§1,6–7): whisper-small Hindi CV11 63.5→32.0 WER after ~8 h fine-tune (official HF recipe); IndicWhisper (medium base) 13.6 avg WER across 7 Hindi benchmarks; large-v2 Arabic MGB-2 34.7→15.5 full FT; **fine-tuned whisper-small underperforms zero-shot large-v2 on every published Arabic test set** — a base-size warning binding on any future Arabic fine-tune. `ct2-transformers-converter` officially supports fine-tuned checkpoints.
+
+**Qwen3-ASR 0.6B/1.7B — open questions discharged**
+- 2026-08-10 — *status unchanged (Researching)* — **Arabic coverage CONFIRMED [FACT]:** the official repository's 52-language list includes both Hindi and Arabic (read 2026-08-10), discharging the dossier's "Arabic unresolved" question. **First-party fine-tuning support CONFIRMED [FACT]:** the repo publishes a Qwen3-ASR-Finetuning path and the technical report describes an open-sourced fine-tuning framework. This amends the Gate 2 structural finding: **one permissive candidate besides Whisper now claims EN+HI+AR.** Named second-choice fine-tuning lineage in the 2026-08-10 report; unmeasured on our corpus; GPU-published operating points and the two-model timestamp story stand.
+
+**Parakeet (NVIDIA) — landscape note**
+- 2026-08-10 — *status unchanged (Researching)* — NVIDIA's **Parakeet-RNNT-1.1B multilingual** (NGC) lists `hi-IN` and `ar-AR` among 25 languages but under the "AI Foundation Models Community License", not CC-BY-4.0 [FACT, read 2026-08-10]. [INFERENCE] Fails ADR-0005's permissive-only rule; would require its own Gate 0 entry and licence read if ever triggered. The permissive `tdt-0.6b-v3` remains European-only — the coverage verdict on this row is unchanged.
+
+**SeamlessM4T v2 — re-verification**
+- 2026-08-10 — *status unchanged (Rejected)* — `cc-by-nc-4.0` re-read at source 2026-08-10; unchanged from the 2026-08-05 verdict.
+
+### Report recommendation (research → founder; no status change)
+
+- 2026-08-10 — The report recommends **whisper-small (LoRA, Hindi, ≤10 h commercially-clean public data)** as the first fine-tuning experiment base, **Qwen3-ASR 0.6B** as second choice, and a staged (not balanced-mixture) language order: Hindi now, Arabic after its ruler exists, English closed per Stage 2. The experiment proves Ladder Stage 0→1 machinery and feeds the Stage 3 gate a ready remedy; it proposes **no serving change**. Founder decision pending — evidence: [2026-08-10-first-finetuning-experiment.md](2026-08-10-first-finetuning-experiment.md)
 
 ---
 
