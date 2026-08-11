@@ -3,6 +3,7 @@
 import io
 import struct
 import wave
+from pathlib import Path
 
 import pytest
 
@@ -85,6 +86,44 @@ class TestProbe:
     def test_unknown_container_is_refused(self) -> None:
         with pytest.raises(UnreadableAudioError, match="unrecognized container"):
             probe_audio(b"OggS" + b"\x00" * 64)
+
+    def test_m4a_is_probed_via_ffprobe(self, tmp_path: Path) -> None:
+        # Kathbath ships M4A. Generate a real 1 s AAC/M4A fixture with the
+        # same ffmpeg the serving pipeline and CI already require.
+        import shutil
+        import subprocess
+
+        if shutil.which("ffmpeg") is None:  # pragma: no cover
+            pytest.skip("ffmpeg not on PATH")
+        fixture = tmp_path / "tone.m4a"
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-f",
+                "lavfi",
+                "-i",
+                "sine=frequency=440:duration=1",
+                "-ar",
+                "16000",
+                "-ac",
+                "1",
+                "-y",
+                str(fixture),
+            ],
+            capture_output=True,
+            check=True,
+            timeout=60,
+        )
+        probe = probe_audio(fixture.read_bytes())
+        assert probe.container == "m4a"
+        assert probe.sample_rate_hz == 16000
+        assert probe.channels == 1
+        assert 0.8 <= probe.duration_seconds <= 1.3
+
+    def test_corrupt_m4a_is_refused(self) -> None:
+        junk = b"\x00\x00\x00\x20ftypM4A " + b"\x00" * 64
+        with pytest.raises(UnreadableAudioError, match="ffprobe"):
+            probe_audio(junk)
 
     def test_unsupported_format_code_is_refused(self) -> None:
         fmt = struct.pack("<HHIIHH", 6, 1, 8000, 8000, 1, 8)  # A-law

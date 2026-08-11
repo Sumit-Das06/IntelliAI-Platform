@@ -147,7 +147,12 @@ def _cmd_ingest_hf(args: argparse.Namespace) -> int:
         )
         return 2
     try:
-        result = ingest_hf(spec, data_root=args.data_root, max_rows=args.max_rows)
+        result = ingest_hf(
+            spec,
+            data_root=args.data_root,
+            max_rows=args.max_rows,
+            max_shards=args.max_shards,
+        )
     except HfAccessError as exc:
         print(f"BLOCKED: {exc}")
         return 2
@@ -245,7 +250,14 @@ def _cmd_freeze_eval(args: argparse.Namespace) -> int:
 
 
 def _cmd_freeze_train(args: argparse.Namespace) -> int:
-    samples, _, revision = _read_candidates(args.candidates)
+    samples: list[CandidateSample] = []
+    revisions: dict[str, str] = {}
+    for candidates_path in args.candidates:
+        file_samples, _, revision = _read_candidates(candidates_path)
+        samples.extend(file_samples)
+        for s_ in file_samples:
+            if revision:
+                revisions[s_.source] = revision
     eval_dataset = load_dataset(args.eval_manifest)
     eval_hashes = [c.sha256 for c in eval_dataset.clips if c.sha256 is not None]
     # The frozen eval's speaker roster (recorded in its provenance sidecar)
@@ -295,7 +307,9 @@ def _cmd_freeze_train(args: argparse.Namespace) -> int:
             + (f" and by speaker roster ({len(eval_speakers)} speakers)" if eval_speakers else "")
         ),
         validation=report,
-        source_revisions={s: revision for s in {c.source for c in chosen} if revision},
+        source_revisions={
+            s_: r for s_, r in revisions.items() if any(c.source == s_ for c in chosen)
+        },
         statistics=_statistics(chosen),
     )
     write_provenance(provenance, args.provenance_out)
@@ -337,6 +351,12 @@ def build_parser() -> argparse.ArgumentParser:
     ingest_gated.add_argument("--preset", required=True, help=", ".join(sorted(SPECS)))
     ingest_gated.add_argument("--data-root", type=Path, default=Path("ml/datasets/data"))
     ingest_gated.add_argument("--max-rows", type=int, default=None)
+    ingest_gated.add_argument(
+        "--max-shards",
+        type=int,
+        default=None,
+        help="deterministic prefix of the sorted shard list (huge-split sampling)",
+    )
     ingest_gated.add_argument("--out", type=Path, required=True)
     ingest_gated.set_defaults(func=_cmd_ingest_hf)
 
@@ -369,7 +389,7 @@ def build_parser() -> argparse.ArgumentParser:
     freeze_eval.set_defaults(func=_cmd_freeze_eval)
 
     freeze_train = sub.add_parser("freeze-train", help="freeze a train JSONL manifest")
-    freeze_train.add_argument("--candidates", type=Path, required=True)
+    freeze_train.add_argument("--candidates", type=Path, required=True, nargs="+")
     freeze_train.add_argument("--eval-manifest", type=Path, required=True)
     freeze_train.add_argument(
         "--eval-provenance",

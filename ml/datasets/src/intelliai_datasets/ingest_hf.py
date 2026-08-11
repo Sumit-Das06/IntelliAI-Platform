@@ -94,8 +94,28 @@ LAHAJA_TEST = HfDatasetSpec(
     text_note="reference = `normalized` (same rationale as IndicVoices)",
 )
 
+INDICVOICES_HI_TRAIN = INDICVOICES_HI_VALID.model_copy(update={"split": "train"})
+
+KATHBATH_HI_TRAIN = HfDatasetSpec(
+    source_name="kathbath",
+    hf_id="ai4bharat/Kathbath",
+    config="hindi",
+    split="train",
+    language="hi",
+    columns=ColumnMap(
+        audio="audio_filepath",
+        text="text",
+        speaker="speaker_id",  # int64 at source; stringified at ingest
+        row_id="fname",
+        note_fields=("gender",),
+    ),
+    text_note="reference = `text` (the only transcript field Kathbath ships)",
+)
+
 SPECS: dict[str, HfDatasetSpec] = {
     "indicvoices-hindi-valid": INDICVOICES_HI_VALID,
+    "indicvoices-hindi-train": INDICVOICES_HI_TRAIN,
+    "kathbath-hindi-train": KATHBATH_HI_TRAIN,
     "lahaja-test": LAHAJA_TEST,
 }
 
@@ -118,7 +138,15 @@ def ingest_hf(
     *,
     data_root: Path,
     max_rows: int | None = None,
+    max_shards: int | None = None,
 ) -> IngestResult:
+    """Ingest one (dataset, config, split), optionally shard-bounded.
+
+    ``max_shards`` takes a deterministic PREFIX of the sorted shard list —
+    the sanctioned way to sample a huge split (IndicVoices hindi/train is
+    49 GB across 82 shards) without downloading it all. The selection is
+    a pure function of the shard listing, never of download order.
+    """
     record = source(spec.source_name)  # refuses unregistered sources loudly
     token = hf.discover_token()
     audio_dir = data_root / spec.source_name / spec.config / spec.split
@@ -133,7 +161,10 @@ def ingest_hf(
 
     with hf.client(token) as http:
         revision = hf.dataset_revision(spec.hf_id, http)
-        for url in hf.shard_urls(spec.hf_id, spec.config, spec.split, http):
+        urls = hf.shard_urls(spec.hf_id, spec.config, spec.split, http)
+        if max_shards is not None:
+            urls = urls[:max_shards]
+        for url in urls:
             shard_path = shard_dir / Path(httpx.URL(url).path).name
             if not shard_path.exists():
                 hf.download_shard(url, shard_path, http)

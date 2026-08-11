@@ -143,6 +143,8 @@ jobs:
         run: uv run --package intelliai-datasets pytest ml/datasets/tests -q
       - name: Run evaluation package tests
         run: uv run --package intelliai-evaluation pytest ml/evaluation/tests -q
+      - name: Run training package tests (torch-free layers; the train extra is never installed in CI)
+        run: uv run --package intelliai-training pytest ml/training/tests -q
       - name: Run runtime-contract tests
         run: uv run --package intelliai-runtime-contract pytest packages/runtime-contract/tests -q
       - name: Run runtime-core tests (includes lifecycle-boundary enforcement)

@@ -1,0 +1,51 @@
+[project]
+name = "intelliai-training"
+version = "0.1.0"
+description = "Fine-tuning pipelines: manifest-driven, reproducible, research-plane only"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.10",
+    "intelliai-datasets",
+    "intelliai-evaluation",
+]
+
+[project.optional-dependencies]
+# The training stack is an optional extra exactly like the runtimes'
+# engine extras: installed where training actually runs (the GPU dev
+# machine), never in CI, never implicitly. torch resolves from the CUDA
+# index on win/linux (Blackwell sm_120 needs a cu128-class build) and
+# from PyPI elsewhere.
+train = [
+    "torch>=2.7",
+    "transformers>=4.48",
+    "peft>=0.14",
+    "soundfile>=0.12",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv.sources]
+intelliai-datasets = { workspace = true }
+intelliai-evaluation = { workspace = true }
+# win32 ONLY: the GPU training machine is Windows (RTX 5070, sm_120 needs
+# a cu128-class build; PyPI's Windows torch is CPU-only). Linux keeps the
+# tts-runtime rule (pytorch-cpu) — deployment images stay CPU-first, and
+# the two sources never overlap in any environment split. Side effect,
+# accepted and documented: a Windows `--extra kokoro` install now also
+# resolves torch from cu128 (local dev only; tts deployment is Linux).
+torch = [
+    { index = "pytorch-cu128", marker = "sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intelliai_training"]

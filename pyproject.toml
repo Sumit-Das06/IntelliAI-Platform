@@ -27,6 +27,7 @@ members = [
     "apps/api",
     "ml/datasets",
     "ml/evaluation",
+    "ml/training",
     "packages/runtime-contract",
     "packages/runtime-core",
     "services/stt-runtime",
@@ -44,6 +45,8 @@ src = [
     "ml/datasets/tests",
     "ml/evaluation/src",
     "ml/evaluation/tests",
+    "ml/training/src",
+    "ml/training/tests",
     "packages/runtime-contract/src",
     "packages/runtime-contract/tests",
     "packages/runtime-core/src",
@@ -78,6 +81,7 @@ select = [
 ]
 "**/cli.py" = ["T201"]  # the CLI's job is printing to a human
 "research/**" = ["T201"]  # sandbox experiment scripts report to a human
+"ml/training/**" = ["T201"]  # training loops report progress to the operator console
 "**/alembic/versions/*" = ["F401"]  # template imports kept for future revisions
 
 # ── Types: mypy strict ──────────────────────────────────────────────────
@@ -92,6 +96,8 @@ files = [
     "ml/datasets/tests",
     "ml/evaluation/src",
     "ml/evaluation/tests",
+    "ml/training/src",
+    "ml/training/tests",
     "packages/runtime-contract/src",
     "packages/runtime-contract/tests",
     "packages/runtime-core/src",
@@ -118,4 +124,11 @@ ignore_missing_imports = true
 # is validated into typed pydantic models at the boundary.
 [[tool.mypy.overrides]]
 module = ["pyarrow.*"]
+ignore_missing_imports = true
+
+# The training stack is an optional extra (absent in CI, untyped where
+# installed); confined to ml/training, imported lazily behind torch-free
+# config/manifest layers.
+[[tool.mypy.overrides]]
+module = ["transformers.*", "peft.*", "soundfile.*", "ctranslate2.*", "safetensors.*"]
 ignore_missing_imports = true

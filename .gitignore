@@ -33,6 +33,12 @@ weights/
 # `intelliai-datasets ingest-*` from pinned sources; the committed truth
 # is the frozen manifests + provenance sidecars beside them.
 ml/datasets/manifests/candidates-*.json
+# Large frozen TRAIN manifests are data artifacts: the committed truth is
+# the provenance sidecar carrying the SHA-256 pin + the deterministic
+# recipe (freeze runs are byte-identical, proven). Text ballast >1 MB
+# stays out of git like audio does. (Smaller, already-tracked manifests
+# remain tracked - gitignore never untracks.)
+ml/datasets/manifests/hi-public-train-*.jsonl
 .ipynb_checkpoints/
 
 # ── Recorded audio — publication is irreversible ──────────────

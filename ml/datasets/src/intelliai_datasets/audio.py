@@ -48,12 +48,73 @@ def sha256_bytes(data: bytes) -> str:
 
 
 def probe_audio(data: bytes) -> AudioProbe:
-    """Sniff the container and probe it; refuse anything unrecognized."""
+    """Sniff the container and probe it; refuse anything unrecognized.
+
+    WAV and FLAC are parsed natively; MP4/M4A (what Kathbath ships) is
+    probed via ffprobe — the platform's one sanctioned media boundary,
+    already a hard dependency of the serving pipeline and installed in CI.
+    """
     if data[:4] == b"fLaC":
         return probe_flac(data)
     if data[:4] == b"RIFF":
         return probe_wav(data)
-    raise UnreadableAudioError("unrecognized container (not RIFF/WAVE, not FLAC)")
+    if len(data) > 12 and data[4:8] == b"ftyp":
+        return probe_ffprobe(data, container="m4a")
+    raise UnreadableAudioError("unrecognized container (not RIFF/WAVE, FLAC, or MP4/M4A)")
+
+
+def probe_ffprobe(data: bytes, *, container: str) -> AudioProbe:
+    """Probe via ffprobe from a temp file (MP4 needs seekable input).
+
+    The ORIGINAL bytes are what get stored and hashed; ffprobe only
+    reads facts. A probe failure is an UnreadableAudioError like any
+    other — recorded, never skipped.
+    """
+    import json
+    import subprocess
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.NamedTemporaryFile(suffix=f".{container}", delete=False) as handle:
+        handle.write(data)
+        temp_path = Path(handle.name)
+    try:
+        result = subprocess.run(  # noqa: S603 — fixed argv; ffprobe is the media boundary
+            [  # noqa: S607 — PATH lookup is deliberate (same as the serving pipeline)
+                "ffprobe",
+                "-v",
+                "error",
+                "-select_streams",
+                "a:0",
+                "-show_entries",
+                "stream=sample_rate,channels:format=duration",
+                "-of",
+                "json",
+                str(temp_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if result.returncode != 0:
+            msg = f"ffprobe refused the {container} bytes"
+            raise UnreadableAudioError(msg)
+        payload = json.loads(result.stdout)
+        streams = payload.get("streams") or []
+        duration = float((payload.get("format") or {}).get("duration") or 0.0)
+        if not streams or duration <= 0:
+            msg = f"ffprobe found no audio stream in the {container} bytes"
+            raise UnreadableAudioError(msg)
+        return AudioProbe(
+            container=container,
+            duration_seconds=duration,
+            sample_rate_hz=int(streams[0].get("sample_rate") or 0),
+            channels=int(streams[0].get("channels") or 0),
+            sha256=sha256_bytes(data),
+        )
+    finally:
+        temp_path.unlink(missing_ok=True)
 
 
 def probe_flac(data: bytes) -> AudioProbe:
