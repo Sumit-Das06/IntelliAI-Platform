@@ -45,6 +45,35 @@
         }
       ],
       "voices": []
+    },
+    {
+      "public_model": "research:whisper-small-hi-lora-e1",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "whisper-small-hi-lora-e1",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "hi",
+          "status": null,
+          "artifact": "whisper-small-hi-lora-e1",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "whisper-small-hi-lora-e1",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
     }
   ]
 }

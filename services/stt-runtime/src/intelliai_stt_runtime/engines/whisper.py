@@ -177,6 +177,50 @@ WHISPER_LARGE_V3_FILES: Final = ArtifactSpec(
     ),
 )
 
+_RESEARCH_E1: Final = "https://research-artifacts.intelliai.invalid/e1/whisper-small-hi-lora-e1"
+
+#: Milestone 15D candidate: whisper-small + Hindi LoRA (E1), merged and
+#: converted to CTranslate2 float32 on this machine. Research-hosted
+#: only, same rules as whisper-base. THIS ARTIFACT IS NOT DISTRIBUTED:
+#: the URL uses the RFC-reserved .invalid TLD, which can never resolve
+#: — by design. The store serves it from the pre-placed local cache
+#: (hash-verified at every boot, like any artifact); a fresh machine
+#: reproduces the bytes from the run record (base revision 973afd24 +
+#: train manifest a4748dee + config + seed), never by download.
+#: Provenance: ml/training run record weights/e1-hi-lora/run-record.json
+#: (git 8883fa0); adapter sha256 b0b12ea9c2936020...
+WHISPER_SMALL_HI_LORA_E1_FILES: Final = ArtifactSpec(
+    artifact="whisper-small-hi-lora-e1",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename="model.bin",
+            url=f"{_RESEARCH_E1}/model.bin",
+            sha256="6c0e999cc3267d58b2a38c7382cd3dd1750ffa416d3d474622548522950b0c54",
+        ),
+        ArtifactFile(
+            filename="config.json",
+            url=f"{_RESEARCH_E1}/config.json",
+            sha256="364e66f09ce360358f61e549786419eedc8e6ab709186304dc77f84a3c4966c8",
+        ),
+        ArtifactFile(
+            filename="preprocessor_config.json",
+            url=f"{_RESEARCH_E1}/preprocessor_config.json",
+            sha256="3e4dc53c73e7e3954fc4435034f5027733c61d7c123b38bbd1461598fd8503ef",
+        ),
+        ArtifactFile(
+            filename="tokenizer.json",
+            url=f"{_RESEARCH_E1}/tokenizer.json",
+            sha256="7b469ff15eb7816315aa45eec391f5943d639b9d73d110f5c003df5192fd54e3",
+        ),
+        ArtifactFile(
+            filename="vocabulary.json",
+            url=f"{_RESEARCH_E1}/vocabulary.json",
+            sha256="aa4e6188766a36f6a7f3e44db3f74823c6fee0bf33a9559247e18fedb3bc8d55",
+        ),
+    ),
+)
+
 #: Every artifact this engine family can host, keyed by identity. This
 #: table IS the admission surface for the CTranslate2 stack: admitting
 #: another checkpoint of this family is one pinned entry here — no new
@@ -185,7 +229,12 @@ WHISPER_LARGE_V3_FILES: Final = ArtifactSpec(
 #: maps identities to specs rather than letting a declaration invent one.
 ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
     spec.artifact: spec
-    for spec in (WHISPER_SMALL_FILES, WHISPER_BASE_FILES, WHISPER_LARGE_V3_FILES)
+    for spec in (
+        WHISPER_SMALL_FILES,
+        WHISPER_BASE_FILES,
+        WHISPER_LARGE_V3_FILES,
+        WHISPER_SMALL_HI_LORA_E1_FILES,
+    )
 }
 
 

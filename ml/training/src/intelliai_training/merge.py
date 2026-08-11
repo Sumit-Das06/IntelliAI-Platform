@@ -34,6 +34,10 @@ def merge_adapter(config: TrainingConfig, checkpoint_dir: Path, merged_dir: Path
         config.base_model_id, revision=config.base_revision
     )
     processor.save_pretrained(str(merged_dir))
+    # transformers 5.x writes the unified processor_config.json; the CT2
+    # converter and faster-whisper still expect the feature extractor's
+    # classic preprocessor_config.json — write it explicitly.
+    processor.feature_extractor.save_pretrained(str(merged_dir))
 
 
 def convert_to_ct2(merged_dir: Path, ct2_dir: Path) -> dict[str, str]:

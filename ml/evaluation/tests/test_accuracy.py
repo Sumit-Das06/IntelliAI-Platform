@@ -89,6 +89,12 @@ _WITH_REFERENCE = {
     # on stt-hi-public-eval@v1 — hi records, no ascii anchor, 0 by law.
     "2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public.json": 0,
     "2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public-replicate.json": 0,
+    # Milestone 15D (2026-08-11): the E1 LoRA candidate. hi records carry
+    # no ascii anchor (0 by law); the en regression record reproduces the
+    # two JFK clips.
+    "2026-08-11-research-whisper-small-hi-lora-e1-hi-15d.json": 0,
+    "2026-08-11-research-whisper-small-hi-lora-e1-hi-15d-replicate.json": 0,
+    "2026-08-11-research-whisper-small-hi-lora-e1-en-15d-regression.json": 2,
 }
 
 
@@ -119,7 +125,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 22
+        assert sum(_WITH_REFERENCE.values()) == 24
 
 
 class TestUnicodeRulersNeverChooseThemselves:
