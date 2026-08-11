@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-11 (Milestone 15C: official speaker-disjoint Hindi baseline) |
+| **Last entry** | 2026-08-11 (Milestone 15D: E1 Hindi LoRA — candidate FAILED, evidence committed) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -657,6 +657,50 @@ freeze ×2 identical).
   at product scale is now **CER 0.36 / WER 0.66** — evidence:
   [official](../../ml/evaluation/stt/results/2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public.json) ·
   [replicate](../../ml/evaluation/stt/results/2026-08-11-intelliai-stt-hi-whisper-small-int8-15c-public-replicate.json)
+
+---
+
+---
+
+## Milestone 15D — E1 Hindi LoRA: a measured failure (appended 2026-08-11)
+
+Full report: [2026-08-11-15d-e1-hindi-lora.md](2026-08-11-15d-e1-hindi-lora.md).
+**No status changes.** The first fine-tune of the training program ran
+end-to-end on the local GPU and was evaluated on the frozen primary.
+
+**whisper-small-hi-lora-e1 (IntelliAI fine-tune candidate; identity = base 973afd24 + hi-public-train@v1 a4748dee + LoRA r32/α64/lr1e-3/2000steps/seed 20260811)**
+- 2026-08-11 — **Rejected** *(evidence; first entry for this artifact)* —
+  **[EVIDENCE]** On `stt-hi-public-eval@v1` (research-harness route,
+  int8, same ruler and decode policy as the baseline): **cer_unicode
+  0.9049 (replicate 0.9064) vs the official baseline 0.3629** —
+  +0.542 absolute, ~40× the measured 0.014 noise band; wer_unicode
+  1.158 (>1: insertion_rate 0.829, degenerate over-generation);
+  **56 hallucinated probe words vs 0** (safety disqualifier at engine
+  level); recognition_rtf 2.9–4.2 (breaches the CPU serving SLO).
+  English intact (WER 0.0; one probe word). Root-cause hypothesis:
+  over-training (train loss 0.0053 vs val 0.4654 at lr 1e-3 ×
+  ~13 epochs) damaging decode calibration. Remediation candidates
+  recorded in the report (§12); earlier checkpoints preserved on disk.
+  Re-entry: a new recipe is a NEW candidate identity with its own
+  entry — evidence:
+  [candidate](../../ml/evaluation/stt/results/2026-08-11-research-whisper-small-hi-lora-e1-hi-15d.json) ·
+  [replicate](../../ml/evaluation/stt/results/2026-08-11-research-whisper-small-hi-lora-e1-hi-15d-replicate.json) ·
+  [en regression](../../ml/evaluation/stt/results/2026-08-11-research-whisper-small-hi-lora-e1-en-15d-regression.json) ·
+  [run record](../../weights/e1-hi-lora/run-record.json)
+
+**What the milestone proved for the program [FACT]:** the full ladder
+Stage 0→1 machinery — frozen manifests (train `a4748dee`, 10.0 h,
+speaker-roster enforcement observed rejecting 40 leaked speakers),
+deterministic training (176 min, peak 3,354 MiB of 8,150 on the local
+RTX 5070), merge → CT2 → hash-pinned research artifact → standard-
+runner evaluation — works end-to-end and caught a bad model **before**
+any promotion machinery could see it. A recorded failure is the
+system working (Part 10, law 13).
+
+**Consequence for priorities:** the Qwen3-ASR engine-adapter track
+strengthens (its sandbox Hindi reading now stands against a failed
+first fine-tune); the cheap E1b remedies (checkpoint sweep, lower LR /
+fewer epochs) are queued for founder decision, not auto-run.
 
 ---
 

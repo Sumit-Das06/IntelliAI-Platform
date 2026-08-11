@@ -40,6 +40,11 @@ ever touches them.
   — Milestone 15C close-out: gated access unblocked, the speaker-disjoint
   primary `stt-hi-public-eval@v1`, and the OFFICIAL Hindi baseline
   (whisper-small CER 0.3629) with documented engine variance.
+  [2026-08-11-15d-e1-hindi-lora.md](2026-08-11-15d-e1-hindi-lora.md)
+  — Milestone 15D close-out: the first fine-tuning experiment, end to
+  end on the local GPU — and an honestly measured FAILURE (candidate
+  CER 0.9049 vs baseline 0.3629; rejected), with the training machinery
+  proven and remediation hypotheses recorded.
 
 How this directory relates to its neighbors:
 
