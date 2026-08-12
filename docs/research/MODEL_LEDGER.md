@@ -807,4 +807,51 @@ serving incumbent until that test rules; nothing changed in production.
 
 ---
 
+---
+
+## Milestone 16 — Hindi switching test + production-readiness validation (appended 2026-08-12)
+
+Full report: [2026-08-12-qwen3-hindi-switching.md](2026-08-12-qwen3-hindi-switching.md).
+Validation milestone: no accuracy re-litigation, no promotion — the
+operational half of the switching decision, measured.
+
+**Qwen3-ASR 0.6B (same identity as the 15E entry: ggml-org @ 928ab958, pins bca25981/41a342b5; runtime NOW ALSO PINNED — llama.cpp b10344 (7a20b417f), six binaries hashed, verify-at-load)**
+- 2026-08-12 — **measured STRONG CANDIDATE → switching_validated
+  (READY FOR LOCAL CANARY)** *(evidence; promotion still NOT granted)* —
+  **[EVIDENCE]** Switching mechanism proven: `research:intelliai-stt-switch`
+  (hi→challenger, en/default→incumbent) through ONE multi-slot process
+  reproduced **CER 0.1457 / WER 0.2851 bit-identically** with 0 probes
+  and 0 failures while English stayed on whisper-small at WER 0.0 in
+  the same process. Concurrency ladder (median frozen clip 6.88 s,
+  pool 2/8): stable at c=1/5/10 with 0 errors, **saturation 2.28–2.34
+  rps ≈ 16× real-time aggregate vs whisper's 0.65–0.68 rps (3.4×)**;
+  c=20 sheds exactly at the admission boundary as clean 503s; peak RSS
+  1,538.5 MiB; CPU ~70% at saturation. **[DRILL]** Child-process death
+  → bounded 500 in ~2.1 s, incumbent slot UNAFFECTED, restart clean,
+  0 orphans; drill caught an engine-name leak in the timeout message —
+  fixed same-day, regression-tested. Findings that gate a production
+  canary: `/info` readiness is not slot-truthful after child death;
+  supervised child restart absent; Linux runtime build needs its own
+  pin table. Fallback decision: NO per-request fallback (double-compute
+  and double-metering hazards); rollback = registry route revert,
+  precondition (slot isolation) drilled. Hindi segment decision:
+  single-span output satisfies the public contract (no word-timestamp
+  promise exists); the verbose_json segment-count delta is disclosed
+  for the founder's decision — evidence:
+  [switch hi](../../ml/evaluation/stt/results/2026-08-12-research-intelliai-stt-switch-hi-16.json) ·
+  [switch en](../../ml/evaluation/stt/results/2026-08-12-research-intelliai-stt-switch-en-16.json) ·
+  [qwen3 ladder](../../ml/evaluation/stt/benchmarks/2026-08-12-qwen3-asr-0.6b-cpu-ladder.json) ·
+  [whisper ladder](../../ml/evaluation/stt/benchmarks/2026-08-12-whisper-small-cpu-ladder.json) ·
+  [drills + canary sim](../../research/experiments/16-qwen3-switching/)
+
+**Consequence for priorities:** Milestone 17 = production canary
+preparation (slot-truthful readiness, supervised child restart,
+vendored Linux runtime layer re-laddered on VPS hardware, long-audio
+check, the catalog commit prepared for founder review). The founder's
+switching decision now has its complete evidence file: accuracy (15E),
+operations (16), rollback (drilled), and the one disclosed behavior
+delta (hi segment count under verbose_json).
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*
