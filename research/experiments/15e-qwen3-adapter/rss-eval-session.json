@@ -1,0 +1,6 @@
+﻿{
+    "clips_driven":  6,
+    "peak_rss_mib_under_load":  1362.5,
+    "sampler":  "Get-Process llama-server WorkingSet64 @200ms for 90s",
+    "idle_rss_mib":  1362.5
+}

@@ -1,0 +1,49 @@
+﻿{
+    "pool":  {
+                 "admitted":  0,
+                 "max_concurrency":  2,
+                 "max_queue":  8
+             },
+    "service":  "stt-runtime",
+    "service_version":  "0.1.0",
+    "contract_version":  1,
+    "capability":  "transcription",
+    "vad_owner":  "pipeline",
+    "environment":  {
+                        "os_name":  "Windows",
+                        "os_release":  "11",
+                        "os_version":  "10.0.26200",
+                        "machine":  "AMD64",
+                        "python_version":  "3.12.10",
+                        "cpu_model":  "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+                        "cpu_logical_threads":  24,
+                        "hardware_class":  null,
+                        "interpreter":  "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+                        "package_versions":  {
+                                                 "faster-whisper":  "1.2.1",
+                                                 "ctranslate2":  "4.8.1",
+                                                 "numpy":  "2.5.1"
+                                             }
+                    },
+    "models":  [
+                   {
+                       "slot":  "default",
+                       "artifact":  "qwen3-asr-0.6b",
+                       "load_ms":  1041.7,
+                       "warmup_ms":  140.9,
+                       "compute_type":  "q8_0",
+                       "emitted_unit":  "word",
+                       "decode_params":  {
+                                             "temperature":  "0.0",
+                                             "max_tokens":  "2048",
+                                             "context_tokens":  "4096",
+                                             "prompt":  "Transcribe the audio.",
+                                             "output_marker":  "\u003casr_text\u003e",
+                                             "timestamps":  "false",
+                                             "server":  "llama.cpp llama-server (pinned CPU build)",
+                                             "audio_transport":  "wav s16le via input_audio",
+                                             "request_timeout_seconds":  "300.0"
+                                         }
+                   }
+               ]
+}

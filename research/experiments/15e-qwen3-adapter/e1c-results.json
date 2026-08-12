@@ -1,0 +1,733 @@
+{
+  "diagnostic": "e1c-decode-mode-mismatch",
+  "NOT_LEDGER_EVIDENCE": "arm B changes decode policy; compare arms against each other ONLY, never against the official baseline",
+  "run_at": "2026-08-12T06:43:03.320421+00:00",
+  "artifact": {
+    "dir": "models\\whisper-small-hi-lora-e1b\\v1",
+    "model_bin_sha256": "806cfdb94e3ae57e43c994f2a4ea5dce15aa7866ebbbcc63d2c23ea895dcb036"
+  },
+  "manifest": {
+    "name": "stt-hi-public-eval",
+    "version": 1,
+    "sha256": "cf6431466722c199f9430fc1d471cbf94301453317c2555fc8301679123e6ffc"
+  },
+  "environment": {
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "os": "Windows 11",
+    "python": "3.12.10",
+    "compute": "int8",
+    "decoder": "faster-whisper (direct library, same build as the runtime)"
+  },
+  "arm_a_product_decode": {
+    "without_timestamps": false,
+    "aggregates": {
+      "clips_scored": 30,
+      "cer_unicode_char_weighted": 0.7502,
+      "insertion_rate": 0.5634,
+      "rtf": 2.848,
+      "hallucinated_probe_words": 116
+    },
+    "probes": [
+      {
+        "clip_id": "hi-silence-10s",
+        "hallucinated_words": 42,
+        "wall_seconds": 27.432,
+        "hypothesis": "चाना आप ड़ना चर्ञई बना जो देखोंगा इस लैप दार मोन क्छादे थे सैटेसें क्छा देखोंगा लत होई घरे था जो वículos यहना मौह हो नादीरग गेरादीने कर्यपनी भी बोल hanno लेटोट चालता वो झालींट मौलिए नहीं वो बोलींट मौल"
+      },
+      {
+        "clip_id": "hi-tone-440hz-5s",
+        "hallucinated_words": 74,
+        "wall_seconds": 26.941,
+        "hypothesis": "बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी बी"
+      }
+    ],
+    "clips": [
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000034",
+        "duration_seconds": 20.971,
+        "wall_seconds": 4.41,
+        "rtf": 0.21,
+        "hypothesis": "ठीका करन के लिए मोबाई लंबर आठ नौ सात छे दो जीरो दो एक दो जीरो दो पंजीकरत करने के लिए ओ टी पी तीन दो आठ चार सात दो का उप्यों करें",
+        "cer_unicode": 0.0787,
+        "wer_unicode": 0.2188,
+        "insertions": 1,
+        "reference_words": 32
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000461",
+        "duration_seconds": 3.038,
+        "wall_seconds": 28.011,
+        "rtf": 9.22,
+        "hypothesis": "चा चीजि लेना है ङैम शैने चेरे ठाट्री वन तेंगी आप उनलкретा हम जाली खोंट बाला बीजिझ टीक हजट बीजिँ छोझ जीजिट ठालती है चाला चीत गेरी बाला हमाद जाली बाली अदीट बालि अप अप भी पिजिट चीच चचीझ चीच चाली फुद ले भाली",
+        "cer_unicode": 7.52,
+        "wer_unicode": 7.1667,
+        "insertions": 38,
+        "reference_words": 6
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000462",
+        "duration_seconds": 8.225,
+        "wall_seconds": 28.428,
+        "rtf": 3.456,
+        "hypothesis": "अभी तो आलू हुआ है जैम हूँ होने वाला है तो रह वा है मित्र किए हुए हैं क्या चीजे लेना है आपको",
+        "cer_unicode": 0.2105,
+        "wer_unicode": 0.3478,
+        "insertions": 1,
+        "reference_words": 23
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000463",
+        "duration_seconds": 11.873,
+        "wall_seconds": 29.721,
+        "rtf": 2.503,
+        "hypothesis": "अहे ख़षल ते बहुत अच्छा हुआ है इस बार रेट भी है अच्छा हैily इस बार देखे हैं है जो मतर का भी अच्छा हा सारेट रहा है लेना क्या चीज है आलू का भी रेट अच्छा है",
+        "cer_unicode": 0.1447,
+        "wer_unicode": 0.2368,
+        "insertions": 1,
+        "reference_words": 38
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000469",
+        "duration_seconds": 3.711,
+        "wall_seconds": 1.451,
+        "rtf": 0.391,
+        "hypothesis": "हाँ को भी भी भी लेना है और क्या सब तमातर भी लेना है",
+        "cer_unicode": 0.1915,
+        "wer_unicode": 0.4167,
+        "insertions": 2,
+        "reference_words": 12
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000470",
+        "duration_seconds": 8.607,
+        "wall_seconds": 29.027,
+        "rtf": 3.373,
+        "hypothesis": "और हूब बहुब अच्छा होता है हम लोग खेदिवारी करते हैं था अच्छाने हैं तो हम दों चर्य करते हैं सबस्योग जाते हैं कर्सरकी होता है दादी दादी टा Tomb",
+        "cer_unicode": 0.4962,
+        "wer_unicode": 0.7188,
+        "insertions": 2,
+        "reference_words": 32
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000472",
+        "duration_seconds": 5.824,
+        "wall_seconds": 24.775,
+        "rtf": 4.254,
+        "hypothesis": "हाँ गरूरी हो हाई तो अईगी लिजिए देखिए अपना देखिए चर्फँम से vibrating चरेदाए है गेएँ",
+        "cer_unicode": 0.7344,
+        "wer_unicode": 0.8667,
+        "insertions": 3,
+        "reference_words": 15
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000478",
+        "duration_seconds": 2.56,
+        "wall_seconds": 21.487,
+        "rtf": 8.393,
+        "hypothesis": "फाए ठीक देख रिजिए हैं rounds a",
+        "cer_unicode": 1.0,
+        "wer_unicode": 1.25,
+        "insertions": 3,
+        "reference_words": 4
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000479",
+        "duration_seconds": 4.672,
+        "wall_seconds": 19.141,
+        "rtf": 4.097,
+        "hypothesis": "अचर ठीक है आइएगा तब देख लिए देख लिए उसके बाद ज़ा से में सलती हैं",
+        "cer_unicode": 0.3194,
+        "wer_unicode": 0.5,
+        "insertions": 0,
+        "reference_words": 16
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000750",
+        "duration_seconds": 15.35,
+        "wall_seconds": 2.12,
+        "rtf": 0.138,
+        "hypothesis": "अप्रेल दू हज़ार जी बाईस तक एप उन सोला अर्प से अधीक बार सफल सफल ता पुर्वक डाउन लोड हुए हैं",
+        "cer_unicode": 0.1852,
+        "wer_unicode": 0.7647,
+        "insertions": 4,
+        "reference_words": 17
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000916",
+        "duration_seconds": 9.279,
+        "wall_seconds": 7.804,
+        "rtf": 0.841,
+        "hypothesis": "देके हिंदी तो हमारी भाशा है मात्र भाशा है और हम लोग हिंदी बोलते हैं जैसे कोई हमारी भाशा को नहीं जानते कहीं दूसरी मतलब का राते हैं",
+        "cer_unicode": 0.1364,
+        "wer_unicode": 0.3448,
+        "insertions": 1,
+        "reference_words": 29
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000917",
+        "duration_seconds": 5.825,
+        "wall_seconds": 28.228,
+        "rtf": 4.846,
+        "hypothesis": "तो हमारी भांसा नहीं बोल पाते है तो हम लोग थोड़ा बहुत एंगलीस में पाठ ग़े थे मैं जितना मुजिástico हाथा हम अतना ही � finally",
+        "cer_unicode": 0.3922,
+        "wer_unicode": 0.5652,
+        "insertions": 2,
+        "reference_words": 23
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000918",
+        "duration_seconds": 9.758,
+        "wall_seconds": 29.225,
+        "rtf": 2.995,
+        "hypothesis": "इंग्लिस में बात कर लेते हैं और थोड़ा बहुत इसारे में बात कर लेते हैं क्योंकि वह लोग समझ नहीं पाता जैसे कोई मतलब भिहार के हूई याता कोई कही आवर के हूई तो जैसे हम वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह �",
+        "cer_unicode": 0.5283,
+        "wer_unicode": 0.9211,
+        "insertions": 22,
+        "reference_words": 38
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000919",
+        "duration_seconds": 7.457,
+        "wall_seconds": 29.811,
+        "rtf": 3.998,
+        "hypothesis": "हमारी भाषा वो नहीं सम ठाते है उनकी भाषा हम नही तहीं सम पाते हैं इसलिए शमरनेंग थोड़ी दिख",
+        "cer_unicode": 0.4841,
+        "wer_unicode": 0.7143,
+        "insertions": 2,
+        "reference_words": 28
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000920",
+        "duration_seconds": 9.76,
+        "wall_seconds": 29.225,
+        "rtf": 2.994,
+        "hypothesis": "तो जैसे मतलब जैसे कोई खाना वाना बना या फिर कुछ भी तो जैसे हम लोग घ़ड़ा के बता देते हैं कि ऐसे है जठ है मतलब समझ जाते हैं कि ऐसा है मतलब जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है जठ है �",
+        "cer_unicode": 0.8029,
+        "wer_unicode": 1.1471,
+        "insertions": 32,
+        "reference_words": 34
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000922",
+        "duration_seconds": 9.759,
+        "wall_seconds": 27.646,
+        "rtf": 2.833,
+        "hypothesis": "कही सें सें रहता है भाहंशा मतलब जो भीसमच सकती है और हां भीसमच सकती है बस यही है कि म innovations are much maioria है अनकी भाहंशा समचनेमेंiries",
+        "cer_unicode": 0.4143,
+        "wer_unicode": 0.7059,
+        "insertions": 0,
+        "reference_words": 34
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000924",
+        "duration_seconds": 7.166,
+        "wall_seconds": 27.956,
+        "rtf": 3.901,
+        "hypothesis": "अंग्रेजी में बात वत कर लेते हैं थोड़ा बहुत और बाकी तो हिन्दी हम लोग बोलते ही हैं और हिन्दी हम सबसे अच्छा लगता है इसलिए हम वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत वत �",
+        "cer_unicode": 0.8843,
+        "wer_unicode": 1.4074,
+        "insertions": 33,
+        "reference_words": 27
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000926",
+        "duration_seconds": 5.342,
+        "wall_seconds": 4.169,
+        "rtf": 0.78,
+        "hypothesis": "इसलिए हम मतलब जितना बात करते हैं थोड़ा बहुत बात कर लेते हैं वा पाकी कोई दिकते हैं सभ ठीक हैं",
+        "cer_unicode": 0.1354,
+        "wer_unicode": 0.3182,
+        "insertions": 0,
+        "reference_words": 22
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001082",
+        "duration_seconds": 5.546,
+        "wall_seconds": 4.053,
+        "rtf": 0.731,
+        "hypothesis": "इमामी रिफाइंट संफ्लावर आईल जिसका मूल पाँसद रुपे है जोड़ हैं",
+        "cer_unicode": 0.2097,
+        "wer_unicode": 0.8182,
+        "insertions": 0,
+        "reference_words": 11
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001270",
+        "duration_seconds": 3.904,
+        "wall_seconds": 27.643,
+        "rtf": 7.081,
+        "hypothesis": "जी चार चल रगा है आँप सर बताएगे है अप्रत चार हैं शार हैं शार खार हैं पर खार हैं चार हैं औल प kell तो पर चार टर मैं टील सी Mario",
+        "cer_unicode": 2.1136,
+        "wer_unicode": 2.4167,
+        "insertions": 21,
+        "reference_words": 12
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001272",
+        "duration_seconds": 3.136,
+        "wall_seconds": 4.114,
+        "rtf": 1.312,
+        "hypothesis": "हाँ तब ठीक है था रहा और इस्टॉड़ेड लोग का क्या हाल चाल है",
+        "cer_unicode": 0.32,
+        "wer_unicode": 0.5833,
+        "insertions": 2,
+        "reference_words": 12
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001275",
+        "duration_seconds": 4.961,
+        "wall_seconds": 1.496,
+        "rtf": 0.302,
+        "hypothesis": "जी नहीं देखिए चब तो बोल तो रहा है कि ठीठी गया इजाम",
+        "cer_unicode": 0.1509,
+        "wer_unicode": 0.3846,
+        "insertions": 1,
+        "reference_words": 13
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001276",
+        "duration_seconds": 6.688,
+        "wall_seconds": 24.93,
+        "rtf": 3.728,
+        "hypothesis": "जी इजाम तो अछचाही रहा लेकिन इस बढ़ भी हाड़ा है जै आ ता बूद के परज़ से questo is being arrived.",
+        "cer_unicode": 0.7143,
+        "wer_unicode": 0.8947,
+        "insertions": 4,
+        "reference_words": 19
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001283",
+        "duration_seconds": 4.478,
+        "wall_seconds": 29.852,
+        "rtf": 6.666,
+        "hypothesis": "और इधर गिस हो अछ्चा हि घ�HA эн मोगों का एधाम कै तो रहे हैं सब हपís हैleistоп है ठुद सैल बीहंगी के वितके बीह backups है एधाम कै तो रहे हैं साक से के वैट जी करनिए हैं बीहा इस वैरे की हैं जी करनिए हैं मेरी जी एकक्रनिए चेकते है ची करनिएे जी चुची रहे है",
+        "cer_unicode": 3.1077,
+        "wer_unicode": 3.0588,
+        "insertions": 42,
+        "reference_words": 17
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001284",
+        "duration_seconds": 2.464,
+        "wall_seconds": 4.103,
+        "rtf": 1.665,
+        "hypothesis": "हाँ आगे देखिए क्या होता है",
+        "cer_unicode": 0.2222,
+        "wer_unicode": 0.2857,
+        "insertions": 0,
+        "reference_words": 7
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001287",
+        "duration_seconds": 6.88,
+        "wall_seconds": 13.785,
+        "rtf": 2.004,
+        "hypothesis": "जी जी देका जाएब मैट मैट तो थोड़ा हाड होता है ना",
+        "cer_unicode": 0.2,
+        "wer_unicode": 0.5385,
+        "insertions": 0,
+        "reference_words": 13
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001294",
+        "duration_seconds": 2.174,
+        "wall_seconds": 26.623,
+        "rtf": 12.246,
+        "hypothesis": "जी ठीक है चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार चार च",
+        "cer_unicode": 17.6667,
+        "wer_unicode": 13.5,
+        "insertions": 53,
+        "reference_words": 4
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001324",
+        "duration_seconds": 3.261,
+        "wall_seconds": 28.002,
+        "rtf": 8.587,
+        "hypothesis": "सबसे खूसो दाई सबसे खूसो दाई सबसे खूसो दाई सबसे खूसो दाई सबसे खूसो दाई सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सबसे सब",
+        "cer_unicode": 11.7647,
+        "wer_unicode": 14.3333,
+        "insertions": 41,
+        "reference_words": 3
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001325",
+        "duration_seconds": 3.178,
+        "wall_seconds": 4.867,
+        "rtf": 1.532,
+        "hypothesis": "क्या है कौन से कि हैं",
+        "cer_unicode": 0.15,
+        "wer_unicode": 0.5,
+        "insertions": 0,
+        "reference_words": 6
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001336",
+        "duration_seconds": 2.962,
+        "wall_seconds": 24.046,
+        "rtf": 8.118,
+        "hypothesis": "चाका टेह हैं हुटfend.",
+        "cer_unicode": 0.8421,
+        "wer_unicode": 0.8,
+        "insertions": 0,
+        "reference_words": 5
+      }
+    ]
+  },
+  "arm_b_no_timestamps": {
+    "without_timestamps": true,
+    "aggregates": {
+      "clips_scored": 30,
+      "cer_unicode_char_weighted": 1.8958,
+      "insertion_rate": 1.8514,
+      "rtf": 4.393,
+      "hallucinated_probe_words": 66
+    },
+    "probes": [
+      {
+        "clip_id": "hi-silence-10s",
+        "hallucinated_words": 65,
+        "wall_seconds": 27.373,
+        "hypothesis": "ल� ed old baby olarak मॊख की मई कितनध अच्छी है इस न � nightmare company न साच्छी मो का ट्याह थकि न साच्छी मो के अच्छी मोक मीव है मौ लूम में रहे है मौन हेली देंगा है आव साच्छी मacional अच्छी मा जो जो क"
+      },
+      {
+        "clip_id": "hi-tone-440hz-5s",
+        "hallucinated_words": 1,
+        "wall_seconds": 28.144,
+        "hypothesis": "बीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीबीब"
+      }
+    ],
+    "clips": [
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000034",
+        "duration_seconds": 20.971,
+        "wall_seconds": 29.134,
+        "rtf": 1.389,
+        "hypothesis": "तीका करन के लिए मोबाइल णवर आठ नों सात छो दो जीरो दो एक दो जीरो दो पंजीकरक करने के लिए ओ तीी दीन दो आठ चार सात दो का उपयोग करें है पनालल डीरिया ले गे अद लिए जी लिए ब सात पनाललिए ली पनालल रहे डीरिoxideilingual कर भा अन दू थू औ천留 जडि",
+        "cer_unicode": 0.937,
+        "wer_unicode": 1.0,
+        "insertions": 24,
+        "reference_words": 32
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000461",
+        "duration_seconds": 3.038,
+        "wall_seconds": 27.04,
+        "rtf": 8.9,
+        "hypothesis": "और क्या क्या चीजी लेना है हाँ वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह �",
+        "cer_unicode": 7.96,
+        "wer_unicode": 11.1667,
+        "insertions": 66,
+        "reference_words": 6
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000462",
+        "duration_seconds": 8.225,
+        "wall_seconds": 29.036,
+        "rtf": 3.53,
+        "hypothesis": "अरे अभी त devrait हुआ है ए होने वाला है तो ड़ी हुआ है मक्सर किए baseball is being done... क्या चीजि लेना है आपको What you need?",
+        "cer_unicode": 0.6316,
+        "wer_unicode": 0.6522,
+        "insertions": 6,
+        "reference_words": 23
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000463",
+        "duration_seconds": 11.873,
+        "wall_seconds": 29.285,
+        "rtf": 2.467,
+        "hypothesis": "औरिए फशौलतो बहुत अच्या हुत इस बारेट भी है अच्या खाचा इस बार देकिया है जो मत्र का भी अच्या खाचा चाहे चाहा है लेना क्या चीत है आनो का भी डेत अच्या खाचा है",
+        "cer_unicode": 0.2434,
+        "wer_unicode": 0.5789,
+        "insertions": 0,
+        "reference_words": 38
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000469",
+        "duration_seconds": 3.711,
+        "wall_seconds": 27.99,
+        "rtf": 7.542,
+        "hypothesis": "हाँ को भी भी भी लेना है और क्या सब तवातर भी लेना है तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर तवातर",
+        "cer_unicode": 3.4043,
+        "wer_unicode": 2.5,
+        "insertions": 27,
+        "reference_words": 12
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000470",
+        "duration_seconds": 8.607,
+        "wall_seconds": 29.106,
+        "rtf": 3.382,
+        "hypothesis": "अरे खुब बहुत अच्छा होता है हम लोग खितिएवारी करते हैं तो अच्छाने हैं तो हम लोग सारे चीजी करते हैं सबसी जाते हैं सबसी होता हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं हैं ह",
+        "cer_unicode": 1.2481,
+        "wer_unicode": 1.4688,
+        "insertions": 33,
+        "reference_words": 32
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000472",
+        "duration_seconds": 5.824,
+        "wall_seconds": 28.561,
+        "rtf": 4.904,
+        "hypothesis": "हाँ जरूरे थो है तो आईए लिजिए देखिए अखना देखिए चर्फम से यह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह �",
+        "cer_unicode": 2.7656,
+        "wer_unicode": 4.2,
+        "insertions": 50,
+        "reference_words": 15
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000478",
+        "duration_seconds": 2.56,
+        "wall_seconds": 28.955,
+        "rtf": 11.31,
+        "hypothesis": "हाँ ठीक देख लिजिए वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह व",
+        "cer_unicode": 12.0,
+        "wer_unicode": 17.25,
+        "insertions": 68,
+        "reference_words": 4
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000479",
+        "duration_seconds": 4.672,
+        "wall_seconds": 29.922,
+        "rtf": 6.405,
+        "hypothesis": "�金 की आ� fixes.. आख है अच्छा ठाङगा तो देख लिए देख लिए उसके बा जा जा सकय म्ध्ल वहती है अन गी वहती है जा जो पर工 गी है भाग �好好 है अव उस दो नहीक हे नद अव अव उस तो ना का अव अव सस�card अव टेक लिए टेक लिए उसके बाथ जा अव जरयस ममसन से ह",
+        "cer_unicode": 2.4722,
+        "wer_unicode": 3.625,
+        "insertions": 46,
+        "reference_words": 16
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000750",
+        "duration_seconds": 15.35,
+        "wall_seconds": 28.888,
+        "rtf": 1.882,
+        "hypothesis": "अप्रेल दू हज़ार जी बाईस तक एप उन सोला अर्प से अधीक बार सफल सफल ता पुर्वक डाउन लोड हुए हैं अप डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन डाउन �",
+        "cer_unicode": 1.4568,
+        "wer_unicode": 2.0,
+        "insertions": 25,
+        "reference_words": 17
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000916",
+        "duration_seconds": 9.279,
+        "wall_seconds": 29.519,
+        "rtf": 3.181,
+        "hypothesis": "देके हिंदी तो हमारी भाशा है मात्र भाशा है और हम लोग हिंदी बोलते हैं जैसे कोई हमारी भाशा को नहीं जानते कहीं दूसरी मतलब का राते हैं वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह �",
+        "cer_unicode": 0.8864,
+        "wer_unicode": 1.4828,
+        "insertions": 34,
+        "reference_words": 29
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000917",
+        "duration_seconds": 5.825,
+        "wall_seconds": 29.646,
+        "rtf": 5.09,
+        "hypothesis": "तो हमारी भाजय नहीं बोल पाते है तो हम लोग थोड़ा बहुद एंग्लीस में पाहते रहे थेने जितना मुझे हाथा है नहीं उतना ही किस छुठ विज़न हैं कि पहते टेक टेक टेक टेक टेक ठौग टेक टेक टेक Gold Stage l will still be totally button. थे अखाएी डर हैं तो पीक हैं च्ऩ ऱीद ह",
+        "cer_unicode": 1.6569,
+        "wer_unicode": 1.913,
+        "insertions": 34,
+        "reference_words": 23
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000918",
+        "duration_seconds": 9.758,
+        "wall_seconds": 29.278,
+        "rtf": 3.0,
+        "hypothesis": "नग्लीस में बात कर लेते हैं और छब इसारे में बात कर लेते हैं क्युकि वर लोक सम� wetter undercover व coordinator जैसे कोई मतलब बार के हूई या थो कभी कही का और के हूई तो जैसे है हम टी Auntie Wait",
+        "cer_unicode": 0.522,
+        "wer_unicode": 0.6579,
+        "insertions": 6,
+        "reference_words": 38
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000919",
+        "duration_seconds": 7.457,
+        "wall_seconds": 29.988,
+        "rtf": 4.021,
+        "hypothesis": "हमारी भाषा वो नहीं समझ पाते हैं उनकी भाषा हम नहीं समझ पाते हैं इसलिए समझ नहीं हम थोड़ी दिक्कत होती है हम लोगों के थो भाषा हिंदी ही हैं वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह",
+        "cer_unicode": 0.8571,
+        "wer_unicode": 1.3929,
+        "insertions": 33,
+        "reference_words": 28
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000920",
+        "duration_seconds": 9.76,
+        "wall_seconds": 29.831,
+        "rtf": 3.056,
+        "hypothesis": "तो जैसे मतलब जैसे कोई खाना वाना बना या फिर कुछ भी तो जैसे हम लोग हाँ थुठाद के बता देते हैं कि ऐसे है या च्छा है मतलब समझ जाते हैं कि ऐसा है मतलब वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह व",
+        "cer_unicode": 0.6934,
+        "wer_unicode": 1.0882,
+        "insertions": 30,
+        "reference_words": 34
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000922",
+        "duration_seconds": 9.759,
+        "wall_seconds": 29.534,
+        "rtf": 3.026,
+        "hypothesis": "कोहिस � Change nogs tiếparaus है भांसा मतलब जो बी समस चैकतें और हम भी समस चैकतें है बस यही है कि मतलब थोड़ा बहुत अंद्ड़ होता है उंकी भांसा समजने में मतलब ऑर मील टें कि ठीत है लाज़ की आपने ड़ादि में है तो गर ड़ादे तो जर चैक है मेरीं है वहांसा मतलब ज",
+        "cer_unicode": 1.0143,
+        "wer_unicode": 1.2059,
+        "insertions": 24,
+        "reference_words": 34
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000924",
+        "duration_seconds": 7.166,
+        "wall_seconds": 29.211,
+        "rtf": 4.076,
+        "hypothesis": "अंगृरेज्म論 बॉ något कर लेते हैं थोड़ा बहुत और बाखी तो हिंदि हम लोग बोलते हैं और लिएिंदि हमा सभ से अच्चा लगता हे इसली हम प्र्पिक्याANS stark-",
+        "cer_unicode": 0.4132,
+        "wer_unicode": 0.6296,
+        "insertions": 3,
+        "reference_words": 27
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-000926",
+        "duration_seconds": 5.342,
+        "wall_seconds": 29.973,
+        "rtf": 5.611,
+        "hypothesis": "इसलिए हम अतलब जितना बात करते हैं थोड़ा भहँत बात कर लेते हैं वाबकी कोई दिकवत दे हैं सब ठीक हैं पर पर ठीक सब ऽते हैं उपने अचौल वछौल रखर दे हैं वछौल चोल चोल थे हैं और आनी बचे फ़ी पेआँ चोल चौल सहीं अचौल चुल चूल च� halves",
+        "cer_unicode": 1.3958,
+        "wer_unicode": 1.7273,
+        "insertions": 30,
+        "reference_words": 22
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001082",
+        "duration_seconds": 5.546,
+        "wall_seconds": 30.168,
+        "rtf": 5.44,
+        "hypothesis": "इमामी रीफाण्त सन्फलाब�模र और जिसका मूर पासधार रुपे है जोड़ है अच्ज़ का सादियाना जादिया जादियाना लगाँप्स कौकी का बाराथा पारदहागता पासधा बाराथा ईसेवा लगाई बाराद hablando अअअअअउझीें पासधा पपाना लगाईईहाई",
+        "cer_unicode": 2.5968,
+        "wer_unicode": 2.6364,
+        "insertions": 21,
+        "reference_words": 11
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001270",
+        "duration_seconds": 3.904,
+        "wall_seconds": 29.528,
+        "rtf": 7.564,
+        "hypothesis": "� Zero Ser चल रहा है आँ तो बताइए है अब प्रचा कावण हैं प communion is rapidly falling, go away from the you यह बाउ़ दीटीटीटीटीत काथ हैं हैं जो स सरकी बची चोल कै यह टीटीटीटीटीटी चोल कै टीटीटीटीटी चोल की के टेतीटीटीटीटीम के टेताliटीटीटीटीटीटीटीटीटीट key",
+        "cer_unicode": 4.9091,
+        "wer_unicode": 3.5833,
+        "insertions": 35,
+        "reference_words": 12
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001272",
+        "duration_seconds": 3.136,
+        "wall_seconds": 29.326,
+        "rtf": 9.352,
+        "hypothesis": "हाँ तब ठीक है था रहे है और इस्टॉड़ेड लोग का क्या हाँ चाल हैं तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब तब �",
+        "cer_unicode": 2.82,
+        "wer_unicode": 4.0833,
+        "insertions": 43,
+        "reference_words": 12
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001275",
+        "duration_seconds": 4.961,
+        "wall_seconds": 29.114,
+        "rtf": 5.869,
+        "hypothesis": "जी नहीं बैकिए चब तो बोल तो रहा है कि ठीटी गए इज्जाम ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी ठीटी",
+        "cer_unicode": 2.8679,
+        "wer_unicode": 2.6154,
+        "insertions": 28,
+        "reference_words": 13
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001276",
+        "duration_seconds": 6.688,
+        "wall_seconds": 28.065,
+        "rtf": 4.196,
+        "hypothesis": "जीइजाम तो अछचाइ रहा लेकिन इस भाद ते पर भी हाड है गया था बोद के ठर� strand went fromrylic говоря",
+        "cer_unicode": 0.6364,
+        "wer_unicode": 0.8421,
+        "insertions": 4,
+        "reference_words": 19
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001283",
+        "duration_seconds": 4.478,
+        "wall_seconds": 28.905,
+        "rtf": 6.455,
+        "hypothesis": "और एधर बीचो अछ्छा है बिया है इलिवोऊ का एधाम कैत रहे ह україहें है श़ैट पर में के पात है जो � recommended this is space in theiese place कनी का भी �年的 चुएँग एँँँँँँ� ethics and thoughts ऑलन सस जो गर चुण जो जो गर ऒो जो जो जो जो जो जो जो जो जो जो जो जो जो जो जो जो जो जो जो जो �",
+        "cer_unicode": 3.5692,
+        "wer_unicode": 3.7647,
+        "insertions": 50,
+        "reference_words": 17
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001284",
+        "duration_seconds": 2.464,
+        "wall_seconds": 28.134,
+        "rtf": 11.418,
+        "hypothesis": "हाँ आगे देखिए क्या होता है तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो तो त",
+        "cer_unicode": 7.5185,
+        "wer_unicode": 9.7143,
+        "insertions": 66,
+        "reference_words": 7
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001287",
+        "duration_seconds": 6.88,
+        "wall_seconds": 28.642,
+        "rtf": 4.163,
+        "hypothesis": "जी जी देका जाएब मैद मैद तो थोड़ा हाध होता है ना वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह",
+        "cer_unicode": 3.7,
+        "wer_unicode": 5.0,
+        "insertions": 58,
+        "reference_words": 13
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001294",
+        "duration_seconds": 2.174,
+        "wall_seconds": 29.074,
+        "rtf": 13.374,
+        "hypothesis": "जी ठीक है चाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँचाँ",
+        "cer_unicode": 10.75,
+        "wer_unicode": 0.25,
+        "insertions": 0,
+        "reference_words": 4
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001324",
+        "duration_seconds": 3.261,
+        "wall_seconds": 29.21,
+        "rtf": 8.957,
+        "hypothesis": "सबसे खूसर धाएग वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह व",
+        "cer_unicode": 12.4118,
+        "wer_unicode": 23.6667,
+        "insertions": 69,
+        "reference_words": 3
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001325",
+        "duration_seconds": 3.178,
+        "wall_seconds": 29.945,
+        "rtf": 9.423,
+        "hypothesis": "क्या है कौन से किए है वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह वह व",
+        "cer_unicode": 10.45,
+        "wer_unicode": 11.8333,
+        "insertions": 69,
+        "reference_words": 6
+      },
+      {
+        "clip_id": "indicvoices-hindi-valid-0-001336",
+        "duration_seconds": 2.962,
+        "wall_seconds": 28.356,
+        "rtf": 9.573,
+        "hypothesis": "योगे चाकते हैं हूड़ योगे योगे हूड़ चाकते हैं हूड़ है दोचत समकने बहुत पर तमंग लगना समकनी ठिल है में दोठ वैना ढ़के अचने ड़या टेकिर ज़र ठील हैं अचस वारी अचने आपनी वारी तेकिर ransom grace毜घा अचस चची पर ड़े शिल अपने अपने",
+        "cer_unicode": 10.4211,
+        "wer_unicode": 8.8,
+        "insertions": 40,
+        "reference_words": 5
+      }
+    ]
+  }
+}

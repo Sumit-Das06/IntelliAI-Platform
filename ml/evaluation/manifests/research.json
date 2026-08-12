@@ -169,6 +169,42 @@
         }
       ],
       "voices": []
+    },
+    {
+      "public_model": "research:qwen3-asr-0.6b",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "qwen3-asr-0.6b",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "hi",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "zh",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
     }
   ]
 }

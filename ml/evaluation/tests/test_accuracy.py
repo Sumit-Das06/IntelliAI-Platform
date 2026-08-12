@@ -106,6 +106,13 @@ _WITH_REFERENCE = {
     "2026-08-12-research-whisper-small-hi-lora-e1b-hi-e1b.json": 0,
     "2026-08-12-research-whisper-small-hi-lora-e1b-hi-e1b-replicate.json": 0,
     "2026-08-12-research-whisper-small-hi-lora-e1b-en-e1b-regression.json": 2,
+    # Milestone 15E (2026-08-12): Qwen3-ASR 0.6B behind the engine seam,
+    # measured on the standard runner. hi and zh records carry no ascii
+    # anchor (0 by law); the en record reproduces the two JFK clips.
+    "2026-08-12-research-qwen3-asr-0.6b-hi-15e.json": 0,
+    "2026-08-12-research-qwen3-asr-0.6b-hi-15e-replicate.json": 0,
+    "2026-08-12-research-qwen3-asr-0.6b-en-15e.json": 2,
+    "2026-08-12-research-qwen3-asr-0.6b-zh-15e.json": 0,
 }
 
 
@@ -136,7 +143,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 26
+        assert sum(_WITH_REFERENCE.values()) == 28
 
 
 class TestUnicodeRulersNeverChooseThemselves:
