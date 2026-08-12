@@ -171,6 +171,36 @@
       "voices": []
     },
     {
+      "public_model": "research:intelliai-stt-switch",
+      "_comment": "Milestone 16 SWITCHING MODE (research-only): the exact route shape a production promotion would land in the catalog - Hindi to the challenger, everything else to the incumbent - expressed here so the switching mechanism itself is measured before any catalog change is proposed. Same resolution semantics as the product registry: (public_model, language) -> artifact + deployment.",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "whisper-small",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "whisper-small",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "hi",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
+    },
+    {
       "public_model": "research:qwen3-asr-0.6b",
       "capability": "transcription",
       "service": "stt-runtime",

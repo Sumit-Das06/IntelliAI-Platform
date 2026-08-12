@@ -113,6 +113,12 @@ _WITH_REFERENCE = {
     "2026-08-12-research-qwen3-asr-0.6b-hi-15e-replicate.json": 0,
     "2026-08-12-research-qwen3-asr-0.6b-en-15e.json": 2,
     "2026-08-12-research-qwen3-asr-0.6b-zh-15e.json": 0,
+    # Milestone 16 (2026-08-12): the switching test — one multi-slot
+    # process, per-language routes (hi → challenger, en → incumbent).
+    # hi carries no ascii anchor (0 by law); the en arm runs on
+    # whisper-small and reproduces the two JFK clips.
+    "2026-08-12-research-intelliai-stt-switch-hi-16.json": 0,
+    "2026-08-12-research-intelliai-stt-switch-en-16.json": 2,
 }
 
 
@@ -143,7 +149,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 28
+        assert sum(_WITH_REFERENCE.values()) == 30
 
 
 class TestUnicodeRulersNeverChooseThemselves:

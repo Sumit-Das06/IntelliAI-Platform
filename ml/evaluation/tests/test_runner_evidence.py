@@ -504,9 +504,10 @@ def test_every_historical_record_still_parses() -> None:
     # B4b changes no schema: it fills fields B3 already defined.
     committed = sorted(Path("ml/evaluation/stt/results").glob("*.json"))
     assert (
-        len(committed) == 30
+        len(committed) == 32
     )  # 3 pre-methodology + 4 PH0 + 7 Stage 1 + 1 15B + 2 15C + 3 15D (E1 hi/replicate/en)
     # + 6 E1b (3 checkpoint-sweep hi + candidate hi/replicate/en)
     # + 4 15E (qwen3-asr-0.6b hi/replicate/en/zh)
+    # + 2 16 (switching test hi/en through one multi-slot process)
     for path in committed:
         assert EvalRun.model_validate_json(path.read_text(encoding="utf-8"))

@@ -1,0 +1,89 @@
+{
+  "kill": {
+    "phase": "kill",
+    "run_at": "2026-08-12T07:38:10.893625+00:00",
+    "baseline_qwen_hi": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 728.5
+    },
+    "baseline_whisper_hi": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 1661.8
+    },
+    "garbage_audio": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "message_leaks_internals": false,
+      "message": "unrecognized audio format; supported containers: flac, mp3, mp4, ogg, wav, webm"
+    },
+    "whisper_unsupported_language": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "message_leaks_internals": false,
+      "message": "language 'xx' is not served by this artifact",
+      "client_ms": 56.8
+    },
+    "qwen_unmapped_language_hint": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 695.8
+    },
+    "llama_server_pids_before_kill": [
+      27960
+    ],
+    "qwen_after_child_killed": {
+      "status": 500,
+      "error_type": "internal",
+      "message_leaks_internals": true,
+      "message": "the qwen3-asr decode did not complete in time",
+      "client_ms": 2126.7
+    },
+    "qwen_after_child_killed_repeat": {
+      "status": 500,
+      "error_type": "internal",
+      "message_leaks_internals": true,
+      "message": "the qwen3-asr decode did not complete in time",
+      "client_ms": 2103.9
+    },
+    "whisper_after_qwen_killed": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 1512.0
+    },
+    "info_after_kill": {
+      "status": 200,
+      "still_lists_qwen_slot": true
+    }
+  },
+  "post-restart": {
+    "phase": "post-restart",
+    "run_at": "2026-08-12T07:38:40.616696+00:00",
+    "qwen_after_restart": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 1061.3
+    },
+    "whisper_after_restart": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 1549.0
+    },
+    "llama_server_pids_after_restart": [
+      33552
+    ]
+  }
+}
