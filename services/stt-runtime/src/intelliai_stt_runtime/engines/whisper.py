@@ -221,6 +221,99 @@ WHISPER_SMALL_HI_LORA_E1_FILES: Final = ArtifactSpec(
     ),
 )
 
+_RESEARCH_E1B_SWEEP: Final = "https://research-artifacts.intelliai.invalid/e1b"
+
+
+#: Milestone E1b Phase A: the three EARLIER checkpoints of the SAME E1
+#: run (adapters already on disk since 15D), merged and converted
+#: identically to the final one, to answer "did the damage accumulate
+#: with training?" Same non-distribution rules as the E1 artifact: the
+#: .invalid URL never resolves by design; the store serves each from the
+#: pre-placed, hash-verified local cache; a fresh machine reproduces the
+#: bytes from the E1 run record (base 973afd24 + manifest a4748dee +
+#: config + seed), stopping at the named step. config/tokenizer/vocab/
+#: preprocessor pins are IDENTICAL to E1 — only model.bin differs.
+#: Adapter sha256s: ck500 b2aa05a4…, ck1000 238ccd29…, ck1500 61bda028….
+def _e1_sweep_spec(step: int, model_bin_sha256: str) -> ArtifactSpec:
+    base = f"{_RESEARCH_E1B_SWEEP}/whisper-small-hi-lora-e1-ck{step}"
+    return ArtifactSpec(
+        artifact=f"whisper-small-hi-lora-e1-ck{step}",
+        version=1,
+        files=(
+            ArtifactFile(filename="model.bin", url=f"{base}/model.bin", sha256=model_bin_sha256),
+            ArtifactFile(
+                filename="config.json",
+                url=f"{base}/config.json",
+                sha256="364e66f09ce360358f61e549786419eedc8e6ab709186304dc77f84a3c4966c8",
+            ),
+            ArtifactFile(
+                filename="preprocessor_config.json",
+                url=f"{base}/preprocessor_config.json",
+                sha256="3e4dc53c73e7e3954fc4435034f5027733c61d7c123b38bbd1461598fd8503ef",
+            ),
+            ArtifactFile(
+                filename="tokenizer.json",
+                url=f"{base}/tokenizer.json",
+                sha256="7b469ff15eb7816315aa45eec391f5943d639b9d73d110f5c003df5192fd54e3",
+            ),
+            ArtifactFile(
+                filename="vocabulary.json",
+                url=f"{base}/vocabulary.json",
+                sha256="aa4e6188766a36f6a7f3e44db3f74823c6fee0bf33a9559247e18fedb3bc8d55",
+            ),
+        ),
+    )
+
+
+WHISPER_SMALL_HI_LORA_E1_CK500_FILES: Final = _e1_sweep_spec(
+    500, "e59d60d0310f267a0694ebfb7788df027af69bcdc4a086d93148010bbda0a3f1"
+)
+WHISPER_SMALL_HI_LORA_E1_CK1000_FILES: Final = _e1_sweep_spec(
+    1000, "469dfeff5b807a19fa37698bf3a4a30c41720e0fd00f981fd1fa7af2b7b4cfab"
+)
+WHISPER_SMALL_HI_LORA_E1_CK1500_FILES: Final = _e1_sweep_spec(
+    1500, "6a605eef71ffefddc7cb34efdbc10b8f1bfb8d792ce02e1f7adbb8c398050c3c"
+)
+
+_RESEARCH_E1B: Final = "https://research-artifacts.intelliai.invalid/e1b/whisper-small-hi-lora-e1b"
+
+#: Milestone E1b Phase B: the conservative retrain (lr 1e-4, 600 steps,
+#: warmup 60, validation-monitored; checkpoint-600 selected on the
+#: lowest validation loss 0.4064). Same base, data, LoRA shape, seed and
+#: non-distribution rules as E1. Rebuild from the run record
+#: weights/e1b-hi-lora/run-record.json; adapter sha256 e73aa33c2125fd1c….
+WHISPER_SMALL_HI_LORA_E1B_FILES: Final = ArtifactSpec(
+    artifact="whisper-small-hi-lora-e1b",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename="model.bin",
+            url=f"{_RESEARCH_E1B}/model.bin",
+            sha256="806cfdb94e3ae57e43c994f2a4ea5dce15aa7866ebbbcc63d2c23ea895dcb036",
+        ),
+        ArtifactFile(
+            filename="config.json",
+            url=f"{_RESEARCH_E1B}/config.json",
+            sha256="364e66f09ce360358f61e549786419eedc8e6ab709186304dc77f84a3c4966c8",
+        ),
+        ArtifactFile(
+            filename="preprocessor_config.json",
+            url=f"{_RESEARCH_E1B}/preprocessor_config.json",
+            sha256="3e4dc53c73e7e3954fc4435034f5027733c61d7c123b38bbd1461598fd8503ef",
+        ),
+        ArtifactFile(
+            filename="tokenizer.json",
+            url=f"{_RESEARCH_E1B}/tokenizer.json",
+            sha256="7b469ff15eb7816315aa45eec391f5943d639b9d73d110f5c003df5192fd54e3",
+        ),
+        ArtifactFile(
+            filename="vocabulary.json",
+            url=f"{_RESEARCH_E1B}/vocabulary.json",
+            sha256="aa4e6188766a36f6a7f3e44db3f74823c6fee0bf33a9559247e18fedb3bc8d55",
+        ),
+    ),
+)
+
 #: Every artifact this engine family can host, keyed by identity. This
 #: table IS the admission surface for the CTranslate2 stack: admitting
 #: another checkpoint of this family is one pinned entry here — no new
@@ -234,6 +327,10 @@ ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
         WHISPER_BASE_FILES,
         WHISPER_LARGE_V3_FILES,
         WHISPER_SMALL_HI_LORA_E1_FILES,
+        WHISPER_SMALL_HI_LORA_E1_CK500_FILES,
+        WHISPER_SMALL_HI_LORA_E1_CK1000_FILES,
+        WHISPER_SMALL_HI_LORA_E1_CK1500_FILES,
+        WHISPER_SMALL_HI_LORA_E1B_FILES,
     )
 }
 

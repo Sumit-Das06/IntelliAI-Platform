@@ -95,6 +95,17 @@ _WITH_REFERENCE = {
     "2026-08-11-research-whisper-small-hi-lora-e1-hi-15d.json": 0,
     "2026-08-11-research-whisper-small-hi-lora-e1-hi-15d-replicate.json": 0,
     "2026-08-11-research-whisper-small-hi-lora-e1-en-15d-regression.json": 2,
+    # Milestone E1b (2026-08-12): Phase A swept the E1 run's earlier
+    # checkpoints (all degraded); Phase B retrained conservatively
+    # (lr 1e-4, 600 steps, best-val selection) and still failed the
+    # benchmark. hi records carry no ascii anchor (0 by law); the en
+    # regression record reproduces the two JFK clips.
+    "2026-08-12-research-whisper-small-hi-lora-e1-ck500-hi-e1b-sweep.json": 0,
+    "2026-08-12-research-whisper-small-hi-lora-e1-ck1000-hi-e1b-sweep.json": 0,
+    "2026-08-12-research-whisper-small-hi-lora-e1-ck1500-hi-e1b-sweep.json": 0,
+    "2026-08-12-research-whisper-small-hi-lora-e1b-hi-e1b.json": 0,
+    "2026-08-12-research-whisper-small-hi-lora-e1b-hi-e1b-replicate.json": 0,
+    "2026-08-12-research-whisper-small-hi-lora-e1b-en-e1b-regression.json": 2,
 }
 
 
@@ -125,7 +136,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 24
+        assert sum(_WITH_REFERENCE.values()) == 26
 
 
 class TestUnicodeRulersNeverChooseThemselves:
