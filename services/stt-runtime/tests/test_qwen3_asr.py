@@ -167,6 +167,7 @@ def stub_server() -> Any:
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     _StubHandler.mode = "ok"
+    _StubHandler.content = f"language Hindi{ASR_MARKER}नमस्ते"
     _StubHandler.last_payload = None
     yield f"http://127.0.0.1:{server.server_port}"
     server.shutdown()
@@ -176,6 +177,23 @@ def stub_server() -> Any:
 def _engine(base_url: str, *, timeout: float = 5.0) -> Qwen3AsrEngine:
     fake_process = cast(subprocess.Popen[bytes], _FakeProcess())
     return Qwen3AsrEngine(fake_process, base_url, context_tokens=4096, timeout_seconds=timeout)
+
+
+def test_a_shared_closed_event_aborts_in_flight_spawns() -> None:
+    # Milestone 17 orphan fix: the loader hands its cancel event to the
+    # engine, and the spawn closure watches the SAME event — so close()
+    # reaches work the engine object cannot see (a spawn mid-health-wait).
+    shared = threading.Event()
+    engine = Qwen3AsrEngine(
+        cast(subprocess.Popen[bytes], _FakeProcess()),
+        "http://127.0.0.1:9",
+        context_tokens=4096,
+        timeout_seconds=1.0,
+        closed_event=shared,
+    )
+    assert not shared.is_set()
+    engine.close()
+    assert shared.is_set()
 
 
 class _FakeProcess:
@@ -255,6 +273,39 @@ class TestTranscription:
         for marker in ("qwen", "llama", "gguf", "ggml", "whisper"):
             assert marker not in lowered, message
 
+    def test_audio_beyond_the_measured_ceiling_is_refused_loudly(self) -> None:
+        # Phase 6 finding: at ctx 4096 a 300 s input silently truncates to
+        # ~8% of expected output while returning 200. Silent data loss is
+        # the one failure a customer cannot detect — so the engine refuses
+        # beyond the measured-safe ceiling instead.
+        engine = _engine("http://127.0.0.1:9")
+        long_audio = DecodedAudio(
+            pcm=b"\x01\x00" * 16000,  # 1 s of frames; duration says otherwise
+            sample_rate_hz=16000,
+            channels=1,
+            sample_width_bytes=2,
+            duration_seconds=121.0,
+        )
+        with pytest.raises(RuntimeServiceError) as excinfo:
+            engine.transcribe(long_audio, TranscriptionRequest(language="hi"))
+        assert excinfo.value.error_type.value == "invalid_input"
+        assert excinfo.value.param == "file"
+        assert "120 seconds" in excinfo.value.message
+        for marker in ("qwen", "llama", "ctx", "context"):
+            assert marker not in excinfo.value.message.lower()
+
+    def test_audio_at_the_ceiling_is_served(self, stub_server: str) -> None:
+        engine = _engine(stub_server)
+        at_limit = DecodedAudio(
+            pcm=b"\x01\x00" * 16000,
+            sample_rate_hz=16000,
+            channels=1,
+            sample_width_bytes=2,
+            duration_seconds=120.0,
+        )
+        result = engine.transcribe(at_limit, TranscriptionRequest(language="hi"))
+        assert result.text == "नमस्ते"
+
     def test_close_terminates_the_child(self, stub_server: str) -> None:
         fake = _FakeProcess()
         engine = Qwen3AsrEngine(
@@ -300,15 +351,23 @@ class TestLoaderRefusals:
 class TestRuntimeSupplyChain:
     """Milestone 16: the decoder build is pinned like the weights."""
 
-    def test_the_pin_table_covers_the_load_bearing_files(self) -> None:
-        names = set(qwen3_asr.RUNTIME_BINARY_PINS)
+    def test_the_pin_tables_cover_the_load_bearing_files(self) -> None:
         # The server executable and every library that executes model
-        # bytes. A pin table that lost one of these would verify a shell
-        # around an unverified core.
-        assert {"llama-server.exe", "llama-server-impl.dll", "llama.dll", "mtmd.dll"} <= names
-        for digest in qwen3_asr.RUNTIME_BINARY_PINS.values():
-            assert len(digest) == 64
-            assert set(digest) <= set("0123456789abcdef")
+        # bytes, PER PLATFORM. A pin table that lost one of these would
+        # verify a shell around an unverified core.
+        required = {
+            "win32": {"llama-server.exe", "llama-server-impl.dll", "llama.dll", "mtmd.dll"},
+            "linux": {"llama-server", "libllama-server-impl.so", "libllama.so", "libmtmd.so"},
+        }
+        for platform, needed in required.items():
+            table = qwen3_asr._RUNTIME_BINARY_PINS_BY_PLATFORM[platform]
+            assert needed <= set(table), platform
+            for digest in table.values():
+                assert len(digest) == 64
+                assert set(digest) <= set("0123456789abcdef")
+        # And the platform this test runs on must itself be pinned — CI
+        # (linux) and the dev machine (win32) both exercise a real table.
+        assert qwen3_asr.RUNTIME_BINARY_PINS
 
     def test_an_unpinned_binary_is_refused(self, tmp_path: Path) -> None:
         # A directory with the right filenames but wrong bytes: the exact
@@ -336,3 +395,246 @@ class TestRuntimeSupplyChain:
         params = _engine("http://127.0.0.1:9").describe().decode_params
         assert params["server_build"] == qwen3_asr.RUNTIME_BUILD
         assert "b10344" in params["server_build"]
+
+    def test_every_pinned_platform_names_the_same_tag(self) -> None:
+        # Windows and Linux are separate measured systems with separate
+        # tables, but they must pin the SAME upstream release: a version
+        # skew between platforms would make cross-platform evidence
+        # incomparable without anyone having decided that.
+        for platform, build in qwen3_asr._RUNTIME_BUILDS.items():
+            assert "b10344" in build, (platform, build)
+
+
+def _wait_until(predicate: Any, timeout: float = 5.0) -> None:
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if predicate():
+            return
+        time.sleep(0.01)
+    raise AssertionError("condition not reached in time")
+
+
+class _RestartableProcess:
+    """A fake child whose death the test controls."""
+
+    def __init__(self) -> None:
+        self.dead: int | None = None
+        self.terminated = False
+
+    def poll(self) -> int | None:
+        return self.dead
+
+    def terminate(self) -> None:
+        self.terminated = True
+        self.dead = -15
+
+    def wait(self, timeout: float | None = None) -> int:
+        del timeout
+        return self.dead or 0
+
+    def kill(self) -> None:
+        self.terminated = True
+        self.dead = -9
+
+
+def _supervised(
+    spawn_results: list[Any], *, backoff: tuple[float, ...] = (0.0, 0.0, 0.0)
+) -> tuple[Qwen3AsrEngine, _RestartableProcess, list[float], list[Any]]:
+    """An engine under supervision with a scripted spawn outcome list."""
+    first = _RestartableProcess()
+    slept: list[float] = []
+    spawned: list[Any] = []
+
+    def spawn() -> tuple[subprocess.Popen[bytes], str]:
+        outcome = spawn_results.pop(0) if spawn_results else RuntimeError("exhausted")
+        if isinstance(outcome, Exception):
+            raise outcome
+        spawned.append(outcome)
+        return cast(subprocess.Popen[bytes], outcome), "http://127.0.0.1:9"
+
+    engine = Qwen3AsrEngine(
+        cast(subprocess.Popen[bytes], first),
+        "http://127.0.0.1:9",
+        context_tokens=4096,
+        timeout_seconds=5.0,
+        spawn=spawn,
+        restart_backoff_seconds=backoff,
+        monitor_interval_seconds=0.01,
+        sleep=slept.append,
+    )
+    return engine, first, slept, spawned
+
+
+class TestSupervisedRestart:
+    """Milestone 17 Phase 3: bounded recovery, truthful states, no orphans."""
+
+    def test_child_alive_means_ready(self) -> None:
+        engine, first, _, _ = _supervised([])
+        try:
+            assert engine.slot_state() == "ready"
+            assert engine.slot_stats() == {"restarts_completed": 0, "restart_attempts": 0}
+        finally:
+            engine.close()
+        assert first.terminated  # close leaves no orphan
+
+    def test_death_flips_readiness_then_restart_restores_it(self) -> None:
+        replacement = _RestartableProcess()
+        engine, first, slept, spawned = _supervised([replacement], backoff=(0.0,))
+        try:
+            first.dead = 1
+            _wait_until(lambda: engine.slot_state() == "ready" and spawned)
+            assert engine.slot_stats()["restarts_completed"] == 1
+            assert slept == [0.0]  # backoff observed before the attempt
+        finally:
+            engine.close()
+        assert replacement.terminated  # the ADOPTED child is what close kills
+
+    def test_repeated_failures_stop_at_the_configured_bound(self) -> None:
+        engine, first, _, _ = _supervised(
+            [RuntimeError("down"), RuntimeError("still down"), RuntimeError("dead")],
+            backoff=(0.0, 0.0, 0.0),
+        )
+        try:
+            first.dead = 1
+            _wait_until(lambda: engine.slot_state() == "failed")
+            # Exactly as many attempts as the schedule has entries — and
+            # the state is terminal: no hidden retry after failed.
+            assert engine.slot_stats()["restart_attempts"] == 3
+            time.sleep(0.05)
+            assert engine.slot_stats()["restart_attempts"] == 3
+            assert engine.slot_state() == "failed"
+        finally:
+            engine.close()
+
+    def test_requests_are_refused_truthfully_while_not_ready(self) -> None:
+        engine, first, _, _ = _supervised([RuntimeError("x")], backoff=(0.0,))
+        try:
+            first.dead = 1
+            _wait_until(lambda: engine.slot_state() == "failed")
+            with pytest.raises(RuntimeServiceError) as excinfo:
+                engine.transcribe(_audio(), TranscriptionRequest())
+            assert excinfo.value.error_type.value == "not_ready"
+            lowered = excinfo.value.message.lower()
+            for marker in ("qwen", "llama", "gguf"):
+                assert marker not in lowered
+        finally:
+            engine.close()
+
+    def test_dead_child_midflight_reads_as_not_ready_not_internal(self) -> None:
+        # A connection error WITH a dead child is an outage, not a bug:
+        # the envelope should say not_ready so callers back off correctly.
+        dead = _RestartableProcess()
+        dead.dead = 1
+        engine = Qwen3AsrEngine(
+            cast(subprocess.Popen[bytes], dead),
+            "http://127.0.0.1:1",  # nothing listens: connection refused
+            context_tokens=4096,
+            timeout_seconds=0.5,
+        )
+        with pytest.raises(RuntimeServiceError) as excinfo:
+            engine.transcribe(_audio(), TranscriptionRequest())
+        assert excinfo.value.error_type.value == "not_ready"
+
+    def test_close_during_restart_never_adopts_a_new_child(self) -> None:
+        # The interleaving is FORCED, not raced: spawn blocks until the
+        # test has observed that close() marked the engine closed, so the
+        # spawn provably returns after close began.
+        adopted = _RestartableProcess()
+        spawn_entered = threading.Event()
+        release = threading.Event()
+
+        def blocking_spawn() -> tuple[subprocess.Popen[bytes], str]:
+            spawn_entered.set()
+            release.wait(10.0)
+            return cast(subprocess.Popen[bytes], adopted), "http://127.0.0.1:9"
+
+        first = _RestartableProcess()
+        engine = Qwen3AsrEngine(
+            cast(subprocess.Popen[bytes], first),
+            "http://127.0.0.1:9",
+            context_tokens=4096,
+            timeout_seconds=5.0,
+            spawn=blocking_spawn,
+            restart_backoff_seconds=(0.0,),
+            monitor_interval_seconds=0.01,
+            sleep=lambda _: None,
+        )
+        first.dead = 1
+        assert spawn_entered.wait(5.0)
+        assert engine.slot_state() == "restarting"
+        closer = threading.Thread(target=engine.close)
+        closer.start()
+        _wait_until(engine._closed.is_set)  # private by design: the ordering under test
+        release.set()
+        closer.join(timeout=15.0)
+        assert not closer.is_alive()
+        # The child spawned after close must be terminated, not adopted.
+        _wait_until(lambda: adopted.terminated)
+
+
+class TestSlotTruthfulReadiness:
+    """Milestone 17 Phase 2: /health/ready tells per-slot truth."""
+
+    @pytest.fixture
+    def client(self) -> Any:
+        from fastapi.testclient import TestClient
+
+        from intelliai_stt_runtime.config import Settings
+        from intelliai_stt_runtime.main import create_app
+
+        # Two weightless slots: `default` (the deployment's core promise)
+        # and a named specialist — the exact shape of the canary topology.
+        app = create_app(Settings(slots="reference,reference:specialist-b"))
+        with TestClient(app) as test_client:
+            yield test_client
+
+    @staticmethod
+    def _engine_of(client: Any, slot: str) -> Any:
+        manager = client.app.state.manager
+        for loaded in manager.loaded_models():
+            if loaded.slot == slot:
+                return loaded.engine
+        raise AssertionError(f"slot {slot!r} not loaded")
+
+    def test_both_healthy_reads_ready(self, client: Any) -> None:
+        response = client.get("/health/ready")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["status"] == "ready"
+        assert set(body["slots"].values()) == {"ready"}
+
+    def test_dead_specialist_degrades_but_never_kills_the_service(self, client: Any) -> None:
+        engine = self._engine_of(client, "specialist-b")
+        engine.slot_state = lambda: "restarting"
+        response = client.get("/health/ready")
+        # 200: an orchestrator polling this must NOT restart a process
+        # that is still serving its default slot.
+        assert response.status_code == 200
+        body = response.json()
+        assert body["status"] == "degraded"
+        assert body["slots"]["specialist-b"] == "restarting"
+
+    def test_failed_specialist_is_visible_by_name(self, client: Any) -> None:
+        engine = self._engine_of(client, "specialist-b")
+        engine.slot_state = lambda: "failed"
+        body = client.get("/health/ready").json()
+        assert body["status"] == "degraded"
+        assert body["slots"]["specialist-b"] == "failed"
+
+    def test_dead_default_slot_makes_the_service_not_ready(self, client: Any) -> None:
+        engine = self._engine_of(client, "default")
+        engine.slot_state = lambda: "failed"
+        response = client.get("/health/ready")
+        assert response.status_code == 503
+        assert response.json()["status"] == "not_ready"
+
+    def test_unstarted_manager_is_not_ready(self) -> None:
+        from fastapi.testclient import TestClient
+
+        from intelliai_stt_runtime.config import Settings
+        from intelliai_stt_runtime.main import create_app
+
+        app = create_app(Settings(slots="reference"))
+        # No lifespan entered: models never loaded.
+        client = TestClient(app)
+        assert client.get("/health/ready").status_code == 503

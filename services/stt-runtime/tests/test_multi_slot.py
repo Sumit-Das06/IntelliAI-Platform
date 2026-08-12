@@ -47,8 +47,12 @@ class TestCoexistence:
             assert model["warmup_ms"] >= 0  # every slot was warmed before traffic
 
     def test_readiness_covers_every_slot(self, client: TestClient) -> None:
-        # `ready` is reported only after the last slot finished warming.
-        assert client.get("/health/ready").json() == {"status": "ready"}
+        # `ready` is reported only after the last slot finished warming —
+        # and since Milestone 17 the body names each slot's own state.
+        body = client.get("/health/ready").json()
+        assert body["status"] == "ready"
+        assert set(body["slots"]) == set(HOSTED)
+        assert set(body["slots"].values()) == {"ready"}
         assert len(client.get("/info").json()["models"]) == len(HOSTED)
 
 

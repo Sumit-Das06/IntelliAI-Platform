@@ -129,7 +129,10 @@ class TestOperationalSurface:
         assert client.get("/health/live").json() == {"status": "alive"}
 
     def test_readiness_after_lifespan_startup(self, client: TestClient) -> None:
-        assert client.get("/health/ready").json() == {"status": "ready"}
+        assert client.get("/health/ready").json() == {
+            "status": "ready",
+            "slots": {"reference": "ready"},
+        }
 
     def test_info_is_operational_identity_only(self, client: TestClient) -> None:
         info = client.get("/info").json()

@@ -21,6 +21,7 @@ from intelliai_runtime_contract import (
     UsageUnit,
 )
 from intelliai_runtime_core import (
+    DEFAULT_SLOT,
     ModelManager,
     RuntimeServiceError,
     WorkerPool,
@@ -47,10 +48,33 @@ async def live() -> dict[str, str]:
 
 @router.get("/health/ready")
 async def ready(request: Request) -> JSONResponse:
+    """Slot-truthful readiness (Milestone 17).
+
+    Engines MAY expose ``slot_state() -> str`` (`ready`/`restarting`/
+    `failed`); an engine without it is in-process and ready by virtue of
+    having loaded. The DEFAULT slot decides the status code, because it
+    answers requests that pin nothing — the deployment's core promise.
+    A dead specialist beside a healthy default degrades the body, never
+    the code: flipping 503 for it would invite the orchestrator to
+    restart a process that is still serving customers (the same
+    reasoning the compose healthchecks document).
+    """
     manager: ModelManager[TranscriptionEngine] = request.app.state.manager
-    if manager.started:
-        return JSONResponse({"status": "ready"})
-    return JSONResponse({"status": "not_ready"}, status_code=503)
+    if not manager.started:
+        return JSONResponse({"status": "not_ready"}, status_code=503)
+    slots: dict[str, str] = {}
+    default_state = "ready"
+    degraded = False
+    for loaded in manager.loaded_models():
+        state = getattr(loaded.engine, "slot_state", lambda: "ready")()
+        slots[loaded.artifact] = state
+        if loaded.slot == DEFAULT_SLOT:
+            default_state = state
+        elif state != "ready":
+            degraded = True
+    if default_state != "ready":
+        return JSONResponse({"status": "not_ready", "slots": slots}, status_code=503)
+    return JSONResponse({"status": "degraded" if degraded else "ready", "slots": slots})
 
 
 @router.get("/info")

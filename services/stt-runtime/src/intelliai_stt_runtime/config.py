@@ -59,6 +59,10 @@ class Settings(BaseSettings):
     # 8.2 GiB RSS vs 1.5 GiB at 4096 — configuration, not identity.
     qwen3_context_tokens: int = Field(default=4096, ge=1024)
     qwen3_request_timeout_seconds: float = Field(default=300.0, gt=0)
+    # Measured-safe input ceiling at ctx=4096 (Milestone 17 long-audio
+    # probe): 120 s complete, 300 s silently truncates, 600 s errors.
+    # Raising this requires re-measuring completeness AND memory.
+    qwen3_max_audio_seconds: float = Field(default=120.0, gt=0)
 
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be
