@@ -231,6 +231,19 @@ erase-org: ## Erase a tenant's data (ledger kept, org row anonymized): make eras
 up-tts: ## Also start the TTS runtime (V1 is STT-only by default)
 	docker compose --profile tts up -d
 
+# ── Local staging: the Hindi→Qwen canary shape, on THIS machine only ──
+# (docs/ops/local-staging.md). Explicit overlay, never applied by any
+# other target; production posture is unaffected by construction.
+staging-up: ## Start the LOCAL staging stack (hi→Qwen, everything else→Whisper); builds images
+	docker compose -f docker-compose.yml -f infra/compose/local-staging.yml up -d --build
+
+staging-down: ## Stop the local staging stack (data volumes preserved)
+	docker compose -f docker-compose.yml -f infra/compose/local-staging.yml down
+
+staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (skips the ~1 GB first-boot download)
+	docker run --rm -v intelliai_modelcache:/models -v "$(CURDIR)/models/qwen3-asr-0.6b:/src:ro" \
+	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b && cp -r /src/v1 /models/qwen3-asr-0.6b/ && ls -la /models/qwen3-asr-0.6b/v1"
+
 # ── Production (see docs/ops/deployment.md) ───────────────────────────
 prod-up: ## Deploy/refresh the production stack (base + prod overlay, builds images)
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml up -d --build

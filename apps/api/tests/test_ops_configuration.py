@@ -44,10 +44,25 @@ def test_only_caddy_faces_the_internet_in_the_prod_overlay() -> None:
 
 def test_the_staging_registry_profile_is_never_committed_configuration() -> None:
     # Milestone 18: INTELLIAI_REGISTRY_PROFILE=staging activates the
-    # prepared proposals. It is a LOCAL, hand-set choice — a committed
-    # compose file carrying it would be a promotion that skipped review.
+    # prepared proposals. It lives ONLY in the explicit local-staging
+    # overlay — the base stack and the prod overlay carrying it would be
+    # a promotion that skipped review.
     for overlay in (COMPOSE, PROD_OVERLAY):
         assert "INTELLIAI_REGISTRY_PROFILE" not in overlay
+
+
+def test_the_local_staging_overlay_is_explicit_and_unreachable_from_prod() -> None:
+    # Milestone 19: the founder-facing staging stack. The overlay must
+    # say exactly what it changes (profile + slots), and NOTHING in the
+    # production path may reference it — activating staging is always a
+    # deliberate, hand-typed act.
+    overlay = (REPO / "infra/compose/local-staging.yml").read_text(encoding="utf-8")
+    assert "INTELLIAI_REGISTRY_PROFILE: staging" in overlay
+    assert "whisper,qwen3-asr" in overlay
+    assert "local-staging" not in PROD_OVERLAY
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    prod_targets = makefile[makefile.index("prod-up:") :]
+    assert "local-staging" not in prod_targets
 
 
 def test_research_engines_never_appear_in_committed_deployments() -> None:

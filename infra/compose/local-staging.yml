@@ -1,0 +1,31 @@
+# LOCAL STAGING overlay — the Hindi→Qwen canary shape, on your machine only.
+#
+# This file is NEVER applied implicitly: it activates only when passed by
+# hand (`make staging-up`, or `docker compose -f docker-compose.yml -f
+# infra/compose/local-staging.yml up -d`). Guard tests pin that the base
+# stack and the prod overlay carry neither the staging profile nor any
+# research engine, and that no production Make target references this
+# file. The settings layer additionally refuses the staging profile under
+# INTELLIAI_ENV=prod — three independent locks between this overlay and a
+# customer.
+#
+# What it changes, and nothing else:
+#   api          → registry profile "staging": the live catalog PLUS the
+#                  prepared proposal (hi → qwen3-asr-0.6b); every other
+#                  language keeps the incumbent. Logged loudly at boot.
+#   stt-runtime  → hosts BOTH slots. The qwen3 engine serves through the
+#                  image's vendored llama.cpp layer (hash-verified at
+#                  build AND at every load). GGUF weights are fetched
+#                  hash-verified into the model volume on first boot
+#                  (~1 GB) unless pre-seeded (`make staging-seed-models`).
+#
+# Verify the flow end to end: docs/ops/local-staging.md
+
+services:
+  api:
+    environment:
+      INTELLIAI_REGISTRY_PROFILE: staging
+
+  stt-runtime:
+    environment:
+      INTELLIAI_STT_SLOTS: whisper,qwen3-asr
