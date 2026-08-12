@@ -23,7 +23,7 @@ from typing import Final
 
 from intelliai_runtime_core import DEFAULT_SLOT, ArtifactSpec, SlotSpec
 from intelliai_stt_runtime.config import Settings
-from intelliai_stt_runtime.engines import TranscriptionEngine, reference, whisper
+from intelliai_stt_runtime.engines import TranscriptionEngine, qwen3_asr, reference, whisper
 
 #: Separator between hosted-artifact declarations, and between an engine
 #: and an explicit artifact identity within one declaration.
@@ -64,6 +64,15 @@ def _load_whisper(settings: Settings) -> Callable[[Path | None], TranscriptionEn
     return partial(whisper.load_faster_whisper, compute_type=settings.whisper_compute_type)
 
 
+def _load_qwen3_asr(settings: Settings) -> Callable[[Path | None], TranscriptionEngine]:
+    return partial(
+        qwen3_asr.load_qwen3_asr,
+        server_binary=settings.qwen3_server_binary,
+        context_tokens=settings.qwen3_context_tokens,
+        timeout_seconds=settings.qwen3_request_timeout_seconds,
+    )
+
+
 #: Every engine this service can host. Adding an engine is one entry
 #: here plus its adapter module — nothing else on the platform changes.
 CATALOG: Final[dict[str, EngineBinding]] = {
@@ -77,6 +86,16 @@ CATALOG: Final[dict[str, EngineBinding]] = {
         loader=_load_whisper,
         files=whisper.WHISPER_SMALL_FILES,
         registered=whisper.ARTIFACT_SPECS,
+    ),
+    # Research-only (15E): reachable solely through a deployment that
+    # declares it, which no production deployment does — the registry has
+    # no route to this family and the gateway's catalog has never heard
+    # its name. Promotion is a ledger decision, not a CATALOG edit.
+    "qwen3-asr": EngineBinding(
+        artifact=qwen3_asr.ARTIFACT_ID,
+        loader=_load_qwen3_asr,
+        files=qwen3_asr.QWEN3_ASR_0_6B_FILES,
+        registered=qwen3_asr.ARTIFACT_SPECS,
     ),
 }
 

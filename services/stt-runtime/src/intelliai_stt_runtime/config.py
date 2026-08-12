@@ -48,6 +48,18 @@ class Settings(BaseSettings):
     # Precision is deployment configuration, never identity (ADR-0015).
     whisper_compute_type: str = "int8"
 
+    # ── qwen3-asr research engine (Milestone 15E) ───────────────────────
+    # The engine serves through a pinned llama.cpp llama-server child
+    # process (the model has no CTranslate2 path). The binary is a local
+    # research dependency, not an artifact: identity lives in the GGUF
+    # pins, and the build is reported by the engine's description. The
+    # default points at the 15B spike's pinned b10344 CPU build.
+    qwen3_server_binary: Path = Path("weights/qwen3-asr-spike/llama-cpp/llama-server.exe")
+    # KV-bounded context: the spike measured the default 32k allocation at
+    # 8.2 GiB RSS vs 1.5 GiB at 4096 — configuration, not identity.
+    qwen3_context_tokens: int = Field(default=4096, ge=1024)
+    qwen3_request_timeout_seconds: float = Field(default=300.0, gt=0)
+
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be
     # ignored silently and a deployment meant to serve whisper would
