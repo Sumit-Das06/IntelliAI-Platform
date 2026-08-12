@@ -704,4 +704,54 @@ fewer epochs) are queued for founder decision, not auto-run.
 
 ---
 
+---
+
+## Milestone E1b — checkpoint sweep + conservative retrain: the cause space collapses (appended 2026-08-12)
+
+Full report: [2026-08-12-e1b-hindi-lora-conservative.md](2026-08-12-e1b-hindi-lora-conservative.md).
+**No status changes.** Same frozen benchmark, ruler, decode policy and
+harness as 15C/15D; decision matrix fixed before any number existed.
+
+**whisper-small-hi-lora-e1 checkpoints 500/1000/1500 (same artifact lineage as the rejected E1; identity = E1 run + step)**
+- 2026-08-12 — **Rejected** *(evidence; sweep of the preserved E1 run)* —
+  **[EVIDENCE]** On `stt-hi-public-eval@v1`: cer_unicode **0.7295 /
+  0.8132 / 0.7319** vs baseline 0.3629; hallucinated probe words
+  **51 / 59 / 56** vs 0; recognition_rtf 4.89 / 2.93 / 2.70. **The E1
+  damage was fully established by step 500 (~3 epochs) — "evaluate an
+  earlier checkpoint" is closed as a remedy** — evidence:
+  [ck500](../../ml/evaluation/stt/results/2026-08-12-research-whisper-small-hi-lora-e1-ck500-hi-e1b-sweep.json) ·
+  [ck1000](../../ml/evaluation/stt/results/2026-08-12-research-whisper-small-hi-lora-e1-ck1000-hi-e1b-sweep.json) ·
+  [ck1500](../../ml/evaluation/stt/results/2026-08-12-research-whisper-small-hi-lora-e1-ck1500-hi-e1b-sweep.json)
+
+**whisper-small-hi-lora-e1b (NEW candidate identity; base 973afd24 + hi-public-train@v1 a4748dee + LoRA r32/α64/lr1e-4/600steps/warmup60/val-selected ck600/seed 20260811)**
+- 2026-08-12 — **Rejected** *(evidence; first entry for this artifact)* —
+  **[EVIDENCE]** Training was textbook-healthy (train 0.3502; validation
+  monotone 0.6961→**0.4064**, better than E1's best; no overfit signal;
+  29.9 min, peak 3,353 MiB local RTX 5070) and the benchmark still
+  failed it: **cer_unicode 0.7181 (replicate 0.6535) vs 0.3629**;
+  wer_unicode 1.0028/0.9220; **74 hallucinated probe words vs 0 — the
+  worst measured in this program**; recognition_rtf 6.10/2.80;
+  primary↔replicate spread 0.0646 CER (4.6× the 0.014 band —
+  degenerate decoding is unstable, not just slow). English intact
+  (WER 0.0; one probe word). **Refuted as primary cause: over-training,
+  learning rate alone, checkpoint choice, and validation loss as a
+  decode-health proxy.** Substitutions BEAT the baseline (0.4236 vs
+  0.4764) while insertions/probes destroy the result: the failure
+  lives in generation/stopping behavior. Prime suspect recorded for a
+  founder-gated E1c: decode-mode mismatch (trained `<|notimestamps|>`
+  labels vs timestamped product decode) — diagnostic costs hours
+  (report §11). Re-entry: a new recipe is a NEW candidate identity —
+  evidence:
+  [candidate](../../ml/evaluation/stt/results/2026-08-12-research-whisper-small-hi-lora-e1b-hi-e1b.json) ·
+  [replicate](../../ml/evaluation/stt/results/2026-08-12-research-whisper-small-hi-lora-e1b-hi-e1b-replicate.json) ·
+  [en regression](../../ml/evaluation/stt/results/2026-08-12-research-whisper-small-hi-lora-e1b-en-e1b-regression.json) ·
+  [run record](../../weights/e1b-hi-lora/run-record.json)
+
+**Consequence for priorities:** the fine-tuning ladder pauses — no
+third blind LoRA arm. The **Qwen3-ASR engine-adapter** track is now
+the highest-value Hindi move (sandbox CER 0.0796 vs two failed tunes);
+if fine-tuning resumes it resumes as the E1c diagnostic, founder-gated.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*
