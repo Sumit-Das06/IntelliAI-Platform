@@ -1,0 +1,27 @@
+{
+  "steps": [
+    {
+      "step": "hindi_contribute_on",
+      "devanagari": true,
+      "requestId": "req_059a21884dfe41a9ace86722a9b8856f",
+      "sampleId": "smp_adda42a6a41ad9316f07dde6",
+      "leaks_in_raw_response": [],
+      "ui_leaks": []
+    },
+    {
+      "step": "correction",
+      "thanks": "Your correction helps improve IntelliAI STT."
+    },
+    {
+      "step": "hindi_contribute_off",
+      "sampleId": "not stored (contribution off)",
+      "no_sample": false
+    },
+    {
+      "step": "ceiling_121s",
+      "status_line": "audio longer than 120 seconds is not supported by the requested model",
+      "useful_error": true,
+      "leaks": []
+    }
+  ]
+}

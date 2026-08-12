@@ -1,0 +1,34 @@
+{
+  "drill": "18-gateway-failure",
+  "run_at": "2026-08-12T10:31:24.605418+00:00",
+  "pids_killed": [
+    3192
+  ],
+  "hindi_during_outage": {
+    "status": 503,
+    "bounded_seconds": 0.16,
+    "leaks": [],
+    "error_type": "service_unavailable_error"
+  },
+  "english_during_outage": {
+    "status": 200,
+    "seconds": 1.58,
+    "leaks": []
+  },
+  "runtime_readiness_during_outage": {
+    "code": 200,
+    "body": {
+      "status": "ready",
+      "slots": {
+        "whisper-small": "ready",
+        "qwen3-asr-0.6b": "ready"
+      }
+    }
+  },
+  "runtime_recovered": true,
+  "hindi_after_recovery": {
+    "status": 200,
+    "seconds": 1.19,
+    "leaks": []
+  }
+}

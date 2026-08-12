@@ -1,0 +1,818 @@
+{
+  "drill": "18-gateway-product-path",
+  "run_at": "2026-08-12T10:29:59.284947+00:00",
+  "base_url": "http://127.0.0.1:8010",
+  "usage_before": {
+    "period": {
+      "start": "2026-07-14T00:00:00Z",
+      "end": "2026-08-12T10:28:53.656884Z",
+      "days": 30
+    },
+    "granularity": "daily",
+    "totals": {
+      "requests": 0,
+      "speech_minutes": 0.0,
+      "average_request_seconds": null,
+      "success_rate": null,
+      "outcomes": {}
+    },
+    "series": [
+      {
+        "timestamp": "2026-07-14T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-15T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-16T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-17T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-18T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-19T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-20T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-21T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-22T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-23T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-24T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-25T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-26T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-27T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-28T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-29T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-30T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-31T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-01T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-02T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-03T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-04T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-05T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-06T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-07T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-08T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-09T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-10T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-11T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-12T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-07-14",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-15",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-16",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-17",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-18",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-19",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-20",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-21",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-22",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-23",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-24",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-25",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-26",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-27",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-28",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-29",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-30",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-31",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-01",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-02",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-03",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-04",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-05",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-06",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-07",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-08",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-09",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-10",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-11",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-12",
+        "requests": 0,
+        "speech_minutes": 0.0
+      }
+    ],
+    "languages": [],
+    "models": [],
+    "_leaks": []
+  },
+  "usage_after": {
+    "period": {
+      "start": "2026-07-14T00:00:00Z",
+      "end": "2026-08-12T10:29:59.274458Z",
+      "days": 30
+    },
+    "granularity": "daily",
+    "totals": {
+      "requests": 10,
+      "speech_minutes": 5.04,
+      "average_request_seconds": 30.23,
+      "success_rate": 1.0,
+      "outcomes": {
+        "succeeded": 10
+      }
+    },
+    "series": [
+      {
+        "timestamp": "2026-07-14T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-15T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-16T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-17T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-18T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-19T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-20T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-21T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-22T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-23T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-24T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-25T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-26T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-27T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-28T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-29T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-30T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-07-31T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-01T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-02T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-03T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-04T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-05T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-06T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-07T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-08T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-09T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-10T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-11T00:00:00Z",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "timestamp": "2026-08-12T00:00:00Z",
+        "requests": 10,
+        "speech_minutes": 5.04
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-07-14",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-15",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-16",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-17",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-18",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-19",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-20",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-21",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-22",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-23",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-24",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-25",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-26",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-27",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-28",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-29",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-30",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-07-31",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-01",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-02",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-03",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-04",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-05",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-06",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-07",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-08",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-09",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-10",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-11",
+        "requests": 0,
+        "speech_minutes": 0.0
+      },
+      {
+        "date": "2026-08-12",
+        "requests": 10,
+        "speech_minutes": 5.04
+      }
+    ],
+    "languages": [
+      {
+        "key": "hi",
+        "requests": 8,
+        "speech_minutes": 4.67
+      },
+      {
+        "key": "en",
+        "requests": 2,
+        "speech_minutes": 0.37
+      }
+    ],
+    "models": [
+      {
+        "key": "intelliai-stt",
+        "requests": 10,
+        "speech_minutes": 5.04
+      }
+    ],
+    "_leaks": []
+  },
+  "results": {
+    "_timings": [
+      {
+        "hi-short.wav": 0.01
+      },
+      {
+        "hi-short.wav": 0.01
+      },
+      {
+        "hi-short.wav": 1.27
+      },
+      {
+        "hi-short.wav": 0.8
+      },
+      {
+        "en-jfk.wav": 1.35
+      },
+      {
+        "hi-short.wav": 2.51
+      },
+      {
+        "hi-short.wav": 0.78
+      },
+      {
+        "en-jfk.wav": 1.4
+      },
+      {
+        "hi-short.wav": 0.76
+      },
+      {
+        "hi-short.wav": 0.79
+      },
+      {
+        "hi-119s.wav": 27.2
+      },
+      {
+        "hi-120s.wav": 28.35
+      },
+      {
+        "hi-121s.wav": 0.24
+      }
+    ],
+    "auth_missing_key": {
+      "status": 401,
+      "request_id_header": "req_9c14151803c140419f98456ce183e98f",
+      "sample_header": null,
+      "leaks": []
+    },
+    "auth_invalid_key": {
+      "status": 401,
+      "request_id_header": "req_73a945ef83164bcc8870f1ecbc8a94df",
+      "sample_header": null,
+      "leaks": []
+    },
+    "hindi_explicit": {
+      "status": 200,
+      "request_id_header": "req_7bdc78b046c548b89354fa612fcf572e",
+      "sample_header": "smp_dc29ed6360d666e284a2de13",
+      "leaks": [],
+      "devanagari": true,
+      "text_preview": "जी जी देखा जाए मैप मैप तो थोड़ा हार्ड होता है ना"
+    },
+    "hindi_regional_tag": {
+      "status": 200,
+      "request_id_header": "req_81d9f9e04933478e938b3f301c5b225a",
+      "sample_header": "smp_29bec06c27199e24343d99b6",
+      "leaks": [],
+      "devanagari": true
+    },
+    "english_explicit": {
+      "status": 200,
+      "request_id_header": "req_5b214c12dc1b4aea9b99b452b9c9f7f7",
+      "sample_header": "smp_71a9a0129de4e70d7a984a5f",
+      "leaks": [],
+      "ask_not": true,
+      "text_preview": "And so my fellow Americans, ask not what your country can do for you. Ask what y"
+    },
+    "hindi_undeclared_default_route": {
+      "status": 200,
+      "request_id_header": "req_f4e5ec34b417478ba3bd5acc32d407d6",
+      "sample_header": "smp_d76ffb366df324b099fce133",
+      "leaks": [],
+      "devanagari": true
+    },
+    "verbose_json_hindi": {
+      "status": 200,
+      "request_id_header": "req_663dc824de4f48989c341fb6174dcca3",
+      "sample_header": "smp_4461880ccd5c5c174d2535e0",
+      "leaks": [],
+      "segment_count": 1,
+      "segment_keys": [
+        "end",
+        "id",
+        "start",
+        "text"
+      ],
+      "spans_full_clip": true
+    },
+    "verbose_json_english": {
+      "status": 200,
+      "request_id_header": "req_a0c7ee8865eb4ceb92c03d266ac2e54e",
+      "sample_header": "smp_e6ff0c18d5c7ea3c650c6c45",
+      "leaks": [],
+      "segment_count": 2
+    },
+    "collection_consented": {
+      "status": 200,
+      "request_id_header": "req_da5fb40869c54577950960bebbea35e4",
+      "sample_header": "smp_19ca41df9c33af46e8f34745",
+      "leaks": [],
+      "sample_created": true
+    },
+    "correction": {
+      "correction_status": 200,
+      "sample_fetch_status": 200,
+      "sample_leaks": [],
+      "original_preserved": true,
+      "current_is_corrected": true
+    },
+    "contribution_off": {
+      "status": 200,
+      "request_id_header": "req_917361ff8a0a49748829f3ac94c86743",
+      "sample_header": null,
+      "leaks": [],
+      "no_sample": true,
+      "transcript_still_returned": true
+    },
+    "ceiling_119s": {
+      "status": 200,
+      "request_id_header": "req_3d8e7ad48b6e486b84a92aee71d08675",
+      "sample_header": "smp_59ec56910110db956d9390d9",
+      "leaks": [],
+      "output_chars": 1144
+    },
+    "ceiling_120s": {
+      "status": 200,
+      "request_id_header": "req_c18dc7a0995d42aeae72079d2cd0b669",
+      "sample_header": "smp_ba9551e2d1088f4ddb378155",
+      "leaks": [],
+      "output_chars": 1158
+    },
+    "ceiling_121s": {
+      "status": 400,
+      "request_id_header": "req_80b1dbf1c6b343c38c953ec2accbee33",
+      "sample_header": null,
+      "leaks": [],
+      "error_param": "file",
+      "error_names_limit": true
+    }
+  }
+}

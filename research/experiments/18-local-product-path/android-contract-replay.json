@@ -1,0 +1,40 @@
+{
+  "replay": "18-android-contract",
+  "NOT_A_DEVICE_RUN": "no Android SDK/emulator/device available on this machine; byte-faithful client-contract replays against the live staging gateway",
+  "run_at": "2026-08-12T10:35:37.400608+00:00",
+  "hindi_dictation_on": {
+    "outcome": "SUCCESS",
+    "inserted_text_preview": "जी जी देखा जाए मैप मैप तो थोड़ा हार्ड होता है ना",
+    "sample_id": "smp_a02a460b350658d2b7258334",
+    "leaks": []
+  },
+  "correction": {
+    "status": 200
+  },
+  "hindi_dictation_off": {
+    "outcome": "SUCCESS",
+    "inserted_text_preview": "जी जी देखा जाए मैप मैप तो थोड़ा हार्ड होता है ना",
+    "sample_id": null,
+    "no_sample": true
+  },
+  "auto_mode_default_route": {
+    "outcome": "SUCCESS",
+    "inserted_text_preview": "जी जी, देखा जाए, मैद, मैद तो थोड़ा हाद होता है, नहीं।",
+    "sample_id": "smp_0ecd971d3c019aa18a8251fb"
+  },
+  "missing_key": {
+    "outcome": "BAD_API_KEY",
+    "error_type": "authentication_error"
+  },
+  "bad_key": {
+    "outcome": "BAD_API_KEY",
+    "error_type": "authentication_error"
+  },
+  "ceiling_121s": {
+    "outcome": "REJECTED",
+    "error_type": "invalid_request_error",
+    "surfaced_message": "audio longer than 120 seconds is not supported by the requested model",
+    "message_useful": true,
+    "leaks": []
+  }
+}

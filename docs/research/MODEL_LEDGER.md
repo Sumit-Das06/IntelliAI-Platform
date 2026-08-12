@@ -896,4 +896,45 @@ inputs are hardware access and one human decision.
 
 ---
 
+---
+
+## Milestone 18 — local production-path integration (appended 2026-08-12)
+
+Full report: [2026-08-12-local-qwen-production-path.md](2026-08-12-local-qwen-production-path.md).
+No quality re-litigation; the CUSTOMER PIPELINE half of the canary
+story, proven locally.
+
+**Qwen3-ASR 0.6B (identity unchanged)**
+- 2026-08-12 — **canary_ready → local_product_path_proven** *(evidence;
+  promotion still NOT granted; production still resolves hi→whisper,
+  guard-tested)* — **[EVIDENCE]** Through a REAL gateway process
+  (staging registry profile — the prepared proposal running under a
+  flag that production refuses by validator): auth → per-language
+  routing (runtime logs attribute 7 requests to the candidate, 3 to
+  the incumbent, matching the plan one-for-one) → transcript → usage
+  ledger (**22 succeeded/389.0 s billed; 1 failed/0 billed; refusals
+  bill nothing; zero duplicates**) → consent-gated collection (17
+  samples; contribution-off honored) → correction (original immutable).
+  **Web verified in a real browser** driving the real Studio
+  (screenshots committed; zero internal names in the rendered UI or
+  raw responses). **Android verified at contract level** — every
+  branch of the shipped keyboard client's request/parse contract
+  replayed byte-faithfully against the live gateway, all passing; NOT
+  a device run (no SDK/emulator on this machine), said plainly. The
+  120 s ceiling behaves end-to-end (119/120→200, 121→400 named limit,
+  unbilled, uncollected; both clients surface it usefully). Child
+  death under live traffic: 503 in 0.16 s, incumbent unaffected, no
+  fallback fired, recovery clean, 0 orphans. 12 new full-stack tests +
+  4 guards pin all of it — evidence:
+  [drills + screenshots](../../research/experiments/18-local-product-path/) ·
+  [staging profile](../../apps/api/src/intelliai_api/registry/proposals.py)
+
+**Consequence for priorities:** the Hostinger milestone now has
+exactly four inputs left: the vendored Linux runtime layer, VPS
+re-validation (scripts committed), a real Android device pass, and
+the founder's promotion decision. Every other question is answered
+with committed evidence.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*
