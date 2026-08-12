@@ -1,0 +1,38 @@
+{
+  "drill": "17-supervised-restart-live",
+  "run_at": "2026-08-12T08:55:10.179292+00:00",
+  "platform": "linux",
+  "baseline_ready": {
+    "code": 200,
+    "body": {
+      "status": "ready",
+      "slots": {
+        "qwen3-asr-0.6b": "ready"
+      }
+    }
+  },
+  "baseline_transcribe_status": 200,
+  "pids_before_kill": [
+    14942
+  ],
+  "seconds_until_unready": 1.26,
+  "ready_during_outage": {
+    "code": 503,
+    "body": {
+      "status": "not_ready",
+      "slots": {
+        "qwen3-asr-0.6b": "restarting"
+      }
+    }
+  },
+  "transcribe_during_outage": {
+    "status": 503,
+    "bounded_seconds": 0.04
+  },
+  "seconds_until_ready_again": 8.54,
+  "total_outage_seconds": 9.84,
+  "transcribe_after_recovery_status": 200,
+  "pids_after_recovery": [
+    15126
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "kill": {
+    "phase": "kill",
+    "run_at": "2026-08-12T08:49:25.993656+00:00",
+    "baseline_qwen_hi": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 748.6
+    },
+    "baseline_whisper_hi": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "message_leaks_internals": true,
+      "message": "artifact 'whisper-small' is not served by this runtime",
+      "client_ms": 9.8
+    },
+    "garbage_audio": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "message_leaks_internals": false,
+      "message": "unrecognized audio format; supported containers: flac, mp3, mp4, ogg, wav, webm"
+    },
+    "whisper_unsupported_language": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "message_leaks_internals": true,
+      "message": "artifact 'whisper-small' is not served by this runtime",
+      "client_ms": 10.8
+    },
+    "qwen_unmapped_language_hint": {
+      "status": 200,
+      "error_type": null,
+      "message_leaks_internals": false,
+      "message": "",
+      "client_ms": 657.1
+    },
+    "llama_server_pids_before_kill": [
+      14624
+    ],
+    "qwen_after_child_killed": {
+      "status": 503,
+      "error_type": "not_ready",
+      "message_leaks_internals": false,
+      "message": "the requested model is temporarily unavailable",
+      "client_ms": 15.6
+    },
+    "qwen_after_child_killed_repeat": {
+      "status": 503,
+      "error_type": "not_ready",
+      "message_leaks_internals": false,
+      "message": "the requested model is temporarily unavailable",
+      "client_ms": 14.1
+    },
+    "whisper_after_qwen_killed": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "message_leaks_internals": true,
+      "message": "artifact 'whisper-small' is not served by this runtime",
+      "client_ms": 6.4
+    },
+    "info_after_kill": {
+      "status": 200,
+      "still_lists_qwen_slot": true
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"type":"invalid_input","message":"audio longer than 120 seconds is not supported by the requested model","param":"file","runtime":{"service":"stt-runtime","service_version":"0.1.0","contract_version":1}}

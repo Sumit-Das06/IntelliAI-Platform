@@ -119,6 +119,9 @@ _WITH_REFERENCE = {
     # whisper-small and reproduces the two JFK clips.
     "2026-08-12-research-intelliai-stt-switch-hi-16.json": 0,
     "2026-08-12-research-intelliai-stt-switch-en-16.json": 2,
+    # Milestone 17 (2026-08-12): the pinned LINUX runtime validated on
+    # the frozen primary (WSL2; hi record, no ascii anchor — 0 by law).
+    "2026-08-12-research-qwen3-asr-0.6b-hi-17-linux.json": 0,
 }
 
 

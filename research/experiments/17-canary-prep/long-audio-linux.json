@@ -1,0 +1,64 @@
+{
+  "probe": "17-long-audio-ctx4096",
+  "NOT_LEDGER_EVIDENCE": "structural completeness probe on concatenated public audio; references invalid by construction, no accuracy claim",
+  "run_at": "2026-08-12T08:49:12.424438+00:00",
+  "norm_chars_per_second": 6.98,
+  "rows": [
+    {
+      "input_seconds": 60,
+      "status": 200,
+      "error_type": null,
+      "wall_seconds": 13.7,
+      "rtf": 0.228,
+      "output_chars": 571,
+      "chars_per_second": 9.52,
+      "completeness_vs_norm": 1.364,
+      "tail_repetition_ratio": 0.0,
+      "segments": 1,
+      "llama_server_rss_mib": 5421.7,
+      "text_tail": "स्थित है पचमड़ी जिस पर हम नजारा देखते जाते हैं तो एक पहली बात करें तो जल बने प्राणियों के इसमें दर्शन भी होते हैं उसके साथ साथ हम लोग रोड पर भी इसका नागन मोड़ों"
+    },
+    {
+      "input_seconds": 120,
+      "status": 200,
+      "error_type": null,
+      "wall_seconds": 32.1,
+      "rtf": 0.267,
+      "output_chars": 1156,
+      "chars_per_second": 9.63,
+      "completeness_vs_norm": 1.381,
+      "tail_repetition_ratio": 0.0,
+      "segments": 1,
+      "llama_server_rss_mib": 5614.0,
+      "text_tail": " भी लोग नजारा लेते हैं सिविन का और जिप्सी द्वारा भी काफी सारे जैसे कि टाइगर वगैरह इनकी इन लोग इन जानवरों का भी हम नजारा देख पाते हैं एक काफी यहाँ पर एक काफी में"
+    },
+    {
+      "input_seconds": 300,
+      "status": 200,
+      "error_type": null,
+      "wall_seconds": 37.3,
+      "rtf": 0.124,
+      "output_chars": 174,
+      "chars_per_second": 0.58,
+      "completeness_vs_norm": 0.083,
+      "tail_repetition_ratio": 0.0,
+      "segments": 1,
+      "llama_server_rss_mib": 5976.6,
+      "text_tail": "प या सिल्फ होसंगावाज़ जिले के लिए एक अनोखे हैं एक कला के रूप में काफी महत्वपूर्ण दृश्य हैं यहाँ पे प्राचीन सांस्कृतिक धार्मिक धार्मिक स्थान भी जैसे ही होसंगावाज"
+    },
+    {
+      "input_seconds": 600,
+      "status": 500,
+      "error_type": "internal",
+      "wall_seconds": 1.6,
+      "rtf": 0.003,
+      "output_chars": 0,
+      "chars_per_second": 0.0,
+      "completeness_vs_norm": 0.0,
+      "tail_repetition_ratio": 0.0,
+      "segments": 0,
+      "llama_server_rss_mib": 6515.9,
+      "text_tail": ""
+    }
+  ]
+}
