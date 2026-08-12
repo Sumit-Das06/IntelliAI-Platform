@@ -204,7 +204,22 @@ def run(
 
     torch.cuda.reset_peak_memory_stats()
     autocast_dtype = torch.bfloat16 if config.precision == "bf16" else torch.float16
+
+    def validate() -> float | None:
+        """Mean validation loss; restores train mode. None without a split."""
+        if not val_samples:
+            return None
+        model.eval()
+        val_losses: list[float] = []
+        with torch.no_grad():
+            for val_batch in _batches(val_samples, processor, config, shuffle_epoch=None):
+                with torch.autocast("cuda", dtype=autocast_dtype):
+                    val_losses.append(float(model(**val_batch).loss))
+        model.train()
+        return round(sum(val_losses) / max(len(val_losses), 1), 4)
+
     model.train()
+    validation_history: list[tuple[int, float]] = []
     losses: list[float] = []
     step = 0
     epoch = 0
@@ -240,6 +255,10 @@ def run(
                 )
             if not smoke and step % config.checkpoint_every_steps == 0:
                 _checkpoint(model, output_dir, step, mean_loss)
+                boundary_val = validate()
+                if boundary_val is not None:
+                    validation_history.append((step, boundary_val))
+                    print(f"step {step}/{max_steps} validation loss {boundary_val:.4f}")
             if step >= max_steps:
                 break
         epoch += 1
@@ -272,18 +291,15 @@ def run(
             total_parameters=total,
         )
 
-    validation_loss: float | None = None
-    if val_samples:
-        model.eval()
-        val_losses: list[float] = []
-        with torch.no_grad():
-            for batch in _batches(val_samples, processor, config, shuffle_epoch=None):
-                with torch.autocast("cuda", dtype=autocast_dtype):
-                    val_losses.append(float(model(**batch).loss))
-        validation_loss = round(sum(val_losses) / max(len(val_losses), 1), 4)
+    recorded = dict(validation_history)
+    validation_loss = recorded.get(step)
+    if validation_loss is None:
+        validation_loss = validate()
+        if validation_loss is not None:
+            validation_history.append((step, validation_loss))
 
     return RunRecord(
-        experiment="e1-hi-lora",
+        experiment=config.experiment,
         run_at=datetime.datetime.now(tz=datetime.UTC).isoformat(),
         git_commit=env["git_commit"],
         config=config,
@@ -294,6 +310,7 @@ def run(
         steps_completed=step,
         final_train_loss=losses[-1] if losses else float("nan"),
         validation_loss=validation_loss,
+        validation_history=tuple(validation_history),
         peak_vram_mib=round(peak_vram, 1),
         checkpoint_dir=str(final_checkpoint),
         checkpoint_sha256=_adapter_sha256(final_checkpoint),

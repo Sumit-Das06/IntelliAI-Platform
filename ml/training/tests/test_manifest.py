@@ -84,6 +84,71 @@ class TestConfig:
         assert restored.lora.rank == 32
         assert restored.precision == "bf16"
 
+    def test_run_record_carries_the_validation_history(self) -> None:
+        # E1 learned overfitting post-hoc because validation ran once, at
+        # the end. The record now carries the per-checkpoint curve, so
+        # best-checkpoint selection is read off evidence, not guessed.
+        from intelliai_training.config import RunRecord
+
+        config = TrainingConfig(
+            experiment="e1b-hi-lora",
+            base_revision="abc123",
+            manifest_path="m.jsonl",
+            manifest_sha256="0" * 64,
+        )
+        record = RunRecord(
+            experiment=config.experiment,
+            run_at="2026-08-12T00:00:00+00:00",
+            git_commit="deadbeef",
+            config=config,
+            environment={"gpu": "test"},
+            train_samples=100,
+            validation_samples=5,
+            train_duration_seconds=1.0,
+            steps_completed=300,
+            final_train_loss=0.5,
+            validation_loss=0.4,
+            validation_history=((100, 0.6), (200, 0.45), (300, 0.4)),
+            peak_vram_mib=1000.0,
+            checkpoint_dir="weights/x/checkpoint-300",
+            checkpoint_sha256="1" * 64,
+        )
+        restored = RunRecord.model_validate_json(record.model_dump_json())
+        assert restored.validation_history == ((100, 0.6), (200, 0.45), (300, 0.4))
+        assert restored.experiment == "e1b-hi-lora"
+        # Old records (no history) still parse: the field defaults empty.
+        old = json.loads(record.model_dump_json())
+        del old["validation_history"]
+        assert RunRecord.model_validate(old).validation_history == ()
+
+    def test_cli_maps_the_conservative_recipe_into_the_config(self, tmp_path: Path) -> None:
+        from intelliai_training.__main__ import _config_from_args
+
+        manifest = tmp_path / "train.jsonl"
+        write_manifest(manifest)
+        import argparse
+
+        args = argparse.Namespace(
+            experiment="e1b-hi-lora",
+            base_revision="abc123",
+            manifest=str(manifest),
+            manifest_sha=None,
+            max_steps=600,
+            batch_size=8,
+            grad_accum=4,
+            learning_rate=1e-4,
+            warmup_steps=60,
+            checkpoint_every=100,
+            output_dir="weights/e1b-hi-lora",
+            seed=20260811,
+        )
+        config = _config_from_args(args)
+        assert config.experiment == "e1b-hi-lora"
+        assert config.learning_rate == 1e-4
+        assert config.warmup_steps == 60
+        assert config.checkpoint_every_steps == 100
+        assert config.max_steps == 600
+
     def test_trainer_module_imports_without_torch_extra(self) -> None:
         # The lazy-import contract: importing the module must never pull
         # the heavy stack. (In an env WITH the extra this still passes —

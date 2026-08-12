@@ -13,6 +13,7 @@ from intelliai_training.manifest import sha256_file
 def _config_from_args(args: argparse.Namespace) -> TrainingConfig:
     manifest = Path(args.manifest)
     return TrainingConfig(
+        experiment=args.experiment,
         base_revision=args.base_revision,
         manifest_path=manifest.as_posix(),
         manifest_sha256=args.manifest_sha or sha256_file(manifest),
@@ -20,6 +21,8 @@ def _config_from_args(args: argparse.Namespace) -> TrainingConfig:
         per_device_batch_size=args.batch_size,
         gradient_accumulation=args.grad_accum,
         learning_rate=args.learning_rate,
+        warmup_steps=args.warmup_steps,
+        checkpoint_every_steps=args.checkpoint_every,
         output_dir=args.output_dir,
         seed=args.seed,
     )
@@ -38,6 +41,9 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--batch-size", type=int, default=8)
         p.add_argument("--grad-accum", type=int, default=4)
         p.add_argument("--learning-rate", type=float, default=1e-3)
+        p.add_argument("--warmup-steps", type=int, default=100)
+        p.add_argument("--checkpoint-every", type=int, default=500)
+        p.add_argument("--experiment", default="e1-hi-lora")
         p.add_argument("--output-dir", default="weights/e1-hi-lora")
         p.add_argument("--seed", type=int, default=20260811)
         p.add_argument("--out", required=True, help="report/record JSON path")

@@ -24,6 +24,10 @@ class TrainingConfig(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    # The experiment this run belongs to — names the run record so a
+    # conservative retrain (e1b) can never masquerade as the original.
+    experiment: str = "e1-hi-lora"
+
     # Base lineage — the transformers checkpoint, pinned to a revision.
     base_model_id: str = "openai/whisper-small"
     base_revision: str  # commit sha of the HF repo, recorded at run time
@@ -94,6 +98,11 @@ class RunRecord(BaseModel):
     steps_completed: int
     final_train_loss: float
     validation_loss: float | None
+    # (step, validation_loss) at every checkpoint boundary. E1 computed
+    # validation ONCE, after the damage was done — overfitting was found
+    # post-hoc. Monitoring during the run is what makes best-checkpoint
+    # selection an evidence-based act instead of a guess.
+    validation_history: tuple[tuple[int, float], ...] = ()
     peak_vram_mib: float
     checkpoint_dir: str
     checkpoint_sha256: str  # hash of the adapter safetensors
