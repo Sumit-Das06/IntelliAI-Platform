@@ -529,6 +529,10 @@ class LevelResult(BaseModel):
     wall_seconds: float
     p50_ms: float | None
     p95_ms: float | None
+    # Added Milestone 16 (additive; older committed ladders parse with
+    # None): at 20 workers the sample is large enough that the tail
+    # deserves its own number.
+    p99_ms: float | None = None
     throughput_rps: float
     mean_rtf: float | None
     max_pool_admitted: int | None = None

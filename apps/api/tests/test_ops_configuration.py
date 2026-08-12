@@ -42,6 +42,16 @@ def test_only_caddy_faces_the_internet_in_the_prod_overlay() -> None:
     assert "INTELLIAI_STT_SLOTS: whisper" in PROD_OVERLAY
 
 
+def test_research_engines_never_appear_in_committed_deployments() -> None:
+    # Milestone 16 production-disabled guard: the qwen3-asr engine is
+    # research-only until the switching gates pass and a founder promotes
+    # it via the catalog (docs/ops/model-rollout.md). No committed compose
+    # file may declare it — a research candidate reaching a deployment
+    # declaration must be a loud, reviewed diff, never drift.
+    for overlay in (COMPOSE, PROD_OVERLAY):
+        assert "qwen3" not in overlay.lower()
+
+
 def test_secrets_are_required_never_defaulted_in_compose() -> None:
     # `:?` makes compose refuse to start without a value — a dev default
     # can never silently become a production credential.

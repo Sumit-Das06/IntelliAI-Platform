@@ -92,6 +92,59 @@ QWEN3_ASR_0_6B_FILES: Final = ArtifactSpec(
 #: checkpoint is a pinned entry here, never a declaration.
 ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {ARTIFACT_ID: QWEN3_ASR_0_6B_FILES}
 
+#: The serving RUNTIME is pinned exactly like the weights (Milestone 16,
+#: supply-chain law): the llama.cpp build is part of the measured system,
+#: so an unpinned binary must never silently become the thing a research
+#: record describes. These are the load-bearing files of the b10344
+#: win-cpu-x64 distribution (zip sha256 c0cec8825843957cae6620f927eb6eb9
+#: f7f4680da3206910932ea9075f91b405; build `10344 (7a20b417f)`, Clang
+#: 20.1.8, Windows x86_64), hashed 2026-08-12. Adopting a new build is a
+#: reviewed edit to this table — never an environment variable.
+RUNTIME_BUILD: Final = "llama.cpp b10344 (7a20b417f) win-cpu-x64, Clang 20.1.8"
+
+RUNTIME_BINARY_PINS: Final[dict[str, str]] = {
+    "llama-server.exe": "b2ace4b8aed7c60e217fcaed8541850f4998539b8478880f1c3264387a0a8d97",
+    "llama-server-impl.dll": "27eb413c373bad732533c3d8cde7d0841a0038be59485e2da6a4b0d323a9f8ad",
+    "llama.dll": "b1e503807cf5811569eaa3cd867830ad73535f51efc4138b042b81284a90146f",
+    "mtmd.dll": "cd0c5118f34ebabb706a1e4deb3a7a469ca030ef4501e14d91b0fcfeef294e45",
+    "ggml.dll": "112c29c592a9b0f86bfc91aed9397d64bbd06552f68c9d503f3bbb1a545503ab",
+    "ggml-base.dll": "58ef8ecf8e2a1935df8016739d7ffa2c27ab5957bade9da2273fa7ec8ed9a0b1",
+}
+
+
+def verify_runtime_binaries(server_binary: Path) -> None:
+    """Refuse to serve through a runtime build we did not pin.
+
+    The GGUF weights are verified by the ArtifactStore at boot; this
+    closes the OTHER half of the supply chain — the decoder executing
+    them. Hash mismatch and missing file are the same refusal: an
+    unverifiable runtime is an unpinned runtime.
+    """
+    import hashlib
+
+    directory = server_binary.parent
+    for filename, expected in RUNTIME_BINARY_PINS.items():
+        candidate = directory / filename
+        if not candidate.exists():
+            msg = (
+                f"pinned runtime file {filename!r} is missing beside {server_binary}; "
+                f"the qwen3-asr engine serves ONLY through the pinned build ({RUNTIME_BUILD})"
+            )
+            raise ValueError(msg)
+        digest = hashlib.sha256()
+        with candidate.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1 << 20), b""):
+                digest.update(chunk)
+        if digest.hexdigest() != expected:
+            msg = (
+                f"runtime file {filename!r} does not match its pin; refusing to serve "
+                f"through an unpinned build. Expected the {RUNTIME_BUILD} distribution; "
+                "adopting a new build is a reviewed edit to RUNTIME_BINARY_PINS, "
+                "never a swap on disk"
+            )
+            raise ValueError(msg)
+
+
 #: The fixed ASR prompt (matches the 15B spike and the model's intended
 #: use). Language is NOT selectable through this model's request surface:
 #: it auto-detects and self-reports via the output header, which the
@@ -196,7 +249,7 @@ class Qwen3AsrEngine:
                 "prompt": ASR_PROMPT,
                 "output_marker": ASR_MARKER,
                 "timestamps": "false",  # this lineage's ASR models emit none
-                "server": "llama.cpp llama-server (pinned CPU build)",
+                "server_build": RUNTIME_BUILD,
                 "audio_transport": "wav s16le via input_audio",
                 "request_timeout_seconds": str(self._timeout_seconds),
             },
@@ -237,15 +290,18 @@ class Qwen3AsrEngine:
             ) as response:
                 body = json.loads(response.read().decode("utf-8"))
             content = str(body["choices"][0]["message"]["content"])
+        # Error messages carry NO engine or model names: the runtime's
+        # envelope may be forwarded by layers that must never reveal what
+        # serves a request (Milestone 16 drill finding).
         except (TimeoutError, urllib.error.URLError) as exc:
             raise RuntimeServiceError(
                 RuntimeErrorType.INTERNAL,
-                "the qwen3-asr decode did not complete in time",
+                "the transcription backend did not answer in time",
             ) from exc
         except (KeyError, IndexError, TypeError, ValueError, json.JSONDecodeError) as exc:
             raise RuntimeServiceError(
                 RuntimeErrorType.INTERNAL,
-                "the qwen3-asr decoder returned an unreadable response",
+                "the transcription backend returned an unreadable response",
             ) from exc
 
         emitted, text = parse_asr_output(content)
@@ -313,6 +369,7 @@ def load_qwen3_asr(
             "to its llama-server executable"
         )
         raise ValueError(msg)
+    verify_runtime_binaries(server_binary)
 
     port = _free_port()
     base_url = f"http://127.0.0.1:{port}"

@@ -238,12 +238,22 @@ class TestTranscription:
         with pytest.raises(RuntimeServiceError) as excinfo:
             _engine(stub_server).transcribe(_audio(), TranscriptionRequest())
         assert excinfo.value.error_type.value == "internal"
+        self._assert_message_names_nothing_internal(excinfo.value.message)
 
     def test_timeout_is_a_contract_error_not_a_hang(self, stub_server: str) -> None:
         _StubHandler.mode = "slow"
         with pytest.raises(RuntimeServiceError) as excinfo:
             _engine(stub_server, timeout=0.3).transcribe(_audio(), TranscriptionRequest())
         assert excinfo.value.error_type.value == "internal"
+        self._assert_message_names_nothing_internal(excinfo.value.message)
+
+    @staticmethod
+    def _assert_message_names_nothing_internal(message: str) -> None:
+        # Milestone 16 drill finding: envelope messages travel further
+        # than the runtime, so they name no engine, model, or library.
+        lowered = message.lower()
+        for marker in ("qwen", "llama", "gguf", "ggml", "whisper"):
+            assert marker not in lowered, message
 
     def test_close_terminates_the_child(self, stub_server: str) -> None:
         fake = _FakeProcess()
@@ -285,3 +295,44 @@ class TestLoaderRefusals:
     def test_missing_server_binary_is_an_actionable_error(self, tmp_path: Path) -> None:
         with pytest.raises(ValueError, match="INTELLIAI_STT_QWEN3_SERVER_BINARY"):
             qwen3_asr.load_qwen3_asr(tmp_path, server_binary=tmp_path / "does-not-exist.exe")
+
+
+class TestRuntimeSupplyChain:
+    """Milestone 16: the decoder build is pinned like the weights."""
+
+    def test_the_pin_table_covers_the_load_bearing_files(self) -> None:
+        names = set(qwen3_asr.RUNTIME_BINARY_PINS)
+        # The server executable and every library that executes model
+        # bytes. A pin table that lost one of these would verify a shell
+        # around an unverified core.
+        assert {"llama-server.exe", "llama-server-impl.dll", "llama.dll", "mtmd.dll"} <= names
+        for digest in qwen3_asr.RUNTIME_BINARY_PINS.values():
+            assert len(digest) == 64
+            assert set(digest) <= set("0123456789abcdef")
+
+    def test_an_unpinned_binary_is_refused(self, tmp_path: Path) -> None:
+        # A directory with the right filenames but wrong bytes: the exact
+        # shape of a silent build swap.
+        for filename in qwen3_asr.RUNTIME_BINARY_PINS:
+            (tmp_path / filename).write_bytes(b"not the pinned build")
+        with pytest.raises(ValueError, match="unpinned build"):
+            qwen3_asr.verify_runtime_binaries(tmp_path / "llama-server.exe")
+
+    def test_a_missing_runtime_file_is_refused_not_skipped(self, tmp_path: Path) -> None:
+        # An empty directory: nothing to hash is the same refusal as a
+        # wrong hash — an unverifiable runtime is an unpinned runtime.
+        with pytest.raises(ValueError, match="missing beside"):
+            qwen3_asr.verify_runtime_binaries(tmp_path / "llama-server.exe")
+
+    def test_load_verifies_before_spawning(self, tmp_path: Path) -> None:
+        # An existing-but-unpinned binary must be refused by load itself,
+        # before any process is spawned.
+        server = tmp_path / "llama-server.exe"
+        server.write_bytes(b"impostor")
+        with pytest.raises(ValueError, match="pinned"):
+            qwen3_asr.load_qwen3_asr(tmp_path, server_binary=server)
+
+    def test_description_names_the_pinned_build(self) -> None:
+        params = _engine("http://127.0.0.1:9").describe().decode_params
+        assert params["server_build"] == qwen3_asr.RUNTIME_BUILD
+        assert "b10344" in params["server_build"]

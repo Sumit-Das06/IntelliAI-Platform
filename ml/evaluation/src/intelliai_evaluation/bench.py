@@ -204,6 +204,7 @@ async def run_level(
         wall_seconds=round(wall, 2),
         p50_ms=round(nearest_rank(latencies, 0.50), 1) if latencies else None,
         p95_ms=round(nearest_rank(latencies, 0.95), 1) if latencies else None,
+        p99_ms=round(nearest_rank(latencies, 0.99), 1) if latencies else None,
         throughput_rps=round(len(succeeded) / wall, 3) if wall > 0 else 0.0,
         mean_rtf=(
             round(sum(inference) / len(inference) / 1000.0 / clip_seconds, 4) if inference else None
