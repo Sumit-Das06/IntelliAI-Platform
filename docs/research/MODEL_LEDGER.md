@@ -854,4 +854,46 @@ delta (hi segment count under verbose_json).
 
 ---
 
+---
+
+## Milestone 17 — production canary preparation (appended 2026-08-12)
+
+Full report: [2026-08-12-qwen3-production-canary-prep.md](2026-08-12-qwen3-production-canary-prep.md).
+Operational hardening + Linux validation; no accuracy re-litigation,
+no promotion.
+
+**Qwen3-ASR 0.6B (identity unchanged; runtime now pinned per-platform: win32 AND linux b10344 @ 7a20b417f, six hashes each, verify-at-load)**
+- 2026-08-12 — **switching_validated → canary_ready** *(evidence;
+  promotion still NOT granted — it is a prepared diff awaiting the
+  founder)* — **[EVIDENCE]** The pinned LINUX build (ubuntu-x64, GNU
+  11.4.0) reproduced the frozen primary at **CER 0.14594** (Windows:
+  0.1457/0.1446 — within 0.0003), 0 probes, 0 failures, ladder plateau
+  2.27 rps ≈ the Windows envelope. **[DRILL, live ×2]** Slot-truthful
+  readiness (unready in 0.76 s; degraded-vs-dead-default semantics) +
+  supervised bounded restart (total outage 9.8–9.9 s; refusals 0.04 s,
+  `not_ready`, no leak) + **zero orphans including the forced
+  mid-spawn stop window** (an orphan defect this milestone's own drill
+  found and fixed same-day). **Long-audio finding [DRILL→FIX]:** at
+  ctx 4096 the 600 s product ceiling is NOT supportable — 120 s
+  complete, **300 s silently truncated to 8 % with a 200**, 600 s
+  errored, RSS to 6.5 GiB; the engine now refuses >120 s with a clean
+  400 (re-verified live). **Catalog prepared [FACT]:** the promotion
+  is a validated, unreachable diff (proposals.py) with the quality
+  baseline riding ON the route and a PENDING-approval sentinel a test
+  refuses to ever see live; rollback route pinned verbatim. Honest
+  caveat: Linux validation ran on WSL2 Ubuntu on the dev laptop — real
+  kernel, real pinned binaries, NOT VPS hardware; the session scripts
+  are committed for the VPS re-run — evidence:
+  [linux eval](../../ml/evaluation/stt/results/2026-08-12-research-qwen3-asr-0.6b-hi-17-linux.json) ·
+  [linux ladder](../../ml/evaluation/stt/benchmarks/2026-08-12-qwen3-asr-0.6b-linux-wsl2-ladder.json) ·
+  [drills + long-audio + scripts](../../research/experiments/17-canary-prep/)
+
+**Consequence for priorities:** next milestone = production canary
+(vendored runtime layer → VPS re-validation with the committed
+scripts → founder decisions: the switch, the segment disclosure, the
+promotion commit). Engineering evidence is complete; the remaining
+inputs are hardware access and one human decision.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*
