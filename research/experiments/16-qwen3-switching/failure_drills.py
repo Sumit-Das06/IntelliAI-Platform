@@ -13,6 +13,7 @@ import argparse
 import datetime
 import json
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -50,19 +51,45 @@ def request(client: httpx.Client, artifact: str, *, language: str | None = "hi")
 
 
 def llama_server_pids() -> list[int]:
+    if sys.platform == "win32":
+        completed = subprocess.run(
+            ["tasklist", "/FI", "IMAGENAME eq llama-server.exe", "/FO", "CSV", "/NH"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        pids: list[int] = []
+        for line in completed.stdout.splitlines():
+            parts = [p.strip('"') for p in line.split('","')]
+            if len(parts) >= 2 and parts[0].lower() == "llama-server.exe":
+                pids.append(int(parts[1]))
+        return pids
     completed = subprocess.run(
-        ["tasklist", "/FI", "IMAGENAME eq llama-server.exe", "/FO", "CSV", "/NH"],  # noqa: S607
+        ["pgrep", "-x", "llama-server"],  # noqa: S607
         capture_output=True,
         text=True,
         timeout=15,
         check=False,
     )
-    pids: list[int] = []
-    for line in completed.stdout.splitlines():
-        parts = [p.strip('"') for p in line.split('","')]
-        if len(parts) >= 2 and parts[0].lower() == "llama-server.exe":
-            pids.append(int(parts[1]))
-    return pids
+    return [int(line) for line in completed.stdout.split() if line.strip().isdigit()]
+
+
+def kill_pid(pid: int) -> None:
+    if sys.platform == "win32":
+        subprocess.run(  # noqa: S603 — the drill IS the kill
+            ["taskkill", "/F", "/PID", str(pid)],  # noqa: S607
+            capture_output=True,
+            timeout=15,
+            check=False,
+        )
+        return
+    subprocess.run(  # noqa: S603 — the drill IS the kill
+        ["kill", "-9", str(pid)],  # noqa: S607
+        capture_output=True,
+        timeout=15,
+        check=False,
+    )
 
 
 def main() -> int:
@@ -87,12 +114,7 @@ def main() -> int:
             pids = llama_server_pids()
             drills["llama_server_pids_before_kill"] = pids
             for pid in pids:
-                subprocess.run(  # noqa: S603 — the drill IS the kill
-                    ["taskkill", "/F", "/PID", str(pid)],  # noqa: S607
-                    capture_output=True,
-                    timeout=15,
-                    check=False,
-                )
+                kill_pid(pid)
             time.sleep(2)
             drills["qwen_after_child_killed"] = request(client, QWEN)
             drills["qwen_after_child_killed_repeat"] = request(client, QWEN)
