@@ -19,7 +19,7 @@ from enum import StrEnum
 from functools import lru_cache
 from typing import Final, Literal
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 SERVICE_NAME = "intelliai-api"
@@ -241,6 +241,26 @@ class Settings(BaseSettings):
 
     env: Environment = Environment.DEV
     log_level: LogLevel = "INFO"
+
+    # ── Registry profile (Milestone 18) ────────────────────────────────
+    # "production" composes the live catalog exactly as reviewed.
+    # "staging" ADDITIONALLY activates the prepared-but-unpromoted
+    # proposals (registry/proposals.py) for LOCAL/STAGING verification —
+    # the only sanctioned way to route a request to a research candidate
+    # through the real gateway. Guard tests pin: the default is
+    # production, and no committed compose file ever sets this variable.
+    registry_profile: Literal["production", "staging"] = "production"
+
+    @model_validator(mode="after")
+    def _staging_never_reaches_prod(self) -> "Settings":
+        if self.registry_profile == "staging" and self.env is Environment.PROD:
+            msg = (
+                "INTELLIAI_REGISTRY_PROFILE=staging is refused when INTELLIAI_ENV=prod: "
+                "research candidates reach production only through the reviewed "
+                "promotion commit (registry/proposals.py), never through configuration"
+            )
+            raise ValueError(msg)
+        return self
 
     auth: AuthSettings = Field(default_factory=AuthSettings)
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)

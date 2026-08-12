@@ -26,6 +26,7 @@ from intelliai_api.core.logging import configure_logging
 from intelliai_api.db.engine import create_engine, create_session_factory
 from intelliai_api.limits import AdmissionController, RedisLimiterBackend
 from intelliai_api.registry import default_registry
+from intelliai_api.registry.proposals import staging_registry
 from intelliai_api.runtimes import HTTPRuntimeClient, RuntimeClient
 from intelliai_api.storage import ObjectStorage, S3ObjectStorage
 
@@ -72,8 +73,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.engine = engine
     app.state.session_factory = create_session_factory(engine)
     app.state.health = HealthService(default_checks(settings, engine))
-    # The registry composes (and license-gates) at startup.
-    app.state.registry = default_registry()
+    # The registry composes (and license-gates) at startup. The staging
+    # profile (Milestone 18) additionally activates the prepared
+    # proposals for LOCAL verification — refused under prod env by the
+    # settings layer, absent from every committed compose (guard-tested),
+    # and logged loudly so no capture of this process can be mistaken
+    # for the reviewed production catalog.
+    if settings.registry_profile == "staging":
+        app.state.registry = staging_registry()
+        structlog.get_logger(__name__).warning(
+            "registry_profile_staging",
+            detail="prepared proposals are ACTIVE; never serve production traffic",
+        )
+    else:
+        app.state.registry = default_registry()
     # Keyed by DEPLOYMENT (ADR-0026): one capability service is a set of
     # deployments, and resolution names which one hosts the artifact it
     # chose. The default deployment of each capability carries the

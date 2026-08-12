@@ -42,6 +42,14 @@ def test_only_caddy_faces_the_internet_in_the_prod_overlay() -> None:
     assert "INTELLIAI_STT_SLOTS: whisper" in PROD_OVERLAY
 
 
+def test_the_staging_registry_profile_is_never_committed_configuration() -> None:
+    # Milestone 18: INTELLIAI_REGISTRY_PROFILE=staging activates the
+    # prepared proposals. It is a LOCAL, hand-set choice — a committed
+    # compose file carrying it would be a promotion that skipped review.
+    for overlay in (COMPOSE, PROD_OVERLAY):
+        assert "INTELLIAI_REGISTRY_PROFILE" not in overlay
+
+
 def test_research_engines_never_appear_in_committed_deployments() -> None:
     # Milestone 16 production-disabled guard: the qwen3-asr engine is
     # research-only until the switching gates pass and a founder promotes

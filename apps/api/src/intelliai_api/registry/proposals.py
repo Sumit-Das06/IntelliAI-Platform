@@ -21,6 +21,7 @@ promotion commit lands.
 from datetime import date
 from typing import Final
 
+from intelliai_api.registry.catalog import _ARTIFACTS, _MODELS, _ROUTES, _VOICES
 from intelliai_api.registry.records import (
     ArtifactRecord,
     CorpusOwnership,
@@ -30,6 +31,7 @@ from intelliai_api.registry.records import (
     RouteSelector,
     ServingRoute,
 )
+from intelliai_api.registry.registry import Registry
 from intelliai_runtime_contract import Capability
 
 #: The evidence.approval sentinel. A proposal is constructible only in
@@ -106,6 +108,32 @@ QWEN3_HINDI_ROUTE: Final = ServingRoute(
     license=_QWEN3_HI_SERVING_PATH,
     evidence=QWEN3_HI_EVIDENCE,
 )
+
+
+def staging_registry() -> Registry:
+    """The live catalog PLUS the prepared proposals — staging only.
+
+    This is the exact composition the promotion commit would make
+    permanent, built at runtime for local/staging verification
+    (Milestone 18). It is reachable exclusively through
+    ``INTELLIAI_REGISTRY_PROFILE=staging``, which the settings layer
+    refuses under ``INTELLIAI_ENV=prod`` and which no committed compose
+    file sets (guard-tested). Production keeps composing
+    ``default_registry()`` — the reviewed catalog, nothing else.
+    """
+    routes = tuple(
+        QWEN3_HINDI_ROUTE
+        if (route.public_model_id == "intelliai-stt" and route.selector.language == "hi")
+        else route
+        for route in _ROUTES
+    )
+    return Registry(
+        artifacts=(*_ARTIFACTS, QWEN3_ASR_ARTIFACT),
+        models=_MODELS,
+        voices=_VOICES,
+        routes=routes,
+    )
+
 
 #: THE ROLLBACK TARGET, restated verbatim from today's live catalog: the
 #: revert of the promotion commit must land exactly this route, and the

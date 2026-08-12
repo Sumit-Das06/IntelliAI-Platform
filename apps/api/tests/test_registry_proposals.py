@@ -9,6 +9,9 @@ Three guarantees, each load-bearing for the canary plan:
    decision must physically replace it.
 """
 
+import pytest
+
+from intelliai_api.core.config import Settings
 from intelliai_api.registry.catalog import _ARTIFACTS, _MODELS, _ROUTES, _VOICES, default_registry
 from intelliai_api.registry.proposals import (
     APPROVAL_PENDING,
@@ -16,6 +19,7 @@ from intelliai_api.registry.proposals import (
     QWEN3_HI_EVIDENCE,
     QWEN3_HINDI_ROUTE,
     ROLLBACK_HINDI_ROUTE,
+    staging_registry,
 )
 from intelliai_api.registry.registry import Registry
 
@@ -59,6 +63,27 @@ class TestTheProposalIsActivatable:
         assert QWEN3_HI_EVIDENCE.corpus == "stt-hi-public-eval@v1"
         assert QWEN3_HI_EVIDENCE.quality_baseline.startswith("2026-08-12-research-qwen3")
         assert QWEN3_HI_EVIDENCE.production_benchmark.startswith("2026-08-12-qwen3")
+
+
+class TestStagingProfile:
+    """Milestone 18: the ONLY sanctioned path from gateway to candidate."""
+
+    def test_staging_registry_routes_hindi_to_the_candidate(self) -> None:
+        staging = staging_registry()
+        assert staging.resolve("intelliai-stt", language="hi").artifact.id == "qwen3-asr-0.6b"
+        # Everything else keeps the incumbent — the switch is per-language.
+        assert staging.resolve("intelliai-stt", language="en").artifact.id == "whisper-small"
+        assert staging.resolve("intelliai-stt", language=None).artifact.id == "whisper-small"
+        assert staging.resolve("intelliai-stt", language="ar").artifact.id == "whisper-small"
+
+    def test_the_default_profile_is_production(self) -> None:
+        # A gateway started with no configuration composes the reviewed
+        # catalog. Staging is an explicit, loud choice — never a default.
+        assert Settings.model_fields["registry_profile"].default == "production"
+
+    def test_staging_is_refused_under_prod_env(self) -> None:
+        with pytest.raises(ValueError, match=r"reviewed\s+promotion commit"):
+            Settings(env="prod", registry_profile="staging")
 
 
 class TestTheLiveRegistryIsUntouched:
