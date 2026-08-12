@@ -754,4 +754,57 @@ if fine-tuning resumes it resumes as the E1c diagnostic, founder-gated.
 
 ---
 
+---
+
+## Milestone 15E — Qwen3-ASR engine adapter: the first positive result (appended 2026-08-12)
+
+Full report: [2026-08-12-qwen3-asr-adapter-evaluation.md](2026-08-12-qwen3-asr-adapter-evaluation.md).
+The candidate now has a real engine behind the runtime contract; these
+are standard-runner EvalRuns on the frozen manifests, not spike readings.
+
+**Qwen3-ASR 0.6B (ggml-org Q8_0 GGUF @ 928ab958, pins bca25981/41a342b5; upstream Qwen/Qwen3-ASR-0.6B @ 5eb14417, apache-2.0 verified on the 0.6B card 2026-08-12)**
+- 2026-08-12 — **Researching → measured STRONG CANDIDATE** *(evidence;
+  promotion NOT granted — switching test + productization owed)* —
+  **[EVIDENCE]** On `stt-hi-public-eval@v1` (sha cf643146, 153 clips,
+  same ruler/harness/decode-discipline as the official baseline), via
+  the new `qwen3-asr` engine (pinned llama.cpp b10344 llama-server,
+  ctx 4096, greedy): **cer_unicode 0.1457 (replicate 0.1446 — spread
+  0.0011) vs the incumbent's 0.3629 — −60%, ~15× the noise band**;
+  wer_unicode 0.2851 (replicate identical); insertion_rate 0.0169
+  (HALF the incumbent's); **0 hallucinated probe words** (six probes
+  across hi/en/zh, all silent); recognition_rtf 0.207/0.152, p50
+  1.45 s, **p95 3.32 s vs the incumbent's 24.2 s**; 0 failures.
+  English intact (WER 0.0, RTF 0.061). **Chinese cer_unicode 0.1129**
+  on the frozen zh comparability manifest, RTF 0.094. Peak RSS
+  **1,362.5 MiB** (ctx-4096 KV pre-allocated; flat under load); model
+  load 1.0 s. The incumbent has now shown measured weakness on its own
+  primary — the roadmap's precondition for a challenger is met by
+  ledger evidence. Owed before any promotion: vendored/reviewed
+  llama.cpp build, concurrency ladder, the formal switching test, and
+  the hi timestamp-granularity decision (no aligner for hi) — evidence:
+  [hi](../../ml/evaluation/stt/results/2026-08-12-research-qwen3-asr-0.6b-hi-15e.json) ·
+  [replicate](../../ml/evaluation/stt/results/2026-08-12-research-qwen3-asr-0.6b-hi-15e-replicate.json) ·
+  [en](../../ml/evaluation/stt/results/2026-08-12-research-qwen3-asr-0.6b-en-15e.json) ·
+  [zh](../../ml/evaluation/stt/results/2026-08-12-research-qwen3-asr-0.6b-zh-15e.json) ·
+  [RSS/load](../../research/experiments/15e-qwen3-adapter/rss-eval-session.json)
+
+**whisper-small-hi-lora-e1b — E1c decode-mode diagnostic [SPIKE, arms compare to each other only]**
+- 2026-08-12 — *status unchanged (Rejected)* — The E1b close-out's
+  prime remediation suspect (`<|notimestamps|>` training labels vs
+  timestamped product decode) is **REFUTED**: decoding the same failed
+  artifact with `without_timestamps=True` made it 2.5× WORSE (CER
+  0.75→1.90, insertions 0.56→1.85, probes 116→66 on the 30-clip
+  subset). The adapter damaged sequence termination in BOTH decode
+  modes. The whisper-small LoRA r32/q+v family is dead on three
+  independently tested axes (schedule, checkpoint, decode mode); the
+  fine-tuning pause is now a measured conclusion — evidence:
+  [e1c-results.json](../../research/experiments/15e-qwen3-adapter/e1c-results.json)
+
+**Consequence for priorities:** Milestone 16 should be the Hindi
+switching test + Qwen3 productization plan (vendored binary,
+concurrency ladder, segment-granularity decision). Whisper remains the
+serving incumbent until that test rules; nothing changed in production.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*
