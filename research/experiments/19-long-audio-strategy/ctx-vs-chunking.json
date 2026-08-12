@@ -1,0 +1,186 @@
+{
+  "ctx4096": {
+    "probe": "19-long-audio-strategy",
+    "NOT_LEDGER_EVIDENCE": "concatenated-clip sandbox probe; read beside the frozen benchmark, never entered in it",
+    "label": "ctx4096",
+    "mode": "direct",
+    "run_at": "2026-08-12T16:01:19.119518+00:00",
+    "rows": {
+      "120s": {
+        "failure": null,
+        "wall_seconds": 49.4,
+        "peak_rss_mib": 1551.5,
+        "output_chars": 1370,
+        "tail_repetition": 0.0,
+        "text_tail": "ते हैं इसलिए समझने में थोड़ी दिक्कत होती है हम लोग की तो भाषा हिंदी ही है तो जैसे मतलब जैसे कोई खाना वाना बना या फिर कुछ",
+        "cer_unicode": 0.1625,
+        "wer_unicode": 0.2795,
+        "completeness_chars": 0.924
+      },
+      "180s": {
+        "failure": null,
+        "wall_seconds": 87.1,
+        "peak_rss_mib": 1895.7,
+        "output_chars": 1846,
+        "tail_repetition": 0.0,
+        "text_tail": "सलिए हम इसलिए हम मतलब जितना बात करते हैं थोड़ा बहुत बात कर लेते हैं और बाकी कोई दिक्कत नहीं है सब ठीक है इमामी रिफाइंड स",
+        "cer_unicode": 0.2388,
+        "wer_unicode": 0.3282,
+        "completeness_chars": 0.829
+      },
+      "300s": {
+        "failure": null,
+        "wall_seconds": 54.3,
+        "peak_rss_mib": 2393.5,
+        "output_chars": 176,
+        "tail_repetition": 0.0,
+        "text_tail": "ो जीरो दो पंजीकरण करने के लिए ओटीपी तीन दो आठ चार सात दो का उपयोग करें क्या क्या चीज लेना हाँ और अभी तो आलू हुआ है गेहूं",
+        "cer_unicode": 0.9515,
+        "wer_unicode": 0.956,
+        "completeness_chars": 0.051
+      },
+      "600s": {
+        "failure": "HTTPError: HTTP Error 400: Bad Request",
+        "wall_seconds": 2.8,
+        "peak_rss_mib": 2581.3,
+        "output_chars": 0,
+        "tail_repetition": 0.0,
+        "text_tail": ""
+      }
+    }
+  },
+  "ctx8192": {
+    "probe": "19-long-audio-strategy",
+    "NOT_LEDGER_EVIDENCE": "concatenated-clip sandbox probe; read beside the frozen benchmark, never entered in it",
+    "label": "ctx8192",
+    "mode": "direct",
+    "run_at": "2026-08-12T16:10:40.096519+00:00",
+    "rows": {
+      "120s": {
+        "failure": null,
+        "wall_seconds": 53.0,
+        "peak_rss_mib": 1999.9,
+        "output_chars": 1370,
+        "tail_repetition": 0.0,
+        "text_tail": "ते हैं इसलिए समझने में थोड़ी दिक्कत होती है हम लोग की तो भाषा हिंदी ही है तो जैसे मतलब जैसे कोई खाना वाना बना या फिर कुछ",
+        "cer_unicode": 0.1625,
+        "wer_unicode": 0.2795,
+        "completeness_chars": 0.924
+      },
+      "180s": {
+        "failure": null,
+        "wall_seconds": 105.0,
+        "peak_rss_mib": 2344.3,
+        "output_chars": 2204,
+        "tail_repetition": 0.0,
+        "text_tail": "हार आ गया था बोर्ड के प्रत्यक्ष और इधर भी तो अच्छा ही गया है लोगों का एग्जाम कैट हो रहे हैं सब आगे देखिए कि क्या होता है",
+        "cer_unicode": 0.0934,
+        "wer_unicode": 0.2092,
+        "completeness_chars": 0.989
+      },
+      "300s": {
+        "failure": null,
+        "wall_seconds": 212.3,
+        "peak_rss_mib": 2878.8,
+        "output_chars": 3281,
+        "tail_repetition": 0.0,
+        "text_tail": "ं तो आप सॉफ्टवेयर एक बार आ जाएं तो हम आपको बता दें कि क्या चीज़ है कैसा लग रहा है हाँ मार्केट है आपके विशेषतः हमारे यहाँ",
+        "cer_unicode": 0.1716,
+        "wer_unicode": 0.3019,
+        "completeness_chars": 0.942
+      },
+      "600s": {
+        "failure": null,
+        "wall_seconds": 159.9,
+        "peak_rss_mib": 3753.2,
+        "output_chars": 379,
+        "tail_repetition": 0.0,
+        "text_tail": " अच्छा हुआ है इस बार रेट भी है अच्छा खासा इस बार देखिए हैं जो मटर का भी अच्छा खासा रह रहा है लेना क्या चीज़ है आलू का भी",
+        "cer_unicode": 0.9523,
+        "wer_unicode": 0.954,
+        "completeness_chars": 0.049
+      }
+    }
+  },
+  "ctx16384": {
+    "probe": "19-long-audio-strategy",
+    "NOT_LEDGER_EVIDENCE": "concatenated-clip sandbox probe; read beside the frozen benchmark, never entered in it",
+    "label": "ctx16384",
+    "mode": "direct",
+    "run_at": "2026-08-12T16:23:07.129902+00:00",
+    "rows": {
+      "300s": {
+        "failure": null,
+        "wall_seconds": 209.1,
+        "peak_rss_mib": 2941.7,
+        "output_chars": 3281,
+        "tail_repetition": 0.0,
+        "text_tail": "ं तो आप सॉफ्टवेयर एक बार आ जाएं तो हम आपको बता दें कि क्या चीज़ है कैसा लग रहा है हाँ मार्केट है आपके विशेषतः हमारे यहाँ",
+        "cer_unicode": 0.1716,
+        "wer_unicode": 0.3019,
+        "completeness_chars": 0.942
+      },
+      "600s": {
+        "failure": null,
+        "wall_seconds": 497.5,
+        "peak_rss_mib": 3817.4,
+        "output_chars": 6425,
+        "tail_repetition": 0.0,
+        "text_tail": " तरह हम खाना बनाते हैं और बर्बाद अपना खाना नहीं करते चावल भी बस्ता तो उसको फ्राई कर देते हैं और डालो वो बस्ता है तो उसको",
+        "cer_unicode": 0.2515,
+        "wer_unicode": 0.3858,
+        "completeness_chars": 0.836
+      }
+    }
+  },
+  "chunk100x5-ctx4096": {
+    "probe": "19-long-audio-strategy",
+    "NOT_LEDGER_EVIDENCE": "concatenated-clip sandbox probe; read beside the frozen benchmark, never entered in it",
+    "label": "chunk100x5-ctx4096",
+    "mode": "chunked",
+    "run_at": "2026-08-12T16:28:10.989986+00:00",
+    "rows": {
+      "300s": {
+        "failure": null,
+        "wall_seconds": 81.3,
+        "peak_rss_mib": 2334.4,
+        "output_chars": 3521,
+        "tail_repetition": 0.0,
+        "text_tail": " तो आप सॉफ्टवेयर एक बार आ जाएं, तो हम आपको बता दें कि क्या सही है कैसा लग रहा है। हाँ मार्केट है आपके विषय तो हमारे यहाँ",
+        "cer_unicode": 0.2092,
+        "wer_unicode": 0.3434,
+        "completeness_chars": 1.009,
+        "chunks": 4,
+        "chunk_seconds": 100.0,
+        "overlap_seconds": 5.0,
+        "seams": [
+          "… बहुत इंग्लिश में बात कर रहे थे जो जितना मुझे आता है हम उतना ⇢ नहीं बोल पाते तो हम लोग थोड़ा बहुत इंग्लिश में बात कर लेते ह…",
+          "…होता है ना जी ठीक है सर सबसे खुश होता भाई क्या है कौन सखी है ⇢ सबसे खूशोत हाई क्या है कौन सकी है ये चाकते हैं वो सत्व है सत…",
+          "…किसी चीज़ की जरूर मतलब किसी अलग तरीके की जरूरत है समोसा बाहर ⇢ सच्चा जैसे आपको किसी चीज़ की ज़रूरत मतलब किसी अलग तरीके की ज…"
+        ]
+      },
+      "600s": {
+        "failure": null,
+        "wall_seconds": 176.7,
+        "peak_rss_mib": 3266.6,
+        "output_chars": 7791,
+        "tail_repetition": 0.0,
+        "text_tail": "ा पड़ेगा सत्ताला हो गया घंटी हो गया ये सब तो आप ऊपर से लगाना ही पड़ेगा उसने आपको समझिए एंड पांच सौ सालों का खर्च आया ऊपर",
+        "cer_unicode": 0.1857,
+        "wer_unicode": 0.3322,
+        "completeness_chars": 1.014,
+        "chunks": 7,
+        "chunk_seconds": 100.0,
+        "overlap_seconds": 5.0,
+        "seams": [
+          "… बहुत इंग्लिश में बात कर रहे थे जो जितना मुझे आता है हम उतना ⇢ नहीं बोल पाते तो हम लोग थोड़ा बहुत इंग्लिश में बात कर लेते ह…",
+          "…होता है ना जी ठीक है सर सबसे खुश होता भाई क्या है कौन सखी है ⇢ सबसे खूशोत हाई क्या है कौन सकी है ये चाकते हैं वो सत्व है सत…",
+          "…किसी चीज़ की जरूर मतलब किसी अलग तरीके की जरूरत है समोसा बाहर ⇢ जैसा आपको किसी चीज़ की जरूर मतलब किसी अलग तरीके की जरूरत है …",
+          "…ैं चालते हैं झूठ नहीं बोलते हैं लोग हमारे भी मना कि अथवा में ⇢ चालत हैं झूठ नहीं बोलते हैं लो मारे भी माना की इत्ता में अच्…",
+          "… माइंडर लगाएं अगर हम खाना बनाते हैं मेरा खाना अच्छा नहीं हुआ ⇢ लिए रिमाइंडर लगाएं अगर हम खाना बनाते हैं मेरा खाना अच्छा नही…",
+          "… शॉप पड़ेगा थोड़ा एक दूसरे में कम थोड़ा उसका रहता है मार्जिन ⇢ पंचाबंद सब पड़ेगा, थोड़ा एक दूसरे में कम थोड़ा उसका राहत है …"
+        ]
+      }
+    }
+  }
+}
