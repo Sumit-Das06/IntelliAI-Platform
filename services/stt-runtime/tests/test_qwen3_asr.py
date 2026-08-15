@@ -181,6 +181,19 @@ class _StubHandler(BaseHTTPRequestHandler):
         if answer == "@fail":
             self.send_error(500)
             return
+        if answer == "@truncate":
+            # A child dying MID-RESPONSE: headers promise more body than
+            # ever arrives, then the connection closes. The client's
+            # read() raises http.client.IncompleteRead — the raw shape
+            # the M19 kill-mid-window staging drill surfaced.
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", "1000")
+            self.end_headers()
+            self.wfile.write(b'{"choices": [')
+            self.wfile.flush()
+            self.connection.close()
+            return
         if type(self).mode == "malformed":
             body = b"not json at all"
         else:
@@ -874,6 +887,39 @@ class TestChunkedTranscription:
             engine.transcribe(_audio(601.0), TranscriptionRequest(language="hi"))
         assert excinfo.value.error_type.value == "invalid_input"
         assert "600 seconds" in excinfo.value.message
+
+    def test_a_mid_response_disconnect_stays_inside_the_retry_contract(
+        self, stub_server: str
+    ) -> None:
+        # M19 staging drill finding: a child killed MID-RESPONSE raises a
+        # RAW IncompleteRead/ConnectionResetError from response.read(),
+        # which urllib does not wrap in URLError. Before the fix this
+        # escaped the engine as a non-RuntimeServiceError and bypassed
+        # the one-retry path entirely.
+        sleeps: list[float] = []
+        engine = self._chunked_engine(
+            stub_server,
+            scripted=[
+                f"language Hindi{ASR_MARKER}एक",
+                "@truncate",  # chunk 2 dies mid-body
+                f"language Hindi{ASR_MARKER}दो",  # retry succeeds
+                f"language Hindi{ASR_MARKER}तीन",
+            ],
+            sleeps=sleeps,
+        )
+        result = engine.transcribe(_audio(210.0), TranscriptionRequest(language="hi"))
+        assert result.text == "एक दो तीन"
+        assert sleeps == [qwen3_asr.CHUNK_RETRY_DELAY_SECONDS]
+
+    def test_a_mid_response_disconnect_on_the_direct_path_is_a_clean_error(
+        self, stub_server: str
+    ) -> None:
+        _StubHandler.script = ["@truncate"]
+        with pytest.raises(RuntimeServiceError) as excinfo:
+            _engine(stub_server).transcribe(_audio(2.0), TranscriptionRequest(language="hi"))
+        assert excinfo.value.error_type.value == "internal"
+        # The clean generic message — never the raw exception text.
+        assert "did not answer" in excinfo.value.message
 
 
 class TestSlotTruthfulReadiness:

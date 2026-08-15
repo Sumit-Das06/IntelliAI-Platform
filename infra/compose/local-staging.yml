@@ -29,3 +29,8 @@ services:
   stt-runtime:
     environment:
       INTELLIAI_STT_SLOTS: whisper,qwen3-asr
+      # M19 proof battery: the 600 s ceiling exists ONLY in this overlay
+      # until the battery passes, when it becomes the committed default
+      # (Phase 18) and this line is removed. The chunked path activates
+      # by itself above the 120 s direct limit — no other knob moves.
+      INTELLIAI_STT_QWEN3_MAX_AUDIO_SECONDS: "600"

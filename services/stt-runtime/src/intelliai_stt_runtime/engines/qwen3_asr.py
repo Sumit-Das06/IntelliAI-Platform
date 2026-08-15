@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import base64
 import contextlib
+import http.client
 import json
 import socket
 import struct
@@ -762,7 +763,13 @@ class Qwen3AsrEngine:
         # Error messages carry NO engine or model names: the runtime's
         # envelope may be forwarded by layers that must never reveal what
         # serves a request (Milestone 16 drill finding).
-        except (TimeoutError, urllib.error.URLError) as exc:
+        # OSError covers TimeoutError AND urllib's URLError — and, found
+        # by the M19 kill-mid-window drill, the raw ConnectionResetError
+        # that a child dying MID-RESPONSE raises from response.read(),
+        # which urllib does not wrap. HTTPException covers the sibling
+        # mid-stream shapes (RemoteDisconnected, IncompleteRead). An
+        # exception escaping this clause escapes the retry contract.
+        except (OSError, http.client.HTTPException) as exc:
             process = self._process
             if process is not None and process.poll() is not None:
                 # The child is dead, not slow: say so truthfully. The

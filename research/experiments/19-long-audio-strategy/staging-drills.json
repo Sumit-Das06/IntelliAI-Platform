@@ -1,0 +1,93 @@
+{
+  "drill": "19-long-audio-staging",
+  "run_at": "2026-08-15T20:09:29.729044+00:00",
+  "hindi_300s_verbose": {
+    "status": 200,
+    "elapsed_seconds": 79.6,
+    "duration_reported": 300.0,
+    "language": "hi",
+    "text_chars": 3447,
+    "segments": 4,
+    "segment_spans": [
+      [
+        0.0,
+        94.5
+      ],
+      [
+        89.5,
+        193.1
+      ],
+      [
+        188.1,
+        288.1
+      ],
+      [
+        283.1,
+        300.0
+      ]
+    ],
+    "segments_join_equals_text": true,
+    "sample_header_present": true,
+    "usage_delta": {
+      "requests": 1,
+      "speech_seconds": 300.0,
+      "failed": 0
+    },
+    "leaks": []
+  },
+  "correction_300s": {
+    "status": 200,
+    "leaks": []
+  },
+  "hindi_600s_no_contribution": {
+    "status": 200,
+    "elapsed_seconds": 180.8,
+    "text_chars": 7717,
+    "sample_header_present": false,
+    "usage_delta": {
+      "requests": 1,
+      "speech_seconds": 600.0,
+      "failed": 0
+    },
+    "leaks": []
+  },
+  "kill_at_70s": {
+    "status": 500,
+    "elapsed_seconds": 70.9,
+    "leaks": [],
+    "error_type": "internal_error",
+    "partial_text_present": false,
+    "sample_header_present": false,
+    "pids_killed": [
+      31080
+    ],
+    "usage_delta": {
+      "requests": 1,
+      "speech_seconds": 0.0,
+      "failed": 1
+    },
+    "runtime_recovered_after": true
+  },
+  "kill_at_215s": {
+    "status": 200,
+    "elapsed_seconds": 190.1,
+    "leaks": [],
+    "text_chars": 7718,
+    "sample_header_present": true,
+    "pids_killed": [
+      8164
+    ],
+    "usage_delta": {
+      "requests": 1,
+      "speech_seconds": 600.0,
+      "failed": 0
+    },
+    "runtime_recovered_after": true
+  },
+  "hindi_300s_after_drills": {
+    "status": 200,
+    "elapsed_seconds": 79.3,
+    "text_chars": 3447,
+    "leaks": []
+  }
+}

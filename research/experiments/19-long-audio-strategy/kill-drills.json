@@ -1,0 +1,38 @@
+{
+  "drill": "19-kill-mid-window-rerun",
+  "run_at": "2026-08-15T20:24:23.996534+00:00",
+  "kill_at_35s": {
+    "status": 200,
+    "elapsed_seconds": 213.4,
+    "leaks": [],
+    "text_chars": 7718,
+    "sample_header_present": true,
+    "pids_killed": [
+      32848
+    ],
+    "seconds_from_kill_to_response": 178.4,
+    "usage_delta": {
+      "requests": 1,
+      "speech_seconds": 600.0,
+      "failed": 0
+    },
+    "runtime_recovered_after": true
+  },
+  "kill_at_100s": {
+    "status": 200,
+    "elapsed_seconds": 220.4,
+    "leaks": [],
+    "text_chars": 7718,
+    "sample_header_present": true,
+    "pids_killed": [
+      30608
+    ],
+    "seconds_from_kill_to_response": 120.4,
+    "usage_delta": {
+      "requests": 1,
+      "speech_seconds": 600.0,
+      "failed": 0
+    },
+    "runtime_recovered_after": true
+  }
+}

@@ -144,13 +144,16 @@ class RuntimeSettings(BaseSettings):
     deployments: str = ""
     # The gateway's end-to-end patience with a runtime call (it owns the
     # deadline; the runtime owns per-stage limits — ADR-0016). Raised
-    # 120 → 300 for M19 long-audio: a 600 s chunked Hindi decode measures
-    # ~180-220 s runtime-side, and every OTHER layer already outlasts
-    # this deadline (Caddy sets no proxy timeout; uvicorn sets none; the
-    # engine bounds each chunk itself), so 300 s restores the invariant
-    # that the SERVER decides timeouts. Configuration, not contract: the
-    # public API shape is unchanged.
-    timeout_seconds: float = 300.0
+    # 120 → 450 for M19 long-audio, sized to MEASUREMENT, not estimate:
+    # the research probe suggested ~180 s for a 600 s chunked Hindi
+    # decode, but the M19 engine-proof battery measured 297-340 s wall
+    # on the same hardware — the deadline covers the worst measured run
+    # with ~1.3x margin. Every OTHER layer already outlasts this (Caddy
+    # sets no proxy timeout; uvicorn sets none; the engine bounds each
+    # chunk itself; the admission lease sits above this deadline by its
+    # own invariant). Configuration, not contract: the public API shape
+    # is unchanged.
+    timeout_seconds: float = 450.0
 
     def deployment_urls(self) -> dict[str, str]:
         """The deployment → URL map the gateway keys its clients by.
@@ -222,7 +225,11 @@ class LimitsSettings(BaseSettings):
     # How long an in-flight slot is held if the process never releases it.
     # Generously above the gateway's own runtime deadline, so a slow
     # request is never evicted while it is still legitimately running.
-    lease_seconds: int = 180
+    # Re-sized with the M19 deadline (450 s): a legitimate 600 s chunked
+    # request measures up to ~340 s in flight, and the eviction insurance
+    # must outlast the deadline or a healthy long request frees its slot
+    # early (silent over-admission).
+    lease_seconds: int = 540
 
 
 class MeteringSettings(BaseSettings):
