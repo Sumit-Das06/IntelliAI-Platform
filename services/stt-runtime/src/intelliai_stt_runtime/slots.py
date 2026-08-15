@@ -71,6 +71,10 @@ def _load_qwen3_asr(settings: Settings) -> Callable[[Path | None], Transcription
         context_tokens=settings.qwen3_context_tokens,
         timeout_seconds=settings.qwen3_request_timeout_seconds,
         max_audio_seconds=settings.qwen3_max_audio_seconds,
+        direct_audio_seconds=settings.qwen3_direct_audio_seconds,
+        chunk_window_seconds=settings.qwen3_chunk_window_seconds,
+        chunk_overlap_seconds=settings.qwen3_chunk_overlap_seconds,
+        chunk_snap_radius_seconds=settings.qwen3_chunk_snap_radius_seconds,
     )
 
 

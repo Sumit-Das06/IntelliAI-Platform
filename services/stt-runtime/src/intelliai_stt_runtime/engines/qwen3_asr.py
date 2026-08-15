@@ -237,6 +237,128 @@ def resolve_language(emitted: str | None, requested: str | None) -> str:
     return requested or "und"
 
 
+def plan_windows(
+    duration_seconds: float,
+    *,
+    window_seconds: float,
+    overlap_seconds: float,
+) -> list[tuple[float, float]]:
+    """Deterministic chunk windows: fixed stride, overlapping, bounded.
+
+    Starts advance by ``window - overlap``; every window is ``window``
+    long except the last, which ends exactly at ``duration``. A tail
+    bringing less NEW audio than the overlap would be a near-duplicate
+    sliver (the previous window already heard almost all of it), so it
+    is absorbed by extending the last window instead of being decoded.
+    At the 600 s product ceiling with the default 100/5 shape this
+    yields exactly 7 windows.
+    """
+    if duration_seconds <= window_seconds:
+        return [(0.0, duration_seconds)]
+    step = window_seconds - overlap_seconds
+    if step <= 0:
+        msg = "chunk window must be longer than the overlap"
+        raise ValueError(msg)
+    windows: list[tuple[float, float]] = []
+    start = 0.0
+    while start + window_seconds < duration_seconds:
+        windows.append((start, start + window_seconds))
+        start += step
+    new_audio = duration_seconds - windows[-1][1] if windows else duration_seconds
+    if windows and new_audio < overlap_seconds:
+        windows[-1] = (windows[-1][0], duration_seconds)
+    else:
+        windows.append((start, duration_seconds))
+    return windows
+
+
+def quietest_moment(audio: DecodedAudio, target_seconds: float, radius_seconds: float) -> float:
+    """The center of the lowest-energy 200 ms block near ``target``.
+
+    A deterministic argmin over mean |sample| per block — seam
+    placement, not voice-activity detection. Ties break toward the
+    earliest block, so identical audio always snaps identically.
+    """
+    import array
+
+    if radius_seconds <= 0:
+        return target_seconds
+    frame_bytes = audio.channels * audio.sample_width_bytes
+    rate = audio.sample_rate_hz
+    lo = max(0.0, target_seconds - radius_seconds)
+    hi = min(audio.duration_seconds, target_seconds + radius_seconds)
+    block = 0.2
+    if hi - lo < block * 2:
+        return target_seconds
+    samples = array.array("h")
+    samples.frombytes(audio.pcm[int(lo * rate) * frame_bytes : int(hi * rate) * frame_bytes])
+    per_block = max(1, int(block * rate) * audio.channels)
+    best_energy: float | None = None
+    best_center = target_seconds
+    for index in range(0, len(samples) - per_block + 1, per_block):
+        chunk = samples[index : index + per_block]
+        energy = sum(abs(value) for value in chunk) / per_block
+        if best_energy is None or energy < best_energy:
+            best_energy = energy
+            best_center = lo + (index + per_block / 2) / (rate * audio.channels)
+    return best_center
+
+
+def slice_audio(audio: DecodedAudio, start_seconds: float, end_seconds: float) -> DecodedAudio:
+    """A frame-exact PCM byte-slice — no re-decode, no disk, no ffmpeg."""
+    frame_bytes = audio.channels * audio.sample_width_bytes
+    start_frame = round(start_seconds * audio.sample_rate_hz)
+    end_frame = round(end_seconds * audio.sample_rate_hz)
+    pcm = audio.pcm[start_frame * frame_bytes : end_frame * frame_bytes]
+    return DecodedAudio(
+        pcm=pcm,
+        sample_rate_hz=audio.sample_rate_hz,
+        channels=audio.channels,
+        sample_width_bytes=audio.sample_width_bytes,
+        duration_seconds=len(pcm) / (frame_bytes * audio.sample_rate_hz),
+    )
+
+
+def normalize_for_merge(word: str) -> str:
+    """Engine-local matching normalization for overlap dedup ONLY.
+
+    NFC + casefold + punctuation/format-character stripping. This never
+    touches output text — it only decides how many overlap words to
+    drop. The evaluation ruler is NOT imported here on purpose: the
+    runtime does not depend on the evaluation plane (layering law); the
+    sandbox proof checks seam quality with the real ruler instead.
+    """
+    import unicodedata
+
+    normalized = unicodedata.normalize("NFC", word).casefold()
+    return "".join(ch for ch in normalized if not unicodedata.category(ch).startswith(("P", "C")))
+
+
+def merge_chunk_text(
+    previous_words: list[str], chunk_text: str, overlap_window: int = 14
+) -> list[str]:
+    """The words `chunk_text` ADDS after overlap dedup (deterministic).
+
+    Longest suffix(previous)/prefix(chunk) match on normalized words;
+    empty-normalizing words (pure punctuation) are kept in the output
+    but never participate in matching. No model, no heuristics beyond
+    exact normalized equality.
+    """
+    chunk_words = chunk_text.split()
+    if not previous_words:
+        return chunk_words
+    if not chunk_words:
+        return []
+    prev_norm = [normalize_for_merge(w) for w in previous_words[-overlap_window:]]
+    next_norm = [normalize_for_merge(w) for w in chunk_words[: overlap_window * 2]]
+    best = 0
+    for k in range(min(len(prev_norm), len(next_norm)), 0, -1):
+        if prev_norm[-k:] == next_norm[:k] and any(prev_norm[-k:]):
+            best = k
+            break
+    return chunk_words[best:]
+
+
 def wav_bytes(audio: DecodedAudio) -> bytes:
     """Wrap canonical PCM in a minimal RIFF/WAVE container (PCM fmt 1)."""
     byte_rate = audio.sample_rate_hz * audio.channels * audio.sample_width_bytes
@@ -262,15 +384,43 @@ SLOT_READY: Final = "ready"
 SLOT_RESTARTING: Final = "restarting"
 SLOT_FAILED: Final = "failed"
 
-#: The measured-safe input ceiling at ctx=4096 (Milestone 17 Phase 6,
-#: Linux long-audio probe): 120 s inputs transcribe completely; 300 s
-#: inputs SILENTLY truncate to ~8% of expected output while returning
-#: 200 — the worst failure shape — and 600 s errors outright, with RSS
-#: climbing to 6.5 GiB. Until a chunking strategy exists, longer audio
-#: is refused loudly. Raising this without re-measuring completeness
-#: and memory is exactly the "silent context increase" the milestone
-#: forbids.
+#: The measured-safe DIRECT-decode ceiling at ctx=4096 (Milestone 17):
+#: 120 s inputs transcribe completely in one pass; beyond it the token
+#: budget silently truncates (M19 research: onset ~180 s, collapse at
+#: 300 s, hard failure at 600 s). Audio longer than this goes through
+#: the chunked path — it must NEVER reach a single-pass decode.
+DEFAULT_DIRECT_AUDIO_SECONDS: Final = 120.0
+
+#: The total request ceiling. Held at the direct limit until the
+#: Milestone 19 proof battery passes (sandbox + product-path); the
+#: approved end state is 600.0 with chunking serving 120-600 s.
 DEFAULT_MAX_AUDIO_SECONDS: Final = 120.0
+
+#: Chunked-path shape, from the measured M19 research (100 s windows +
+#: 5 s overlap were complete at 300 s AND 600 s, CER 0.19-0.21, RSS
+#: flat, at the product ctx 4096). Window arithmetic lives in
+#: :func:`plan_windows`; these are the only knobs.
+DEFAULT_CHUNK_WINDOW_SECONDS: Final = 100.0
+DEFAULT_CHUNK_OVERLAP_SECONDS: Final = 5.0
+
+#: How far a chunk boundary may slide toward a quieter moment (0
+#: disables snapping). The M19 research warned that fixed seams can cut
+#: mid-word; the snap is a deterministic energy argmin near the seam —
+#: NOT a second VAD (EnergyVad's regions are not plumbed to engines;
+#: re-plumbing that seam was judged not worth it — recorded limitation).
+DEFAULT_CHUNK_SNAP_RADIUS_SECONDS: Final = 8.0
+
+#: Output budget per single inference. ~12 text-tokens per Hindi
+#: speech-second (measured): a 120 s direct pass or a 100 s window both
+#: stay far inside 2048; chunking keeps this constant SAFE by
+#: construction, which is exactly why the window is 100 s.
+MAX_TOKENS_PER_INFERENCE: Final = 2048
+
+#: One bounded retry per chunk (Milestone 19 failure law): a chunk that
+#: fails twice fails the WHOLE request — a partial transcript is never
+#: returned. The delay before the retry gives the supervisor its
+#: detect→restart window (M17 measured ~10 s total outage).
+CHUNK_RETRY_DELAY_SECONDS: Final = 12.0
 
 #: Backoff schedule between restart attempts. Bounded BY CONSTRUCTION:
 #: the number of attempts equals the schedule's length — there is no
@@ -308,6 +458,10 @@ class Qwen3AsrEngine:
         sleep: Callable[[float], None] = time.sleep,
         closed_event: threading.Event | None = None,
         max_audio_seconds: float = DEFAULT_MAX_AUDIO_SECONDS,
+        direct_audio_seconds: float = DEFAULT_DIRECT_AUDIO_SECONDS,
+        chunk_window_seconds: float = DEFAULT_CHUNK_WINDOW_SECONDS,
+        chunk_overlap_seconds: float = DEFAULT_CHUNK_OVERLAP_SECONDS,
+        chunk_snap_radius_seconds: float = DEFAULT_CHUNK_SNAP_RADIUS_SECONDS,
     ) -> None:
         self._process = process
         self._base_url = base_url
@@ -319,6 +473,10 @@ class Qwen3AsrEngine:
         self._monitor_interval = monitor_interval_seconds
         self._sleep = sleep
         self._max_audio_seconds = max_audio_seconds
+        self._direct_audio_seconds = direct_audio_seconds
+        self._chunk_window_seconds = chunk_window_seconds
+        self._chunk_overlap_seconds = chunk_overlap_seconds
+        self._chunk_snap_radius_seconds = chunk_snap_radius_seconds
         self._state = SLOT_READY
         self._restarts_completed = 0
         self._restart_attempts = 0
@@ -419,14 +577,20 @@ class Qwen3AsrEngine:
                 "server_build": RUNTIME_BUILD,
                 "audio_transport": "wav s16le via input_audio",
                 "request_timeout_seconds": str(self._timeout_seconds),
+                # Milestone 19 long-audio shape — constant for the
+                # engine's lifetime, so it belongs in evidence records.
+                "direct_audio_seconds": str(self._direct_audio_seconds),
+                "chunk_window_seconds": str(self._chunk_window_seconds),
+                "chunk_overlap_seconds": str(self._chunk_overlap_seconds),
+                "chunk_snap_radius_seconds": str(self._chunk_snap_radius_seconds),
             },
         )
 
     def transcribe(self, audio: DecodedAudio, request: TranscriptionRequest) -> TranscriptionResult:
         if audio.duration_seconds > self._max_audio_seconds:
-            # Loud refusal beats silent truncation: beyond the measured
-            # ceiling the model returns a fraction of the transcript with
-            # a 200 — unacceptable data loss (Phase 6 finding).
+            # Loud refusal beats silent truncation: beyond the ceiling
+            # a single-pass decode returns a fraction of the transcript
+            # with a 200 — unacceptable data loss (M17 Phase 6 finding).
             raise RuntimeServiceError(
                 RuntimeErrorType.INVALID_INPUT,
                 (
@@ -442,6 +606,125 @@ class Qwen3AsrEngine:
                 RuntimeErrorType.NOT_READY,
                 "the requested model is temporarily unavailable",
             )
+        if audio.duration_seconds <= self._direct_audio_seconds:
+            # The proven short path, byte-for-byte the M15E-M18 behavior.
+            emitted, text = self._decode_once(audio)
+            segments: tuple[TranscriptionSegment, ...] = ()
+            if text:
+                # No timestamps exist in this lineage's ASR output; the
+                # honest segmentation is one utterance-spanning segment.
+                segments = (
+                    TranscriptionSegment(
+                        start_seconds=0.0,
+                        end_seconds=audio.duration_seconds,
+                        text=text,
+                    ),
+                )
+            return TranscriptionResult(
+                text=text,
+                language=resolve_language(emitted, request.language),
+                duration_seconds=audio.duration_seconds,
+                segments=segments,
+            )
+        return self._transcribe_chunked(audio, request)
+
+    def _transcribe_chunked(
+        self, audio: DecodedAudio, request: TranscriptionRequest
+    ) -> TranscriptionResult:
+        """The Milestone 19 long-audio path: complete transcript or clean failure.
+
+        The customer sees ONE result; internally the decoded PCM is
+        byte-sliced into overlapping windows (boundaries snapped toward
+        the quietest nearby moment), each window decoded through the
+        same child with ONE bounded retry, and the texts merged by
+        normalized overlap dedup. A window that fails twice fails the
+        WHOLE request — a partial transcript is never returned.
+        """
+        windows = plan_windows(
+            audio.duration_seconds,
+            window_seconds=self._chunk_window_seconds,
+            overlap_seconds=self._chunk_overlap_seconds,
+        )
+        if self._chunk_snap_radius_seconds > 0 and len(windows) > 1:
+            snapped: list[tuple[float, float]] = [windows[0]]
+            for start, end in windows[1:]:
+                new_start = quietest_moment(audio, start, self._chunk_snap_radius_seconds)
+                # The previous window must still overlap the (possibly
+                # moved) boundary, or seam words could be heard by no one.
+                previous_start = snapped[-1][0]
+                new_start = max(new_start, previous_start + self._chunk_overlap_seconds)
+                snapped[-1] = (previous_start, min(new_start + self._chunk_overlap_seconds, end))
+                snapped.append((new_start, end))
+            windows = snapped
+
+        merged_words: list[str] = []
+        contributions: list[tuple[float, float, str]] = []
+        emitted_language: str | None = None
+        for index, (start, end) in enumerate(windows):
+            window_audio = slice_audio(audio, start, end)
+            emitted, text = self._decode_window_with_retry(window_audio, index + 1, len(windows))
+            emitted_language = emitted_language or emitted
+            added = merge_chunk_text(merged_words, text)
+            if added:
+                merged_words.extend(added)
+                contributions.append((start, min(end, audio.duration_seconds), " ".join(added)))
+            logger.info(
+                "qwen3_chunk_decoded",
+                chunk=index + 1,
+                of=len(windows),
+                window_seconds=round(end - start, 1),
+                added_words=len(added),
+            )
+        segments = tuple(
+            TranscriptionSegment(start_seconds=start, end_seconds=end, text=text)
+            for start, end, text in contributions
+        )
+        # The final text IS the join of segment contributions — the
+        # verbose_json invariant (concatenated segments == text) holds by
+        # construction, never by later reconciliation.
+        return TranscriptionResult(
+            text=" ".join(text for _, _, text in contributions),
+            language=resolve_language(emitted_language, request.language),
+            duration_seconds=audio.duration_seconds,
+            segments=segments,
+        )
+
+    def _decode_window_with_retry(
+        self, window_audio: DecodedAudio, chunk: int, of: int
+    ) -> tuple[str | None, str]:
+        """One window, at most ONE retry, then the whole request fails.
+
+        The retry waits long enough for the supervisor's detect→restart
+        cycle (M17: ~10 s), so a child that died mid-request gets exactly
+        one chance to have recovered. Failure semantics are the request's
+        failure semantics — no partial output survives this method.
+        """
+        try:
+            return self._decode_once(window_audio)
+        except RuntimeServiceError as first_error:
+            logger.warning(
+                "qwen3_chunk_retry",
+                chunk=chunk,
+                of=of,
+                error=first_error.error_type.value,
+            )
+            self._sleep(CHUNK_RETRY_DELAY_SECONDS)
+            if self._state != SLOT_READY:
+                raise RuntimeServiceError(
+                    RuntimeErrorType.NOT_READY,
+                    "the requested model is temporarily unavailable",
+                ) from first_error
+            try:
+                return self._decode_once(window_audio)
+            except RuntimeServiceError as second_error:
+                logger.error("qwen3_chunk_failed", chunk=chunk, of=of)
+                raise RuntimeServiceError(
+                    second_error.error_type,
+                    "transcription of the full audio could not be completed",
+                ) from second_error
+
+    def _decode_once(self, audio: DecodedAudio) -> tuple[str | None, str]:
+        """One inference through the child — the SINGLE decode call site."""
         payload = {
             "messages": [
                 {
@@ -497,25 +780,7 @@ class Qwen3AsrEngine:
                 RuntimeErrorType.INTERNAL,
                 "the transcription backend returned an unreadable response",
             ) from exc
-
-        emitted, text = parse_asr_output(content)
-        segments: tuple[TranscriptionSegment, ...] = ()
-        if text:
-            # No timestamps exist in this lineage's ASR output; the honest
-            # segmentation is one utterance spanning the decoded audio.
-            segments = (
-                TranscriptionSegment(
-                    start_seconds=0.0,
-                    end_seconds=audio.duration_seconds,
-                    text=text,
-                ),
-            )
-        return TranscriptionResult(
-            text=text,
-            language=resolve_language(emitted, request.language),
-            duration_seconds=audio.duration_seconds,
-            segments=segments,
-        )
+        return parse_asr_output(content)
 
     def close(self) -> None:
         # Supervisor first: after `_closed` is set no restart can adopt a
@@ -551,6 +816,10 @@ def load_qwen3_asr(
     load_timeout_seconds: float = 180.0,
     restart_backoff_seconds: tuple[float, ...] = DEFAULT_RESTART_BACKOFF_SECONDS,
     max_audio_seconds: float = DEFAULT_MAX_AUDIO_SECONDS,
+    direct_audio_seconds: float = DEFAULT_DIRECT_AUDIO_SECONDS,
+    chunk_window_seconds: float = DEFAULT_CHUNK_WINDOW_SECONDS,
+    chunk_overlap_seconds: float = DEFAULT_CHUNK_OVERLAP_SECONDS,
+    chunk_snap_radius_seconds: float = DEFAULT_CHUNK_SNAP_RADIUS_SECONDS,
 ) -> Qwen3AsrEngine:
     """Slot loader: verified artifact directory -> a serving engine.
 
@@ -639,4 +908,8 @@ def load_qwen3_asr(
         restart_backoff_seconds=restart_backoff_seconds,
         closed_event=closed,
         max_audio_seconds=max_audio_seconds,
+        direct_audio_seconds=direct_audio_seconds,
+        chunk_window_seconds=chunk_window_seconds,
+        chunk_overlap_seconds=chunk_overlap_seconds,
+        chunk_snap_radius_seconds=chunk_snap_radius_seconds,
     )

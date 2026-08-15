@@ -143,8 +143,14 @@ class RuntimeSettings(BaseSettings):
     #: this gateway has no URL for is an operations error, loudly.
     deployments: str = ""
     # The gateway's end-to-end patience with a runtime call (it owns the
-    # deadline; the runtime owns per-stage limits — ADR-0016).
-    timeout_seconds: float = 120.0
+    # deadline; the runtime owns per-stage limits — ADR-0016). Raised
+    # 120 → 300 for M19 long-audio: a 600 s chunked Hindi decode measures
+    # ~180-220 s runtime-side, and every OTHER layer already outlasts
+    # this deadline (Caddy sets no proxy timeout; uvicorn sets none; the
+    # engine bounds each chunk itself), so 300 s restores the invariant
+    # that the SERVER decides timeouts. Configuration, not contract: the
+    # public API shape is unchanged.
+    timeout_seconds: float = 300.0
 
     def deployment_urls(self) -> dict[str, str]:
         """The deployment → URL map the gateway keys its clients by.

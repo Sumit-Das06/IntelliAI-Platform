@@ -8,6 +8,7 @@ accuracy, RTF, RSS — lives in the evaluation ledger, never in CI.
 
 from __future__ import annotations
 
+import itertools
 import json
 import struct
 import subprocess
@@ -15,7 +16,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, ClassVar, cast
 
 import pytest
 
@@ -129,12 +130,41 @@ class TestArtifactIdentity:
         with pytest.raises(ValueError, match="determined by them"):
             build_slot_specs(Settings(slots="qwen3-asr:some-other-name"))
 
+    def test_the_chunking_settings_reach_the_loader(self) -> None:
+        # M19: the long-audio shape is deployment configuration — every
+        # knob a canary overlay sets must actually arrive at the loader,
+        # or a raised ceiling would silently serve the built-in defaults.
+        specs = build_slot_specs(
+            Settings(
+                slots="qwen3-asr",
+                qwen3_max_audio_seconds=600.0,
+                qwen3_direct_audio_seconds=110.0,
+                qwen3_chunk_window_seconds=90.0,
+                qwen3_chunk_overlap_seconds=4.0,
+                qwen3_chunk_snap_radius_seconds=6.0,
+            )
+        )
+        keywords = cast(Any, specs[0].load).keywords
+        assert keywords["max_audio_seconds"] == 600.0
+        assert keywords["direct_audio_seconds"] == 110.0
+        assert keywords["chunk_window_seconds"] == 90.0
+        assert keywords["chunk_overlap_seconds"] == 4.0
+        assert keywords["chunk_snap_radius_seconds"] == 6.0
+
 
 class _StubHandler(BaseHTTPRequestHandler):
-    """Configurable llama-server stand-in for one test at a time."""
+    """Configurable llama-server stand-in for one test at a time.
+
+    ``content`` answers every request identically; ``script`` (when
+    non-empty) answers each request with the NEXT entry instead — the
+    chunked path's per-window sequencing needs ordered answers. The
+    sentinel ``"@fail"`` answers one request with a 500, which the
+    engine maps like any transport failure.
+    """
 
     mode = "ok"
     content = f"language Hindi{ASR_MARKER}नमस्ते"
+    script: ClassVar[list[str]] = []
     last_payload: dict[str, Any] | None = None
 
     def do_POST(self) -> None:
@@ -145,12 +175,16 @@ class _StubHandler(BaseHTTPRequestHandler):
             return
         if type(self).mode == "slow":
             time.sleep(1.5)
+        answer = type(self).content
+        if type(self).script:
+            answer = type(self).script.pop(0)
+        if answer == "@fail":
+            self.send_error(500)
+            return
         if type(self).mode == "malformed":
             body = b"not json at all"
         else:
-            body = json.dumps({"choices": [{"message": {"content": type(self).content}}]}).encode(
-                "utf-8"
-            )
+            body = json.dumps({"choices": [{"message": {"content": answer}}]}).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
@@ -168,6 +202,7 @@ def stub_server() -> Any:
     thread.start()
     _StubHandler.mode = "ok"
     _StubHandler.content = f"language Hindi{ASR_MARKER}नमस्ते"
+    _StubHandler.script = []
     _StubHandler.last_payload = None
     yield f"http://127.0.0.1:{server.server_port}"
     server.shutdown()
@@ -328,6 +363,12 @@ class TestDescription:
         assert params["timestamps"] == "false"
         assert params["prompt"] == ASR_PROMPT
         assert params["context_tokens"] == "4096"
+        # M19: the chunking shape is decode configuration — evidence
+        # records must say which long-audio geometry produced a result.
+        assert params["direct_audio_seconds"] == "120.0"
+        assert params["chunk_window_seconds"] == "100.0"
+        assert params["chunk_overlap_seconds"] == "5.0"
+        assert params["chunk_snap_radius_seconds"] == "8.0"
 
     def test_no_local_path_leaks_through_the_description(self) -> None:
         # /info is runtime-internal, but descriptions still travel into
@@ -570,6 +611,269 @@ class TestSupervisedRestart:
         assert not closer.is_alive()
         # The child spawned after close must be terminated, not adopted.
         _wait_until(lambda: adopted.terminated)
+
+
+class TestWindowPlanning:
+    """M19 Phase 3: deterministic, bounded chunk arithmetic."""
+
+    def _plan(self, duration: float) -> list[tuple[float, float]]:
+        from intelliai_stt_runtime.engines.qwen3_asr import plan_windows
+
+        return plan_windows(duration, window_seconds=100.0, overlap_seconds=5.0)
+
+    def test_at_or_below_one_window_is_a_single_window(self) -> None:
+        assert self._plan(100.0) == [(0.0, 100.0)]
+        assert self._plan(42.0) == [(0.0, 42.0)]
+
+    def test_just_over_a_window_splits_with_overlap(self) -> None:
+        windows = self._plan(120.1)
+        assert windows == [(0.0, 100.0), (95.0, 120.1)]
+
+    @pytest.mark.parametrize(
+        ("duration", "count"),
+        [(200.0, 3), (300.0, 4), (600.0, 7)],
+    )
+    def test_window_counts_match_the_researched_shapes(self, duration: float, count: int) -> None:
+        windows = self._plan(duration)
+        assert len(windows) == count
+        # Full coverage, ordered, overlapping by exactly the overlap.
+        assert windows[0][0] == 0.0
+        assert windows[-1][1] == duration
+        for (a_start, a_end), (b_start, _) in itertools.pairwise(windows):
+            assert b_start == a_end - 5.0
+            assert a_start < b_start
+
+    def test_a_sliver_tail_is_absorbed_not_decoded(self) -> None:
+        # 195 + tiny: the remainder after the second window start (95)
+        # would be <= overlap — extend the last window instead.
+        windows = self._plan(197.0)
+        assert windows == [(0.0, 100.0), (95.0, 197.0)]
+
+    def test_overlap_must_be_smaller_than_the_window(self) -> None:
+        from intelliai_stt_runtime.engines.qwen3_asr import plan_windows
+
+        with pytest.raises(ValueError, match="longer than the overlap"):
+            plan_windows(300.0, window_seconds=5.0, overlap_seconds=5.0)
+
+
+class TestAudioSlicing:
+    """M19 Phase 3: frame-exact PCM slices, no re-decode, no disk."""
+
+    def test_slices_preserve_format_and_duration(self) -> None:
+        from intelliai_stt_runtime.engines.qwen3_asr import slice_audio
+
+        audio = _audio(10.0)
+        piece = slice_audio(audio, 2.0, 7.5)
+        assert piece.sample_rate_hz == audio.sample_rate_hz
+        assert piece.channels == audio.channels
+        assert piece.sample_width_bytes == audio.sample_width_bytes
+        assert piece.duration_seconds == pytest.approx(5.5)
+        assert len(piece.pcm) == int(5.5 * 16000) * 2
+
+    def test_adjacent_slices_reassemble_exactly(self) -> None:
+        from intelliai_stt_runtime.engines.qwen3_asr import slice_audio
+
+        audio = _audio(3.0)
+        first = slice_audio(audio, 0.0, 1.7)
+        second = slice_audio(audio, 1.7, 3.0)
+        assert first.pcm + second.pcm == audio.pcm
+
+
+class TestBoundarySnap:
+    """M19 Phase 4: a deterministic energy argmin near the seam."""
+
+    @staticmethod
+    def _audio_with_gap(gap_at: float, total: float = 30.0) -> DecodedAudio:
+        rate = 16000
+        loud = (1000).to_bytes(2, "little", signed=True)
+        quiet = (0).to_bytes(2, "little", signed=True)
+        frames = bytearray()
+        gap_start = int(gap_at * rate)
+        gap_end = int((gap_at + 0.4) * rate)
+        for i in range(int(total * rate)):
+            frames += quiet if gap_start <= i < gap_end else loud
+        return DecodedAudio(
+            pcm=bytes(frames),
+            sample_rate_hz=rate,
+            channels=1,
+            sample_width_bytes=2,
+            duration_seconds=total,
+        )
+
+    def test_snaps_into_a_nearby_silence(self) -> None:
+        from intelliai_stt_runtime.engines.qwen3_asr import quietest_moment
+
+        audio = self._audio_with_gap(gap_at=17.0)
+        snapped = quietest_moment(audio, target_seconds=15.0, radius_seconds=8.0)
+        assert 16.8 <= snapped <= 17.6
+
+    def test_uniform_audio_keeps_a_stable_deterministic_choice(self) -> None:
+        from intelliai_stt_runtime.engines.qwen3_asr import quietest_moment
+
+        audio = _audio(30.0)
+        first = quietest_moment(audio, 15.0, 8.0)
+        second = quietest_moment(audio, 15.0, 8.0)
+        assert first == second  # ties break deterministically
+
+    def test_zero_radius_disables_snapping(self) -> None:
+        from intelliai_stt_runtime.engines.qwen3_asr import quietest_moment
+
+        audio = self._audio_with_gap(gap_at=17.0)
+        assert quietest_moment(audio, 15.0, 0.0) == 15.0
+
+
+class TestOverlapMerge:
+    """M19 Phase 6: deterministic dedup on normalized words."""
+
+    @staticmethod
+    def _merge(previous: str, nxt: str) -> str:
+        from intelliai_stt_runtime.engines.qwen3_asr import merge_chunk_text
+
+        words = previous.split()
+        return " ".join(words + merge_chunk_text(words, nxt))
+
+    def test_exact_overlap_is_deduplicated(self) -> None:
+        assert (
+            self._merge("मेरा विद्यालय बहुत अच्छा है", "बहुत अच्छा है यह शहर में")
+            == "मेरा विद्यालय बहुत अच्छा है यह शहर में"
+        )
+
+    def test_punctuation_and_case_do_not_defeat_the_match(self) -> None:
+        assert (
+            self._merge("Learning good MANNERS,", "manners doesn't come easy")
+            == "Learning good MANNERS, doesn't come easy"
+        )
+
+    def test_no_overlap_appends_everything(self) -> None:
+        assert self._merge("पहला हिस्सा", "दूसरा हिस्सा") == "पहला हिस्सा दूसरा हिस्सा"
+
+    def test_repeated_speech_is_not_over_deduplicated(self) -> None:
+        # Genuine repetition inside the NEW text (beyond the overlap
+        # window) must survive — dedup only eats the seam.
+        merged = self._merge("ठीक है ठीक है", "ठीक है फिर ठीक है चलो")
+        assert merged == "ठीक है ठीक है फिर ठीक है चलो"
+
+    def test_empty_chunk_output_adds_nothing(self) -> None:
+        assert self._merge("कुछ शब्द", "") == "कुछ शब्द"
+
+    def test_first_chunk_seeds_the_transcript(self) -> None:
+        assert self._merge("", "पहली खिड़की का पाठ") == "पहली खिड़की का पाठ"
+
+    def test_pure_punctuation_words_never_anchor_a_match(self) -> None:
+        # A '-' normalizes to empty; matching on it would let unrelated
+        # texts glue together at punctuation.
+        assert self._merge("एक दो -", "- तीन चार") == "एक दो - - तीन चार"
+
+
+class TestChunkedTranscription:
+    """M19 Phases 5+7+19: the request-level laws, deterministically."""
+
+    @staticmethod
+    def _chunked_engine(
+        stub_url: str, *, scripted: list[str], sleeps: list[float]
+    ) -> Qwen3AsrEngine:
+        _StubHandler.script = list(scripted)
+        return Qwen3AsrEngine(
+            cast(subprocess.Popen[bytes], _FakeProcess()),
+            stub_url,
+            context_tokens=4096,
+            timeout_seconds=5.0,
+            max_audio_seconds=600.0,
+            direct_audio_seconds=120.0,
+            chunk_window_seconds=100.0,
+            chunk_overlap_seconds=5.0,
+            chunk_snap_radius_seconds=0.0,  # fixed boundaries: deterministic windows
+            sleep=sleeps.append,
+        )
+
+    def test_direct_path_is_untouched_at_the_boundary(self, stub_server: str) -> None:
+        _StubHandler.script = [f"language Hindi{ASR_MARKER}सीधा रास्ता"]
+        engine = self._chunked_engine(stub_server, scripted=[], sleeps=[])
+        _StubHandler.script = [f"language Hindi{ASR_MARKER}सीधा रास्ता"]
+        result = engine.transcribe(_audio(120.0), TranscriptionRequest(language="hi"))
+        assert result.text == "सीधा रास्ता"
+        assert len(result.segments) == 1
+        assert result.segments[0].end_seconds == 120.0
+
+    def test_three_window_request_merges_into_one_result(self, stub_server: str) -> None:
+        sleeps: list[float] = []
+        engine = self._chunked_engine(
+            stub_server,
+            scripted=[
+                f"language Hindi{ASR_MARKER}पहली खिड़की का पाठ यहाँ समाप्त",
+                f"language Hindi{ASR_MARKER}यहाँ समाप्त दूसरी खिड़की जारी",
+                f"language Hindi{ASR_MARKER}जारी तीसरी खिड़की का अंत",
+            ],
+            sleeps=sleeps,
+        )
+        result = engine.transcribe(_audio(210.0), TranscriptionRequest(language="hi"))
+        assert result.text == ("पहली खिड़की का पाठ यहाँ समाप्त दूसरी खिड़की जारी तीसरी खिड़की का अंत")
+        # One request, one result; segments carry REAL window offsets and
+        # their texts concatenate to exactly the final text (Phase 7 law).
+        assert [(s.start_seconds, s.end_seconds) for s in result.segments] == [
+            (0.0, 100.0),
+            (95.0, 195.0),
+            (190.0, 210.0),
+        ]
+        assert " ".join(s.text for s in result.segments) == result.text
+        assert result.duration_seconds == 210.0
+        assert sleeps == []  # no retries were needed
+
+    def test_a_failing_chunk_is_retried_once_then_succeeds(self, stub_server: str) -> None:
+        sleeps: list[float] = []
+        engine = self._chunked_engine(
+            stub_server,
+            scripted=[
+                f"language Hindi{ASR_MARKER}एक",
+                "@fail",  # chunk 2, first attempt
+                f"language Hindi{ASR_MARKER}दो",  # chunk 2, retry
+                f"language Hindi{ASR_MARKER}तीन",
+            ],
+            sleeps=sleeps,
+        )
+        result = engine.transcribe(_audio(210.0), TranscriptionRequest(language="hi"))
+        assert result.text == "एक दो तीन"
+        assert sleeps == [qwen3_asr.CHUNK_RETRY_DELAY_SECONDS]
+
+    def test_a_chunk_failing_twice_fails_the_whole_request(self, stub_server: str) -> None:
+        sleeps: list[float] = []
+        engine = self._chunked_engine(
+            stub_server,
+            scripted=[f"language Hindi{ASR_MARKER}एक", "@fail", "@fail"],
+            sleeps=sleeps,
+        )
+        with pytest.raises(RuntimeServiceError) as excinfo:
+            engine.transcribe(_audio(210.0), TranscriptionRequest(language="hi"))
+        # The failure is the REQUEST's failure: no partial transcript
+        # exists anywhere in the raised error, and the message names
+        # neither chunks nor engines.
+        assert "एक" not in excinfo.value.message
+        lowered = excinfo.value.message.lower()
+        for marker in ("chunk", "qwen", "llama", "window"):
+            assert marker not in lowered
+        assert "could not be completed" in excinfo.value.message
+
+    def test_silent_windows_produce_no_empty_segments(self, stub_server: str) -> None:
+        engine = self._chunked_engine(
+            stub_server,
+            scripted=[
+                f"language Hindi{ASR_MARKER}बोला गया हिस्सा",
+                f"language None{ASR_MARKER}",  # silent middle window
+                f"language Hindi{ASR_MARKER}आख़िरी हिस्सा",
+            ],
+            sleeps=[],
+        )
+        result = engine.transcribe(_audio(210.0), TranscriptionRequest(language="hi"))
+        assert result.text == "बोला गया हिस्सा आख़िरी हिस्सा"
+        assert len(result.segments) == 2
+        assert " ".join(s.text for s in result.segments) == result.text
+
+    def test_over_ceiling_is_still_refused(self, stub_server: str) -> None:
+        engine = self._chunked_engine(stub_server, scripted=[], sleeps=[])
+        with pytest.raises(RuntimeServiceError) as excinfo:
+            engine.transcribe(_audio(601.0), TranscriptionRequest(language="hi"))
+        assert excinfo.value.error_type.value == "invalid_input"
+        assert "600 seconds" in excinfo.value.message
 
 
 class TestSlotTruthfulReadiness:
