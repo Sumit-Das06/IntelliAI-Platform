@@ -935,6 +935,47 @@ re-validation (scripts committed), a real Android device pass, and
 the founder's promotion decision. Every other question is answered
 with committed evidence.
 
+## Milestone 19 — hybrid long-audio implementation (appended 2026-08-16)
+
+Full report:
+[2026-08-12-qwen3-long-audio-implementation.md](2026-08-12-qwen3-long-audio-implementation.md).
+The approved Hybrid C strategy, implemented and proven; the product
+ceiling raised **120 → 600 s** after (and only after) the battery.
+
+**Qwen3-ASR 0.6B (identity unchanged; serving shape extended)**
+- 2026-08-16 — **local_product_path_proven → long_audio_ready_600s**
+  *(evidence; promotion still NOT granted; production still resolves
+  hi→whisper, guard-tested)* — **[EVIDENCE]** Chunking lives entirely
+  inside `Qwen3AsrEngine.transcribe()` (100 s windows, 5 s overlap,
+  seams snapped to a deterministic energy argmin — A/B-measured better
+  than fixed seams on spontaneous speech in every cell); ≤120 s stays
+  the byte-identical direct pass. Complete-or-fail law held in every
+  proof: sandbox through the engine (23/23 windows across
+  120/180/300/600 × repeats; 300 s CER 0.2084 vs prototype 0.2092;
+  600 s CER 0.184, completeness 1.005), staging product path (300 s in
+  79.6 s and 600 s in 180.8 s through the real gateway; one usage
+  event at the exact duration; one sample only when contributed;
+  correction lifecycle; zero leaks), Web in a real browser (300+600 s,
+  UI responsive mid-decode, segments join == text in the Studio's own
+  pane), kill-mid-window drills (**the drill caught a real defect** —
+  raw mid-response disconnects bypassed the retry contract; fixed,
+  pinned by tests, re-drilled: a child killed 35 s or 100 s into a
+  600 s request now recovers invisibly to a complete transcript),
+  short-ladder regression (admission contract identical to M16; no
+  material regression), long-audio concurrency (5×300 s all complete;
+  tail 422 s ≈ the honest concurrent ceiling; RSS plateaus ~3.4 GiB).
+  Deadlines sized to measurement, not estimates: gateway 120→450,
+  lease 180→540. Android unchanged: long audio on mobile is formally
+  unsupported until a deliberate client re-timing (recorded
+  limitation). — evidence:
+  [engine-proof + seam-probe + drills](../../research/experiments/19-long-audio-strategy/)
+
+**Consequence for priorities:** unchanged Hostinger inputs, plus one
+capacity decision before any long-audio production promise: concurrent
+long-request admission (~4–5 × 300 s per single-decoder deployment,
+measured) and the ~4 GiB steady-state slot memory, both re-measured on
+VPS hardware.
+
 ---
 
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

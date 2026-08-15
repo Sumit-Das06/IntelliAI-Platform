@@ -392,15 +392,22 @@ SLOT_FAILED: Final = "failed"
 #: the chunked path — it must NEVER reach a single-pass decode.
 DEFAULT_DIRECT_AUDIO_SECONDS: Final = 120.0
 
-#: The total request ceiling. Held at the direct limit until the
-#: Milestone 19 proof battery passes (sandbox + product-path); the
-#: approved end state is 600.0 with chunking serving 120-600 s.
-DEFAULT_MAX_AUDIO_SECONDS: Final = 120.0
+#: The total request ceiling — raised 120 → 600 at Milestone 19
+#: Phase 18, AFTER the full proof battery passed (sandbox through the
+#: engine at 120/180/300/600 with repeats; staging product path incl.
+#: kill-mid-window drills; Web; seam A/B on spontaneous speech;
+#: concurrency regression). ≤120 s decodes in the proven single pass;
+#: 120-600 s decodes through the chunked path; beyond 600 the loud
+#: refusal remains, because the M17 silent-truncation incident is the
+#: failure this constant exists to prevent.
+DEFAULT_MAX_AUDIO_SECONDS: Final = 600.0
 
 #: Chunked-path shape, from the measured M19 research (100 s windows +
-#: 5 s overlap were complete at 300 s AND 600 s, CER 0.19-0.21, RSS
-#: flat, at the product ctx 4096). Window arithmetic lives in
-#: :func:`plan_windows`; these are the only knobs.
+#: 5 s overlap were complete at 300 s AND 600 s, CER 0.18-0.21, at the
+#: product ctx 4096; the serving build RETAINS RSS across sequential
+#: decodes — a capacity fact, recorded in the M19 implementation doc).
+#: Window arithmetic lives in :func:`plan_windows`; these are the only
+#: knobs.
 DEFAULT_CHUNK_WINDOW_SECONDS: Final = 100.0
 DEFAULT_CHUNK_OVERLAP_SECONDS: Final = 5.0
 

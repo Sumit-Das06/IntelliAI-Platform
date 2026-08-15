@@ -1,0 +1,40 @@
+{
+  "verification": "19-web-long-audio",
+  "run_at": "2026-08-15T20:32:13.323425+00:00",
+  "steps": [
+    {
+      "step": "300s-contribute-on",
+      "elapsed_seconds": 87.5,
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "transcript_chars": 3447,
+      "devanagari": true,
+      "ui_responsive_during_decode": true,
+      "request_id": "req_db89a4de5c26442bb0cbc60ee8661274",
+      "sample_id": "smp_6b70fa915115948f926368ee",
+      "response_segments": 4,
+      "segments_join_equals_text": true,
+      "duration_reported": 300,
+      "leaks_in_raw_response": [],
+      "ui_leaks": []
+    },
+    {
+      "step": "correction-300s",
+      "thanks": "Your correction helps improve IntelliAI STT."
+    },
+    {
+      "step": "600s-contribute-off",
+      "elapsed_seconds": 190.0,
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "transcript_chars": 7714,
+      "devanagari": true,
+      "ui_responsive_during_decode": true,
+      "request_id": "req_ae2c067907f64c5eae6f84699b08f2d3",
+      "sample_id": "not stored (contribution off)",
+      "response_segments": 7,
+      "segments_join_equals_text": true,
+      "duration_reported": 600,
+      "leaks_in_raw_response": [],
+      "ui_leaks": []
+    }
+  ]
+}

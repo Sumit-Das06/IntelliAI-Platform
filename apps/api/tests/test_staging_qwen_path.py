@@ -62,10 +62,14 @@ def qwen_envelope(duration: float = 8.2) -> RuntimeResponse[TranscriptionResult]
 
 
 def ceiling_refusal() -> RuntimeErrorResponse:
-    """The runtime's real 120-second guard envelope, verbatim shape."""
+    """The runtime's real ceiling-guard envelope, verbatim shape.
+
+    600 s since M19 Phase 18 (120-600 s chunks inside the engine; the
+    refusal beyond the ceiling is unchanged in shape and honesty).
+    """
     return RuntimeErrorResponse(
         type=RuntimeErrorType.INVALID_INPUT,
-        message="audio longer than 120 seconds is not supported by the requested model",
+        message="audio longer than 600 seconds is not supported by the requested model",
         param="file",
         runtime=META,
     )
@@ -286,7 +290,7 @@ async def test_correction_flows_through_the_existing_endpoint(
 # ── The runtime's safety refusals, through the gateway ───────────────────
 
 
-async def test_the_120_second_refusal_passes_through_cleanly(
+async def test_the_ceiling_refusal_passes_through_cleanly(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
     fake = FakeRuntimeClient(error=ceiling_refusal())
@@ -300,7 +304,7 @@ async def test_the_120_second_refusal_passes_through_cleanly(
         assert response.status_code == 400
         body = response.json()
         assert body["error"]["param"] == "file"
-        assert "120 seconds" in body["error"]["message"]
+        assert "600 seconds" in body["error"]["message"]
         lowered = response.text.lower()
         for marker in ("qwen", "llama", "gguf", "ctx"):
             assert marker not in lowered

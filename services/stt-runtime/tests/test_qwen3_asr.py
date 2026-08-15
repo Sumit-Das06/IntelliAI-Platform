@@ -321,24 +321,25 @@ class TestTranscription:
         for marker in ("qwen", "llama", "gguf", "ggml", "whisper"):
             assert marker not in lowered, message
 
-    def test_audio_beyond_the_measured_ceiling_is_refused_loudly(self) -> None:
-        # Phase 6 finding: at ctx 4096 a 300 s input silently truncates to
-        # ~8% of expected output while returning 200. Silent data loss is
-        # the one failure a customer cannot detect — so the engine refuses
-        # beyond the measured-safe ceiling instead.
+    def test_audio_beyond_the_product_ceiling_is_refused_loudly(self) -> None:
+        # M17 Phase 6 finding: beyond what the serving shape can decode,
+        # a single pass silently truncates while returning 200 — silent
+        # data loss is the one failure a customer cannot detect. Since
+        # M19 Phase 18 the DEFAULT ceiling is 600 s (chunked above the
+        # 120 s direct limit); beyond it the loud refusal remains.
         engine = _engine("http://127.0.0.1:9")
         long_audio = DecodedAudio(
             pcm=b"\x01\x00" * 16000,  # 1 s of frames; duration says otherwise
             sample_rate_hz=16000,
             channels=1,
             sample_width_bytes=2,
-            duration_seconds=121.0,
+            duration_seconds=601.0,
         )
         with pytest.raises(RuntimeServiceError) as excinfo:
             engine.transcribe(long_audio, TranscriptionRequest(language="hi"))
         assert excinfo.value.error_type.value == "invalid_input"
         assert excinfo.value.param == "file"
-        assert "120 seconds" in excinfo.value.message
+        assert "600 seconds" in excinfo.value.message
         for marker in ("qwen", "llama", "ctx", "context"):
             assert marker not in excinfo.value.message.lower()
 
@@ -887,6 +888,27 @@ class TestChunkedTranscription:
             engine.transcribe(_audio(601.0), TranscriptionRequest(language="hi"))
         assert excinfo.value.error_type.value == "invalid_input"
         assert "600 seconds" in excinfo.value.message
+
+    def test_the_final_window_failing_twice_fails_the_whole_request(self, stub_server: str) -> None:
+        # Failure matrix case 6: the LAST window is not special — its
+        # double failure voids the whole request exactly like any other
+        # window's, and none of the earlier windows' text escapes.
+        sleeps: list[float] = []
+        engine = self._chunked_engine(
+            stub_server,
+            scripted=[
+                f"language Hindi{ASR_MARKER}एक",
+                f"language Hindi{ASR_MARKER}दो",
+                "@fail",  # final window, first attempt
+                "@fail",  # final window, retry
+            ],
+            sleeps=sleeps,
+        )
+        with pytest.raises(RuntimeServiceError) as excinfo:
+            engine.transcribe(_audio(210.0), TranscriptionRequest(language="hi"))
+        assert "एक" not in excinfo.value.message
+        assert "दो" not in excinfo.value.message
+        assert sleeps == [qwen3_asr.CHUNK_RETRY_DELAY_SECONDS]
 
     def test_a_mid_response_disconnect_stays_inside_the_retry_contract(
         self, stub_server: str

@@ -59,11 +59,12 @@ class Settings(BaseSettings):
     # 8.2 GiB RSS vs 1.5 GiB at 4096 — configuration, not identity.
     qwen3_context_tokens: int = Field(default=4096, ge=1024)
     qwen3_request_timeout_seconds: float = Field(default=300.0, gt=0)
-    # Total request ceiling. Held at the direct limit until the M19
-    # chunking proof battery passes; the approved end state is 600.0
-    # (chunked path serving 120-600 s). Raising it without the proofs is
-    # exactly the silent-truncation hazard M17 closed.
-    qwen3_max_audio_seconds: float = Field(default=120.0, gt=0)
+    # Total request ceiling — 600.0 since Milestone 19 Phase 18, raised
+    # from 120 only after the full proof battery passed (the engine
+    # chunks 120-600 s internally; ≤120 s stays the proven direct pass).
+    # Beyond 600 the loud refusal remains: the M17 silent-truncation
+    # incident is the failure this ceiling exists to prevent.
+    qwen3_max_audio_seconds: float = Field(default=600.0, gt=0)
     # ── M19 hybrid long-audio shape ─────────────────────────────────────
     # Audio ≤ direct decodes in one proven pass; audio between direct and
     # the ceiling is chunked INSIDE the engine (windows + overlap, seam
