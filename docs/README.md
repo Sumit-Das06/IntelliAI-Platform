@@ -9,6 +9,11 @@ which maps where every kind of truth lives.
            foundation models, model identity, Registry V2, fine-tuning,
            research report, founding review) with reading order and cadence.
 - `ARCHITECTURE.md` — the current system, updated at every milestone close.
+- `PRODUCT_WALKTHROUGH.md` — plain-language, screen-by-screen explanation of
+           how the product works and why: what each console page does, what
+           happens behind it, and what is deliberately not built yet. The
+           onboarding/demo companion to ARCHITECTURE.md. Grows one screen at
+           a time.
 - `PRD.md` — Product Requirements Document: the single source of truth for
            product decisions. Updated in the PR that closes each milestone.
 - `ENGINEERING_PRINCIPLES.md` — the philosophy that breaks ties.
