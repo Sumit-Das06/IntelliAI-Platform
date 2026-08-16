@@ -6,7 +6,9 @@
 
 .PHONY: help up down ps logs clean sync api test migrate migration downgrade build db-ui psql \
         eval-fetch eval speech-eval bench manifest bootstrap-org bootstrap-benchmark-org \
-        keyboard-apk keyboard-test
+        keyboard-apk keyboard-test \
+        prod-check prod-config-check prod-build prod-up prod-migrate prod-health prod-smoke \
+        prod-backup prod-restore-check prod-down
 
 help: ## List available commands
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-24s\033[0m %s\n", $$1, $$2}'
@@ -245,12 +247,47 @@ staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (s
 	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b && cp -r /src/v1 /models/qwen3-asr-0.6b/ && ls -la /models/qwen3-asr-0.6b/v1"
 
 # ── Production (see docs/ops/deployment.md) ───────────────────────────
+# The deployment sequence, in call order:
+#   prod-check → prod-build → prod-up → prod-migrate → prod-health → prod-smoke
+# Every target is idempotent; nothing here reaches beyond this machine.
+
+prod-check: ## Preflight: docker, .env completeness, secrets, compose config, Caddyfile — BEFORE touching services
+	bash infra/prod-preflight.sh
+
+prod-config-check: prod-check ## Alias for prod-check (configuration validation only)
+
+prod-build: ## Build the production images without starting anything
+	docker compose -f docker-compose.yml -f infra/compose/prod.yml build
+
 prod-up: ## Deploy/refresh the production stack (base + prod overlay, builds images)
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml up -d --build
 
-prod-migrate: ## Apply database migrations inside the production stack
+# Migrations refuse to run without a fresh backup (<24 h): the runbook's
+# backup-before-migration rule, made mechanical. force=1 overrides for
+# the very first deploy of an empty database.
+prod-migrate: ## Apply database migrations (requires a <24h backup; first deploy: force=1)
+	@if [ -z "$(force)" ] && ! find backups -name 'pg-*.sql.gz' -mtime -1 2>/dev/null | grep -q .; then \
+	  echo "REFUSED: no Postgres backup newer than 24h in backups/."; \
+	  echo "  Run 'make prod-backup' first (or force=1 for a first deploy of an empty database)."; \
+	  exit 2; \
+	fi
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml run --rm --no-deps api \
 	  alembic -c apps/api/alembic.ini upgrade head
+
+prod-health: ## Quick health read: gateway live/ready + runtime ready (running stack)
+	@curl -fsS --max-time 5 http://127.0.0.1:8000/health/live && echo " <- /health/live"
+	@curl -fsS --max-time 10 http://127.0.0.1:8000/health/ready && echo " <- /health/ready"
+	@curl -fsS --max-time 10 http://127.0.0.1:8001/health/ready && echo " <- stt-runtime /health/ready"
+
+prod-smoke: ## Full smoke: services, health, migrations-at-head, auth refusal, edge headers, port exposure
+	bash infra/prod-smoke.sh
+
+prod-backup: ## Production backup (same as `make backup`: pg dump + volume tar + object mirror)
+	bash infra/backup.sh
+	bash infra/backup-objects.sh
+
+prod-restore-check: ## Prove the newest pg backup restores (disposable container; live data untouched)
+	bash infra/restore-check.sh
 
 prod-down: ## Stop the production stack (volumes are kept)
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml down

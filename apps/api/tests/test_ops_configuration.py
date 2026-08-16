@@ -121,7 +121,14 @@ def test_the_edge_keeps_the_body_ceiling_and_security_headers() -> None:
 
 
 def test_backup_and_restore_scripts_exist_and_never_embed_credentials() -> None:
-    for name in ("backup.sh", "backup-objects.sh", "restore-objects.sh"):
+    for name in (
+        "backup.sh",
+        "backup-objects.sh",
+        "restore-objects.sh",
+        "prod-preflight.sh",
+        "prod-smoke.sh",
+        "restore-check.sh",
+    ):
         script = (REPO / "infra" / name).read_text(encoding="utf-8")
         # Credentials arrive via environment; a literal assignment of a
         # non-empty password on a CODE line would be a leak. Comment
@@ -150,6 +157,52 @@ def test_the_makefile_exposes_the_backup_verbs() -> None:
         assert f"\n{target}" in makefile, f"missing Makefile target {target}"
 
 
+def test_the_makefile_exposes_the_deployment_verbs() -> None:
+    # Milestone 20: the deployment sequence is executable documentation —
+    # preflight, build, up, migrate, health, smoke, backup, restore-check.
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    for target in (
+        "prod-check:",
+        "prod-build:",
+        "prod-health:",
+        "prod-smoke:",
+        "prod-backup:",
+        "prod-restore-check:",
+        "prod-down:",
+    ):
+        assert f"\n{target}" in makefile, f"missing Makefile target {target}"
+
+
+def test_prod_migrate_refuses_to_run_without_a_fresh_backup() -> None:
+    # The runbook's backup-before-migration rule, made mechanical: the
+    # target must gate on a recent pg dump and name the override.
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    migrate = makefile[makefile.index("\nprod-migrate:") : makefile.index("\nprod-health:")]
+    assert "pg-*.sql.gz" in migrate, "prod-migrate must check for a recent backup"
+    assert "force" in migrate, "prod-migrate must offer an explicit first-deploy override"
+
+
+def test_preflight_refuses_the_staging_profile_and_placeholder_secrets() -> None:
+    script = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
+    assert "INTELLIAI_REGISTRY_PROFILE" in script, "preflight must refuse the staging profile"
+    assert "api.yourdomain.com" in script, "preflight must reject the placeholder domain"
+    for variable in ("INTELLIAI_AUTH_KEY_PEPPER", "POSTGRES_PASSWORD", "MINIO_ROOT_PASSWORD"):
+        assert variable in script, f"preflight must require {variable}"
+
+
+def test_the_smoke_script_checks_the_load_bearing_surfaces() -> None:
+    script = (REPO / "infra/prod-smoke.sh").read_text(encoding="utf-8")
+    for surface in (
+        "/health/live",
+        "/health/ready",
+        "alembic",
+        "401",  # auth is enforced
+        "strict-transport-security",
+        "0\\.0\\.0\\.0",  # the port-exposure sweep
+    ):
+        assert surface in script, f"smoke must verify {surface}"
+
+
 # ── Example env files: placeholders only ────────────────────────────────
 
 
@@ -163,6 +216,23 @@ def test_env_examples_contain_no_real_looking_secrets() -> None:
                 f"{name} contains a minted-looking secret: {match.group(0)[:40]}…"
             )
         assert "ik_live_" not in text, f"{name} must never carry an API key"
+
+
+# ── Timeout chain consistency (Milestones 19/20) ─────────────────────────
+
+
+def test_the_admission_lease_outlasts_the_runtime_deadline() -> None:
+    # The lease is eviction insurance for stuck requests. If it expires
+    # below the gateway's own deadline, a healthy long-audio request
+    # frees its admission slot while still running — silent
+    # over-admission. M19 found exactly this (180 < the new deadline)
+    # and re-sized both by measurement; this pins the relationship so no
+    # future retuning can silently reopen it.
+    from intelliai_api.core.config import LimitsSettings, RuntimeSettings
+
+    deadline = RuntimeSettings().timeout_seconds
+    assert deadline >= 450.0, "deadline sized to the measured worst 600 s chunked wall (M19)"
+    assert LimitsSettings().lease_seconds > deadline
 
 
 def test_the_prod_example_requires_generation_not_reuse() -> None:

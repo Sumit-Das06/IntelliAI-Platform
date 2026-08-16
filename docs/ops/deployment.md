@@ -1,16 +1,29 @@
 # Deployment Guide — IntelliAI STT v1 (Controlled Pilot)
 
-> **STATUS: PREPARED, NOT DEPLOYED.** Everything below is implemented,
-> validated locally (prod compose config + Caddyfile syntax checked, two
-> restore drills recorded in [backup.md](backup.md)), and waiting on the
-> external inputs in section 0. No production server exists yet; nothing
-> in this repository claims otherwise. When the first real deployment
-> happens, record it under "Deployment log" at the bottom.
+> **STATUS: PREPARED, NOT DEPLOYED** (re-verified end-to-end at
+> Milestone 20 with a full local dry run — §15 of
+> [../milestones/20-production-deployment-readiness.md](../milestones/20-production-deployment-readiness.md)).
+> Everything below is implemented and validated locally; two restore
+> drills are recorded in [backup.md](backup.md). No production server
+> exists yet; nothing in this repository claims otherwise. When the
+> first real deployment happens, record it under "Deployment log" at
+> the bottom. The go/no-go checklist lives in
+> [production-readiness.md](production-readiness.md).
 
 One VPS, Docker Compose, HTTPS via Caddy. Same stack as development —
 the prod overlay adds exactly one internet-facing thing (Caddy on
 80/443) and pins the production posture. ~30 minutes from blank machine
 to serving.
+
+**What the STT runtime image carries (since M18/M19):** the whisper
+engine AND the pinned llama.cpp Linux layer for the qwen3 candidate
+(checksummed at build, re-verified at every load). Carrying it
+activates nothing — production declares `whisper` only, and promoting
+the Hindi candidate is the one-commit reviewed diff in
+[model-rollout.md](model-rollout.md). Long-audio posture (M19, code
+defaults — no env needed): ≤120 s direct, 120–600 s chunked inside the
+engine, >600 s clean 400; gateway deadline 450 s, admission lease 540 s
+(guard-tested to stay above the deadline).
 
 ## 0. External inputs needed before starting
 
@@ -50,9 +63,13 @@ chmod 600 .env               # with any required secret missing (:?)
 files carry placeholders only — `test_ops_configuration.py` refuses
 minted-looking values in them.
 
-## 6–7. HTTPS and first start
+## 6–7. Preflight, HTTPS, first start
 
 ```bash
+make prod-check   # fails loudly BEFORE Docker is touched: docker present,
+                  # .env complete, secrets generated (not placeholders),
+                  # no staging profile, compose config + Caddyfile valid
+make prod-build   # build images without starting anything
 make prod-up      # base + prod overlay; Caddy obtains Let's Encrypt
                   # automatically; HTTP answers only with redirects;
                   # HSTS + nosniff headers ride every response
@@ -64,25 +81,30 @@ runtime healthcheck allows up to 10 minutes.
 ## 8. Database migrations (safe order, always)
 
 ```bash
-make backup          # BEFORE any migration — even on first deploy
-make prod-migrate    # alembic upgrade head, one-shot container
-docker compose -f docker-compose.yml -f infra/compose/prod.yml \
-  run --rm --no-deps api alembic -c apps/api/alembic.ini current   # verify head
+make prod-backup     # BEFORE any migration — even on first deploy
+make prod-migrate    # refuses to run without a <24h backup
+                     # (first deploy of an EMPTY database: force=1)
 ```
 
-Never auto-run migrations on container start; never downgrade against
+`prod-migrate` enforces the backup-first rule mechanically. Never
+auto-run migrations on container start; never downgrade against
 production data without the pre-migration dump proven restorable.
 
 ## 9–11. Verify health, storage, STT
 
 ```bash
-curl -s https://$DOMAIN/health/ready | python3 -m json.tool
+make prod-health   # gateway live/ready + runtime ready, quick read
+make prod-smoke    # the full battery: all services healthy, migrations
+                   # at head, auth refuses (401), HTTPS + headers at the
+                   # edge, HTTP→HTTPS redirect, no internal port beyond
+                   # loopback; with INTELLIAI_SMOKE_API_KEY exported it
+                   # also runs one real transcription through the edge
 ```
 
-`status` must be `"healthy"`, with checks for `database`, `redis`,
-`storage`, **and `stt-runtime`**. `"degraded"` still serves the control
-plane but is an alarm state. Then one real transcription per served
-language (English at minimum) using the step-12 key.
+Gateway `status` must be `"healthy"`, with checks for `database`,
+`redis`, `storage`, **and `stt-runtime`**. `"degraded"` still serves
+the control plane but is an alarm state. Then one real transcription
+per served language (English at minimum) using the step-12 key.
 
 ## 12. Verify Web STT Studio (real, never mocked)
 
@@ -113,7 +135,9 @@ language (English at minimum) using the step-12 key.
 ## 14–15. Verify backups and restore
 
 ```bash
-make backup && ls -la backups/ && tail -5 backups/backup.log
+make prod-backup && ls -la backups/
+make prod-restore-check   # proves the newest pg dump restores, in a
+                          # disposable container; live data untouched
 ```
 
 All three artifacts must appear (`pg-*.sql.gz`, `minio-*.tar.gz`,

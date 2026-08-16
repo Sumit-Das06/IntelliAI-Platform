@@ -52,6 +52,49 @@ traffic.
 - A rollout with no `quality_baseline` update is a smell: what
   measurement justified it?
 
+## The prepared (and deliberately DISABLED) promotion: Hindi → Qwen3-ASR
+
+*(added at Milestone 20; status: PENDING, exactly as the ledger says)*
+
+The candidate is fully validated (accuracy, switching, canary prep,
+product path, 600 s long audio — `docs/research/MODEL_LEDGER.md`), and
+every artifact of the promotion already exists in the repository:
+
+- the **proposal route** in `apps/api/src/intelliai_api/registry/proposals.py`
+  (active only under the staging profile, which production refuses by
+  validator);
+- the **runtime image** already carries the pinned llama.cpp layer and
+  the qwen artifact pins — hosting it is a declaration, not a build;
+- the **guards** that keep it disabled:
+  `test_research_engines_never_appear_in_committed_deployments` (no
+  committed compose may say `qwen3`),
+  `test_the_staging_registry_profile_is_never_committed_configuration`,
+  and the settings validator refusing `staging`+`prod`.
+
+Promoting it, when the founder decides, is ONE reviewed commit that
+moves three things together — loud by construction, because each is
+individually guard-pinned today:
+
+1. `infra/compose/prod.yml`: `INTELLIAI_STT_SLOTS: whisper` →
+   `whisper,qwen3-asr` (the deployment now hosts the artifact;
+   first boot downloads ~1 GB hash-verified — allow the healthcheck's
+   start period, and raise it in the same commit if the VPS link is
+   slow).
+2. The catalog: the hi route moves from the incumbent to
+   `qwen3-asr-0.6b` with its `quality_baseline`
+   (`2026-08-12-qwen3-asr-adapter-evaluation`), promoted from
+   proposals.py into catalog.py — the same diff the staging profile
+   has been exercising since M18.
+3. The guards: the two tests above are UPDATED in the same commit to
+   pin the new posture (the diff that flips them is the review).
+
+Rollback stays `git revert` of that one commit: whisper is still
+pinned, still cached in the model volume, and the ledger's lineage
+marks the boundary. Capacity facts to price in before the decision
+(measured, M19): ~4–5 concurrent 300 s long requests per deployment,
+~4 GiB steady-state RSS per busy long-audio slot — re-measure both on
+the VPS before enabling long audio for customers.
+
 ## What the future ML milestone adds (not now)
 
 Evaluation harness against a held-out set, automated promotion gates,

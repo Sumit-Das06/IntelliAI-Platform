@@ -38,6 +38,7 @@ jobs:
     outputs:
       python: ${{ steps.filter.outputs.python }}
       android: ${{ steps.filter.outputs.android }}
+      deploy: ${{ steps.filter.outputs.deploy }}
     steps:
       - uses: actions/checkout@v7
       - uses: dorny/paths-filter@v4
@@ -54,6 +55,14 @@ jobs:
               - '.github/workflows/**'
             android:
               - 'apps/keyboard-android/**'
+              - '.github/workflows/**'
+            deploy:
+              - 'infra/**'
+              - 'docker-compose.yml'
+              - '.env.example'
+              - '.env.prod.example'
+              - 'pyproject.toml'
+              - 'uv.lock'
               - '.github/workflows/**'
 
   lint:
@@ -190,19 +199,60 @@ jobs:
           path: apps/keyboard-android/app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 14
 
+  deployment-config:
+    # Milestone 20: production readiness must be checkable WITHOUT a
+    # deployment. Validates the exact artifacts an operator will trust on
+    # the VPS: the prod compose overlay resolves with dummy (never real)
+    # secrets, the Caddyfile parses, and the production stt-runtime image
+    # BUILDS — which re-verifies the pinned llama.cpp layer's checksums
+    # and catches base-image bumps (e.g. Dependabot) that would otherwise
+    # merge unbuilt. CI never deploys; there is nothing here to deploy to.
+    name: Deployment Config
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Dummy values so `compose config` can resolve required variables.
+      # Deliberately shaped like placeholders — never real secrets.
+      DOMAIN: ci.invalid
+      INTELLIAI_AUTH_KEY_PEPPER: ci-only-dummy-pepper-value
+      POSTGRES_PASSWORD: ci-only-dummy-password
+      MINIO_ROOT_PASSWORD: ci-only-dummy-password
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate the production compose configuration
+        run: docker compose -f docker-compose.yml -f infra/compose/prod.yml config -q
+      - name: Validate the local-staging overlay too (it must stay loadable)
+        run: docker compose -f docker-compose.yml -f infra/compose/local-staging.yml config -q
+      - name: Validate the Caddyfile
+        run: |
+          docker run --rm -e DOMAIN="$DOMAIN" \
+            -v "$PWD/infra/Caddyfile:/etc/caddy/Caddyfile:ro" \
+            caddy:2.10-alpine caddy validate --config /etc/caddy/Caddyfile
+      - name: Build the production stt-runtime image (verifies the pinned llama.cpp layer)
+        run: docker build -f infra/docker/stt-runtime.Dockerfile -t intelliai-stt-runtime:ci .
+      - name: Build the production api image
+        run: docker build -f infra/docker/api.Dockerfile -t intelliai-api:ci .
+      - name: The built runtime image must carry the pinned llama-server
+        run: |
+          docker run --rm --entrypoint sh intelliai-stt-runtime:ci -c \
+            'sha256sum /opt/llama-cpp/llama-server' | tee hash.txt
+          grep -q '9b7b699e2e9579184117834aeaef34d5cc711027fbbc67a2a38d66559c4f288e' hash.txt
+
   ci-ok:
     # The one status check to rule them all: branch protection requires
     # THIS job, so adding/removing upstream jobs never breaks merge rules.
     # skipped upstream (docs-only change) counts as success.
     name: CI OK
-    needs: [changes, lint, typecheck, test, android]
+    needs: [changes, lint, typecheck, test, android, deployment-config]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Verify all jobs succeeded or were skipped
         run: |
-          for result in "${{ needs.lint.result }}" "${{ needs.typecheck.result }}" "${{ needs.test.result }}" "${{ needs.android.result }}"; do
+          for result in "${{ needs.lint.result }}" "${{ needs.typecheck.result }}" "${{ needs.test.result }}" "${{ needs.android.result }}" "${{ needs.deployment-config.result }}"; do
             if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
               echo "A required job failed: $result"
               exit 1
