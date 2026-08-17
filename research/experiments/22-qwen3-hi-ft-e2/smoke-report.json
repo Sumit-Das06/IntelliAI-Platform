@@ -1,0 +1,29 @@
+{
+  "experiment": "22-qwen3-hi-ft-e2",
+  "phase": "smoke",
+  "run_at": "2026-08-17T15:38:22.966560+00:00",
+  "negative_rows_in_corpus": 68,
+  "speech_rows_in_corpus": 13424,
+  "report": {
+    "gpu_name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "vram_total_mib": 8150,
+    "torch_version": "2.11.0+cu128",
+    "cuda_version": "12.8",
+    "python_version": "3.12.10",
+    "precision": "bf16",
+    "per_device_batch_size": 2,
+    "gradient_accumulation": 8,
+    "steps_run": 4,
+    "losses": [
+      20.1896,
+      24.3769,
+      18.7598,
+      17.1794
+    ],
+    "peak_vram_mib": 5061.8,
+    "seconds_per_step": 2.25,
+    "checkpoint_roundtrip_ok": true,
+    "trainable_parameters": 596049920,
+    "total_parameters": 782426112
+  }
+}

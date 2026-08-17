@@ -273,6 +273,8 @@ def _cmd_freeze_train(args: argparse.Namespace) -> int:
         data_root=args.data_root,
         eval_sha256=eval_hashes,
         eval_speakers=eval_speakers,
+        clean_markup=args.clean_markup,
+        allow_no_speech=args.allow_no_speech,
     )
     chosen = curate_by_budget(
         accepted,
@@ -317,6 +319,24 @@ def _cmd_freeze_train(args: argparse.Namespace) -> int:
     print(f"TRAIN MANIFEST SHA256: {pin.sha256}")
     print(f"samples: {pin.samples}, duration: {pin.duration_seconds}s")
     print(f"rejections: {len(rejections)}")
+    return 0
+
+
+def _cmd_make_negatives(args: argparse.Namespace) -> int:
+    from intelliai_datasets.negatives import generate_negatives
+
+    pool, _, _ = _read_candidates(args.derived_pool)
+    candidates = generate_negatives(
+        data_root=args.data_root,
+        out_candidates=args.out,
+        silence_count=args.silence,
+        noise_count=args.noise,
+        derived_count=args.derived,
+        derived_pool=list(pool),
+        seed=args.seed,
+    )
+    total = sum(c.duration_seconds for c in candidates)
+    print(f"NEGATIVES: {len(candidates)} clips, {total:.1f}s -> {args.out}")
     return 0
 
 
@@ -411,7 +431,36 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     freeze_train.add_argument("--created", default=today)
+    # ── M22 data-quality policy, OFF by default so every earlier
+    # manifest stays byte-reproducible from the same command ──────────
+    freeze_train.add_argument(
+        "--clean-markup",
+        action="store_true",
+        help="reject <...>-markup transcripts; strip control chars; collapse whitespace",
+    )
+    freeze_train.add_argument(
+        "--allow-no-speech",
+        action="store_true",
+        help="admit zxx negatives with empty transcripts (no-speech training examples)",
+    )
     freeze_train.set_defaults(func=_cmd_freeze_train)
+
+    negatives_cmd = sub.add_parser(
+        "make-negatives", help="generate deterministic no-speech negatives (M22)"
+    )
+    negatives_cmd.add_argument("--data-root", type=Path, default=Path("ml/datasets/data"))
+    negatives_cmd.add_argument("--out", type=Path, required=True, help="candidates JSON path")
+    negatives_cmd.add_argument("--silence", type=int, default=40)
+    negatives_cmd.add_argument("--noise", type=int, default=20)
+    negatives_cmd.add_argument("--derived", type=int, default=40)
+    negatives_cmd.add_argument(
+        "--derived-pool",
+        type=Path,
+        required=True,
+        help="candidates JSON whose clips donate quiet windows",
+    )
+    negatives_cmd.add_argument("--seed", type=int, default=20260817)
+    negatives_cmd.set_defaults(func=_cmd_make_negatives)
 
     sources_cmd = sub.add_parser("sources", help="print the source registry")
     sources_cmd.set_defaults(func=_cmd_sources)

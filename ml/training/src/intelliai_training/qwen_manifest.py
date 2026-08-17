@@ -52,9 +52,28 @@ class QwenJsonlRecord(BaseModel):
     total_duration_seconds: float
 
 
+#: Manifest language codes -> the official emission header names. "zxx"
+#: (no linguistic content — the M22 negatives) maps to "None", which is
+#: LITERALLY what the pinned base model emits on silence (15E probe
+#: evidence, pinned by the serving adapter's parser tests).
+_LANGUAGE_HEADERS = {"hi": "Hindi", "en": "English", "zh": "Chinese", "zxx": "None"}
+
+
 def qwen_text(sample: TrainSample, *, language_tag: str) -> str:
-    """The official supervision string for one sample."""
-    return f"language {language_tag}<asr_text>{sample.text}"
+    """The official supervision string for one sample.
+
+    ``language_tag`` names the DEFAULT header (the corpus language);
+    a sample whose own language differs — the zxx negatives — takes its
+    own mapped header. A zxx negative must carry an empty transcript,
+    so its full target is exactly ``language None<asr_text>``.
+    """
+    header = language_tag
+    if sample.language in _LANGUAGE_HEADERS and _LANGUAGE_HEADERS[sample.language] != header:
+        header = _LANGUAGE_HEADERS[sample.language]
+    if sample.language == "zxx" and sample.text.strip():
+        msg = f"negative {sample.id} carries text; a zxx row must be empty"
+        raise ValueError(msg)
+    return f"language {header}<asr_text>{sample.text}"
 
 
 def _write_jsonl(samples: list[TrainSample], path: Path, *, language_tag: str) -> str:

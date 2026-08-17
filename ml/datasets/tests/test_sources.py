@@ -19,7 +19,10 @@ class TestRegistry:
 
     def test_only_open_commercial_sources_are_usable_now(self) -> None:
         usable = {r.name for r in SOURCES if usable_now(r)}
-        assert usable == {"fleurs"}
+        # M22 added the in-repo negative sources: generated audio and
+        # locally derived segments of already-approved clips are OPEN by
+        # construction — no external gate exists to record.
+        assert usable == {"fleurs", "negatives-synthetic", "negatives-indicvoices-derived"}
 
     def test_the_approved_primaries_are_registered_even_though_blocked(self) -> None:
         for name in ("indicvoices", "kathbath", "common-voice-hi", "lahaja"):

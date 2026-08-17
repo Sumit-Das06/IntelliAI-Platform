@@ -182,6 +182,46 @@ SOURCES: Final[tuple[SourceRecord, ...]] = (
             "published models' training). FLEURS zh is the provisional stand-in."
         ),
     ),
+    # ── M22: no-speech negatives (the silence-regression fix) ───────────
+    SourceRecord(
+        name="negatives-synthetic",
+        reference="intelliai_datasets.negatives (generated in-repo)",
+        language="zxx",
+        license="synthetic — generated in-repo, no external rights attach",
+        license_verified_on="2026-08-17",
+        license_source_url="https://github.com/Sumit-Das06/IntelliAI-Platform",
+        commercial=CommercialVerdict.YES,
+        access=Access.OPEN,
+        speaker_ids=False,
+        official_splits=False,
+        contamination_risk="none_known",
+        notes=(
+            "Deterministic seeded digital silence and low-level noise "
+            "(M22 Phase 3): teaches `language None<asr_text>` on "
+            "no-speech input — the exact emission the pinned base model "
+            "produces and the serving adapter parses to an empty result."
+        ),
+    ),
+    SourceRecord(
+        name="negatives-indicvoices-derived",
+        reference="ai4bharat/IndicVoices (derived near-silence segments)",
+        language="zxx",
+        license="CC-BY-4.0 (derivative of IndicVoices audio; attribution carries)",
+        license_verified_on="2026-08-11",
+        license_source_url="https://huggingface.co/datasets/ai4bharat/IndicVoices",
+        commercial=CommercialVerdict.YES,
+        access=Access.OPEN,
+        access_detail="derived locally from already-ingested approved clips",
+        speaker_ids=False,
+        official_splits=False,
+        contamination_risk="none_known",
+        notes=(
+            "Quietest ≥2.5 s windows cut deterministically from approved "
+            "ingested IndicVoices Hindi clips (parent clip id recorded per "
+            "candidate); real room tone rather than digital zero, so the "
+            "no-speech lesson generalizes past exact silence."
+        ),
+    ),
 )
 
 
