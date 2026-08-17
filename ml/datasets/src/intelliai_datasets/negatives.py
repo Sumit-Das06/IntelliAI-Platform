@@ -126,7 +126,7 @@ def generate_negatives(
             energy = float(abs(wave[start : start + window]).mean())
             if best_energy is None or energy < best_energy:
                 best_start, best_energy = start, energy
-        if best_energy is None or best_energy > DERIVED_MAX_MEAN_ABS:
+        if best_start is None or best_energy is None or best_energy > DERIVED_MAX_MEAN_ABS:
             continue
         path = base / f"derived-{taken:03d}.flac"
         digest, duration = _write_flac(path, wave[best_start : best_start + window])

@@ -1,0 +1,49 @@
+{
+  "experiment": "21-qwen3-hi-finetuning",
+  "phase": "english-regression + probes (HF-side tripwire, not a benchmark)",
+  "run_at": "2026-08-17T22:12:30.672768+00:00",
+  "base": {
+    "jfk-flac": {
+      "wer": 1.2273,
+      "text_head": "और तो मेरे भाइयों अमरिकन्स आप नहीं पूछते कि आपके देश आपको क्या कर सकता है आप नही"
+    },
+    "jfk-wav": {
+      "wer": 1.1364,
+      "text_head": "और तो मेरे भाइयों अमरिकन्स आपको नहीं पूछना चाहिए कि आपके देश को आपको क्या कर सकत"
+    },
+    "silence-10s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "tone-440hz-5s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "hindi-language-id": {
+      "devanagari": true,
+      "text_head": "टिकट करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जी"
+    }
+  },
+  "candidate": {
+    "jfk-flac": {
+      "wer": 1.2273,
+      "text_head": "और तो मेरे भाइयों अमरिकन्स आप नहीं पूछते कि आपके देश आपको क्या कर सकता है आप नही"
+    },
+    "jfk-wav": {
+      "wer": 1.1364,
+      "text_head": "और तो मेरे भाइयों अमरिकन्स आपको नहीं पूछना चाहिए कि आपके देश को आपको क्या कर सकत"
+    },
+    "silence-10s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "tone-440hz-5s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "hindi-language-id": {
+      "devanagari": true,
+      "text_head": "टिकट करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जी"
+    }
+  }
+}

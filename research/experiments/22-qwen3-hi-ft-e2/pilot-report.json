@@ -1,0 +1,117 @@
+{
+  "experiment": "22-qwen3-hi-ft-e2",
+  "phase": "pilot",
+  "run_at": "2026-08-17T15:43:43.080381+00:00",
+  "record": {
+    "experiment": "qwen-e2-hi-sft",
+    "run_at": "2026-08-17T15:43:25.769061+00:00",
+    "git_commit": "c7dd40ef1fc6f96c75f7cae9d85e8b2481d697b0",
+    "config": {
+      "experiment": "qwen-e2-hi-sft",
+      "base_model_id": "Qwen/Qwen3-ASR-0.6B",
+      "base_revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "base_weights_sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea",
+      "base_weights_bytes": 1876091704,
+      "language": "hi",
+      "language_tag": "Hindi",
+      "manifest_path": "ml/datasets/manifests/qwen-hi-public-train-v2.jsonl",
+      "manifest_sha256": "31e61c1cd6240177f4d88009254746beb091b9dfada5b00c4c1d683337e86708",
+      "data_root": "ml/datasets/data",
+      "validation_fraction": 0.03,
+      "freeze_audio_encoder": true,
+      "optimizer": "adafactor",
+      "learning_rate": 1e-05,
+      "epochs": 2.0,
+      "per_device_batch_size": 2,
+      "gradient_accumulation": 8,
+      "warmup_ratio": 0.03,
+      "gradient_checkpointing": true,
+      "precision": "bf16",
+      "max_grad_norm": 1.0,
+      "seed": 20260817,
+      "max_audio_seconds": 30.0,
+      "output_dir": "weights/qwen-e2-hi-sft-pilot",
+      "save_steps": 15,
+      "save_total_limit": 6,
+      "log_steps": 5
+    },
+    "environment": {
+      "python": "3.12.10",
+      "torch": "2.11.0+cu128",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "platform": "Windows-11-10.0.26200-SP0"
+    },
+    "train_jsonl_sha256": "ef624a38eb531012bba349f5d91c63268c5ca1594bc035e1d8b7b3febef52e01",
+    "validation_jsonl_sha256": "1808623be493af5880e98847bde4a7c5d1d40f80ddd1a5d49b1464a498b150c4",
+    "train_samples": 13071,
+    "validation_samples": 421,
+    "trainable_parameters": 596049920,
+    "total_parameters": 782426112,
+    "train_duration_seconds": 251.3,
+    "steps_completed": 30,
+    "final_train_loss": 13.4812,
+    "train_loss_history": [
+      [
+        5,
+        32.8573
+      ],
+      [
+        10,
+        20.5524
+      ],
+      [
+        15,
+        18.1643
+      ],
+      [
+        20,
+        15.6342
+      ],
+      [
+        25,
+        15.7747
+      ],
+      [
+        30,
+        13.4812
+      ]
+    ],
+    "validation_history": [
+      [
+        15,
+        1.7756
+      ],
+      [
+        30,
+        1.6574
+      ]
+    ],
+    "peak_vram_mib": 5089.2,
+    "checkpoint_dir": "weights\\qwen-e2-hi-sft-pilot\\checkpoints",
+    "notes": ""
+  },
+  "qualitative": {
+    "speech": [
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000000.flac",
+        "reference": "language Hindi<asr_text>मैं थ्री फोर फाइव सिक्स मैं पेल ड्राइव कोलकाता पश्चिम बंगाल पिन कोड सेवेन जीरो जीरो जीरो बैंक में बुकिंग संदर्भ संख्या सिक्स जीरो सिक्स नाइन ऐट नाइन वन जीरो फोर जीरो ऐट के साथ वाणिज्यिक गैस वितरण सेवा पर प्रतिक्रिया देना चाहता हूँ मेरी प्रतिक्रिया यह है कि बढ़िया सेवा शीघ्र वितरण और विनम्र कर्मचारी धन्यवाद",
+        "hypothesis": "मैं तीन चार पाँच छह मैं पल ड्राइव कलकत्ता पश्चिम बंगाल पिन कोड सेवन जीरो जीरो जीरो वन मैं बुकिंग संदर्भ संख्या छह जीरो छह नाइन आठ नाइन वन जीरो चार जीरो आठ के साथ वाणिज्यिक गैस वितरण सेवा पर प्रतिक्रिया देना चाहता हूँ मेरे प्रतिक्रिया यह है कि बढ़िया सेवा सीक्रेट वितरण और बिनमूर फर्मचारी धन्यवाद"
+      },
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000054.flac",
+        "reference": "language Hindi<asr_text>या उनका माल गड़बड़ होगा न",
+        "hypothesis": "या उनका माल गड़बड़ होगा ना"
+      },
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000159.flac",
+        "reference": "language Hindi<asr_text>नौ आठ सात छः पाँच चार तीन दो एक शून्य है और मेरी जन्मतिथि उन्नीस सौ तिरानवे",
+        "hypothesis": "नौ आठ सात छह पाँच चार तीन दो एक शून्य है और मेरी जन्मदिन थी उन्नीस सौ तिरान वे"
+      }
+    ],
+    "silence_10s": {
+      "empty": true,
+      "text_head": ""
+    }
+  }
+}

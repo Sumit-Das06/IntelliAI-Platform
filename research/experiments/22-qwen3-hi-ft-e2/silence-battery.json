@@ -1,0 +1,94 @@
+{
+  "experiment": "22-qwen3-hi-ft-e2",
+  "phase": "silence-battery (Phase 13 acceptance gate)",
+  "run_at": "2026-08-17T22:45:21.022552+00:00",
+  "speech_source": "ml\\datasets\\data\\indicvoices\\hindi\\train\\indicvoices-hindi-train-0-000005.flac",
+  "e1_candidate": {
+    "digital-silence-10s": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "इस्ट्रिक्ट इस्ट्रिक्ट"
+    },
+    "real-ish-noise-quiet(-50dBFS)-8s": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "इस्ट्रेस"
+    },
+    "real-ish-noise-moderate(-40dBFS)-8s": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "इस्ट्रेस"
+    },
+    "speech-then-silence-5s": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "silence-5s-then-speech": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "very-short-speech-1s": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "मनुष्य को कर"
+    },
+    "short-speech-2.5s-in-noise": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "उ जो कि मनुष्य को करना चाहिए"
+    }
+  },
+  "e2_candidate": {
+    "digital-silence-10s": {
+      "empty": true,
+      "devanagari": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "real-ish-noise-quiet(-50dBFS)-8s": {
+      "empty": true,
+      "devanagari": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "real-ish-noise-moderate(-40dBFS)-8s": {
+      "empty": true,
+      "devanagari": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "speech-then-silence-5s": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "silence-5s-then-speech": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "very-short-speech-1s": {
+      "empty": true,
+      "devanagari": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "short-speech-2.5s-in-noise": {
+      "empty": false,
+      "devanagari": true,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    }
+  }
+}

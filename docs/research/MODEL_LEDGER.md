@@ -1012,6 +1012,43 @@ remains a founder decision with the switching/canary battery to re-run
 on whichever artifact is proposed; the deployment story is unchanged
 (same runtime, same mmproj, same serving shape, same size).
 
+## Milestone 22 — Hindi fine-tuning E2: data quality + scale (appended 2026-08-18)
+
+Full report:
+[2026-08-17-qwen3-hindi-finetuning-e2.md](2026-08-17-qwen3-hindi-finetuning-e2.md).
+One variable moved — the data — and it answered the question.
+
+**qwen3-asr-0.6b-hi-ft-e2 (NEW research candidate; ck1200 of qwen-e2-hi-sft)**
+- 2026-08-18 — **created → hi_ft_e2_best_hindi_NOT_promotable
+  (B. MODEST IMPROVEMENT over E1; English gate FAILED)** *(research
+  only; production Hindi still whisper-small; the M18 proposal still
+  names the incumbent)* — **[EVIDENCE]** Corpus `qwen-hi-public-train@v2`
+  (27.27 h cleaned: markup dropped with reasons, eval roster + content
+  hashes enforced, 0.5% no-speech negatives whose target is the base's
+  own `language None<asr_text>` emission), E1's exact configuration.
+  On the frozen primary THROUGH the real adapter: **CER 0.12477 →
+  0.11044 (replicate 0.10871), WER 0.26642 → 0.22805, 0 hallucinated
+  probes, RTF 0.262, RSS 1,652 MiB — the program's best Hindi numbers**,
+  every E2 checkpoint beating E1's best. **The E1 silence regression
+  is FIXED** (silence → empty at every checkpoint, HF and quantized
+  paths; 0.5% negatives sufficed, landing by step 30). **Recorded
+  cost: English is GONE** — ck300/600 answer English with silence,
+  ck900+ TRANSLATE it into Hindi; E1's 10 h kept English, so the
+  monolingual retention threshold sits between 10 h and 27 h. Second
+  recorded edge: **very short speech (1 s) now suppresses to empty**
+  (the 2 s corpus floor left it unsupervised and the negatives taught
+  "when unsure, silence") — E2's no-speech robustness meanwhile
+  extends past digital silence to real noise at −50/−40 dBFS where E1
+  voices text. Same byte-exact export pipeline (control unchanged);
+  long-audio chunked path intact at 300 s and 600 s.
+
+**Consequence for priorities:** data remains the binding axis. The
+stated E3 arm is a COMPOSITION FIX (v2 corpus + ~5–8% approved open
+English, e.g. FLEURS en, + a bounded 0.5–2 s short-speech slice; all
+else frozen) to close both recorded regressions while keeping the
+Hindi gain — only if that fails does optimizer work earn a turn. No
+promotion proposal changes until a candidate passes every gate.
+
 ---
 
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

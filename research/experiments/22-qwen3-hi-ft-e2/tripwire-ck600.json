@@ -1,0 +1,49 @@
+{
+  "experiment": "21-qwen3-hi-finetuning",
+  "phase": "english-regression + probes (HF-side tripwire, not a benchmark)",
+  "run_at": "2026-08-17T22:12:02.713806+00:00",
+  "base": {
+    "jfk-flac": {
+      "wer": 1.0,
+      "text_head": ""
+    },
+    "jfk-wav": {
+      "wer": 1.0,
+      "text_head": ""
+    },
+    "silence-10s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "tone-440hz-5s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "hindi-language-id": {
+      "devanagari": true,
+      "text_head": "टीका करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जी"
+    }
+  },
+  "candidate": {
+    "jfk-flac": {
+      "wer": 1.0,
+      "text_head": ""
+    },
+    "jfk-wav": {
+      "wer": 1.0,
+      "text_head": ""
+    },
+    "silence-10s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "tone-440hz-5s": {
+      "empty": true,
+      "text_head": ""
+    },
+    "hindi-language-id": {
+      "devanagari": true,
+      "text_head": "टीका करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जी"
+    }
+  }
+}

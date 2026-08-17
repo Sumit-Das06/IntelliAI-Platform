@@ -156,6 +156,25 @@ class TestArtifactIdentity:
         assert specs[0].artifact == "qwen3-asr-0.6b-hi-ft-e1"
         assert specs[0].files is qwen3_asr.ARTIFACT_SPECS["qwen3-asr-0.6b-hi-ft-e1"]
 
+    def test_the_e2_candidate_is_registered_research_only(self) -> None:
+        # M22: same laws as E1 — .invalid model URL, the OFFICIAL mmproj
+        # byte-for-byte (tower frozen), distinct text weights, and
+        # distinct from E1 (a new experiment is a new identity).
+        spec = qwen3_asr.ARTIFACT_SPECS["qwen3-asr-0.6b-hi-ft-e2"]
+        by_name = {f.filename: f for f in spec.files}
+        assert ".invalid/m22/qwen3-asr-0.6b-hi-ft-e2/" in by_name["Qwen3-ASR-0.6B-Q8_0.gguf"].url
+        official = {f.filename: f for f in QWEN3_ASR_0_6B_FILES.files}
+        e1 = {f.filename: f for f in qwen3_asr.ARTIFACT_SPECS["qwen3-asr-0.6b-hi-ft-e1"].files}
+        assert (
+            by_name["mmproj-Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+            == official["mmproj-Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+        )
+        model_sha = by_name["Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+        assert model_sha != official["Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+        assert model_sha != e1["Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+        specs = build_slot_specs(Settings(slots="qwen3-asr:qwen3-asr-0.6b-hi-ft-e2"))
+        assert specs[0].artifact == "qwen3-asr-0.6b-hi-ft-e2"
+
     def test_the_chunking_settings_reach_the_loader(self) -> None:
         # M19: the long-audio shape is deployment configuration — every
         # knob a canary overlay sets must actually arrive at the loader,

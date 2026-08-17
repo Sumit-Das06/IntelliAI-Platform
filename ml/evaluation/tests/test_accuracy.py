@@ -49,6 +49,15 @@ def _reproduce(path: Path) -> int:
         reference = references[clip.clip_id]
         if not reference:  # probes declare no reference; nothing to align
             continue
+        if clip.hypothesis_text and not wer_ascii(reference, clip.hypothesis_text).hypothesis_words:
+            # The hypothesis is real text the ascii ruler cannot see
+            # (M22's en record stores a DEVANAGARI hypothesis for an
+            # English clip — the recorded en→hi regression). The unicode
+            # ruler scored substitutions; ascii would call the same text
+            # deletions. No ascii anchor exists for such a clip; skipping
+            # is the honest scope, and the pinned per-record count drops
+            # accordingly so this can never silently check nothing.
+            continue
         recomputed = wer_ascii(reference, clip.hypothesis_text)
         assert recomputed.substitutions == clip.substitutions
         assert recomputed.insertions == clip.insertions
@@ -128,6 +137,14 @@ _WITH_REFERENCE = {
     "2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-hi-m21.json": 0,
     "2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-hi-m21-replicate.json": 0,
     "2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-en-m21-safety.json": 2,
+    # Milestone 22 (2026-08-18): the E2 candidate. hi + replicate carry
+    # no ascii anchor (0 by law). The en safety record anchors ONE clip:
+    # jfk-wav's empty hypothesis reproduces exactly (22 deletions);
+    # jfk-flac stores the recorded en→hi translation — Devanagari the
+    # ascii ruler cannot see, so it carries no ascii anchor (skipped).
+    "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-hi-m22.json": 0,
+    "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-hi-m22-replicate.json": 0,
+    "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-en-m22-safety.json": 1,
 }
 
 
@@ -158,7 +175,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 32
+        assert sum(_WITH_REFERENCE.values()) == 33
 
 
 class TestUnicodeRulersNeverChooseThemselves:

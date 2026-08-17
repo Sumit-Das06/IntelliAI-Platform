@@ -128,10 +128,45 @@ QWEN3_ASR_0_6B_HI_FT_E1_FILES: Final = ArtifactSpec(
     ),
 )
 
+_RESEARCH_HI_FT_E2: Final = (
+    "https://research-artifacts.intelliai.invalid/m22/qwen3-asr-0.6b-hi-ft-e2"
+)
+
+#: Milestone 22: the E2 candidate — checkpoint-1200 of qwen-e2-hi-sft
+#: (base 5eb14417…, manifest qwen-hi-public-train@v2 31e61c1c…, seed
+#: 20260817, micro-batch 1 x acc 16; run record in
+#: research/experiments/22-qwen3-hi-ft-e2). Same byte-exact template-
+#: rewrite export and same official mmproj as E1 (tower frozen).
+#: RESEARCH ONLY, and NOT a promotion candidate: the all-Hindi 27 h
+#: corpus fixed the silence regression but cost English (late
+#: checkpoints translate en→hi; early ones emit nothing) — recorded in
+#: the M22 report; an E3 retention-mix is the stated path.
+QWEN3_ASR_0_6B_HI_FT_E2_FILES: Final = ArtifactSpec(
+    artifact="qwen3-asr-0.6b-hi-ft-e2",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename=MODEL_FILENAME,
+            url=f"{_RESEARCH_HI_FT_E2}/{MODEL_FILENAME}",
+            sha256="2fbd9faf4b3cb7ce889702f3dadd6225f96b8047550bf88376cd85394172e529",
+        ),
+        ArtifactFile(
+            filename=MMPROJ_FILENAME,
+            url=f"{_GGUF_BASE}/{MMPROJ_FILENAME}",
+            sha256="41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d",
+        ),
+    ),
+)
+
 #: This family's admission table (same law as the whisper table): a new
 #: checkpoint is a pinned entry here, never a declaration.
 ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
-    spec.artifact: spec for spec in (QWEN3_ASR_0_6B_FILES, QWEN3_ASR_0_6B_HI_FT_E1_FILES)
+    spec.artifact: spec
+    for spec in (
+        QWEN3_ASR_0_6B_FILES,
+        QWEN3_ASR_0_6B_HI_FT_E1_FILES,
+        QWEN3_ASR_0_6B_HI_FT_E2_FILES,
+    )
 }
 
 #: The serving RUNTIME is pinned exactly like the weights (Milestone 16,
