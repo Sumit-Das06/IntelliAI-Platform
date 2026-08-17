@@ -21,6 +21,16 @@ train = [
     "peft>=0.14",
     "soundfile>=0.12",
 ]
+# Milestone 21: the official Qwen3-ASR SFT path. The `qwen-asr` wrapper
+# is the official training/inference entry point (QwenLM/Qwen3-ASR);
+# everything else rides on the same pinned torch/transformers stack.
+qwen-train = [
+    "torch>=2.7",
+    "transformers>=4.57",
+    "qwen-asr>=0.0.6",
+    "soundfile>=0.12",
+    "huggingface-hub>=0.26",
+]
 
 [dependency-groups]
 dev = ["pytest>=8"]
