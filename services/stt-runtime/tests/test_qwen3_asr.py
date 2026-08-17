@@ -130,6 +130,32 @@ class TestArtifactIdentity:
         with pytest.raises(ValueError, match="determined by them"):
             build_slot_specs(Settings(slots="qwen3-asr:some-other-name"))
 
+    def test_the_hi_ft_e1_candidate_is_registered_research_only(self) -> None:
+        # M21: the fine-tune is ADMITTED (a pinned entry, selectable via
+        # the registered-artifact declaration) and nothing more — its
+        # model URL uses the RFC-reserved .invalid TLD so it can never
+        # resolve, and its mmproj IS the official pinned artifact
+        # byte-for-byte (the audio tower was frozen in training).
+        spec = qwen3_asr.ARTIFACT_SPECS["qwen3-asr-0.6b-hi-ft-e1"]
+        by_name = {f.filename: f for f in spec.files}
+        model_url = by_name["Qwen3-ASR-0.6B-Q8_0.gguf"].url
+        assert ".invalid/m21/qwen3-asr-0.6b-hi-ft-e1/" in model_url
+        official = {f.filename: f for f in QWEN3_ASR_0_6B_FILES.files}
+        assert (
+            by_name["mmproj-Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+            == official["mmproj-Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+        )
+        # And the text weights are NOT the incumbent's: a distinct model.
+        assert (
+            by_name["Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+            != official["Qwen3-ASR-0.6B-Q8_0.gguf"].sha256
+        )
+
+    def test_the_candidate_is_selectable_through_the_admission_law(self) -> None:
+        specs = build_slot_specs(Settings(slots="qwen3-asr:qwen3-asr-0.6b-hi-ft-e1"))
+        assert specs[0].artifact == "qwen3-asr-0.6b-hi-ft-e1"
+        assert specs[0].files is qwen3_asr.ARTIFACT_SPECS["qwen3-asr-0.6b-hi-ft-e1"]
+
     def test_the_chunking_settings_reach_the_loader(self) -> None:
         # M19: the long-audio shape is deployment configuration — every
         # knob a canary overlay sets must actually arrive at the loader,

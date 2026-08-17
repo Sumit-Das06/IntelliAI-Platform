@@ -96,9 +96,43 @@ QWEN3_ASR_0_6B_FILES: Final = ArtifactSpec(
     ),
 )
 
+_RESEARCH_HI_FT_E1: Final = (
+    "https://research-artifacts.intelliai.invalid/m21/qwen3-asr-0.6b-hi-ft-e1"
+)
+
+#: Milestone 21: the Hindi SFT candidate — checkpoint-600 of the
+#: qwen-e1-hi-sft run (base 5eb14417…, manifest a4748dee…, seed
+#: 20260817; run record weights/qwen-e1-hi-sft/run + full-run-record
+#: in research/experiments/21-qwen3-hi-finetuning). The text GGUF was
+#: produced by TEMPLATE REWRITE onto the official artifact's structure —
+#: a pipeline proven exact by reproducing the official base GGUF
+#: byte-for-byte from the base weights. The mmproj IS the official
+#: artifact (same bytes, same pin): the audio tower was frozen in
+#: training, so the candidate and the incumbent share it. RESEARCH
+#: ONLY: the .invalid URL never resolves by design; the store serves
+#: these files from local placement, hash-verified like everything else.
+QWEN3_ASR_0_6B_HI_FT_E1_FILES: Final = ArtifactSpec(
+    artifact="qwen3-asr-0.6b-hi-ft-e1",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename=MODEL_FILENAME,
+            url=f"{_RESEARCH_HI_FT_E1}/{MODEL_FILENAME}",
+            sha256="63e98aae609d9ce8939073678f367fe88ca2a64d3184f0eb08cfefabbaf18bdb",
+        ),
+        ArtifactFile(
+            filename=MMPROJ_FILENAME,
+            url=f"{_GGUF_BASE}/{MMPROJ_FILENAME}",
+            sha256="41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d",
+        ),
+    ),
+)
+
 #: This family's admission table (same law as the whisper table): a new
 #: checkpoint is a pinned entry here, never a declaration.
-ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {ARTIFACT_ID: QWEN3_ASR_0_6B_FILES}
+ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
+    spec.artifact: spec for spec in (QWEN3_ASR_0_6B_FILES, QWEN3_ASR_0_6B_HI_FT_E1_FILES)
+}
 
 #: The serving RUNTIME is pinned exactly like the weights (Milestone 16,
 #: supply-chain law): the llama.cpp build is part of the measured system,

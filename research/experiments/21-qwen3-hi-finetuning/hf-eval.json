@@ -1,0 +1,350 @@
+{
+  "base": {
+    "experiment": "21-qwen3-hi-finetuning",
+    "phase": "checkpoint-eval (HF-side selection instrument; NOT the adapter verdict)",
+    "label": "base",
+    "model_dir": "weights\\hf-base\\qwen3-asr-0.6b-5eb144179a02",
+    "run_at": "2026-08-17T13:12:25.257998+00:00",
+    "clips": 151,
+    "cer": 0.14781,
+    "wer": 0.28177,
+    "empty_outputs": 0,
+    "probe_hits": 0,
+    "rtf": 0.1128,
+    "p50_seconds": 0.77,
+    "p95_seconds": 1.64,
+    "wall_seconds": 132.1,
+    "worst_clips": [
+      {
+        "id": "indicvoices-hindi-valid-0-001336",
+        "cer": 1.0,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 6
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001547",
+        "cer": 1.0,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 4
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-003148",
+        "cer": 1.0,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 4
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001455",
+        "cer": 0.9556,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 19
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001325",
+        "cer": 0.95,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 8
+      }
+    ]
+  },
+  "ck150": {
+    "experiment": "21-qwen3-hi-finetuning",
+    "phase": "checkpoint-eval (HF-side selection instrument; NOT the adapter verdict)",
+    "label": "ck150",
+    "model_dir": "weights\\qwen-e1-hi-sft\\checkpoints\\checkpoint-150\\inferable",
+    "run_at": "2026-08-17T13:15:12.283874+00:00",
+    "clips": 151,
+    "cer": 0.13868,
+    "wer": 0.2744,
+    "empty_outputs": 0,
+    "probe_hits": 0,
+    "rtf": 0.1312,
+    "p50_seconds": 0.89,
+    "p95_seconds": 2.52,
+    "wall_seconds": 153.7,
+    "worst_clips": [
+      {
+        "id": "indicvoices-hindi-valid-0-001337",
+        "cer": 0.8986,
+        "wer": 0.9744,
+        "empty": false,
+        "probes": [],
+        "chars": 31
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001455",
+        "cer": 0.6222,
+        "wer": 0.75,
+        "empty": false,
+        "probes": [],
+        "chars": 46
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-000469",
+        "cer": 0.5957,
+        "wer": 0.75,
+        "empty": false,
+        "probes": [],
+        "chars": 56
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001336",
+        "cer": 0.5789,
+        "wer": 0.8,
+        "empty": false,
+        "probes": [],
+        "chars": 19
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-004836",
+        "cer": 0.525,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 51
+      }
+    ]
+  },
+  "ck300": {
+    "experiment": "21-qwen3-hi-finetuning",
+    "phase": "checkpoint-eval (HF-side selection instrument; NOT the adapter verdict)",
+    "label": "ck300",
+    "model_dir": "weights\\qwen-e1-hi-sft\\checkpoints\\checkpoint-300\\inferable",
+    "run_at": "2026-08-17T13:17:48.317973+00:00",
+    "clips": 151,
+    "cer": 0.12518,
+    "wer": 0.26489,
+    "empty_outputs": 0,
+    "probe_hits": 0,
+    "rtf": 0.1229,
+    "p50_seconds": 0.87,
+    "p95_seconds": 2.01,
+    "wall_seconds": 144.0,
+    "worst_clips": [
+      {
+        "id": "indicvoices-hindi-valid-0-001324",
+        "cer": 0.7059,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 19
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001336",
+        "cer": 0.6842,
+        "wer": 0.8,
+        "empty": false,
+        "probes": [],
+        "chars": 17
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001495",
+        "cer": 0.4681,
+        "wer": 1.25,
+        "empty": false,
+        "probes": [],
+        "chars": 51
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001487",
+        "cer": 0.4615,
+        "wer": 0.5,
+        "empty": false,
+        "probes": [],
+        "chars": 28
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001455",
+        "cer": 0.4444,
+        "wer": 0.6667,
+        "empty": false,
+        "probes": [],
+        "chars": 36
+      }
+    ]
+  },
+  "ck450": {
+    "experiment": "21-qwen3-hi-finetuning",
+    "phase": "checkpoint-eval (HF-side selection instrument; NOT the adapter verdict)",
+    "label": "ck450",
+    "model_dir": "weights\\qwen-e1-hi-sft\\checkpoints\\checkpoint-450\\inferable",
+    "run_at": "2026-08-17T13:20:18.891303+00:00",
+    "clips": 151,
+    "cer": 0.12594,
+    "wer": 0.26182,
+    "empty_outputs": 0,
+    "probe_hits": 0,
+    "rtf": 0.1185,
+    "p50_seconds": 0.87,
+    "p95_seconds": 1.87,
+    "wall_seconds": 138.8,
+    "worst_clips": [
+      {
+        "id": "indicvoices-hindi-valid-0-000461",
+        "cer": 0.6,
+        "wer": 0.8333,
+        "empty": false,
+        "probes": [],
+        "chars": 23
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001336",
+        "cer": 0.5263,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 22
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001455",
+        "cer": 0.5111,
+        "wer": 0.6667,
+        "empty": false,
+        "probes": [],
+        "chars": 43
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-000469",
+        "cer": 0.5106,
+        "wer": 0.5833,
+        "empty": false,
+        "probes": [],
+        "chars": 59
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001324",
+        "cer": 0.4706,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 13
+      }
+    ]
+  },
+  "ck600": {
+    "experiment": "21-qwen3-hi-finetuning",
+    "phase": "checkpoint-eval (HF-side selection instrument; NOT the adapter verdict)",
+    "label": "ck600",
+    "model_dir": "weights\\qwen-e1-hi-sft\\checkpoints\\checkpoint-600\\inferable",
+    "run_at": "2026-08-17T13:22:44.880144+00:00",
+    "clips": 151,
+    "cer": 0.12401,
+    "wer": 0.25967,
+    "empty_outputs": 0,
+    "probe_hits": 0,
+    "rtf": 0.1152,
+    "p50_seconds": 0.83,
+    "p95_seconds": 1.86,
+    "wall_seconds": 134.9,
+    "worst_clips": [
+      {
+        "id": "indicvoices-hindi-valid-0-000461",
+        "cer": 0.6,
+        "wer": 0.8333,
+        "empty": false,
+        "probes": [],
+        "chars": 21
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001336",
+        "cer": 0.5789,
+        "wer": 0.8,
+        "empty": false,
+        "probes": [],
+        "chars": 15
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001455",
+        "cer": 0.4889,
+        "wer": 0.5833,
+        "empty": false,
+        "probes": [],
+        "chars": 43
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001495",
+        "cer": 0.4681,
+        "wer": 1.25,
+        "empty": false,
+        "probes": [],
+        "chars": 51
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001487",
+        "cer": 0.4615,
+        "wer": 0.5,
+        "empty": false,
+        "probes": [],
+        "chars": 28
+      }
+    ]
+  },
+  "ck604": {
+    "experiment": "21-qwen3-hi-finetuning",
+    "phase": "checkpoint-eval (HF-side selection instrument; NOT the adapter verdict)",
+    "label": "ck604",
+    "model_dir": "weights\\qwen-e1-hi-sft\\checkpoints\\checkpoint-604\\inferable",
+    "run_at": "2026-08-17T13:25:04.416338+00:00",
+    "clips": 151,
+    "cer": 0.12484,
+    "wer": 0.25998,
+    "empty_outputs": 0,
+    "probe_hits": 0,
+    "rtf": 0.1088,
+    "p50_seconds": 0.79,
+    "p95_seconds": 1.71,
+    "wall_seconds": 127.5,
+    "worst_clips": [
+      {
+        "id": "indicvoices-hindi-valid-0-000461",
+        "cer": 0.6,
+        "wer": 0.8333,
+        "empty": false,
+        "probes": [],
+        "chars": 21
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001336",
+        "cer": 0.5789,
+        "wer": 1.0,
+        "empty": false,
+        "probes": [],
+        "chars": 20
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001455",
+        "cer": 0.4889,
+        "wer": 0.5833,
+        "empty": false,
+        "probes": [],
+        "chars": 43
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-001495",
+        "cer": 0.4681,
+        "wer": 1.25,
+        "empty": false,
+        "probes": [],
+        "chars": 51
+      },
+      {
+        "id": "indicvoices-hindi-valid-0-000469",
+        "cer": 0.4468,
+        "wer": 0.6667,
+        "empty": false,
+        "probes": [],
+        "chars": 59
+      }
+    ]
+  }
+}

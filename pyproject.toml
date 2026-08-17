@@ -130,5 +130,13 @@ ignore_missing_imports = true
 # installed); confined to ml/training, imported lazily behind torch-free
 # config/manifest layers.
 [[tool.mypy.overrides]]
-module = ["transformers.*", "peft.*", "soundfile.*", "ctranslate2.*", "safetensors.*", "qwen_asr.*"]
+module = [
+    "transformers.*",
+    "peft.*",
+    "soundfile.*",
+    "ctranslate2.*",
+    "safetensors.*",
+    "qwen_asr.*",
+    "huggingface_hub.*",
+]
 ignore_missing_imports = true

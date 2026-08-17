@@ -93,7 +93,7 @@ def snapshot_base_model(config: QwenTrainingConfig, *, cache_dir: Path) -> Path:
     return path
 
 
-def load_wrapper(model_dir: Path) -> Any:
+def load_wrapper(model_dir: Path, *, device_map: str | None = None) -> Any:
     """The official entry point: Qwen3ASRModel wraps model + processor."""
     import torch
     from qwen_asr import Qwen3ASRModel
@@ -101,7 +101,7 @@ def load_wrapper(model_dir: Path) -> Any:
     return Qwen3ASRModel.from_pretrained(
         str(model_dir),
         dtype=torch.bfloat16,
-        device_map=None,
+        device_map=device_map,
     )
 
 
@@ -470,7 +470,9 @@ def train(config: QwenTrainingConfig, *, max_steps: int | None = None) -> QwenRu
     train_rows = _read_jsonl(Path(record.train_path))
     validation_rows = _read_jsonl(Path(record.validation_path)) if record.validation_path else []
 
-    base_dir = snapshot_base_model(config, cache_dir=output_dir / "hf-cache")
+    # ONE shared base snapshot for every run (gitignored weights/): the
+    # size check guards it, and a flaky resolver stops costing re-downloads.
+    base_dir = snapshot_base_model(config, cache_dir=Path("weights/hf-base"))
     wrapper = load_wrapper(base_dir)
     model, processor = wrapper.model, wrapper.processor
     if config.freeze_audio_encoder:
@@ -501,6 +503,11 @@ def train(config: QwenTrainingConfig, *, max_steps: int | None = None) -> QwenRu
         for entry in trainer.state.log_history
         if "eval_loss" in entry
     )
+    train_loss_history = tuple(
+        (int(entry["step"]), round(entry["loss"], 4))
+        for entry in trainer.state.log_history
+        if "loss" in entry
+    )
     final_loss = next(
         (entry["loss"] for entry in reversed(trainer.state.log_history) if "loss" in entry),
         float("nan"),
@@ -521,6 +528,7 @@ def train(config: QwenTrainingConfig, *, max_steps: int | None = None) -> QwenRu
         train_duration_seconds=round(elapsed, 1),
         steps_completed=int(result.global_step),
         final_train_loss=round(float(final_loss), 4),
+        train_loss_history=train_loss_history,
         validation_history=validation_history,
         peak_vram_mib=round(torch.cuda.max_memory_allocated() / (1024 * 1024), 1),
         checkpoint_dir=str(output_dir / "checkpoints"),

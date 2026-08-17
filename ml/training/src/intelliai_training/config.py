@@ -169,6 +169,9 @@ class QwenRunRecord(BaseModel):
     train_duration_seconds: float
     steps_completed: int
     final_train_loss: float
+    #: (step, windowed train loss) for every logging boundary — the E1b
+    #: pilot showed the last window alone can mislead (batch spikes).
+    train_loss_history: tuple[tuple[int, float], ...] = ()
     validation_history: tuple[tuple[int, float], ...] = ()
     peak_vram_mib: float
     checkpoint_dir: str

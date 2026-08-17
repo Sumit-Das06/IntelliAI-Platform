@@ -235,6 +235,36 @@
         }
       ],
       "voices": []
+    },
+    {
+      "public_model": "research:qwen3-asr-0.6b-hi-ft-e1",
+      "_comment": "Milestone 21: the Hindi SFT candidate (checkpoint-600 of qwen-e1-hi-sft), exported by template rewrite onto the official GGUF structure (the rewrite reproduced the official base artifact byte-for-byte, so the conversion adds nothing); the mmproj is the official artifact reused byte-for-byte because the audio tower was frozen in training.",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "qwen3-asr-0.6b-hi-ft-e1",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "hi",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b-hi-ft-e1",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b-hi-ft-e1",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
     }
   ]
 }

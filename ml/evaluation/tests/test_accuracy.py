@@ -122,6 +122,12 @@ _WITH_REFERENCE = {
     # Milestone 17 (2026-08-12): the pinned LINUX runtime validated on
     # the frozen primary (WSL2; hi record, no ascii anchor — 0 by law).
     "2026-08-12-research-qwen3-asr-0.6b-hi-17-linux.json": 0,
+    # Milestone 21 (2026-08-17): the Hindi SFT candidate through the
+    # real adapter. hi + replicate carry no ascii anchor (0 by law);
+    # the safety record reproduces the two JFK clips.
+    "2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-hi-m21.json": 0,
+    "2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-hi-m21-replicate.json": 0,
+    "2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-en-m21-safety.json": 2,
 }
 
 
@@ -152,7 +158,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 30
+        assert sum(_WITH_REFERENCE.values()) == 32
 
 
 class TestUnicodeRulersNeverChooseThemselves:

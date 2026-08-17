@@ -976,6 +976,42 @@ long-request admission (~4–5 × 300 s per single-decoder deployment,
 measured) and the ~4 GiB steady-state slot memory, both re-measured on
 VPS hardware.
 
+## Milestone 21 — Qwen3 Hindi fine-tuning experiment E1 (appended 2026-08-17)
+
+Full report:
+[2026-08-17-qwen3-hindi-finetuning.md](2026-08-17-qwen3-hindi-finetuning.md).
+The program's first fine-tune of an ADOPTED lineage — and its first
+fine-tune to beat its own baseline.
+
+**qwen3-asr-0.6b-hi-ft-e1 (NEW research candidate; identity in report §24)**
+- 2026-08-17 — **created → hi_ft_candidate (B. MODEST IMPROVEMENT)**
+  *(research only; NOT promoted; production Hindi still whisper-small;
+  the M18 promotion proposal still names the incumbent qwen artifact)* —
+  **[EVIDENCE]** SFT of the official recipe on `hi-public-train@v1`
+  (10 h IndicVoices+Kathbath, eval-disjoint by content hash), audio
+  tower frozen, 604 steps / 31 min on the RTX 5070 (peak 5.3 GiB).
+  On the frozen `stt-hi-public-eval@v1` THROUGH the real adapter on the
+  pinned b10344 runtime: **CER 0.1457 → 0.12477 (−14.4% rel, ~11× the
+  replicate band; replicate spread 0.0006), WER 0.2851 → 0.26642, 0
+  hallucinated probes, RTF 0.237, English WER 0.0 byte-perfect, M19
+  chunked long-audio intact.** Export by TEMPLATE REWRITE onto the
+  official GGUF structure — the pipeline reproduced the official base
+  artifact **byte-for-byte** from base weights (sha `bca259818b50…`),
+  so conversion provably adds nothing. Recorded regression, mitigated
+  structurally: called WITHOUT the pipeline VAD, the candidate emits a
+  repeated token on pure silence where the base emits nothing (10 h of
+  speech-only supervision); unreachable through the product path (VAD
+  short-circuits, verified adapter-side), zero empties on the
+  benchmark. Next arm should fix data first (strip verbatim markup,
+  add silence/noise negatives, scale 10→25-40 h) before any
+  hyperparameter sweep.
+
+**Consequence for priorities:** Hindi now has an in-house candidate
+BETTER than the adopted incumbent on the frozen primary. Promotion
+remains a founder decision with the switching/canary battery to re-run
+on whichever artifact is proposed; the deployment story is unchanged
+(same runtime, same mmproj, same serving shape, same size).
+
 ---
 
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

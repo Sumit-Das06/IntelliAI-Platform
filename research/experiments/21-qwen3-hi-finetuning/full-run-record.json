@@ -1,0 +1,318 @@
+{
+  "experiment": "21-qwen3-hi-finetuning",
+  "phase": "full",
+  "run_at": "2026-08-17T13:08:56.267685+00:00",
+  "record": {
+    "experiment": "qwen-e1-hi-sft",
+    "run_at": "2026-08-17T13:08:56.160326+00:00",
+    "git_commit": "375fcef8bc08c988f893a55cc4d1f8f8eac18a10",
+    "config": {
+      "experiment": "qwen-e1-hi-sft",
+      "base_model_id": "Qwen/Qwen3-ASR-0.6B",
+      "base_revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "base_weights_sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea",
+      "base_weights_bytes": 1876091704,
+      "language": "hi",
+      "language_tag": "Hindi",
+      "manifest_path": "ml/datasets/manifests/hi-public-train-v1.jsonl",
+      "manifest_sha256": "a4748dee8a7a82ee4e1233587f3f4366fba91dfcb1e367415191e2e3388ee0df",
+      "data_root": "ml/datasets/data",
+      "validation_fraction": 0.03,
+      "freeze_audio_encoder": true,
+      "optimizer": "adafactor",
+      "learning_rate": 1e-05,
+      "epochs": 2.0,
+      "per_device_batch_size": 2,
+      "gradient_accumulation": 8,
+      "warmup_ratio": 0.03,
+      "gradient_checkpointing": true,
+      "precision": "bf16",
+      "max_grad_norm": 1.0,
+      "seed": 20260817,
+      "max_audio_seconds": 30.0,
+      "output_dir": "weights/qwen-e1-hi-sft",
+      "save_steps": 150,
+      "save_total_limit": 6,
+      "log_steps": 10
+    },
+    "environment": {
+      "python": "3.12.10",
+      "torch": "2.11.0+cu128",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "platform": "Windows-11-10.0.26200-SP0"
+    },
+    "train_jsonl_sha256": "1b69ce84b13b72cf42826d68d88ae3231cdf796ed3274721760daaac7bf243c0",
+    "validation_jsonl_sha256": "2291ebff4e33ae22679d637d2e2acdbbf3fb3a7d7817110e591dba32885dba22",
+    "train_samples": 4822,
+    "validation_samples": 166,
+    "trainable_parameters": 596049920,
+    "total_parameters": 782426112,
+    "train_duration_seconds": 1883.9,
+    "steps_completed": 604,
+    "final_train_loss": 1.5502,
+    "train_loss_history": [
+      [
+        10,
+        39.079
+      ],
+      [
+        20,
+        22.9178
+      ],
+      [
+        30,
+        16.309
+      ],
+      [
+        40,
+        15.0992
+      ],
+      [
+        50,
+        13.5499
+      ],
+      [
+        60,
+        11.7594
+      ],
+      [
+        70,
+        11.8325
+      ],
+      [
+        80,
+        10.7053
+      ],
+      [
+        90,
+        9.4077
+      ],
+      [
+        100,
+        8.0105
+      ],
+      [
+        110,
+        7.9754
+      ],
+      [
+        120,
+        7.7676
+      ],
+      [
+        130,
+        6.6873
+      ],
+      [
+        140,
+        6.4281
+      ],
+      [
+        150,
+        5.9377
+      ],
+      [
+        160,
+        5.2701
+      ],
+      [
+        170,
+        4.8825
+      ],
+      [
+        180,
+        4.5547
+      ],
+      [
+        190,
+        4.2693
+      ],
+      [
+        200,
+        4.2831
+      ],
+      [
+        210,
+        3.8969
+      ],
+      [
+        220,
+        3.396
+      ],
+      [
+        230,
+        3.5395
+      ],
+      [
+        240,
+        3.1119
+      ],
+      [
+        250,
+        2.8897
+      ],
+      [
+        260,
+        2.8787
+      ],
+      [
+        270,
+        2.864
+      ],
+      [
+        280,
+        2.6138
+      ],
+      [
+        290,
+        2.6338
+      ],
+      [
+        300,
+        2.3386
+      ],
+      [
+        310,
+        2.0061
+      ],
+      [
+        320,
+        2.0298
+      ],
+      [
+        330,
+        2.0788
+      ],
+      [
+        340,
+        1.8444
+      ],
+      [
+        350,
+        1.9504
+      ],
+      [
+        360,
+        1.7268
+      ],
+      [
+        370,
+        1.8327
+      ],
+      [
+        380,
+        1.8508
+      ],
+      [
+        390,
+        1.7261
+      ],
+      [
+        400,
+        1.6708
+      ],
+      [
+        410,
+        1.8489
+      ],
+      [
+        420,
+        1.7579
+      ],
+      [
+        430,
+        1.6286
+      ],
+      [
+        440,
+        1.6171
+      ],
+      [
+        450,
+        1.5774
+      ],
+      [
+        460,
+        1.6146
+      ],
+      [
+        470,
+        1.6002
+      ],
+      [
+        480,
+        1.6219
+      ],
+      [
+        490,
+        1.5756
+      ],
+      [
+        500,
+        1.7176
+      ],
+      [
+        510,
+        1.5822
+      ],
+      [
+        520,
+        1.5729
+      ],
+      [
+        530,
+        1.6372
+      ],
+      [
+        540,
+        1.6947
+      ],
+      [
+        550,
+        1.6496
+      ],
+      [
+        560,
+        1.6396
+      ],
+      [
+        570,
+        1.6254
+      ],
+      [
+        580,
+        1.5335
+      ],
+      [
+        590,
+        1.6015
+      ],
+      [
+        600,
+        1.5502
+      ]
+    ],
+    "validation_history": [
+      [
+        150,
+        0.6239
+      ],
+      [
+        300,
+        0.2747
+      ],
+      [
+        450,
+        0.2173
+      ],
+      [
+        600,
+        0.2093
+      ]
+    ],
+    "peak_vram_mib": 5274.2,
+    "checkpoint_dir": "weights\\qwen-e1-hi-sft\\checkpoints",
+    "notes": ""
+  }
+}

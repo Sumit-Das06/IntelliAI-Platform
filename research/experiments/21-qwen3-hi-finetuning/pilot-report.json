@@ -1,0 +1,85 @@
+{
+  "experiment": "21-qwen3-hi-finetuning",
+  "phase": "pilot",
+  "run_at": "2026-08-17T12:19:26.192427+00:00",
+  "record": {
+    "experiment": "qwen-e1-hi-sft",
+    "run_at": "2026-08-17T12:18:12.755389+00:00",
+    "git_commit": "375fcef8bc08c988f893a55cc4d1f8f8eac18a10",
+    "config": {
+      "experiment": "qwen-e1-hi-sft",
+      "base_model_id": "Qwen/Qwen3-ASR-0.6B",
+      "base_revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "base_weights_sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea",
+      "base_weights_bytes": 1876091704,
+      "language": "hi",
+      "language_tag": "Hindi",
+      "manifest_path": "ml/datasets/manifests/hi-public-train-v1.jsonl",
+      "manifest_sha256": "a4748dee8a7a82ee4e1233587f3f4366fba91dfcb1e367415191e2e3388ee0df",
+      "data_root": "ml/datasets/data",
+      "validation_fraction": 0.03,
+      "freeze_audio_encoder": true,
+      "optimizer": "adafactor",
+      "learning_rate": 1e-05,
+      "epochs": 2.0,
+      "per_device_batch_size": 2,
+      "gradient_accumulation": 8,
+      "warmup_ratio": 0.03,
+      "gradient_checkpointing": true,
+      "precision": "bf16",
+      "max_grad_norm": 1.0,
+      "seed": 20260817,
+      "max_audio_seconds": 30.0,
+      "output_dir": "weights/qwen-e1-hi-sft-pilot",
+      "save_steps": 15,
+      "save_total_limit": 6,
+      "log_steps": 5
+    },
+    "environment": {
+      "python": "3.12.10",
+      "torch": "2.11.0+cu128",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "platform": "Windows-11-10.0.26200-SP0"
+    },
+    "train_jsonl_sha256": "1b69ce84b13b72cf42826d68d88ae3231cdf796ed3274721760daaac7bf243c0",
+    "validation_jsonl_sha256": "2291ebff4e33ae22679d637d2e2acdbbf3fb3a7d7817110e591dba32885dba22",
+    "train_samples": 4822,
+    "validation_samples": 166,
+    "trainable_parameters": 596049920,
+    "total_parameters": 782426112,
+    "train_duration_seconds": 236.4,
+    "steps_completed": 30,
+    "final_train_loss": 15.5583,
+    "validation_history": [
+      [
+        15,
+        1.7257
+      ],
+      [
+        30,
+        1.6401
+      ]
+    ],
+    "peak_vram_mib": 5101.0,
+    "checkpoint_dir": "weights\\qwen-e1-hi-sft-pilot\\checkpoints",
+    "notes": ""
+  },
+  "qualitative": [
+    {
+      "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000081.flac",
+      "reference": "language Hindi<asr_text>हाँ ठीक है रहना है <unintelligible> किराया है हज़ार रुपैया किराया है होटल में भी खाना अच्छा है",
+      "hypothesis": "हाँ ठीक है राना सभी रूम पे आ जाओ बैग के राज़ टॉल में भी खाना अच्छा है"
+    },
+    {
+      "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000177.flac",
+      "reference": "language Hindi<asr_text>चलिए ठीक है",
+      "hypothesis": "家里贴个呢。"
+    },
+    {
+      "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000225.flac",
+      "reference": "language Hindi<asr_text>वो अपने पशुओं के लिए छोड़ देते थे लेकिन जो आज का इंसान है वो इतना ज्यादा लालची हो गया है कि जैसे ही अपनी फसल कटती है वो अपने खेतों में आग लगा देता है ताकि जल्दी से जल्दी दूसरी फसल का उपयोग कर सके दूसरी फसल को बो सके लेकिन इसकी वजह से हमारे जो",
+      "hypothesis": "वो अपने पसुओं के लिए छोड़ देते थे लेकिन जो आज का इंसान है वो इतना ज़्यादा लालची हो गया है कि जैसे ही अपनी फसल कटती है वो अपने खेतों में आग लगा देता है ताकि जल्दी से जल्दी दूसरी फसल का उपयोग कर सके दूसरी फसल को बो सके लेकिन इसकी वजह से हमारे जो"
+    }
+  ]
+}
