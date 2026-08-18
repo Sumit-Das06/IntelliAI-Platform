@@ -1,0 +1,726 @@
+{
+  "simulation": "24-local-canary-challenger-share-0.75",
+  "NOT_LEDGER_EVIDENCE": "operational mixed-routing smoke on research runtime; no quality claim",
+  "run_at": "2026-08-18T22:23:03.488239+00:00",
+  "seed": 20260818,
+  "challenger_share": 0.75,
+  "incumbent": {
+    "requests": 24,
+    "succeeded": 24,
+    "failed": 0,
+    "p50_ms": 1851.8,
+    "p95_ms": 7863.2,
+    "max_ms": 13261.6
+  },
+  "challenger": {
+    "requests": 76,
+    "succeeded": 76,
+    "failed": 0,
+    "p50_ms": 1375.2,
+    "p95_ms": 1635.9,
+    "max_ms": 1762.8
+  },
+  "fallback_events": 0,
+  "samples": [
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 846.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1502.7
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1969.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1762.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1327.1
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 857.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1460.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1439.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1501.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1347.4
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1446.1
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1639.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1484.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1491.1
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1340.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 791.9
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 7863.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1480.0
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1956.9
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1859.0
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1338.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1295.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1349.4
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1919.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1215.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 824.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1338.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1362.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1413.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1220.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 765.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1306.0
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1815.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1433.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1233.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 748.9
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1325.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1420.9
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1469.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1329.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 796.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1399.9
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1937.5
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1597.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1361.1
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1392.5
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 13261.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1635.9
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1506.1
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1365.5
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1394.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1547.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1394.8
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1986.3
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1807.5
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1360.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1439.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1384.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1421.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1215.1
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 830.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1348.5
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1844.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1534.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1253.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 794.5
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1531.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1425.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1592.5
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1344.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 821.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1512.5
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1897.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1653.8
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1362.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 888.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1502.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1462.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1465.1
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1322.3
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1413.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1441.1
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1951.6
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1531.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1362.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 777.2
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1433.4
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1882.4
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1975.7
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1351.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 753.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1337.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1450.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1423.0
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1794.7
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1351.3
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1593.3
+    },
+    {
+      "artifact": "whisper-small",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-002151.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1818.4
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-004235.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1525.0
+    },
+    {
+      "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+      "clip": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "status": 200,
+      "error_type": null,
+      "client_ms": 1244.7
+    }
+  ]
+}

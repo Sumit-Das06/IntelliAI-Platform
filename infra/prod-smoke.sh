@@ -14,8 +14,11 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 # project and a generated env file; production uses the defaults.
 PROJECT="${INTELLIAI_PROJECT:-intelliai}"
 ENV_FILE="${INTELLIAI_ENV_FILE:-.env}"
+# M25: the same battery runs against the local production-shaped
+# overlay (local-prod.yml) by pointing this at it; default is prod.
+OVERLAY="${INTELLIAI_COMPOSE_OVERLAY:-infra/compose/prod.yml}"
 
-COMPOSE="docker compose -p $PROJECT --env-file $ENV_FILE -f docker-compose.yml -f infra/compose/prod.yml"
+COMPOSE="docker compose -p $PROJECT --env-file $ENV_FILE -f docker-compose.yml -f $OVERLAY"
 fail() { echo "SMOKE FAILED: $*" >&2; exit 1; }
 note() { echo "  ok: $*"; }
 warn() { echo "  WARN: $*" >&2; }

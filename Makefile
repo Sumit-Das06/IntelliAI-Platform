@@ -7,6 +7,8 @@
 .PHONY: help up down ps logs clean sync api test migrate migration downgrade build db-ui psql \
         eval-fetch eval speech-eval bench manifest bootstrap-org bootstrap-benchmark-org \
         keyboard-apk keyboard-test \
+        local-prod-check local-prod-build local-prod-up local-prod-migrate \
+        local-prod-health local-prod-smoke local-prod-down \
         prod-check prod-config-check prod-build prod-up prod-migrate prod-health prod-smoke \
         prod-backup prod-restore-check prod-down
 
@@ -250,6 +252,38 @@ staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (t
 	  && cp -r /src-base/v1 /models/qwen3-asr-0.6b/ \
 	  && cp -r /src-e3/v1 /models/qwen3-asr-0.6b-hi-ft-e3/ \
 	  && ls -la /models/qwen3-asr-0.6b/v1 /models/qwen3-asr-0.6b-hi-ft-e3/v1"
+
+# ── Local production-shaped stack (M25; see docs/ops/local-tunnel.md) ─
+# The EXACT production architecture (base + Caddy edge) with the ONE
+# staging difference: hi -> qwen3-asr-0.6b-hi-ft-e3 via the staging
+# registry profile. Never referenced by any prod-* target; the settings
+# layer refuses the staging profile under INTELLIAI_ENV=prod.
+
+LOCAL_PROD_OVERLAY := infra/compose/local-prod.yml
+LOCAL_PROD := docker compose -f docker-compose.yml -f $(LOCAL_PROD_OVERLAY)
+
+local-prod-check: ## Preflight the local production-shaped stack (same battery as prod-check)
+	INTELLIAI_COMPOSE_OVERLAY=$(LOCAL_PROD_OVERLAY) bash infra/prod-preflight.sh
+
+local-prod-build: ## Build the local production-shaped images (same Dockerfiles as prod)
+	$(LOCAL_PROD) build
+
+local-prod-up: staging-seed-models ## Seed models + start the local production-shaped stack
+	$(LOCAL_PROD) up -d --build
+
+local-prod-migrate: ## Apply migrations inside the local production-shaped stack
+	$(LOCAL_PROD) run --rm --no-deps api alembic -c apps/api/alembic.ini upgrade head
+
+local-prod-health: ## Health read: gateway live/ready + runtime slot-truthful ready
+	@curl -fsS --max-time 5 http://127.0.0.1:8000/health/live && echo " <- /health/live"
+	@curl -fsS --max-time 10 http://127.0.0.1:8000/health/ready && echo " <- /health/ready"
+	@curl -fsS --max-time 10 http://127.0.0.1:8001/health/ready && echo " <- stt-runtime /health/ready"
+
+local-prod-smoke: ## Full smoke against the local production-shaped stack (same battery as prod-smoke)
+	INTELLIAI_COMPOSE_OVERLAY=$(LOCAL_PROD_OVERLAY) bash infra/prod-smoke.sh
+
+local-prod-down: ## Stop the local production-shaped stack (volumes are kept)
+	$(LOCAL_PROD) down
 
 # ── Production (see docs/ops/deployment.md) ───────────────────────────
 # The deployment sequence, in call order:

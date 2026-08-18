@@ -1,0 +1,19 @@
+{
+  "drill": "25-rollback (Phase 15, Docker stack)",
+  "run_at": "2026-08-18T22:24:08.742835+00:00",
+  "procedure": "the api service alone was recreated from the BASE compose (no staging profile) while Caddy, the stt-runtime, and all data services kept running - a pure configuration operation taking seconds",
+  "result": {
+    "hindi_after_rollback": {
+      "status": 200,
+      "served_by": "whisper-small"
+    },
+    "hindi_after_restore": {
+      "status": 200,
+      "served_by": "qwen3-asr-0.6b-hi-ft-e3"
+    },
+    "runtime_restarted": false,
+    "images_rebuilt": false,
+    "clients_changed": false
+  },
+  "production_equivalence": "on Hostinger the same flip is the git revert of the promotion commit; ROLLBACK_HINDI_ROUTE (proposals.py) restates the target verbatim, test-pinned"
+}

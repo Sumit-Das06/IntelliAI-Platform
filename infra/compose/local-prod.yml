@@ -1,0 +1,53 @@
+# LOCAL PRODUCTION-SHAPED overlay — the M25 tunnel-testable E3 stack.
+#
+# The EXACT production architecture (base stack + the prod overlay's
+# Caddy HTTPS edge) with exactly one routing difference: the staging
+# registry profile serves hi -> qwen3-asr-0.6b-hi-ft-e3 (the PENDING
+# M24 promotion proposal, live for LOCAL verification only). This file
+# is NEVER applied implicitly: it activates only by hand
+# (`make local-prod-up`). Production separation is structural, not
+# procedural — the settings layer refuses the staging profile under
+# INTELLIAI_ENV=prod, so this overlay CANNOT run with the production
+# environment, and the prod overlay CANNOT serve E3. Guard tests pin
+# both directions, and no prod-* Make target references this file.
+#
+# Cloudflare Tunnel points at the Caddy edge (https://localhost) so
+# Web and Android exercise the same HTTPS path a future Hostinger
+# deployment serves: docs/ops/local-tunnel.md.
+
+services:
+  caddy:
+    # Same edge as production (infra/compose/prod.yml): TLS, security
+    # headers, 30MB body ceiling. DOMAIN=localhost issues Caddy's
+    # internal self-signed certificate; the tunnel gives clients a real
+    # Cloudflare certificate on the outside.
+    image: caddy:2.10-alpine
+    ports:
+      - "127.0.0.1:443:443"
+      - "127.0.0.1:80:80"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on:
+      api:
+        condition: service_started
+    networks: [intelliai]
+    restart: unless-stopped
+
+  api:
+    environment:
+      # dev env + staging profile: the ONLY composition that can serve
+      # the E3 proposal (prod refuses it). Everything else about the
+      # stack keeps the production posture.
+      INTELLIAI_REGISTRY_PROFILE: staging
+
+  stt-runtime:
+    environment:
+      INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3
+
+volumes:
+  caddydata:
+  caddyconfig:

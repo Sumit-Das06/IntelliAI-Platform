@@ -1,0 +1,102 @@
+{
+  "drill": "25-e3-failure-restart-in-container",
+  "run_at": "2026-08-18T22:06:25.207910+00:00",
+  "baseline_e3": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1261.3
+  },
+  "baseline_whisper": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1368.5
+  },
+  "baseline_slots": {
+    "whisper-small": "ready",
+    "qwen3-asr-0.6b-hi-ft-e3": "ready"
+  },
+  "kill1:pids_before_kill": [
+    "46"
+  ],
+  "kill1:readiness_timeline": [
+    {
+      "t": 0.22,
+      "e3": "ready"
+    },
+    {
+      "t": 0.98,
+      "e3": "restarting"
+    },
+    {
+      "t": 3.01,
+      "e3": "ready"
+    }
+  ],
+  "kill1:seconds_to_truth": 0.98,
+  "kill1:seconds_to_recovered": 3.01,
+  "kill1:whisper_during_outage": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1393.8
+  },
+  "kill1:e3_after_recovery": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1233.5
+  },
+  "kill2:pids_before_kill": [
+    "2033"
+  ],
+  "kill2:readiness_timeline": [
+    {
+      "t": 0.24,
+      "e3": "ready"
+    },
+    {
+      "t": 0.49,
+      "e3": "restarting"
+    },
+    {
+      "t": 2.77,
+      "e3": "ready"
+    }
+  ],
+  "kill2:seconds_to_truth": 0.49,
+  "kill2:seconds_to_recovered": 2.77,
+  "kill2:whisper_during_outage": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1387.3
+  },
+  "kill2:e3_after_recovery": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1231.9
+  },
+  "final_slots": {
+    "whisper-small": "ready",
+    "qwen3-asr-0.6b-hi-ft-e3": "ready"
+  },
+  "final_e3": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 734.1
+  },
+  "final_whisper": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1360.9
+  },
+  "llama_pids_final": [
+    "2174"
+  ],
+  "orphans": 0
+}

@@ -13,6 +13,9 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 # project and a generated env file; production uses the defaults.
 PROJECT="${INTELLIAI_PROJECT:-intelliai}"
 ENV_FILE="${INTELLIAI_ENV_FILE:-.env}"
+# M25: the same battery runs against the local production-shaped
+# overlay (local-prod.yml) by pointing this at it; default is prod.
+OVERLAY="${INTELLIAI_COMPOSE_OVERLAY:-infra/compose/prod.yml}"
 
 fail() { echo "PREFLIGHT FAILED: $*" >&2; exit 1; }
 note() { echo "  ok: $*"; }
@@ -55,13 +58,23 @@ if [ "$DOMAIN" = "localhost" ]; then
   warn "DOMAIN=localhost — Caddy will self-sign (fine for the local dry run, wrong for production)"
 fi
 
-# ── 4. Production posture ───────────────────────────────────────────────
-[ "${INTELLIAI_ENV:-}" = "prod" ] || fail "INTELLIAI_ENV must be 'prod' in .env (found '${INTELLIAI_ENV:-unset}')"
-# The staging registry profile activates unreviewed model routes; the app
-# refuses the combination at startup, but a preflight should say it
-# BEFORE an operator watches a container crash-loop.
-[ -z "${INTELLIAI_REGISTRY_PROFILE:-}" ] || fail "INTELLIAI_REGISTRY_PROFILE must not be set in production (found '${INTELLIAI_REGISTRY_PROFILE}')"
-note "INTELLIAI_ENV=prod, no staging profile"
+# ── 4. Environment posture (overlay-aware, M25) ─────────────────────────
+# The PROD overlay demands the production posture. The LOCAL
+# production-shaped overlay demands the OPPOSITE: it serves the pending
+# E3 proposal via the staging profile, which the app refuses under
+# INTELLIAI_ENV=prod — so prod env there would crash-loop at startup.
+if [ "$OVERLAY" = "infra/compose/local-prod.yml" ]; then
+  [ "${INTELLIAI_ENV:-}" != "prod" ] \
+    || fail "INTELLIAI_ENV must NOT be 'prod' for the local production-shaped stack (the staging registry profile is refused under prod)"
+  note "local production-shaped posture (env '${INTELLIAI_ENV:-dev}'; the overlay sets the staging profile itself)"
+else
+  [ "${INTELLIAI_ENV:-}" = "prod" ] || fail "INTELLIAI_ENV must be 'prod' in .env (found '${INTELLIAI_ENV:-unset}')"
+  # The staging registry profile activates unreviewed model routes; the app
+  # refuses the combination at startup, but a preflight should say it
+  # BEFORE an operator watches a container crash-loop.
+  [ -z "${INTELLIAI_REGISTRY_PROFILE:-}" ] || fail "INTELLIAI_REGISTRY_PROFILE must not be set in production (found '${INTELLIAI_REGISTRY_PROFILE}')"
+  note "INTELLIAI_ENV=prod, no staging profile"
+fi
 
 # ── 5. the env file stays private ───────────────────────────────────────
 if command -v stat >/dev/null 2>&1; then
@@ -73,9 +86,9 @@ fi
 
 # ── 6. Compose configuration parses with THESE values ───────────────────
 docker compose -p "$PROJECT" --env-file "$ENV_FILE" \
-  -f docker-compose.yml -f infra/compose/prod.yml config -q \
+  -f docker-compose.yml -f "$OVERLAY" config -q \
   || fail "docker compose config rejected the production overlay"
-note "compose config (base + prod overlay)"
+note "compose config (base + $OVERLAY)"
 
 # ── 7. Caddyfile syntax, with this DOMAIN ───────────────────────────────
 docker run --rm -e "DOMAIN=$DOMAIN" \
@@ -92,4 +105,8 @@ if command -v df >/dev/null 2>&1; then
   fi
 fi
 
-echo "PREFLIGHT OK — safe to run: make prod-build && make prod-up"
+if [ "$OVERLAY" = "infra/compose/local-prod.yml" ]; then
+  echo "PREFLIGHT OK — safe to run: make local-prod-up"
+else
+  echo "PREFLIGHT OK — safe to run: make prod-build && make prod-up"
+fi

@@ -38,9 +38,21 @@ def leak_scan(text: str) -> list[str]:
     return [marker for marker in LEAK_MARKERS if marker in lowered]
 
 
+def safe_json(response: httpx.Response) -> dict:
+    """A proxy edge (Cloudflare 524/530) answers HTML, not JSON — that
+    outcome is EVIDENCE, never a crash."""
+    try:
+        body = response.json()
+        return body if isinstance(body, dict) else {}
+    except (json.JSONDecodeError, ValueError):
+        return {}
+
+
 class Drills:
-    def __init__(self, base_url: str, key: str, audio_dir: Path) -> None:
-        self.client = httpx.Client(base_url=base_url, timeout=600.0)
+    def __init__(self, base_url: str, key: str, audio_dir: Path, *, verify: bool = True) -> None:
+        # verify=False exists for ONE hop only: the local Caddy edge's
+        # self-signed localhost certificate (M25). Public URLs verify.
+        self.client = httpx.Client(base_url=base_url, timeout=600.0, verify=verify)
         self.key = key
         self.audio = audio_dir
         self.rows: dict[str, Any] = {}
@@ -101,10 +113,15 @@ def main() -> int:
     parser.add_argument("--base-url", default="http://127.0.0.1:8010")
     parser.add_argument("--audio-dir", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--insecure",
+        action="store_true",
+        help="accept the local Caddy edge's self-signed localhost certificate",
+    )
     args = parser.parse_args()
     key = os.environ["INTELLIAI_M24_KEY"]
 
-    d = Drills(args.base_url, key, args.audio_dir)
+    d = Drills(args.base_url, key, args.audio_dir, verify=not args.insecure)
 
     # ── Auth matrix (unchanged laws) ─────────────────────────────────
     d.summarize("auth_missing_key", d.post("hi-short.wav", auth=None, language="hi"))
@@ -115,34 +132,36 @@ def main() -> int:
     d.summarize(
         "hindi_explicit_to_e3",
         r,
-        devanagari=bool(DEVANAGARI.search(r.json().get("text", ""))),
-        text_preview=r.json().get("text", "")[:80],
+        devanagari=bool(DEVANAGARI.search(safe_json(r).get("text", ""))),
+        text_preview=safe_json(r).get("text", "")[:80],
     )
     r = d.post("hi-short.wav", language="hi-IN")
     d.summarize(
-        "hindi_regional_tag", r, devanagari=bool(DEVANAGARI.search(r.json().get("text", "")))
+        "hindi_regional_tag", r, devanagari=bool(DEVANAGARI.search(safe_json(r).get("text", "")))
     )
     r = d.post("en-jfk.wav", language="en")
     d.summarize(
         "english_stays_on_incumbent",
         r,
-        ask_not=("ask not" in r.json().get("text", "").lower()),
+        ask_not=("ask not" in safe_json(r).get("text", "").lower()),
     )
     # No declared language = the DEFAULT route (declaration-first law).
     r = d.post("hi-short.wav")
     d.summarize(
         "hindi_undeclared_default_route",
         r,
-        devanagari=bool(DEVANAGARI.search(r.json().get("text", ""))),
+        devanagari=bool(DEVANAGARI.search(safe_json(r).get("text", ""))),
     )
     # Unsupported language hint: no route -> default (incumbent) which
     # refuses the unknown code cleanly; never a 500, never a leak.
     r = d.post("hi-short.wav", language="xx")
-    d.summarize("unsupported_language_hint", r, error_param=r.json().get("error", {}).get("param"))
+    d.summarize(
+        "unsupported_language_hint", r, error_param=safe_json(r).get("error", {}).get("param")
+    )
 
     # ── verbose_json: short = one clean segment ──────────────────────
     r = d.post("hi-short.wav", language="hi", response_format="verbose_json")
-    body = r.json()
+    body = safe_json(r)
     d.summarize(
         "verbose_json_short",
         r,
@@ -161,7 +180,7 @@ def main() -> int:
     d.summarize("collection_consented", r, sample_created=bool(sample_id))
     correction_row: dict[str, Any] = {"skipped": "no sample id"}
     if sample_id:
-        original = r.json()["text"]
+        original = safe_json(r)["text"]
         corrected = d.client.post(
             f"/v1/audio/transcriptions/{sample_id}/correction",
             headers={"Authorization": f"Bearer {key}"},
@@ -186,7 +205,7 @@ def main() -> int:
         "contribution_off",
         r,
         no_sample=r.headers.get("X-IntelliAI-Sample") is None,
-        transcript_still_returned=bool(r.json().get("text")),
+        transcript_still_returned=bool(safe_json(r).get("text")),
     )
 
     # ── Malformed / empty / tiny inputs (Phase 5, items 13-15) ───────
@@ -196,7 +215,7 @@ def main() -> int:
         ("tiny-malformed.wav", "tiny_malformed_audio"),
     ):
         r = d.post(clip, language="hi")
-        d.summarize(name, r, error_param=r.json().get("error", {}).get("param"))
+        d.summarize(name, r, error_param=safe_json(r).get("error", {}).get("param"))
 
     # ── The 600 s law through the gateway, with usage deltas ─────────
     for clip, name, seconds in (
@@ -206,7 +225,7 @@ def main() -> int:
         before = d.usage_total()
         r = d.post(clip, language="hi", response_format="verbose_json")
         after = d.usage_total()
-        body = r.json()
+        body = safe_json(r)
         segments = body.get("segments", [])
         join = " ".join(str(s.get("text", "")) for s in segments)
         d.summarize(
@@ -224,7 +243,7 @@ def main() -> int:
     before = d.usage_total()
     r = d.post("hi-602s.wav", language="hi")
     after = d.usage_total()
-    error = r.json().get("error", {})
+    error = safe_json(r).get("error", {})
     d.summarize(
         "ceiling_602s_refused",
         r,

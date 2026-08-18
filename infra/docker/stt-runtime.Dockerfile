@@ -15,8 +15,12 @@ FROM python:3.12-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /usr/local/bin/uv
 
+# UV_HTTP_TIMEOUT: large pinned wheels (ctranslate2 ~38MB) over slow or
+# flaky links need more than uv's default per-request budget; the
+# lockfile stays frozen, so this changes resilience, never contents.
 ENV UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    UV_HTTP_TIMEOUT=300
 
 WORKDIR /app
 
@@ -67,8 +71,8 @@ FROM python:3.12-slim AS runtime
 # without it, so it is part of the image contract. libgomp1 is the ONE
 # system dependency of the vendored llama.cpp layer (outside its pin
 # table by design — an OS package, satisfied by the OS layer).
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg libgomp1 && \
+RUN apt-get -o Acquire::Retries=5 update && \
+    apt-get -o Acquire::Retries=5 install -y --no-install-recommends ffmpeg libgomp1 && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=llama /opt/llama-cpp /opt/llama-cpp

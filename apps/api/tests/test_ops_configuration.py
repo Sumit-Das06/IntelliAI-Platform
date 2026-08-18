@@ -67,6 +67,31 @@ def test_the_local_staging_overlay_is_explicit_and_unreachable_from_prod() -> No
     assert "local-staging" not in prod_targets
 
 
+def test_the_local_prod_overlay_is_e3_shaped_and_unreachable_from_prod() -> None:
+    # M25: the local production-shaped stack — the prod architecture
+    # (Caddy edge) with the ONE staging difference (hi -> E3). It must
+    # declare the E3-specific slot and the staging profile, must NEVER
+    # set the production environment (the settings layer would refuse
+    # the combination anyway — structural, not procedural), must keep
+    # its edge loopback-bound (the tunnel is the only way in), and no
+    # prod-* Make target may reference it.
+    overlay = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    assert "INTELLIAI_REGISTRY_PROFILE: staging" in overlay
+    assert "whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3" in overlay
+    assert "INTELLIAI_ENV: prod" not in overlay
+    ports = re.findall(r'-\s*"([^"]+)"', overlay)
+    for entry in ports:
+        assert entry.startswith("127.0.0.1:"), f"local-prod edge beyond loopback: {entry}"
+    assert "local-prod" not in PROD_OVERLAY
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    prod_targets = makefile[makefile.index("\nprod-check:") :]
+    prod_targets = prod_targets[: prod_targets.index("\nbackup:")]
+    assert "local-prod" not in prod_targets
+    # No throwaway tunnel hostname may ever be committed as configuration.
+    for text in (COMPOSE, PROD_OVERLAY, overlay, makefile):
+        assert "trycloudflare" not in text
+
+
 def test_research_engines_never_appear_in_committed_deployments() -> None:
     # Milestone 16 production-disabled guard: the qwen3-asr engine is
     # research-only until the switching gates pass and a founder promotes
