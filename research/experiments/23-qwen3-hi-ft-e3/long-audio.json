@@ -1,0 +1,26 @@
+{
+  "experiment": "23-qwen3-hi-ft-e3",
+  "phase": "long-audio (Phase 18; M19 chunked path, E3 served)",
+  "run_at": "2026-08-18T14:53:00.828878+00:00",
+  "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+  "results": {
+    "300s": {
+      "complete": true,
+      "chars": 3551,
+      "segments": 4,
+      "join_equals_text": true,
+      "first_offset": 0.0,
+      "last_end": 300.0,
+      "wall_seconds": 76.5
+    },
+    "600s": {
+      "complete": true,
+      "chars": 7915,
+      "segments": 7,
+      "join_equals_text": true,
+      "first_offset": 0.0,
+      "last_end": 600.0,
+      "wall_seconds": 196.5
+    }
+  }
+}

@@ -76,9 +76,9 @@ class TestResumableDownload:
         # A pipe dropping every MiB still finishes an 8 MiB "shard"
         # (7 drops > the 6-attempt budget) because each drop banks
         # bytes; only consecutive ZERO-progress failures count.
-        import intelliai_datasets.ingest_fleurs as module
+        import time
 
-        monkeypatch.setattr(module.time, "sleep", lambda _: None)
+        monkeypatch.setattr(time, "sleep", lambda _: None)
         target = tmp_path / "0.parquet"
         step = 1 << 20  # the downloader's iter_bytes chunk size
         total = bytes(8 * step)
@@ -104,9 +104,9 @@ class TestResumableDownload:
     def test_consecutive_zero_progress_failures_still_bound_the_loop(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        import intelliai_datasets.ingest_fleurs as module
+        import time
 
-        monkeypatch.setattr(module.time, "sleep", lambda _: None)
+        monkeypatch.setattr(time, "sleep", lambda _: None)
         calls = {"n": 0}
 
         def handler(_request: httpx.Request) -> httpx.Response:

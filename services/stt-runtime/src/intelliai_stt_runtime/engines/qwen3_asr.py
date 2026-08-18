@@ -158,6 +158,38 @@ QWEN3_ASR_0_6B_HI_FT_E2_FILES: Final = ArtifactSpec(
     ),
 )
 
+_RESEARCH_HI_FT_E3: Final = (
+    "https://research-artifacts.intelliai.invalid/m23/qwen3-asr-0.6b-hi-ft-e3"
+)
+
+#: Milestone 23: the E3 retention-mix candidate — checkpoint-1500 of
+#: qwen-e3-hi-sft (base 5eb14417…, manifest qwen-hi-public-train@v3
+#: 6cfc585d… = v2 verbatim + 5.92% FLEURS-en + a bounded [0.5s, 2.0s)
+#: short-Hindi slice, seed 20260817, micro-batch 1 x acc 16; run record
+#: in research/experiments/23-qwen3-hi-ft-e3). Same byte-exact
+#: template-rewrite export and same official mmproj as E1/E2 (tower
+#: frozen). RESEARCH ONLY. The retention sweep held at every
+#: checkpoint: JFK English WER 0.0, held-out English stays English,
+#: 1 s Hindi transcribes, silence/noise stay empty — the E2 failure
+#: modes absent at all depths for ~4.6% relative Hindi giveback vs
+#: E2's best (HF-side 0.11612 vs 0.11100).
+QWEN3_ASR_0_6B_HI_FT_E3_FILES: Final = ArtifactSpec(
+    artifact="qwen3-asr-0.6b-hi-ft-e3",
+    version=1,
+    files=(
+        ArtifactFile(
+            filename=MODEL_FILENAME,
+            url=f"{_RESEARCH_HI_FT_E3}/{MODEL_FILENAME}",
+            sha256="e54586c4c98c2244954082f7e3dc53abed626c39b0d584e1d2c1a0621ef98e84",
+        ),
+        ArtifactFile(
+            filename=MMPROJ_FILENAME,
+            url=f"{_GGUF_BASE}/{MMPROJ_FILENAME}",
+            sha256="41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d",
+        ),
+    ),
+)
+
 #: This family's admission table (same law as the whisper table): a new
 #: checkpoint is a pinned entry here, never a declaration.
 ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
@@ -166,6 +198,7 @@ ARTIFACT_SPECS: Final[dict[str, ArtifactSpec]] = {
         QWEN3_ASR_0_6B_FILES,
         QWEN3_ASR_0_6B_HI_FT_E1_FILES,
         QWEN3_ASR_0_6B_HI_FT_E2_FILES,
+        QWEN3_ASR_0_6B_HI_FT_E3_FILES,
     )
 }
 

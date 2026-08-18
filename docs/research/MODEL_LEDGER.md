@@ -1051,4 +1051,43 @@ promotion proposal changes until a candidate passes every gate.
 
 ---
 
+## Milestone 23 — Hindi fine-tuning E3: the retention mix (appended 2026-08-18)
+
+Full report:
+[2026-08-18-qwen3-hindi-finetuning-e3.md](2026-08-18-qwen3-hindi-finetuning-e3.md).
+One variable moved again — the COMPOSITION — and both E2 regressions
+closed.
+
+- **`qwen3-asr-0.6b-hi-ft-e3@v1`** — REGISTERED (research-only), and
+  the program's first **A. PROMOTION CANDIDATE**: all eight gates
+  pass; production untouched pending a switching/promotion milestone —
+  **[EVIDENCE]** Corpus `qwen-hi-public-train@v3` (30.11 h, sha
+  `6cfc585d…` = v2 verbatim, containment proven row-for-row, + 5.92%
+  FLEURS-en rows under a merge-enforced 8% ceiling + 800 REAL
+  [0.5 s, 2.0 s) IndicVoices utterances + the 68 negatives carried),
+  E2's exact configuration, 1,840 steps / 3.30 h / 5,096 MiB peak. On
+  the frozen primary THROUGH the real adapter: **CER 0.11612
+  (replicate 0.11750), WER 0.24064, 0 hallucinated probes — −20.3% vs
+  base, a priced +5.1% relative giveback vs E2's gate-failed best.**
+  **English RESTORED: safety record WER 0.0 / CER 0.0** (E2: 1.0) —
+  and retained at EVERY checkpoint depth (JFK 0.0 across ck600–ck1840;
+  the 5.92% slice held what 27 h of pure Hindi erased). **Short speech
+  RESTORED**: the served artifact transcribes the full 0.5–2.5 s
+  ladder and real held-out sub-2 s utterances (E2: empty at 1 s).
+  **Silence/noise safety PRESERVED** (silence, −50, −40 dBFS all
+  empty; transitions transcribe). Long-audio intact (300 s → 4
+  segments, 600 s → 7, join==text at real offsets). RSS 1,559 MiB,
+  RTF 0.16–0.218, sizes identical; same byte-exact export pipeline.
+  Data-plane laws added for the mix: a bounded short-speech admission
+  window exclusive at the standard floor, row-count freeze budgets,
+  and a pin-reverified `merge-train` with language-share ceilings.
+
+**Consequence for priorities:** the experiment arc E1→E2→E3 is
+closed: pipeline proven, data proven binding, composition proven the
+fix. The next Qwen-Hindi decision is PROMOTION, not training — an
+M16-style switching battery against this artifact plus a proposal
+update, founder-gated. Optimizer work never earned its turn.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

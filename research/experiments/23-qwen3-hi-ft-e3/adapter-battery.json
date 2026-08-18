@@ -1,0 +1,106 @@
+{
+  "experiment": "23-qwen3-hi-ft-e3",
+  "phase": "adapter-battery (Phases 15-16 through the served artifact)",
+  "run_at": "2026-08-18T14:41:27.112588+00:00",
+  "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+  "results": {
+    "digital-silence-10s": {
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "noise-quiet(-50dBFS)-8s": {
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "noise-moderate(-40dBFS)-8s": {
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "speech-then-silence-5s": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "silence-5s-then-speech": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "short-speech-2.5s-in-noise": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "speech-ladder-0.5s": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य"
+    },
+    "speech-ladder-1.0s": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को कर"
+    },
+    "speech-ladder-1.5s": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को करना चाहिए"
+    },
+    "speech-ladder-2.0s": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को करना चाहिए"
+    },
+    "speech-ladder-2.5s": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को करना चाहिए"
+    },
+    "real-short:indicvoices-hindi-train-0-000576": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "हाँ सर"
+    },
+    "real-short:indicvoices-hindi-train-1-001045": {
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "बाएँ"
+    },
+    "jfk-english": {
+      "empty": false,
+      "devanagari": false,
+      "latin": true,
+      "repetition": false,
+      "text_head": "And so my fellow Americans, ask not what your country can do for you, "
+    }
+  }
+}

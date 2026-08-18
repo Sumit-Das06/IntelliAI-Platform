@@ -237,6 +237,36 @@
       "voices": []
     },
     {
+      "public_model": "research:qwen3-asr-0.6b-hi-ft-e3",
+      "_comment": "Milestone 23: the E3 retention-mix candidate (checkpoint-1500 of qwen-e3-hi-sft on v3 = E2's corpus + 5.92% FLEURS-en + a bounded 0.5-2s short-Hindi slice). Same byte-exact export pipeline and official mmproj as E1/E2. Retention sweep clean at every checkpoint: English kept, 1s Hindi transcribes, silence/noise stay empty.",
+      "capability": "transcription",
+      "service": "stt-runtime",
+      "routes": [
+        {
+          "language": null,
+          "status": null,
+          "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "hi",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        },
+        {
+          "language": "en",
+          "status": null,
+          "artifact": "qwen3-asr-0.6b-hi-ft-e3",
+          "artifact_version": 1,
+          "deployment": "stt-runtime-research"
+        }
+      ],
+      "voices": []
+    },
+    {
       "public_model": "research:qwen3-asr-0.6b-hi-ft-e2",
       "_comment": "Milestone 22: the E2 candidate (checkpoint-1200 of qwen-e2-hi-sft on the cleaned 27.3h corpus with no-speech negatives). Same byte-exact export pipeline and official mmproj as E1. NOT a promotion candidate: English regressed (en->hi translation; recorded gate failure).",
       "capability": "transcription",

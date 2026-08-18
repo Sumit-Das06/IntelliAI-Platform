@@ -145,6 +145,12 @@ _WITH_REFERENCE = {
     "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-hi-m22.json": 0,
     "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-hi-m22-replicate.json": 0,
     "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-en-m22-safety.json": 1,
+    # Milestone 23 (2026-08-18): the E3 retention-mix candidate. hi +
+    # replicate carry no ascii anchor (0 by law). English is RESTORED:
+    # both JFK clips reproduce at WER 0.0, so both anchor.
+    "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23.json": 0,
+    "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23-replicate.json": 0,
+    "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-en-m23-safety.json": 2,
 }
 
 
@@ -175,7 +181,7 @@ class TestWerAsciiIsTheLegacyAnchor:
         # its reproduction is vacuously true. If the English records ever
         # stopped contributing clips, every assertion above would pass
         # while proving nothing.
-        assert sum(_WITH_REFERENCE.values()) == 33
+        assert sum(_WITH_REFERENCE.values()) == 35
 
 
 class TestUnicodeRulersNeverChooseThemselves:
