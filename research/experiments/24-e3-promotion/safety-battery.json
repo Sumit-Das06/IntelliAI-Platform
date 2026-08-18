@@ -1,0 +1,247 @@
+{
+  "experiment": "24-e3-promotion",
+  "phase": "safety-battery (Phase 5; base-qwen cited from M22/M23 evidence)",
+  "run_at": "2026-08-18T16:23:15.565784+00:00",
+  "e3": {
+    "digital-silence-10s": {
+      "status": 200,
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "noise-quiet(-50dBFS)-8s": {
+      "status": 200,
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "speech-then-silence-5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "silence-5s-then-speech": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "normal-hindi-8s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो कि मनुष्य को करना चाहिए"
+    },
+    "english-jfk": {
+      "status": 200,
+      "empty": false,
+      "devanagari": false,
+      "latin": true,
+      "repetition": false,
+      "text_head": "And so my fellow Americans, ask not what your country can do"
+    },
+    "malformed-audio": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "leaks": []
+    },
+    "empty-audio": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "leaks": []
+    },
+    "tiny-malformed": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "leaks": []
+    },
+    "speech-ladder-0.5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य"
+    },
+    "speech-ladder-1.0s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को कर"
+    },
+    "speech-ladder-1.5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को करना चाहिए"
+    },
+    "speech-ladder-2.0s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को करना चाहिए"
+    },
+    "speech-ladder-2.5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनुष्य को करना चाहिए"
+    },
+    "real-short:indicvoices-hindi-train-0-000576": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "हाँ सर"
+    },
+    "real-short:indicvoices-hindi-train-1-001045": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "बाएँ"
+    }
+  },
+  "whisper_small": {
+    "digital-silence-10s": {
+      "status": 200,
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "noise-quiet(-50dBFS)-8s": {
+      "status": 200,
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "speech-then-silence-5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो की मनुशिको करना चाहिये"
+    },
+    "silence-5s-then-speech": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "यो की मनुशी को करना चाहिए"
+    },
+    "normal-hindi-8s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "जो की मनुस्सिको करना चाहें।"
+    },
+    "english-jfk": {
+      "status": 200,
+      "empty": false,
+      "devanagari": false,
+      "latin": true,
+      "repetition": false,
+      "text_head": "And so my fellow Americans, ask not what your country can do"
+    },
+    "malformed-audio": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "leaks": []
+    },
+    "empty-audio": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "leaks": []
+    },
+    "tiny-malformed": {
+      "status": 400,
+      "error_type": "invalid_input",
+      "leaks": []
+    },
+    "speech-ladder-0.5s": {
+      "status": 200,
+      "empty": true,
+      "devanagari": false,
+      "latin": false,
+      "repetition": false,
+      "text_head": ""
+    },
+    "speech-ladder-1.0s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मुनु से कुकर"
+    },
+    "speech-ladder-1.5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मुनु सिकु करना जाए।"
+    },
+    "speech-ladder-2.0s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनु सिकु करना चाहिए"
+    },
+    "speech-ladder-2.5s": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "मनु सिकु करना चाहिए"
+    },
+    "real-short:indicvoices-hindi-train-0-000576": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "काज़ें"
+    },
+    "real-short:indicvoices-hindi-train-1-001045": {
+      "status": 200,
+      "empty": false,
+      "devanagari": true,
+      "latin": false,
+      "repetition": false,
+      "text_head": "बाई"
+    }
+  }
+}

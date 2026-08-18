@@ -242,9 +242,14 @@ staging-up: ## Start the LOCAL staging stack (hi→Qwen, everything else→Whisp
 staging-down: ## Stop the local staging stack (data volumes preserved)
 	docker compose -f docker-compose.yml -f infra/compose/local-staging.yml down
 
-staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (skips the ~1 GB first-boot download)
-	docker run --rm -v intelliai_modelcache:/models -v "$(CURDIR)/models/qwen3-asr-0.6b:/src:ro" \
-	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b && cp -r /src/v1 /models/qwen3-asr-0.6b/ && ls -la /models/qwen3-asr-0.6b/v1"
+staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (the E3 candidate is research-only and CANNOT be downloaded)
+	docker run --rm -v intelliai_modelcache:/models \
+	  -v "$(CURDIR)/models/qwen3-asr-0.6b:/src-base:ro" \
+	  -v "$(CURDIR)/models/qwen3-asr-0.6b-hi-ft-e3:/src-e3:ro" \
+	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b /models/qwen3-asr-0.6b-hi-ft-e3 \
+	  && cp -r /src-base/v1 /models/qwen3-asr-0.6b/ \
+	  && cp -r /src-e3/v1 /models/qwen3-asr-0.6b-hi-ft-e3/ \
+	  && ls -la /models/qwen3-asr-0.6b/v1 /models/qwen3-asr-0.6b-hi-ft-e3/v1"
 
 # ── Production (see docs/ops/deployment.md) ───────────────────────────
 # The deployment sequence, in call order:

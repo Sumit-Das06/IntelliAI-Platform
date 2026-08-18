@@ -1,0 +1,15 @@
+{
+  "drill": "24-rollback (Phase 12)",
+  "run_at": "2026-08-18T17:21:08.880912+00:00",
+  "procedure": "the staging gateway process (hi -> qwen3-asr-0.6b-hi-ft-e3) was stopped and relaunched WITHOUT INTELLIAI_REGISTRY_PROFILE=staging - the production-default registry composed; nothing else changed (same binary, same runtime process, same DB, same clients)",
+  "result": {
+    "hindi_request_status": 200,
+    "served_by_artifact": "whisper-small",
+    "runtime_restarted": false,
+    "rebuild_required": false,
+    "retraining_required": false,
+    "client_changes_required": false,
+    "incumbent_artifact_still_valid": true
+  },
+  "equivalence": "in production the same flip is the git revert of the promotion commit (docs/ops/model-rollout.md); ROLLBACK_HINDI_ROUTE in proposals.py restates the revert target verbatim and a test pins it equal to today's live route"
+}

@@ -1,0 +1,52 @@
+{
+  "experiment": "24-e3-promotion",
+  "phase": "identity (Phase 2)",
+  "run_at": "2026-08-18T15:35:25.841824+00:00",
+  "artifact": "qwen3-asr-0.6b-hi-ft-e3@v1",
+  "checks": {
+    "placed:Qwen3-ASR-0.6B-Q8_0.gguf": {
+      "expected": "e54586c4c98c2244954082f7e3dc53abed626c39b0d584e1d2c1a0621ef98e84",
+      "actual": "e54586c4c98c2244954082f7e3dc53abed626c39b0d584e1d2c1a0621ef98e84",
+      "bytes": 804749248,
+      "ok": true
+    },
+    "placed:mmproj-Qwen3-ASR-0.6B-Q8_0.gguf": {
+      "expected": "41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d",
+      "actual": "41a342b5e4c514e968cb756de6cd1b7be39eff43c44c57a2ef5fc6522e36603d",
+      "bytes": 214392480,
+      "ok": true
+    },
+    "distinct-from:qwen3-asr-0.6b": {
+      "ok": true
+    },
+    "distinct-from:qwen3-asr-0.6b-hi-ft-e1": {
+      "ok": true
+    },
+    "distinct-from:qwen3-asr-0.6b-hi-ft-e2": {
+      "ok": true
+    },
+    "training-manifest:qwen-hi-public-train@v3": {
+      "expected": "6cfc585d3cecbdc177f31f476ec10aa54232706c2e74015af28e2a041e73a467",
+      "actual": "6cfc585d3cecbdc177f31f476ec10aa54232706c2e74015af28e2a041e73a467",
+      "ok": true
+    },
+    "eval-manifest:stt-hi-public-eval@v1": {
+      "expected": "cf6431466722c199f9430fc1d471cbf94301453317c2555fc8301679123e6ffc",
+      "actual": "cf6431466722c199f9430fc1d471cbf94301453317c2555fc8301679123e6ffc",
+      "ok": true
+    },
+    "base-model": {
+      "id": "Qwen/Qwen3-ASR-0.6B",
+      "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "weights_sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea",
+      "ok": true
+    },
+    "runtime-pins": {
+      "files": 6,
+      "llama_server": "b2ace4b8aed7c60e217fcaed8541850f4998539b8478880f1c3264387a0a8d97",
+      "ok": true
+    }
+  },
+  "failures": [],
+  "verdict": "IDENTITY VERIFIED"
+}

@@ -1,4 +1,4 @@
-"""Milestone 18: the staging profile drives the REAL product path to Qwen.
+"""M18 mechanism, M24 candidate: staging drives the REAL product path to E3.
 
 Full-stack tests over the actual app — real auth, real usage ledger
 (rolled back), real admission, real collection seam — with the ONE
@@ -54,7 +54,7 @@ def qwen_envelope(duration: float = 8.2) -> RuntimeResponse[TranscriptionResult]
                 TranscriptionSegment(start_seconds=0.0, end_seconds=duration, text=HINDI_TEXT),
             ),
         ),
-        model="qwen3-asr-0.6b",
+        model="qwen3-asr-0.6b-hi-ft-e3",
         usage=(Usage(unit=UsageUnit.AUDIO_SECONDS, amount=duration),),
         timing=RuntimeTiming(total_ms=1450.0, stages={"inference": 1300.0}),
         runtime=META,
@@ -138,8 +138,8 @@ async def _samples(
 @pytest.mark.parametrize(
     ("form", "artifact"),
     [
-        ({"language": "hi"}, "qwen3-asr-0.6b"),
-        ({"language": "hi-IN"}, "qwen3-asr-0.6b"),
+        ({"language": "hi"}, "qwen3-asr-0.6b-hi-ft-e3"),
+        ({"language": "hi-IN"}, "qwen3-asr-0.6b-hi-ft-e3"),
         ({"language": "en"}, "whisper-small"),
         ({}, "whisper-small"),
     ],
@@ -331,7 +331,7 @@ async def test_unavailable_runtime_fails_safely_with_no_fallback(
         # NO automatic fallback (Milestone 16 decision): exactly one
         # runtime call was made, and nothing re-routed to the incumbent.
         assert len(fake.calls) == 1
-        assert fake.calls[0][1].model == "qwen3-asr-0.6b"
+        assert fake.calls[0][1].model == "qwen3-asr-0.6b-hi-ft-e3"
         # A failed request is not billed.
         assert await _usage_events(factory, tenant.organization.id) == []
 

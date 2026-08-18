@@ -11,13 +11,15 @@
 #
 # What it changes, and nothing else:
 #   api          → registry profile "staging": the live catalog PLUS the
-#                  prepared proposal (hi → qwen3-asr-0.6b); every other
-#                  language keeps the incumbent. Logged loudly at boot.
+#                  prepared proposal (hi → qwen3-asr-0.6b-hi-ft-e3, the
+#                  M24 candidate — E3-specific, never the generic base);
+#                  every other language keeps the incumbent. Logged
+#                  loudly at boot.
 #   stt-runtime  → hosts BOTH slots. The qwen3 engine serves through the
 #                  image's vendored llama.cpp layer (hash-verified at
-#                  build AND at every load). GGUF weights are fetched
-#                  hash-verified into the model volume on first boot
-#                  (~1 GB) unless pre-seeded (`make staging-seed-models`).
+#                  build AND at every load). The E3 GGUF is research-only
+#                  (.invalid URL — it can never be downloaded), so it
+#                  MUST be pre-seeded: `make staging-seed-models`.
 #
 # Verify the flow end to end: docs/ops/local-staging.md
 
@@ -28,4 +30,4 @@ services:
 
   stt-runtime:
     environment:
-      INTELLIAI_STT_SLOTS: whisper,qwen3-asr
+      INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3

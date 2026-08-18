@@ -1,0 +1,92 @@
+{
+  "characterization": "24-e3-long-audio-concurrency",
+  "NOT_A_GUARANTEE": "capacity characterization of THIS machine's staging pair under a day of sustained bench load; client timeout 900s sits ABOVE the gateway's 450s budget so tail requests record the DEPLOYMENT's own verdict, never a client abort",
+  "pool": "runtime deployment defaults (max_concurrency=2, max_queue=8)",
+  "run_at": "2026-08-18T16:46:07.876122+00:00",
+  "batches": [
+    {
+      "shape": "2x300s",
+      "batch_wall_seconds": 162.1,
+      "peak_llama_rss_mib": 3558.1,
+      "results": [
+        {
+          "status": 200,
+          "wall_seconds": 162.1,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        },
+        {
+          "status": 200,
+          "wall_seconds": 79.8,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        }
+      ]
+    },
+    {
+      "shape": "5x300s",
+      "batch_wall_seconds": 399.5,
+      "peak_llama_rss_mib": 3558.2,
+      "results": [
+        {
+          "status": 200,
+          "wall_seconds": 399.5,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        },
+        {
+          "status": 200,
+          "wall_seconds": 78.7,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        },
+        {
+          "status": 200,
+          "wall_seconds": 319.7,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        },
+        {
+          "status": 200,
+          "wall_seconds": 239.7,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        },
+        {
+          "status": 200,
+          "wall_seconds": 158.9,
+          "text_chars": 3544,
+          "error_type": "",
+          "leaks": []
+        }
+      ]
+    },
+    {
+      "shape": "2x600s",
+      "batch_wall_seconds": 363.4,
+      "peak_llama_rss_mib": 3564.6,
+      "results": [
+        {
+          "status": 200,
+          "wall_seconds": 182.3,
+          "text_chars": 7905,
+          "error_type": "",
+          "leaks": []
+        },
+        {
+          "status": 200,
+          "wall_seconds": 363.4,
+          "text_chars": 7918,
+          "error_type": "",
+          "leaks": []
+        }
+      ]
+    }
+  ]
+}

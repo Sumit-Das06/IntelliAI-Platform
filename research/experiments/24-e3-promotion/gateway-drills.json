@@ -1,0 +1,131 @@
+{
+  "drill": "24-gateway-product-path (E3 candidate)",
+  "run_at": "2026-08-18T16:03:46.516382+00:00",
+  "base_url": "http://127.0.0.1:8010",
+  "results": {
+    "auth_missing_key": {
+      "status": 401,
+      "wall_seconds": 0.02,
+      "leaks": []
+    },
+    "auth_invalid_key": {
+      "status": 401,
+      "wall_seconds": 0.01,
+      "leaks": []
+    },
+    "hindi_explicit_to_e3": {
+      "status": 200,
+      "wall_seconds": 0.95,
+      "leaks": [],
+      "devanagari": true,
+      "text_preview": "जो कि मनुष्य को करना चाहिए"
+    },
+    "hindi_regional_tag": {
+      "status": 200,
+      "wall_seconds": 0.63,
+      "leaks": [],
+      "devanagari": true
+    },
+    "english_stays_on_incumbent": {
+      "status": 200,
+      "wall_seconds": 1.72,
+      "leaks": [],
+      "ask_not": true
+    },
+    "hindi_undeclared_default_route": {
+      "status": 200,
+      "wall_seconds": 3.08,
+      "leaks": [],
+      "devanagari": true
+    },
+    "unsupported_language_hint": {
+      "status": 400,
+      "wall_seconds": 0.15,
+      "leaks": [],
+      "error_param": "language"
+    },
+    "verbose_json_short": {
+      "status": 200,
+      "wall_seconds": 0.84,
+      "leaks": [],
+      "segment_count": 1,
+      "segment_keys": [
+        "end",
+        "id",
+        "start",
+        "text"
+      ],
+      "spans_full_clip": true
+    },
+    "collection_consented": {
+      "status": 200,
+      "wall_seconds": 0.65,
+      "leaks": [],
+      "sample_created": true
+    },
+    "correction": {
+      "correction_status": 200,
+      "sample_fetch_status": 200,
+      "sample_leaks": [],
+      "original_preserved": true,
+      "current_is_corrected": true
+    },
+    "contribution_off": {
+      "status": 200,
+      "wall_seconds": 0.71,
+      "leaks": [],
+      "no_sample": true,
+      "transcript_still_returned": true
+    },
+    "malformed_audio": {
+      "status": 400,
+      "wall_seconds": 0.05,
+      "leaks": [],
+      "error_param": "file"
+    },
+    "empty_audio": {
+      "status": 400,
+      "wall_seconds": 0.04,
+      "leaks": [],
+      "error_param": "file"
+    },
+    "tiny_malformed_audio": {
+      "status": 400,
+      "wall_seconds": 0.05,
+      "leaks": [],
+      "error_param": "file"
+    },
+    "long_300s_chunked": {
+      "status": 200,
+      "wall_seconds": 122.97,
+      "leaks": [],
+      "segment_count": 4,
+      "join_equals_text": true,
+      "first_start": 0.0,
+      "last_end": 300.0,
+      "output_chars": 3565,
+      "usage_delta_seconds": 300.0,
+      "billed_exactly_once": true
+    },
+    "long_600s_chunked": {
+      "status": 200,
+      "wall_seconds": 303.22,
+      "leaks": [],
+      "segment_count": 7,
+      "join_equals_text": true,
+      "first_start": 0.0,
+      "last_end": 600.0,
+      "output_chars": 7923,
+      "usage_delta_seconds": 600.0,
+      "billed_exactly_once": true
+    },
+    "ceiling_602s_refused": {
+      "status": 400,
+      "wall_seconds": 0.44,
+      "leaks": [],
+      "error_param": "file",
+      "error_names_limit": true,
+      "refusal_billed_zero": true
+    }
+  }
+}

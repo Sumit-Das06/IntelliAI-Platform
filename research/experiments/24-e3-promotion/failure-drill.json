@@ -1,0 +1,108 @@
+{
+  "drill": "24-e3-failure-restart-readiness",
+  "run_at": "2026-08-18T17:03:15.390195+00:00",
+  "baseline_e3": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 920.4
+  },
+  "baseline_whisper": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1701.6
+  },
+  "baseline_slots": {
+    "whisper-small": "ready",
+    "qwen3-asr-0.6b-hi-ft-e3": "ready"
+  },
+  "kill1:pids_before_kill": [
+    41744
+  ],
+  "kill1:readiness_timeline": [
+    {
+      "t": 0.32,
+      "status": 200,
+      "e3": "ready"
+    },
+    {
+      "t": 1.33,
+      "status": 200,
+      "e3": "restarting"
+    },
+    {
+      "t": 3.85,
+      "status": 200,
+      "e3": "ready"
+    }
+  ],
+  "kill1:seconds_to_truth": 1.33,
+  "kill1:seconds_to_recovered": 3.85,
+  "kill1:whisper_during_outage": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1615.5
+  },
+  "kill1:e3_after_recovery": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1163.7
+  },
+  "kill2:pids_before_kill": [
+    22220
+  ],
+  "kill2:readiness_timeline": [
+    {
+      "t": 0.34,
+      "status": 200,
+      "e3": "ready"
+    },
+    {
+      "t": 1.1,
+      "status": 200,
+      "e3": "restarting"
+    },
+    {
+      "t": 3.62,
+      "status": 200,
+      "e3": "ready"
+    }
+  ],
+  "kill2:seconds_to_truth": 1.1,
+  "kill2:seconds_to_recovered": 3.62,
+  "kill2:whisper_during_outage": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1594.5
+  },
+  "kill2:e3_after_recovery": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1111.5
+  },
+  "final_slots": {
+    "whisper-small": "ready",
+    "qwen3-asr-0.6b-hi-ft-e3": "ready"
+  },
+  "final_e3": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 747.2
+  },
+  "final_whisper": {
+    "status": 200,
+    "error_type": null,
+    "message_leaks_internals": false,
+    "client_ms": 1631.9
+  },
+  "llama_server_pids_final": [
+    50756
+  ],
+  "orphans": 0
+}

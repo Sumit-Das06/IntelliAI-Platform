@@ -58,7 +58,9 @@ def test_the_local_staging_overlay_is_explicit_and_unreachable_from_prod() -> No
     # deliberate, hand-typed act.
     overlay = (REPO / "infra/compose/local-staging.yml").read_text(encoding="utf-8")
     assert "INTELLIAI_REGISTRY_PROFILE: staging" in overlay
-    assert "whisper,qwen3-asr" in overlay
+    # M24: the staging slot is E3-SPECIFIC — the generic base artifact
+    # must never silently come back as the canary candidate.
+    assert "whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3" in overlay
     assert "local-staging" not in PROD_OVERLAY
     makefile = (REPO / "Makefile").read_text(encoding="utf-8")
     prod_targets = makefile[makefile.index("prod-up:") :]

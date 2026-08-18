@@ -1090,4 +1090,42 @@ update, founder-gated. Optimizer work never earned its turn.
 
 ---
 
+## Milestone 24 — E3 promotion & switching validation (appended 2026-08-18)
+
+Full report:
+[2026-08-18-qwen3-hi-e3-promotion-readiness.md](2026-08-18-qwen3-hi-e3-promotion-readiness.md).
+The question changed from "is it better?" to "can it safely replace
+the incumbent?" — and every gate a laptop can prove says yes.
+
+- **`qwen3-asr-0.6b-hi-ft-e3@v1` — classified A. READY FOR PRODUCTION
+  CANARY (local/staging evidence); the promotion proposal is PREPARED
+  and PENDING; production unchanged and test-pinned** — **[EVIDENCE]**
+  Against a FRESH same-day incumbent baseline (whisper-small CER
+  0.37617, inside the 15C band): **−69% relative CER, −64% relative
+  WER, ~15× the noise band**, through the same multi-slot runtime.
+  Safety battery matches-or-beats the incumbent row by row (E3
+  transcribes 0.5 s where whisper is empty; both clean-400 malformed
+  inputs; zero leaks). Product path drilled end to end on the real
+  gateway: metering exact (+300.0/+600.0; 602 s refused, billed 0),
+  one sample under consent, contribution-off honored, correction
+  immutable-original, verbose_json segment law held at every length.
+  Ladders: E3 c=10 p50 6.5 s vs incumbent 21.0 s (falls behind live
+  speech); both shed cleanly at the admission boundary. Long-audio
+  concurrency matches M19 (5×300 all clean; RSS 3.56 GiB sustained).
+  Failure drills: readiness truthful in ~1.2 s, supervised recovery
+  <4 s twice, incumbent never blinked, zero orphans. Canary sims
+  400/400 clean across 10/25/50/75% shares. Rollback drilled as a
+  pure configuration flip back to whisper-small. The proposal module
+  now names E3 SPECIFICALLY (superseding the never-approved M17
+  base-qwen proposal) with the PENDING sentinel; the staging overlay
+  pins the E3 slot by guard test.
+
+**Consequence for priorities:** the evidence file for the founder's
+switching decision is complete. Remaining before real traffic: the
+founder decision itself, VPS access (M20 runbook), and the Linux
+re-pin + re-ladder on VPS hardware. Nothing further is learnable from
+this laptop.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

@@ -151,6 +151,10 @@ _WITH_REFERENCE = {
     "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23.json": 0,
     "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23-replicate.json": 0,
     "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-en-m23-safety.json": 2,
+    # Milestone 24 (2026-08-18): the fresh whisper-small incumbent
+    # baseline for the promotion decision. hi record - no ascii anchor
+    # (0 by law).
+    "2026-08-18-intelliai-stt-hi-whisper-small-int8-m24-incumbent.json": 0,
 }
 
 

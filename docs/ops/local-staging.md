@@ -1,9 +1,12 @@
-# Local Staging — drive the Hindi→Qwen flow yourself
+# Local Staging — drive the Hindi→Qwen-E3 flow yourself
 
 > The full customer pipeline, on your machine, with the proposed routing
 > live: **Web STT Studio → `/v1/audio/transcriptions` → auth → gateway →
-> language routing → (hi → Qwen3-ASR 0.6B | other → Whisper-small) →
-> transcript → usage ledger → optional collection → correction.**
+> language routing → (hi → Qwen3-ASR 0.6B **hi-ft-e3** | other →
+> Whisper-small) → transcript → usage ledger → optional collection →
+> correction.** The E3 candidate is the M23 retention-mix fine-tune;
+> its weights are research-only and never downloadable, so seeding
+> (`make staging-seed-models`) is REQUIRED, not optional.
 >
 > Production posture is untouched by construction: the staging profile
 > lives only in `infra/compose/local-staging.yml`, is applied only by the
@@ -14,8 +17,9 @@
 ## 1. Start it
 
 ```
-make staging-seed-models   # optional: copies local GGUFs into the volume
-                           # (skip = first boot downloads ~1 GB, hash-verified)
+make staging-seed-models   # REQUIRED: copies local GGUFs into the volume
+                           # (the E3 candidate's URL is .invalid by design —
+                           # the store refuses to download research artifacts)
 make staging-up            # builds images (vendored llama.cpp layer) + starts
 make ps                    # wait until api and stt-runtime report healthy
 ```
@@ -49,12 +53,13 @@ docker compose exec api python -m intelliai_api.cli grant-consent \
    ```
    docker compose logs stt-runtime | grep transcription_completed
    ```
-   Hindi requests show `"artifact": "qwen3-asr-0.6b"`, English/default
-   `"artifact": "whisper-small"`.
+   Hindi requests show `"artifact": "qwen3-asr-0.6b-hi-ft-e3"`,
+   English/default `"artifact": "whisper-small"`.
 5. Usage: **http://localhost:8000/console/usage** — every successful
    request metered once, refusals not billed.
-6. Limits: audio over **120 s** on Hindi is refused with a clear message
-   (the measured-safe ceiling of the candidate at ctx 4096).
+6. Limits: audio over **600 s** on Hindi is refused with a clear message
+   (the M19 product ceiling; 120–600 s chunks internally and stays one
+   request).
 
 ## 4. Android keyboard (optional, needs your phone)
 
