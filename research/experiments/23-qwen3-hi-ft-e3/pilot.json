@@ -1,0 +1,153 @@
+{
+  "experiment": "23-qwen3-hi-ft-e3",
+  "phase": "pilot",
+  "run_at": "2026-08-18T10:43:39.719171+00:00",
+  "record": {
+    "experiment": "qwen-e3-hi-sft",
+    "run_at": "2026-08-18T10:43:13.689712+00:00",
+    "git_commit": "0640a33968eda2ac0ffb32765067c201e7a7e552",
+    "config": {
+      "experiment": "qwen-e3-hi-sft",
+      "base_model_id": "Qwen/Qwen3-ASR-0.6B",
+      "base_revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "base_weights_sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea",
+      "base_weights_bytes": 1876091704,
+      "language": "hi",
+      "language_tag": "Hindi",
+      "manifest_path": "ml/datasets/manifests/qwen-hi-public-train-v3.jsonl",
+      "manifest_sha256": "6cfc585d3cecbdc177f31f476ec10aa54232706c2e74015af28e2a041e73a467",
+      "data_root": "ml/datasets/data",
+      "validation_fraction": 0.03,
+      "freeze_audio_encoder": true,
+      "optimizer": "adafactor",
+      "learning_rate": 1e-05,
+      "epochs": 2.0,
+      "per_device_batch_size": 1,
+      "gradient_accumulation": 16,
+      "warmup_ratio": 0.03,
+      "gradient_checkpointing": true,
+      "precision": "bf16",
+      "max_grad_norm": 1.0,
+      "seed": 20260817,
+      "max_audio_seconds": 30.0,
+      "output_dir": "weights/qwen-e3-hi-sft-pilot",
+      "save_steps": 15,
+      "save_total_limit": 6,
+      "log_steps": 5
+    },
+    "environment": {
+      "python": "3.12.10",
+      "torch": "2.11.0+cu128",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "platform": "Windows-11-10.0.26200-SP0"
+    },
+    "train_jsonl_sha256": "11237317c26fae949997234819f93f0b5e9e48fa9db33e440a2adbf416d5c49a",
+    "validation_jsonl_sha256": "261b8a81a385d16fbcdadadd9d95f73635d0c1e5b4392fd4c0549130aa769b2c",
+    "train_samples": 14720,
+    "validation_samples": 472,
+    "trainable_parameters": 596049920,
+    "total_parameters": 782426112,
+    "train_duration_seconds": 234.0,
+    "steps_completed": 30,
+    "final_train_loss": 3.8903,
+    "train_loss_history": [
+      [
+        5,
+        6.8196
+      ],
+      [
+        10,
+        4.3005
+      ],
+      [
+        15,
+        4.188
+      ],
+      [
+        20,
+        3.3012
+      ],
+      [
+        25,
+        3.4994
+      ],
+      [
+        30,
+        3.8903
+      ]
+    ],
+    "validation_history": [
+      [
+        15,
+        0.2298
+      ],
+      [
+        30,
+        0.2236
+      ]
+    ],
+    "peak_vram_mib": 5089.1,
+    "checkpoint_dir": "weights\\qwen-e3-hi-sft-pilot\\checkpoints",
+    "notes": ""
+  },
+  "qualitative": {
+    "hindi_speech": [
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000000.flac",
+        "reference": "language Hindi<asr_text>मैं थ्री फोर फाइव सिक्स मैं पेल ड्राइव कोलकाता पश्चिम बंगाल पिन कोड सेवेन जीरो जीरो जीरो बैंक में बुकिंग संदर्भ संख्या सिक्स जीरो सिक्स नाइन ऐट नाइन वन जीरो फोर जीरो ऐट के साथ वाणिज्यिक गैस वितरण सेवा पर प्रतिक्रिया देना चाहता हूँ मेरी प्रतिक्रिया यह है कि बढ़िया सेवा शीघ्र वितरण और विनम्र कर्मचारी धन्यवाद",
+        "hypothesis": "मैं तीन चार पाँच छः मैं पल ड्राइव कोलकाता पश्चिम बंगाल पिन कोड सेवन ज़ीरो ज़ीरो ज़ीरो वन मैं बुकिंग संदर्भ संख्या सिक्स ज़ीरो सिक्स नाइन एट नाइन वन ज़ीरो फ़ोर ज़ीरो आठ के साथ वाणिज्यिक गैस वितरण सेवा पर प्रतिक्रिया देना चाहता हूँ मेरे प्रतिक्रिया यह है कि बढ़िया सेवा सीख वितरण और बिनमूर परम्परार्थी धनवाद"
+      },
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000054.flac",
+        "reference": "language Hindi<asr_text>या उनका माल गड़बड़ होगा न",
+        "hypothesis": "या उनका माल गड़बड़ होगा ना"
+      },
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-000159.flac",
+        "reference": "language Hindi<asr_text>नौ आठ सात छः पाँच चार तीन दो एक शून्य है और मेरी जन्मतिथि उन्नीस सौ तिरानवे",
+        "hypothesis": "नौ आठ सात छः पाँच चार तीन दो एक शून्य है और मेरी जन्मतिथि उन्नीस सौ तिरानवे"
+      }
+    ],
+    "english_speech": [
+      {
+        "audio": "fleurs/en_us/train/fleurs-en_us-train-000033.wav",
+        "reference": "language English<asr_text>As the cars ahead of Alonso went in for fuel under the safety car, he moved up the pack to take victory.",
+        "hypothesis": "As the car was ahead of Alonso, winning for the fuel under the safety car, he moved up the pack to take victory."
+      },
+      {
+        "audio": "fleurs/en_us/train/fleurs-en_us-train-000055-2.wav",
+        "reference": "language English<asr_text>Peter Costello, Australian treasurer and the man most likely to succeed Prime Minister John Howard as Liberal party leader has thrown his support behind a nuclear power industry in Australia.",
+        "hypothesis": "Peter Costello, Australian treasurer and the man most likely to succeed Prime Minister John Howard as Liberty Party leader, has thrown his support behind a nuclear power industry in Australia."
+      }
+    ],
+    "short_hindi_speech": [
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-001679.flac",
+        "reference": "language Hindi<asr_text>नमस्ते",
+        "hypothesis": "नमस्ते"
+      },
+      {
+        "audio": "indicvoices/hindi/train/indicvoices-hindi-train-0-001751.flac",
+        "reference": "language Hindi<asr_text>जी जी",
+        "hypothesis": "जीजी"
+      }
+    ],
+    "jfk_english": {
+      "id": "jfk-flac",
+      "reference": "And so, my fellow Americans: ask not what your country can do for you; ask what you can do for your country.",
+      "hypothesis": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+      "latin_letters": true,
+      "devanagari": false
+    },
+    "one_second_hindi": {
+      "empty": false,
+      "devanagari": true,
+      "text_head": "मनुष्य को"
+    },
+    "silence_10s": {
+      "empty": true,
+      "text_head": ""
+    }
+  }
+}
