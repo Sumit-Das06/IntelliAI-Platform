@@ -110,6 +110,10 @@ class Provenance(BaseModel):
     source_revisions: dict[str, str] = {}
     speaker_roster: tuple[str, ...] = ()
     statistics: dict[str, dict[str, int]] = {}
+    # Additive (M23): a merged manifest records the pins of the frozen
+    # parts it unions — the merge is auditable back to each part's own
+    # sidecar, where the real validation record lives.
+    merged_from: tuple[ManifestPin, ...] = ()
 
 
 def sha256_file(path: Path) -> str:

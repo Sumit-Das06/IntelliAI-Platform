@@ -29,13 +29,16 @@ from intelliai_datasets.samples import CandidateSample
 from intelliai_datasets.sources import source
 
 _PARQUET_INDEX = "https://huggingface.co/api/datasets/google/fleurs/parquet/{config}/{split}"
-_DOWNLOAD_TIMEOUT = httpx.Timeout(600.0, connect=30.0)
-_DOWNLOAD_ATTEMPTS = 4
+_DOWNLOAD_TIMEOUT = httpx.Timeout(600.0, connect=30.0, read=120.0)
+_DOWNLOAD_ATTEMPTS = 6
 
 # FLEURS locale → our normalized base subtag.
 LANGUAGE_BY_CONFIG = {
     "hi_in": "hi",
     "cmn_hans_cn": "zh",
+    # M23: the English retention slice — FLEURS en is the one approved
+    # OPEN English source (registry verdict 2026-08-11).
+    "en_us": "en",
 }
 
 
@@ -54,28 +57,47 @@ def shard_urls(config: str, split: str, client: httpx.Client) -> list[str]:
 
 
 def _download_shard(url: str, target: Path, client: httpx.Client) -> None:
-    """Stream a shard to a temp file, retrying transient failures.
+    """Stream a shard to a temp file, resuming across transient failures.
 
     Atomic temp-then-rename: a partial download can never be mistaken
-    for a complete shard on a later run.
+    for a complete shard on a later run. A retry RESUMES the partial
+    with an HTTP Range request instead of starting over — on a flaky
+    pipe a gigabyte shard otherwise has to survive one unbroken stream
+    (M23 lesson: repeated mid-stream stalls burned every attempt from
+    byte zero). Truncation cannot slip through: the parquet reader
+    refuses a short file.
     """
     partial = target.with_suffix(target.suffix + ".partial")
     last_error: Exception | None = None
-    for attempt in range(1, _DOWNLOAD_ATTEMPTS + 1):
+    stalled_attempts = 0
+    while stalled_attempts < _DOWNLOAD_ATTEMPTS:
+        resume_at = partial.stat().st_size if partial.exists() else 0
+        headers = {"Range": f"bytes={resume_at}-"} if resume_at else {}
         try:
-            with client.stream("GET", url) as response:
+            with client.stream("GET", url, headers=headers) as response:
                 response.raise_for_status()
-                with partial.open("wb") as handle:
+                # 206 honors the Range (append the tail); a 200 despite
+                # the Range means the server sent the whole file — start
+                # the bytes over.
+                mode = "ab" if response.status_code == 206 else "wb"
+                with partial.open(mode) as handle:
                     for chunk in response.iter_bytes(1 << 20):
                         handle.write(chunk)
             partial.replace(target)
             return
         except (httpx.TransportError, httpx.HTTPStatusError) as exc:
             last_error = exc
-            partial.unlink(missing_ok=True)
-            if attempt < _DOWNLOAD_ATTEMPTS:
-                time.sleep(2.0 * attempt)
-    msg = f"shard download failed after {_DOWNLOAD_ATTEMPTS} attempts: {url}"
+            if isinstance(exc, httpx.HTTPStatusError):
+                # A refused Range (416 and kin) poisons the partial.
+                partial.unlink(missing_ok=True)
+            # The attempt budget bounds CONSECUTIVE zero-progress
+            # failures: a pipe that drops every couple of hundred MB
+            # still finishes a multi-GB shard, because each drop banked
+            # bytes (M23 lesson #2 — six fixed attempts died at 78%).
+            new_size = partial.stat().st_size if partial.exists() else 0
+            stalled_attempts = 0 if new_size > resume_at else stalled_attempts + 1
+            time.sleep(2.0 * (stalled_attempts + 1))
+    msg = f"shard download failed after {_DOWNLOAD_ATTEMPTS} stalled attempts: {url}"
     raise FleursIngestError(msg) from last_error
 
 

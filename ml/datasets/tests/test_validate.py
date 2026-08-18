@@ -103,6 +103,60 @@ class TestValidation:
         assert len(accepted) + len(rejections) == 2
 
 
+class TestShortSpeechWindow:
+    """M23: the bounded [0.5s, 2.0s) slice — window inverts, laws hold."""
+
+    def test_short_real_speech_is_admitted(self, tmp_path: Path) -> None:
+        accepted, rejections = validate_samples(
+            [sample(tmp_path, duration_seconds=1.0)],
+            expected_language="hi",
+            data_root=tmp_path,
+            short_speech=True,
+        )
+        assert len(accepted) == 1
+        assert rejections == []
+
+    def test_below_half_a_second_is_rejected(self, tmp_path: Path) -> None:
+        _, rejections = validate_samples(
+            [sample(tmp_path, duration_seconds=0.4)],
+            expected_language="hi",
+            data_root=tmp_path,
+            short_speech=True,
+        )
+        assert rejections[0].reason is RejectionReason.DURATION_TOO_SHORT
+
+    def test_the_standard_floor_is_the_exclusive_ceiling(self, tmp_path: Path) -> None:
+        # 2.0s belongs to the STANDARD window; the slice must refuse it,
+        # so no clip can ever satisfy both freezes.
+        _, rejections = validate_samples(
+            [sample(tmp_path, duration_seconds=2.0)],
+            expected_language="hi",
+            data_root=tmp_path,
+            short_speech=True,
+        )
+        assert rejections[0].reason is RejectionReason.DURATION_TOO_LONG
+
+    def test_markup_law_still_applies_inside_the_window(self, tmp_path: Path) -> None:
+        _, rejections = validate_samples(
+            [sample(tmp_path, duration_seconds=1.0, text="हाँ <unintelligible>")],
+            expected_language="hi",
+            data_root=tmp_path,
+            short_speech=True,
+            clean_markup=True,
+        )
+        assert rejections[0].reason is RejectionReason.MARKUP_IN_TRANSCRIPT
+
+    def test_eval_roster_law_still_applies_inside_the_window(self, tmp_path: Path) -> None:
+        _, rejections = validate_samples(
+            [sample(tmp_path, duration_seconds=1.0, speaker_id="SPK-07")],
+            expected_language="hi",
+            data_root=tmp_path,
+            short_speech=True,
+            eval_speakers=["SPK-07"],
+        )
+        assert rejections[0].reason is RejectionReason.SPEAKER_IN_EVAL
+
+
 class TestNormalizeText:
     def test_nfc_and_trim_only(self) -> None:
         composed = "नमस्ते"

@@ -1,0 +1,127 @@
+{
+  "experiment": "23-qwen3-hi-ft-e3",
+  "phase": "data-comparison (Phase 7)",
+  "run_at": "2026-08-18T10:28:46.097328+00:00",
+  "corpora": [
+    {
+      "corpus": "E1: hi-public-train@v1",
+      "rows": 4988,
+      "hours": 10.002,
+      "per_language": {
+        "hi": {
+          "rows": 4988,
+          "hours": 10.002,
+          "row_share": 1.0
+        }
+      },
+      "short_rows_below_2s": 0,
+      "markup_rows": 166,
+      "id_prefixes": {
+        "indicvoices": 3604,
+        "kathbath": 1384
+      },
+      "duration_seconds": {
+        "min": 2.0,
+        "median": 5.728,
+        "p95": 16.817,
+        "max": 29.633
+      }
+    },
+    {
+      "corpus": "E2: qwen-hi-public-train@v2",
+      "rows": 13492,
+      "hours": 27.275,
+      "per_language": {
+        "hi": {
+          "rows": 13424,
+          "hours": 27.183,
+          "row_share": 0.995
+        },
+        "zxx": {
+          "rows": 68,
+          "hours": 0.092,
+          "row_share": 0.005
+        }
+      },
+      "short_rows_below_2s": 0,
+      "markup_rows": 0,
+      "id_prefixes": {
+        "indicvoices": 10556,
+        "kathbath": 2868,
+        "neg": 68
+      },
+      "duration_seconds": {
+        "min": 2.0,
+        "median": 5.875,
+        "p95": 16.719,
+        "max": 29.726
+      }
+    },
+    {
+      "corpus": "E3: qwen-hi-public-train@v3",
+      "rows": 15192,
+      "hours": 30.106,
+      "per_language": {
+        "en": {
+          "rows": 900,
+          "hours": 2.581,
+          "row_share": 0.0592
+        },
+        "hi": {
+          "rows": 14224,
+          "hours": 27.434,
+          "row_share": 0.9363
+        },
+        "zxx": {
+          "rows": 68,
+          "hours": 0.092,
+          "row_share": 0.0045
+        }
+      },
+      "short_rows_below_2s": 800,
+      "markup_rows": 0,
+      "id_prefixes": {
+        "fleurs": 900,
+        "indicvoices": 11356,
+        "kathbath": 2868,
+        "neg": 68
+      },
+      "duration_seconds": {
+        "min": 0.5,
+        "median": 5.875,
+        "p95": 16.56,
+        "max": 29.726
+      }
+    }
+  ],
+  "containment": {
+    "v2_rows_missing_from_v3": [],
+    "v2_subset_of_v3": true,
+    "rows_added_beyond_v2": 1700,
+    "added_by_language": {
+      "en": 900,
+      "hi": 800
+    }
+  },
+  "v3_parts": [
+    {
+      "path": "ml/datasets/manifests/qwen-hi-public-train-v2.jsonl",
+      "sha256": "31e61c1cd6240177f4d88009254746beb091b9dfada5b00c4c1d683337e86708",
+      "samples": 13492,
+      "duration_seconds": 98189.213
+    },
+    {
+      "path": "ml/datasets/manifests/qwen-en-retention-slice-v1.jsonl",
+      "sha256": "c3bbff6381e95d73bde2a1a7e3eaa1f6d4392f179a12e385ad59bec7a14a08a1",
+      "samples": 900,
+      "duration_seconds": 9290.44
+    },
+    {
+      "path": "ml/datasets/manifests/qwen-hi-short-slice-v1.jsonl",
+      "sha256": "d381d8ca0f12189d57143313bcfca346f351443973de75bb453b09c74ba2ef1b",
+      "samples": 800,
+      "duration_seconds": 903.424
+    }
+  ],
+  "v3_curation": "deterministic merge of 3 frozen parts (pins re-verified; global id/path uniqueness enforced; row-share ceilings en<=0.08); rows in ascending id order; per-part validation lives in each part's own provenance sidecar"
+}

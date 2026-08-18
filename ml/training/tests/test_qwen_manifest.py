@@ -56,6 +56,16 @@ class TestOfficialFormat:
         # supervision and product output are one format by construction.
         assert qwen_text(sample, language_tag="Hindi") == "language Hindi<asr_text>नमस्ते"
 
+    def test_per_row_languages_take_their_own_headers(self) -> None:
+        # M23 retention mix: an English row inside a Hindi-tagged corpus
+        # supervises the English header; a zxx negative stays None-empty.
+        en = TrainSample(
+            id="e", audio="e.wav", text="hello world", language="en", duration_seconds=2.0
+        )
+        zxx = TrainSample(id="z", audio="z.wav", text="", language="zxx", duration_seconds=4.0)
+        assert qwen_text(en, language_tag="Hindi") == "language English<asr_text>hello world"
+        assert qwen_text(zxx, language_tag="Hindi") == "language None<asr_text>"
+
     def test_rows_are_the_official_two_field_shape(self, tmp_path: Path) -> None:
         sha = _tiny_manifest(tmp_path / "m.jsonl")
         record = convert_manifest(
@@ -138,19 +148,33 @@ class TestFrozenManifestGovernance:
     def test_training_and_eval_never_share_a_clip(self) -> None:
         # Freeze-time curation enforced content-hash disjointness; this
         # re-checks the cheap invariants forever: no shared ids, no
-        # shared audio paths between what trains and what judges.
-        train_ids = set()
-        train_audio = set()
-        for line in FROZEN_MANIFEST.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                row = json.loads(line)
-                train_ids.add(row["id"])
-                train_audio.add(row["audio"])
+        # shared audio paths between what trains and what judges —
+        # for EVERY frozen train manifest present (E1's v1, E2's v2,
+        # the M23 slices, and the merged v3).
         eval_doc = json.loads(EVAL_MANIFEST.read_text(encoding="utf-8"))
         eval_ids = {clip["id"] for clip in eval_doc["clips"]}
         eval_audio = {clip["path"] for clip in eval_doc["clips"] if clip.get("path")}
-        assert not (train_ids & eval_ids)
-        assert not (train_audio & eval_audio)
+        manifests_dir = REPO_ROOT / "ml/datasets/manifests"
+        frozen = [
+            FROZEN_MANIFEST,
+            *sorted(
+                path
+                for pattern in ("qwen-hi-public-train-v*.jsonl", "qwen-*-slice-v*.jsonl")
+                for path in manifests_dir.glob(pattern)
+            ),
+        ]
+        for manifest in frozen:
+            if not manifest.exists():
+                continue
+            train_ids = set()
+            train_audio = set()
+            for line in manifest.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    row = json.loads(line)
+                    train_ids.add(row["id"])
+                    train_audio.add(row["audio"])
+            assert not (train_ids & eval_ids), manifest.name
+            assert not (train_audio & eval_audio), manifest.name
 
     def test_default_config_points_at_the_pinned_manifest(self) -> None:
         config = QwenTrainingConfig()

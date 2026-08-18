@@ -43,7 +43,7 @@ from intelliai_datasets.manifests import (
     write_train_jsonl,
 )
 from intelliai_datasets.samples import CandidateSample
-from intelliai_datasets.sources import SOURCES, source, usable_now
+from intelliai_datasets.sources import SOURCES, SourceRecord, source, usable_now
 from intelliai_datasets.validate import ValidationReport, validate_samples
 from intelliai_evaluation.dataset import load_dataset
 
@@ -250,6 +250,9 @@ def _cmd_freeze_eval(args: argparse.Namespace) -> int:
 
 
 def _cmd_freeze_train(args: argparse.Namespace) -> int:
+    if not args.target_count and args.target_hours is None:
+        print("refusing: one of --target-hours / --target-count is required")
+        return 2
     samples: list[CandidateSample] = []
     revisions: dict[str, str] = {}
     for candidates_path in args.candidates:
@@ -275,11 +278,17 @@ def _cmd_freeze_train(args: argparse.Namespace) -> int:
         eval_speakers=eval_speakers,
         clean_markup=args.clean_markup,
         allow_no_speech=args.allow_no_speech,
+        short_speech=args.short_speech,
     )
-    chosen = curate_by_budget(
-        accepted,
-        target_duration_seconds=args.target_hours * 3600.0,
-    )
+    if args.target_count:
+        chosen = curate_count(accepted, count=args.target_count)
+        budget_recipe = f"first {args.target_count} accepted clips (row-count budget)"
+    else:
+        chosen = curate_by_budget(
+            accepted,
+            target_duration_seconds=args.target_hours * 3600.0,
+        )
+        budget_recipe = f"until {args.target_hours}h budget met (first crossing clip included)"
     report = ValidationReport(
         source=",".join(sorted({s.source for s in samples})) or "none",
         language=args.language,
@@ -302,11 +311,15 @@ def _cmd_freeze_train(args: argparse.Namespace) -> int:
         speaker_ids_available=all(s.speaker_id is not None for s in chosen) and bool(chosen),
         speaker_disjointness=args.speaker_disjointness,
         curation=(
-            f"deterministic: ascending sha256 order until "
-            f"{args.target_hours}h budget met (first crossing clip included); "
+            f"deterministic: ascending sha256 order {budget_recipe}; "
             f"eval disjointness enforced by content hash against "
             f"{eval_dataset.name}@v{eval_dataset.version}"
             + (f" and by speaker roster ({len(eval_speakers)} speakers)" if eval_speakers else "")
+            + (
+                "; admission window inverted to the short-speech slice [0.5s, 2.0s)"
+                if args.short_speech
+                else ""
+            )
         ),
         validation=report,
         source_revisions={
@@ -319,6 +332,102 @@ def _cmd_freeze_train(args: argparse.Namespace) -> int:
     print(f"TRAIN MANIFEST SHA256: {pin.sha256}")
     print(f"samples: {pin.samples}, duration: {pin.duration_seconds}s")
     print(f"rejections: {len(rejections)}")
+    return 0
+
+
+def _cmd_merge_train(args: argparse.Namespace) -> int:
+    from intelliai_datasets.merge import (
+        MergeError,
+        enforce_language_shares,
+        merge_rows,
+        merged_statistics,
+        read_part,
+        write_merged_jsonl,
+    )
+
+    if len(args.parts) != len(args.provenances):
+        print("refusing: --parts and --provenances must pair one-to-one, in order")
+        return 2
+    ceilings: dict[str, float] = {}
+    for spec in args.max_language_share:
+        language, _, fraction = spec.partition(":")
+        if not language or not fraction:
+            print(f"refusing: malformed --max-language-share {spec!r} (want lang:fraction)")
+            return 2
+        ceilings[language] = float(fraction)
+    try:
+        parts = [
+            read_part(jsonl, sidecar)
+            for jsonl, sidecar in zip(args.parts, args.provenances, strict=True)
+        ]
+        rows = merge_rows(parts)
+        enforce_language_shares(rows, ceilings)
+    except MergeError as exc:
+        print(f"MERGE REFUSED: {exc}")
+        return 2
+    pin = write_merged_jsonl(rows, args.out)
+
+    source_records = {}
+    splits: set[str] = set()
+    revisions: dict[str, str] = {}
+    for part in parts:
+        raw_sources = part.sidecar.get("sources", [])
+        if isinstance(raw_sources, list):
+            for record in raw_sources:
+                parsed = SourceRecord.model_validate(record)
+                source_records[parsed.name] = parsed
+        raw_splits = part.sidecar.get("source_splits", [])
+        if isinstance(raw_splits, list):
+            splits.update(str(s) for s in raw_splits)
+        raw_revisions = part.sidecar.get("source_revisions", {})
+        if isinstance(raw_revisions, dict):
+            for name, rev in raw_revisions.items():
+                revisions[str(name)] = str(rev)
+    report = ValidationReport(
+        source="merge:" + "+".join(Path(str(p.pin.path)).stem for p in parts),
+        language=args.language,
+        split=",".join(sorted(splits)) or "none",
+        candidates=len(rows),
+        accepted=len(rows),
+        rejections=(),
+        accepted_duration_seconds=round(sum(r.duration_seconds for r in rows), 3),
+    )
+    provenance = Provenance(
+        manifest=pin,
+        created=args.created,
+        language=args.language,
+        sources=tuple(source_records[name] for name in sorted(source_records)),
+        source_splits=tuple(sorted(splits)),
+        normalization="unicode_generic@v2",
+        primary_ruler="cer_unicode",
+        contamination_risk=args.contamination_risk,
+        speaker_ids_available=all(
+            bool(p.sidecar.get("speaker_ids_available", False)) for p in parts
+        ),
+        speaker_disjointness=args.speaker_disjointness,
+        curation=(
+            f"deterministic merge of {len(parts)} frozen parts (pins re-verified; "
+            "global id/path uniqueness enforced"
+            + (
+                "; row-share ceilings "
+                + ", ".join(f"{lang}<={c}" for lang, c in sorted(ceilings.items()))
+                if ceilings
+                else ""
+            )
+            + "); rows in ascending id order; per-part validation lives in each "
+            "part's own provenance sidecar"
+        ),
+        validation=report,
+        source_revisions=revisions,
+        statistics=merged_statistics(rows),
+        merged_from=tuple(p.pin for p in parts),
+    )
+    write_provenance(provenance, args.provenance_out)
+    print(f"MERGED MANIFEST: {pin.path}")
+    print(f"MERGED MANIFEST SHA256: {pin.sha256}")
+    print(f"samples: {pin.samples}, duration: {pin.duration_seconds}s")
+    for language, count in sorted(merged_statistics(rows)["language"].items()):
+        print(f"  {language}: {count} rows ({count / len(rows):.2%})")
     return 0
 
 
@@ -418,7 +527,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="frozen eval's provenance sidecar; its speaker_roster is enforced",
     )
     freeze_train.add_argument("--language", required=True)
-    freeze_train.add_argument("--target-hours", type=float, required=True)
+    freeze_train.add_argument("--target-hours", type=float, default=None)
+    freeze_train.add_argument(
+        "--target-count",
+        type=int,
+        default=0,
+        help="row-count budget (overrides --target-hours; the M23 slice instrument)",
+    )
     freeze_train.add_argument("--data-root", type=Path, default=Path("ml/datasets/data"))
     freeze_train.add_argument("--out", type=Path, required=True)
     freeze_train.add_argument("--provenance-out", type=Path, required=True)
@@ -443,7 +558,45 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="admit zxx negatives with empty transcripts (no-speech training examples)",
     )
+    # ── M23: the bounded short-speech slice ───────────────────────────
+    freeze_train.add_argument(
+        "--short-speech",
+        action="store_true",
+        help="admit ONLY the [0.5s, 2.0s) speech window (M23 short-speech slice)",
+    )
     freeze_train.set_defaults(func=_cmd_freeze_train)
+
+    merge_train = sub.add_parser(
+        "merge-train", help="merge frozen train manifests into one composition (M23)"
+    )
+    merge_train.add_argument("--parts", type=Path, required=True, nargs="+")
+    merge_train.add_argument(
+        "--provenances",
+        type=Path,
+        required=True,
+        nargs="+",
+        help="provenance sidecars pairing --parts one-to-one, in order",
+    )
+    merge_train.add_argument("--language", required=True, help="composite label, e.g. 'multi'")
+    merge_train.add_argument(
+        "--max-language-share",
+        action="append",
+        default=[],
+        metavar="LANG:FRACTION",
+        help="refuse the merge if LANG exceeds FRACTION of rows (repeatable)",
+    )
+    merge_train.add_argument("--out", type=Path, required=True)
+    merge_train.add_argument("--provenance-out", type=Path, required=True)
+    merge_train.add_argument("--contamination-risk", default="known_overlap")
+    merge_train.add_argument(
+        "--speaker-disjointness",
+        default=(
+            "Enforced per part at freeze time (see each part's sidecar); "
+            "the merge adds no new speakers."
+        ),
+    )
+    merge_train.add_argument("--created", default=today)
+    merge_train.set_defaults(func=_cmd_merge_train)
 
     negatives_cmd = sub.add_parser(
         "make-negatives", help="generate deterministic no-speech negatives (M22)"

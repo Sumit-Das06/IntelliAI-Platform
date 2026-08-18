@@ -1,0 +1,153 @@
+{
+  "manifest": {
+    "path": "ml/datasets/manifests/qwen-hi-public-train-v3.jsonl",
+    "sha256": "6cfc585d3cecbdc177f31f476ec10aa54232706c2e74015af28e2a041e73a467",
+    "samples": 15192,
+    "duration_seconds": 108383.077
+  },
+  "created": "2026-08-18",
+  "language": "multi",
+  "sources": [
+    {
+      "name": "fleurs",
+      "reference": "google/fleurs",
+      "language": "multi",
+      "license": "CC-BY-4.0",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/google/fleurs",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "",
+      "speaker_ids": false,
+      "official_splits": true,
+      "contamination_risk": "known_overlap",
+      "notes": "Read speech (FLoRes sentences). Train/dev/test official splits; authors describe splits as speaker-aware [CLAIM]. Widely used in public model training/benchmarks since 2022 — treat every FLEURS number as comparability, never as the primary product ruler."
+    },
+    {
+      "name": "indicvoices",
+      "reference": "ai4bharat/IndicVoices",
+      "language": "hi",
+      "license": "CC-BY-4.0",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/ai4bharat/IndicVoices",
+      "commercial": "yes",
+      "access": "gated",
+      "access_detail": "HF gated:auto. UNBLOCKED 2026-08-11: founder account accepted the terms; read token present on this machine (never committed). Ingest via the `ingest-hf` preset with the token discovered from the environment/HF token file.",
+      "speaker_ids": true,
+      "official_splits": true,
+      "contamination_risk": "possible",
+      "notes": "APPROVED PRIMARY eval source (+ future train backbone); spontaneous-heavy. Schema verified 2026-08-11: speaker_id, verbatim/normalized transcripts, scenario/gender/age/district. hindi/valid = 5,530 rows (~518 MB); hindi/train = 445,160 rows (~49 GB, NOT ingested — 15D concern)."
+    },
+    {
+      "name": "kathbath",
+      "reference": "ai4bharat/Kathbath",
+      "language": "hi",
+      "license": "CC0 (explicit waiver on card)",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/ai4bharat/Kathbath",
+      "commercial": "yes",
+      "access": "gated",
+      "access_detail": "HF gated:auto. UNBLOCKED 2026-08-11 (terms accepted, token present). Ingestion deferred: audio ships as M4A (fname '…-f.m4a'), outside the WAV-only probe — a recorded adapter gap for 15D, not a partial ingest.",
+      "speaker_ids": true,
+      "official_splits": true,
+      "contamination_risk": "possible",
+      "notes": "APPROVED train source (clean read speech; speaker_id int64, schema verified 2026-08-11). Role: training (15D)."
+    },
+    {
+      "name": "negatives-indicvoices-derived",
+      "reference": "ai4bharat/IndicVoices (derived near-silence segments)",
+      "language": "zxx",
+      "license": "CC-BY-4.0 (derivative of IndicVoices audio; attribution carries)",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/ai4bharat/IndicVoices",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "derived locally from already-ingested approved clips",
+      "speaker_ids": false,
+      "official_splits": false,
+      "contamination_risk": "none_known",
+      "notes": "Quietest ≥2.5 s windows cut deterministically from approved ingested IndicVoices Hindi clips (parent clip id recorded per candidate); real room tone rather than digital zero, so the no-speech lesson generalizes past exact silence."
+    },
+    {
+      "name": "negatives-synthetic",
+      "reference": "intelliai_datasets.negatives (generated in-repo)",
+      "language": "zxx",
+      "license": "synthetic — generated in-repo, no external rights attach",
+      "license_verified_on": "2026-08-17",
+      "license_source_url": "https://github.com/Sumit-Das06/IntelliAI-Platform",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "",
+      "speaker_ids": false,
+      "official_splits": false,
+      "contamination_risk": "none_known",
+      "notes": "Deterministic seeded digital silence and low-level noise (M22 Phase 3): teaches `language None<asr_text>` on no-speech input — the exact emission the pinned base model produces and the serving adapter parses to an empty result."
+    }
+  ],
+  "source_splits": [
+    "train",
+    "valid"
+  ],
+  "normalization": "unicode_generic@v2",
+  "primary_ruler": "cer_unicode",
+  "contamination_risk": "known_overlap",
+  "speaker_ids_available": false,
+  "speaker_disjointness": "Enforced per part at freeze time (see each part's sidecar); the merge adds no new speakers.",
+  "curation": "deterministic merge of 3 frozen parts (pins re-verified; global id/path uniqueness enforced; row-share ceilings en<=0.08); rows in ascending id order; per-part validation lives in each part's own provenance sidecar",
+  "validation": {
+    "source": "merge:qwen-hi-public-train-v2+qwen-en-retention-slice-v1+qwen-hi-short-slice-v1",
+    "language": "multi",
+    "split": "train,valid",
+    "candidates": 15192,
+    "accepted": 15192,
+    "rejections": [],
+    "accepted_duration_seconds": 108383.077
+  },
+  "notes": "",
+  "source_revisions": {
+    "indicvoices": "c96f9088f138cf89d419da7e8e643e1f05c00a87",
+    "kathbath": "5b9e92849222026d9141acba4e8434fe816396bf",
+    "negatives-synthetic": "generated:seed=20260817",
+    "negatives-indicvoices-derived": "generated:seed=20260817"
+  },
+  "speaker_roster": [],
+  "statistics": {
+    "language": {
+      "en": 900,
+      "hi": 14224,
+      "zxx": 68
+    },
+    "duration_bands": {
+      "15-30s": 1110,
+      "5-15s": 8201,
+      "2-5s": 5081,
+      "<2s": 800
+    },
+    "id_prefix": {
+      "fleurs": 900,
+      "indicvoices": 11356,
+      "kathbath": 2868,
+      "neg": 68
+    }
+  },
+  "merged_from": [
+    {
+      "path": "ml/datasets/manifests/qwen-hi-public-train-v2.jsonl",
+      "sha256": "31e61c1cd6240177f4d88009254746beb091b9dfada5b00c4c1d683337e86708",
+      "samples": 13492,
+      "duration_seconds": 98189.213
+    },
+    {
+      "path": "ml/datasets/manifests/qwen-en-retention-slice-v1.jsonl",
+      "sha256": "c3bbff6381e95d73bde2a1a7e3eaa1f6d4392f179a12e385ad59bec7a14a08a1",
+      "samples": 900,
+      "duration_seconds": 9290.44
+    },
+    {
+      "path": "ml/datasets/manifests/qwen-hi-short-slice-v1.jsonl",
+      "sha256": "d381d8ca0f12189d57143313bcfca346f351443973de75bb453b09c74ba2ef1b",
+      "samples": 800,
+      "duration_seconds": 903.424
+    }
+  ]
+}

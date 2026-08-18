@@ -1,0 +1,102 @@
+{
+  "manifest": {
+    "path": "ml/datasets/manifests/qwen-en-retention-slice-v1.jsonl",
+    "sha256": "c3bbff6381e95d73bde2a1a7e3eaa1f6d4392f179a12e385ad59bec7a14a08a1",
+    "samples": 900,
+    "duration_seconds": 9290.44
+  },
+  "created": "2026-08-18",
+  "language": "en",
+  "sources": [
+    {
+      "name": "fleurs",
+      "reference": "google/fleurs",
+      "language": "multi",
+      "license": "CC-BY-4.0",
+      "license_verified_on": "2026-08-11",
+      "license_source_url": "https://huggingface.co/datasets/google/fleurs",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "",
+      "speaker_ids": false,
+      "official_splits": true,
+      "contamination_risk": "known_overlap",
+      "notes": "Read speech (FLoRes sentences). Train/dev/test official splits; authors describe splits as speaker-aware [CLAIM]. Widely used in public model training/benchmarks since 2022 — treat every FLEURS number as comparability, never as the primary product ruler."
+    }
+  ],
+  "source_splits": [
+    "train"
+  ],
+  "normalization": "unicode_generic@v2",
+  "primary_ruler": "cer_unicode",
+  "contamination_risk": "known_overlap",
+  "speaker_ids_available": false,
+  "speaker_disjointness": "FLEURS publishes no per-clip speaker identifiers; the authors describe official splits as speaker-aware [CLAIM]. Content-hash disjointness against the frozen Hindi eval is enforced mechanically; the slice shares no source or language with the frozen eval.",
+  "curation": "deterministic: ascending sha256 order first 900 accepted clips (row-count budget); eval disjointness enforced by content hash against stt-hi-public-eval@v1 and by speaker roster (32 speakers)",
+  "validation": {
+    "source": "fleurs",
+    "language": "en",
+    "split": "train",
+    "candidates": 2602,
+    "accepted": 2596,
+    "rejections": [
+      {
+        "sample_id": "fleurs-en_us-train-000002",
+        "reason": "duration_too_long",
+        "detail": "30.24s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-en_us-train-001391",
+        "reason": "duration_too_long",
+        "detail": "42.36s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-en_us-train-000708",
+        "reason": "duration_too_long",
+        "detail": "30.48s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-en_us-train-000558",
+        "reason": "duration_too_long",
+        "detail": "31.38s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-en_us-train-001215",
+        "reason": "duration_too_long",
+        "detail": "33.30s > 30.0s"
+      },
+      {
+        "sample_id": "fleurs-en_us-train-001453-2",
+        "reason": "duration_too_long",
+        "detail": "32.70s > 30.0s"
+      }
+    ],
+    "accepted_duration_seconds": 26766.44
+  },
+  "notes": "",
+  "source_revisions": {},
+  "speaker_roster": [],
+  "statistics": {
+    "style": {
+      "unknown": 900
+    },
+    "gender": {
+      "1": 535,
+      "0": 365
+    },
+    "duration_bands": {
+      "5-15s": 785,
+      "15-30s": 95,
+      "<5s": 20
+    },
+    "transcript_length_bands": {
+      "10-25w": 658,
+      ">=25w": 225,
+      "<10w": 17
+    },
+    "source": {
+      "fleurs": 900
+    }
+  },
+  "merged_from": []
+}

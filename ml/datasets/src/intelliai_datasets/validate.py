@@ -21,6 +21,13 @@ from intelliai_datasets.samples import CandidateSample
 MIN_DURATION_SECONDS = 2.0
 MAX_DURATION_SECONDS = 30.0
 
+# M23 short-speech slice: E2 recorded 1 s utterances suppressing because
+# its corpus had a 2 s floor — sub-2 s speech was never supervised. The
+# bounded slice admits ONLY [0.5 s, 2.0 s): the upper bound is exclusive
+# and equals the standard floor, so a short-slice freeze can never
+# re-admit what a standard freeze already covers, and vice versa.
+SHORT_MIN_DURATION_SECONDS = 0.5
+
 
 class RejectionReason(enum.StrEnum):
     AUDIO_MISSING = "audio_missing"
@@ -109,6 +116,7 @@ def validate_samples(
     require_speaker_ids: bool = False,
     clean_markup: bool = False,
     allow_no_speech: bool = False,
+    short_speech: bool = False,
 ) -> tuple[list[CandidateSample], list[Rejection]]:
     """Validate in stable input order; return (accepted, rejections).
 
@@ -123,6 +131,10 @@ def validate_samples(
     ``allow_no_speech`` (M22): admit ``language == "zxx"`` negatives
     with EMPTY transcripts — the no-speech training examples. Off by
     default for the same reason.
+    ``short_speech`` (M23): invert the speech duration window to the
+    bounded short-speech slice [0.5 s, 2.0 s) — every other rule
+    (markup, language, dedup, contamination, roster) applies unchanged;
+    zxx negatives keep the standard bounds.
     """
     frozen_hashes = {h.lower() for h in eval_sha256}
     frozen_speakers = set(eval_speakers)
@@ -154,6 +166,7 @@ def validate_samples(
             seen_hashes=seen_hashes,
             require_speaker_ids=require_speaker_ids,
             allow_no_speech=allow_no_speech,
+            short_speech=short_speech,
         )
         if reason is None:
             seen_hashes.add(candidate.sha256.lower())
@@ -173,6 +186,7 @@ def _reject_reason(
     seen_hashes: set[str],
     require_speaker_ids: bool = False,
     allow_no_speech: bool = False,
+    short_speech: bool = False,
 ) -> Rejection | None:
     #: A no-speech negative: "zxx" is ISO 639-2 for "no linguistic
     #: content" (the same code the evaluation seed probes use). Its
@@ -220,13 +234,32 @@ def _reject_reason(
             reason=RejectionReason.AUDIO_UNREADABLE,
             detail="probe reported no decodable audio",
         )
-    if sample.duration_seconds < MIN_DURATION_SECONDS:
+    if short_speech:
+        if sample.duration_seconds < SHORT_MIN_DURATION_SECONDS:
+            return Rejection(
+                sample_id=sample.id,
+                reason=RejectionReason.DURATION_TOO_SHORT,
+                detail=(
+                    f"{sample.duration_seconds:.2f}s < {SHORT_MIN_DURATION_SECONDS}s "
+                    "(short-speech window)"
+                ),
+            )
+        if sample.duration_seconds >= MIN_DURATION_SECONDS:
+            return Rejection(
+                sample_id=sample.id,
+                reason=RejectionReason.DURATION_TOO_LONG,
+                detail=(
+                    f"{sample.duration_seconds:.2f}s >= {MIN_DURATION_SECONDS}s "
+                    "(outside the short-speech window)"
+                ),
+            )
+    elif sample.duration_seconds < MIN_DURATION_SECONDS:
         return Rejection(
             sample_id=sample.id,
             reason=RejectionReason.DURATION_TOO_SHORT,
             detail=f"{sample.duration_seconds:.2f}s < {MIN_DURATION_SECONDS}s",
         )
-    if sample.duration_seconds > MAX_DURATION_SECONDS:
+    elif sample.duration_seconds > MAX_DURATION_SECONDS:
         return Rejection(
             sample_id=sample.id,
             reason=RejectionReason.DURATION_TOO_LONG,

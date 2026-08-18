@@ -14,11 +14,13 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
         args: [--maxkb=1024]  # model weights and audio must never enter git
-        # Frozen dataset MANIFESTS are the reproducibility artifacts the
-        # training law requires in git (pin-verified before every run);
-        # they are text definitions, not data — 27 h of clip metadata
-        # legitimately exceeds 1 MB. Audio/weights stay blocked everywhere.
-        exclude: ^ml/datasets/manifests/.*\.jsonl$
+        # Frozen dataset MANIFESTS and their PROVENANCE sidecars are the
+        # reproducibility artifacts the training law requires in git
+        # (pin-verified before every run); they are text definitions and
+        # rejection ledgers, not data — 27 h of clip metadata or a
+        # 12k-row rejection ledger legitimately exceeds 1 MB.
+        # Audio/weights stay blocked everywhere.
+        exclude: ^ml/datasets/manifests/.*\.(jsonl|provenance\.json)$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.0
