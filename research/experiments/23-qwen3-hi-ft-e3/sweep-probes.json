@@ -1,0 +1,411 @@
+{
+  "experiment": "23-qwen3-hi-ft-e3",
+  "phase": "sweep-probes (Phase 12 retention half)",
+  "run_at": "2026-08-18T14:05:52.007134+00:00",
+  "held_out_english": [
+    "fleurs-en_us-train-000295-2",
+    "fleurs-en_us-train-001042"
+  ],
+  "held_out_short": [
+    "indicvoices-hindi-train-0-000576",
+    "indicvoices-hindi-train-1-001045"
+  ],
+  "checkpoints": {
+    "checkpoint-600": {
+      "jfk-english": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "And so my fellow Americans, ask not what your country can do for you, ",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "silence-10s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "noise-quiet(-50dBFS)-8s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "window-1s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को कर"
+      },
+      "window-2s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को करना चाहिए"
+      },
+      "en-holdout:fleurs-en_us-train-000295-2": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "The LUNO had 120–160 m³ of fuel aboard it when it broke down and high ",
+        "wer": 0.125,
+        "cer": 0.1148
+      },
+      "en-holdout:fleurs-en_us-train-001042": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "Other topics covered reportedly include the future state of Jerusalem,",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-0-000576": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "हाँ सर",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-1-001045": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "बाएँ",
+        "wer": 1.0,
+        "cer": 0.25
+      }
+    },
+    "checkpoint-900": {
+      "jfk-english": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "And so my fellow Americans, ask not what your country can do for you, ",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "silence-10s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "noise-quiet(-50dBFS)-8s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "window-1s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को कर"
+      },
+      "window-2s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को करना चाहिए"
+      },
+      "en-holdout:fleurs-en_us-train-000295-2": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "The LUNO had 120-160 cubic meters of fuel aboard it when it broke down",
+        "wer": 0.0833,
+        "cer": 0.041
+      },
+      "en-holdout:fleurs-en_us-train-001042": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "Other topics covered reportedly include the future state of Jerusalem,",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-0-000576": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "हाँ सर",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-1-001045": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "बाएँ",
+        "wer": 1.0,
+        "cer": 0.25
+      }
+    },
+    "checkpoint-1200": {
+      "jfk-english": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "And so my fellow Americans, ask not what your country can do for you, ",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "silence-10s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "noise-quiet(-50dBFS)-8s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "window-1s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को कर"
+      },
+      "window-2s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को करना चाहिए"
+      },
+      "en-holdout:fleurs-en_us-train-000295-2": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "The LUNO had 120–160 m³ of fuel aboard it when it broke down and high ",
+        "wer": 0.125,
+        "cer": 0.1148
+      },
+      "en-holdout:fleurs-en_us-train-001042": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "Other topics covered reportedly include the future state of Jerusalem,",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-0-000576": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "हाँ सर",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-1-001045": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "बाएँ",
+        "wer": 1.0,
+        "cer": 0.25
+      }
+    },
+    "checkpoint-1500": {
+      "jfk-english": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "And so my fellow Americans, ask not what your country can do for you, ",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "silence-10s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "noise-quiet(-50dBFS)-8s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "window-1s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को कर"
+      },
+      "window-2s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को करना चाहिए"
+      },
+      "en-holdout:fleurs-en_us-train-000295-2": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "The LUNO had 120–160 m³ of fuel aboard it when it broke down and high ",
+        "wer": 0.125,
+        "cer": 0.1148
+      },
+      "en-holdout:fleurs-en_us-train-001042": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "Other topics covered reportedly include the future state of Jerusalem,",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-0-000576": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "हाँ सर",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-1-001045": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "बाएँ",
+        "wer": 1.0,
+        "cer": 0.25
+      }
+    },
+    "checkpoint-1800": {
+      "jfk-english": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "And so my fellow Americans, ask not what your country can do for you, ",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "silence-10s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "noise-quiet(-50dBFS)-8s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "window-1s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को कर"
+      },
+      "window-2s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को करना चाहिए"
+      },
+      "en-holdout:fleurs-en_us-train-000295-2": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "The LUNO had 120–160 m³ of fuel aboard it when it broke down and high ",
+        "wer": 0.125,
+        "cer": 0.1148
+      },
+      "en-holdout:fleurs-en_us-train-001042": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "Other topics covered reportedly include the future state of Jerusalem,",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-0-000576": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "हाँ सर",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-1-001045": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "बाएँ",
+        "wer": 1.0,
+        "cer": 0.25
+      }
+    },
+    "checkpoint-1840": {
+      "jfk-english": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "And so my fellow Americans, ask not what your country can do for you, ",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "silence-10s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "noise-quiet(-50dBFS)-8s": {
+        "empty": true,
+        "devanagari": false,
+        "latin": false,
+        "text_head": ""
+      },
+      "window-1s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को कर"
+      },
+      "window-2s-hindi": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "मनुष्य को करना चाहिए"
+      },
+      "en-holdout:fleurs-en_us-train-000295-2": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "The LUNO had 120–160 m³ of fuel aboard it when it broke down and high ",
+        "wer": 0.125,
+        "cer": 0.1148
+      },
+      "en-holdout:fleurs-en_us-train-001042": {
+        "empty": false,
+        "devanagari": false,
+        "latin": true,
+        "text_head": "Other topics covered reportedly include the future state of Jerusalem,",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-0-000576": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "हाँ सर",
+        "wer": 0.0,
+        "cer": 0.0
+      },
+      "short-holdout:indicvoices-hindi-train-1-001045": {
+        "empty": false,
+        "devanagari": true,
+        "latin": false,
+        "text_head": "बाएँ",
+        "wer": 1.0,
+        "cer": 0.25
+      }
+    }
+  }
+}
