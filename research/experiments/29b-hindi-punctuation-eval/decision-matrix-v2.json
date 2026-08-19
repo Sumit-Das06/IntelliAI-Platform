@@ -1,0 +1,231 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "v1_sha256": "3fa83ddb98cb2aafc3814c2cf4a385d309f8f79c7cf90699f83baefe7434a154",
+  "v2_sha256": "edbddee8a1dd2a092955f6b21a7d38cf5d4b6c2a8eb13fe27350b8cacd753eff",
+  "slices": {
+    "fleurs-single (v1)": {
+      "no-op": {
+        "micro_f1": 0.0,
+        "micro_precision": 0.0,
+        "micro_recall": 0.0,
+        "danda_f1": 0.0,
+        "comma_f1": 0.0,
+        "question_f1": 0.0,
+        "boundary_f1": 0.0,
+        "boundary_precision": 0.0,
+        "boundary_recall": 0.0,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 265
+      },
+      "rules": {
+        "micro_f1": 0.1706,
+        "micro_precision": 0.2755,
+        "micro_recall": 0.1235,
+        "danda_f1": 0.422,
+        "comma_f1": 0.0,
+        "question_f1": 0.0,
+        "boundary_f1": 0.8942,
+        "boundary_precision": 0.9887,
+        "boundary_recall": 0.8162,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 265
+      },
+      "lead-old": {
+        "micro_f1": 0.2421,
+        "micro_precision": 0.2351,
+        "micro_recall": 0.2496,
+        "danda_f1": 0.2721,
+        "comma_f1": 0.3467,
+        "question_f1": 0.0,
+        "boundary_f1": 0.7497,
+        "boundary_precision": 0.6107,
+        "boundary_recall": 0.9707,
+        "invariant_pass_rate": 0.9623,
+        "invariant_failures": 10,
+        "rows": 265
+      },
+      "lead-wordcopy": {
+        "micro_f1": 0.242,
+        "micro_precision": 0.2356,
+        "micro_recall": 0.2487,
+        "danda_f1": 0.2726,
+        "comma_f1": 0.3481,
+        "question_f1": 0.0,
+        "boundary_f1": 0.7497,
+        "boundary_precision": 0.6126,
+        "boundary_recall": 0.9657,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 265
+      }
+    },
+    "read-paragraph (v2)": {
+      "no-op": {
+        "micro_f1": 0.0,
+        "micro_precision": 0.0,
+        "micro_recall": 0.0,
+        "danda_f1": 0.0,
+        "comma_f1": 0.0,
+        "question_f1": 0.0,
+        "boundary_f1": 0.0,
+        "boundary_precision": 0.0,
+        "boundary_recall": 0.0,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 88
+      },
+      "rules": {
+        "micro_f1": 0.0739,
+        "micro_precision": 0.2841,
+        "micro_recall": 0.0424,
+        "danda_f1": 0.2959,
+        "comma_f1": 0.0,
+        "question_f1": 0.0,
+        "boundary_f1": 0.4216,
+        "boundary_precision": 0.9773,
+        "boundary_recall": 0.2687,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 88
+      },
+      "lead-old": {
+        "micro_f1": 0.2589,
+        "micro_precision": 0.2547,
+        "micro_recall": 0.2632,
+        "danda_f1": 0.2934,
+        "comma_f1": 0.3678,
+        "question_f1": 0.0,
+        "boundary_f1": 0.7695,
+        "boundary_precision": 0.6496,
+        "boundary_recall": 0.9435,
+        "invariant_pass_rate": 0.8864,
+        "invariant_failures": 10,
+        "rows": 88
+      },
+      "lead-wordcopy": {
+        "micro_f1": 0.2606,
+        "micro_precision": 0.2549,
+        "micro_recall": 0.2666,
+        "danda_f1": 0.2811,
+        "comma_f1": 0.389,
+        "question_f1": 0.0,
+        "boundary_f1": 0.7441,
+        "boundary_precision": 0.6195,
+        "boundary_recall": 0.9313,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 88
+      }
+    },
+    "spontaneous (v2)": {
+      "no-op": {
+        "micro_f1": 0.0,
+        "micro_precision": 0.0,
+        "micro_recall": 0.0,
+        "danda_f1": 0.0,
+        "comma_f1": 0.0,
+        "question_f1": 0.0,
+        "boundary_f1": 0.0,
+        "boundary_precision": 0.0,
+        "boundary_recall": 0.0,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 60
+      },
+      "rules": {
+        "micro_f1": 0.4211,
+        "micro_precision": 0.8667,
+        "micro_recall": 0.2781,
+        "danda_f1": 0.6846,
+        "comma_f1": 0.0,
+        "question_f1": 0.1053,
+        "boundary_f1": 0.7143,
+        "boundary_precision": 1.0,
+        "boundary_recall": 0.5556,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 60
+      },
+      "lead-old": {
+        "micro_f1": 0.5747,
+        "micro_precision": 0.6211,
+        "micro_recall": 0.5348,
+        "danda_f1": 0.6771,
+        "comma_f1": 0.4462,
+        "question_f1": 0.5,
+        "boundary_f1": 0.7248,
+        "boundary_precision": 0.7182,
+        "boundary_recall": 0.7315,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 60
+      },
+      "lead-wordcopy": {
+        "micro_f1": 0.5747,
+        "micro_precision": 0.6211,
+        "micro_recall": 0.5348,
+        "danda_f1": 0.6771,
+        "comma_f1": 0.4462,
+        "question_f1": 0.5,
+        "boundary_f1": 0.7248,
+        "boundary_precision": 0.7182,
+        "boundary_recall": 0.7315,
+        "invariant_pass_rate": 1.0,
+        "invariant_failures": 0,
+        "rows": 60
+      }
+    }
+  },
+  "questions": {
+    "rules": {
+      "questions": 30,
+      "statement_controls": 12,
+      "correct_questions": 5,
+      "missed_questions": 25,
+      "false_positive_statements": 0,
+      "correct_statements": 12,
+      "detection_precision": 1.0,
+      "detection_recall": 0.1667,
+      "detection_f1": 0.2857,
+      "pct_questions_correct": 16.7
+    },
+    "lead-old": {
+      "questions": 30,
+      "statement_controls": 12,
+      "correct_questions": 21,
+      "missed_questions": 9,
+      "false_positive_statements": 0,
+      "correct_statements": 12,
+      "detection_precision": 1.0,
+      "detection_recall": 0.7,
+      "detection_f1": 0.8235,
+      "pct_questions_correct": 70.0
+    },
+    "lead-wordcopy": {
+      "questions": 30,
+      "statement_controls": 12,
+      "correct_questions": 21,
+      "missed_questions": 9,
+      "false_positive_statements": 0,
+      "correct_statements": 12,
+      "detection_precision": 1.0,
+      "detection_recall": 0.7,
+      "detection_f1": 0.8235,
+      "pct_questions_correct": 70.0
+    }
+  },
+  "edges": {
+    "lead-old": {
+      "probes": 22,
+      "corruptions": 13,
+      "verdict": "FAIL"
+    },
+    "lead-wordcopy": {
+      "probes": 22,
+      "corruptions": 0,
+      "verdict": "PASS"
+    }
+  }
+}

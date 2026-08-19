@@ -1,0 +1,78 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "phase": "performance-tiers word-copy (development machine - NOT production SLA)",
+  "cpu_logical_cores": 24,
+  "cold_load_including_download_seconds": {
+    "value": 36.3,
+    "label": "MEASURED once in M28"
+  },
+  "warm_disk_load_seconds": 0.88,
+  "rss_mib": {
+    "python_baseline": 60.9,
+    "after_load": 305.2,
+    "after_all_tiers": 313.4,
+    "peak": 427.9
+  },
+  "tiers": {
+    "5s": {
+      "input_chars": 260,
+      "model_latency_seconds": 0.015,
+      "decoder_latency_seconds": 4e-05,
+      "total_latency_seconds": 0.015,
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 5,
+        "comma": 0,
+        "question_mark": 0
+      }
+    },
+    "30s": {
+      "input_chars": 412,
+      "model_latency_seconds": 0.027,
+      "decoder_latency_seconds": 6e-05,
+      "total_latency_seconds": 0.027,
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 8,
+        "comma": 2,
+        "question_mark": 0
+      }
+    },
+    "120s": {
+      "input_chars": 1467,
+      "model_latency_seconds": 0.081,
+      "decoder_latency_seconds": 0.00011,
+      "total_latency_seconds": 0.081,
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 21,
+        "comma": 15,
+        "question_mark": 0
+      }
+    },
+    "300s": {
+      "input_chars": 3782,
+      "model_latency_seconds": 0.236,
+      "decoder_latency_seconds": 0.00025,
+      "total_latency_seconds": 0.236,
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 61,
+        "comma": 35,
+        "question_mark": 0
+      }
+    },
+    "600s": {
+      "input_chars": 7340,
+      "model_latency_seconds": 0.451,
+      "decoder_latency_seconds": 0.00058,
+      "total_latency_seconds": 0.451,
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 116,
+        "comma": 77,
+        "question_mark": 1
+      }
+    }
+  }
+}

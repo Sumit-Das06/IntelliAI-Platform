@@ -1,0 +1,263 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "proposed_gate": ">=80% questions correct (PROPOSED, not yet approved)",
+  "systems": {
+    "rules": {
+      "questions": 30,
+      "statement_controls": 12,
+      "correct_questions": 5,
+      "missed_questions": 25,
+      "false_positive_statements": 0,
+      "correct_statements": 12,
+      "detection_precision": 1.0,
+      "detection_recall": 0.1667,
+      "detection_f1": 0.2857,
+      "pct_questions_correct": 16.7,
+      "wrong": [
+        {
+          "id": "q-03",
+          "expected": "?",
+          "output": "तुम कल मीटिंग में क्यों नहीं आए।"
+        },
+        {
+          "id": "q-04",
+          "expected": "?",
+          "output": "परीक्षा का रिजल्ट कब आएगा।"
+        },
+        {
+          "id": "q-05",
+          "expected": "?",
+          "output": "आपका ऑफिस कहाँ है।"
+        },
+        {
+          "id": "q-06",
+          "expected": "?",
+          "output": "यह मशीन कैसे चलती है।"
+        },
+        {
+          "id": "q-07",
+          "expected": "?",
+          "output": "दरवाजे पर कौन खड़ा है।"
+        },
+        {
+          "id": "q-08",
+          "expected": "?",
+          "output": "इस किताब की कीमत कितनी है।"
+        },
+        {
+          "id": "q-09",
+          "expected": "?",
+          "output": "आपने खाने में क्या बनाया है।"
+        },
+        {
+          "id": "q-10",
+          "expected": "?",
+          "output": "तुम्हारा नाम क्या है।"
+        },
+        {
+          "id": "q-11",
+          "expected": "?",
+          "output": "आप कल आ रहे हैं ना।"
+        },
+        {
+          "id": "q-12",
+          "expected": "?",
+          "output": "खाना अच्छा बना है न।"
+        },
+        {
+          "id": "q-13",
+          "expected": "?",
+          "output": "मैं शाम को फोन करता हूँ ठीक है ना।"
+        },
+        {
+          "id": "q-14",
+          "expected": "?",
+          "output": "तुमने खाना खा लिया।"
+        },
+        {
+          "id": "q-15",
+          "expected": "?",
+          "output": "आप डॉक्टर से मिल आए।"
+        },
+        {
+          "id": "q-16",
+          "expected": "?",
+          "output": "गाड़ी समय पर पहुँच गई थी।"
+        },
+        {
+          "id": "q-20",
+          "expected": "?",
+          "output": "आपका laptop ठीक हो गया।"
+        },
+        {
+          "id": "q-21",
+          "expected": "?",
+          "output": "project की deadline कब है।"
+        },
+        {
+          "id": "q-22",
+          "expected": "?",
+          "output": "आप चाय लेंगे या कॉफी।"
+        },
+        {
+          "id": "q-23",
+          "expected": "?",
+          "output": "हम आज जाएँ या कल।"
+        },
+        {
+          "id": "q-24",
+          "expected": "?",
+          "output": "यह फैसला किसने लिया।"
+        },
+        {
+          "id": "q-25",
+          "expected": "?",
+          "output": "आप किसके साथ आए हैं।"
+        },
+        {
+          "id": "q-26",
+          "expected": "?",
+          "output": "अगर बारिश हो गई तो कार्यक्रम कहाँ होगा।"
+        },
+        {
+          "id": "q-27",
+          "expected": "?",
+          "output": "जो सामान कल आया था वो किसने भेजा था।"
+        },
+        {
+          "id": "q-28",
+          "expected": "?",
+          "output": "मुझे बताइए कि आप कब आएँगे।"
+        },
+        {
+          "id": "q-29",
+          "expected": "?",
+          "output": "आपकी तबीयत अब कैसी है।"
+        },
+        {
+          "id": "q-30",
+          "expected": "?",
+          "output": "घर पर सब कैसे हैं।"
+        }
+      ]
+    },
+    "lead-old": {
+      "questions": 30,
+      "statement_controls": 12,
+      "correct_questions": 21,
+      "missed_questions": 9,
+      "false_positive_statements": 0,
+      "correct_statements": 12,
+      "detection_precision": 1.0,
+      "detection_recall": 0.7,
+      "detection_f1": 0.8235,
+      "pct_questions_correct": 70.0,
+      "wrong": [
+        {
+          "id": "q-11",
+          "expected": "?",
+          "output": "आप कल आ रहे हैं ना।"
+        },
+        {
+          "id": "q-12",
+          "expected": "?",
+          "output": "खाना अच्छा बना है न।"
+        },
+        {
+          "id": "q-13",
+          "expected": "?",
+          "output": "मैं शाम को फोन करता हूँ, ठीक है ना।"
+        },
+        {
+          "id": "q-14",
+          "expected": "?",
+          "output": "तुमने खाना खा लिया।"
+        },
+        {
+          "id": "q-15",
+          "expected": "?",
+          "output": "आप डॉक्टर से मिल आए।"
+        },
+        {
+          "id": "q-16",
+          "expected": "?",
+          "output": "गाड़ी समय पर पहुँच गई थी।"
+        },
+        {
+          "id": "q-20",
+          "expected": "?",
+          "output": "आपका laptop ठीक हो गया।"
+        },
+        {
+          "id": "q-23",
+          "expected": "?",
+          "output": "हम आज जाएँ या कल।"
+        },
+        {
+          "id": "q-27",
+          "expected": "?",
+          "output": "जो सामान कल आया था, वो किसने भेजा था।"
+        }
+      ]
+    },
+    "lead-wordcopy": {
+      "questions": 30,
+      "statement_controls": 12,
+      "correct_questions": 21,
+      "missed_questions": 9,
+      "false_positive_statements": 0,
+      "correct_statements": 12,
+      "detection_precision": 1.0,
+      "detection_recall": 0.7,
+      "detection_f1": 0.8235,
+      "pct_questions_correct": 70.0,
+      "wrong": [
+        {
+          "id": "q-11",
+          "expected": "?",
+          "output": "आप कल आ रहे हैं ना।"
+        },
+        {
+          "id": "q-12",
+          "expected": "?",
+          "output": "खाना अच्छा बना है न।"
+        },
+        {
+          "id": "q-13",
+          "expected": "?",
+          "output": "मैं शाम को फोन करता हूँ, ठीक है ना।"
+        },
+        {
+          "id": "q-14",
+          "expected": "?",
+          "output": "तुमने खाना खा लिया।"
+        },
+        {
+          "id": "q-15",
+          "expected": "?",
+          "output": "आप डॉक्टर से मिल आए।"
+        },
+        {
+          "id": "q-16",
+          "expected": "?",
+          "output": "गाड़ी समय पर पहुँच गई थी।"
+        },
+        {
+          "id": "q-20",
+          "expected": "?",
+          "output": "आपका laptop ठीक हो गया।"
+        },
+        {
+          "id": "q-23",
+          "expected": "?",
+          "output": "हम आज जाएँ या कल।"
+        },
+        {
+          "id": "q-27",
+          "expected": "?",
+          "output": "जो सामान कल आया था, वो किसने भेजा था।"
+        }
+      ]
+    }
+  }
+}

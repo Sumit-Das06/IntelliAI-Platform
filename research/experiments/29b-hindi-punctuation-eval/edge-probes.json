@@ -1,0 +1,29 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "phase": "edge-probe-set (product safety probes: lexical corruption must be ZERO)",
+  "design": "Deterministic authored probes for every corruption class M29A observed (uppercase acronyms -> <unk>, @ -> <UNK>, punctuation inside URLs, truecasing damage) plus classes it predicted (decimals, dates, emoji, mixed script). PASS requires the word-preservation invariant AND no unk marker in the output.",
+  "probes": [
+    {"id": "e-01", "kind": "acronym", "text": "रोलैंडो मेंडोज़ा ने अपनी M16 राइफल से फायर किया"},
+    {"id": "e-02", "kind": "acronym", "text": "इसे केमिकल का pH कहा जाता है"},
+    {"id": "e-03", "kind": "acronym", "text": "वाहन 1200 GMT पर हटाया गया"},
+    {"id": "e-04", "kind": "acronym", "text": "METI ने कहा कि Apple ने मामले गंभीरता से नहीं लिए"},
+    {"id": "e-05", "kind": "acronym", "text": "चुनाव परिषद CEP में नौ सदस्य हैं"},
+    {"id": "e-06", "kind": "acronym-dotted-era", "text": "यह मंदिर 400 AD से 1100 AD तक प्रसिद्ध रहा"},
+    {"id": "e-07", "kind": "url", "text": "आप हमारी वेबसाइट intelliai.example.com पर जा सकते हैं"},
+    {"id": "e-08", "kind": "url", "text": "जानकारी docs.example.org/help पर मिलेगी"},
+    {"id": "e-09", "kind": "email", "text": "मुझे अपना बायोडाटा support@example.com पर भेज दीजिए"},
+    {"id": "e-10", "kind": "email", "text": "शिकायत के लिए complaints@intelliai.example.com पर लिखिए"},
+    {"id": "e-11", "kind": "numbers-spoken", "text": "मेरा नंबर नौ आठ सात छह पांच चार तीन दो एक शून्य है"},
+    {"id": "e-12", "kind": "numbers-digits", "text": "कुल रकम 2500 रुपये है और छूट 150 रुपये मिली"},
+    {"id": "e-13", "kind": "decimal", "text": "ब्याज दर 7.5 प्रतिशत से बढ़कर 8.25 प्रतिशत हो गई"},
+    {"id": "e-14", "kind": "date", "text": "मुझे 10 9 2023 को वाराणसी जाना है"},
+    {"id": "e-15", "kind": "date-format", "text": "बैठक 15/08/2026 को सुबह दस बजे होगी"},
+    {"id": "e-16", "kind": "abbreviation-honorific", "text": "डॉ शर्मा और श्री वर्मा कल आएँगे"},
+    {"id": "e-17", "kind": "hinglish", "text": "मैंने नया laptop खरीदा उसकी battery life बहुत अच्छी है"},
+    {"id": "e-18", "kind": "hinglish-heavy", "text": "please meeting का agenda share कर दीजिए deadline कल है"},
+    {"id": "e-19", "kind": "latin-inside-hindi", "text": "उसने WhatsApp पर message भेजा और OK लिख दिया"},
+    {"id": "e-20", "kind": "emoji", "text": "बहुत बढ़िया 👍 कल मिलते हैं"},
+    {"id": "e-21", "kind": "mixed-script", "text": "टिकट PNR 4520167890 कन्फर्म हो गया है"},
+    {"id": "e-22", "kind": "camelcase", "text": "TogiNet रेडियो पर यह शो फीचर हुआ था"}
+  ]
+}

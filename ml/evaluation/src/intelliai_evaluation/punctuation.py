@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import json
 import unicodedata
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -207,6 +208,44 @@ def _slot_counts(reference: tuple[str, ...], predicted: tuple[str, ...]) -> dict
     return per_mark
 
 
+class MarkApplicationError(ValueError):
+    """A mark application that would violate the word-copy contract."""
+
+
+def apply_marks(text: str, marks_per_slot: Sequence[Sequence[str]]) -> str:
+    """The word-copy decoder's writing half: original words + marks, nothing else.
+
+    ``text`` is split on whitespace; ``marks_per_slot`` must have
+    ``len(tokens) + 1`` entries (slot 0 = before the first token, slot i =
+    after token i), each holding only SUPPORTED_MARKS. Tokens are copied
+    VERBATIM — no casing, spelling, tokenization, or ordering change is
+    possible by construction, so ``depunct(output) == depunct(input)``
+    structurally (every supported mark is category P and depuncts away).
+
+    M29B contract (forbidden: word changes, spelling changes, casing
+    changes, transliteration, token deletion, token insertion; allowed:
+    inserting supported punctuation at token boundaries only).
+    """
+    tokens = text.split()
+    if len(marks_per_slot) != len(tokens) + 1:
+        msg = f"need {len(tokens) + 1} slots for {len(tokens)} tokens, got {len(marks_per_slot)}"
+        raise MarkApplicationError(msg)
+    for slot in marks_per_slot:
+        for mark in slot:
+            if mark not in SUPPORTED_MARKS:
+                msg = f"unsupported mark {mark!r}"
+                raise MarkApplicationError(msg)
+    if not tokens:
+        return "".join(marks_per_slot[0])
+    decorated = [
+        token + "".join(marks) for token, marks in zip(tokens, marks_per_slot[1:], strict=True)
+    ]
+    prefix = "".join(marks_per_slot[0])
+    if prefix:
+        decorated[0] = prefix + decorated[0]
+    return " ".join(decorated)
+
+
 def score_pair(reference_text: str, predicted_text: str) -> PairScore:
     """Score one prediction against one punctuated reference.
 
@@ -297,7 +336,13 @@ class PunctuationSourceAudio(BaseModel):
 
 
 class PunctuationRow(BaseModel):
-    """One punctuated reference. The audio stays at the pinned source."""
+    """One punctuated reference. The audio stays at the pinned source.
+
+    ``domain`` names the speech register the row represents (added for v2;
+    v1 rows default to ``read-single``). ``members`` lists the source row
+    ids a DERIVED row (e.g. a multi-sentence paragraph) was built from —
+    empty for rows taken directly from a source.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -305,6 +350,8 @@ class PunctuationRow(BaseModel):
     language: str
     reference_text: str
     source: PunctuationSourceAudio
+    domain: str = "read-single"
+    members: tuple[str, ...] = ()
 
     @field_validator("reference_text")
     @classmethod

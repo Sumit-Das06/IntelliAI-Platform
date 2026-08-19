@@ -1,0 +1,219 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "target": "qp",
+  "system": "lead-old",
+  "rows": 42,
+  "wall_seconds": 4.97,
+  "predictions": [
+    {
+      "id": "q-01",
+      "kind": "question",
+      "output_text": "क्या आप कल ऑफिस आओगे?"
+    },
+    {
+      "id": "q-02",
+      "kind": "question",
+      "output_text": "क्या यह ट्रेन दिल्ली जाती है?"
+    },
+    {
+      "id": "q-03",
+      "kind": "question",
+      "output_text": "तुम कल मीटिंग में क्यों नहीं आए?"
+    },
+    {
+      "id": "q-04",
+      "kind": "question",
+      "output_text": "परीक्षा का रिजल्ट कब आएगा?"
+    },
+    {
+      "id": "q-05",
+      "kind": "question",
+      "output_text": "आपका ऑफिस कहाँ है?"
+    },
+    {
+      "id": "q-06",
+      "kind": "question",
+      "output_text": "यह मशीन कैसे चलती है?"
+    },
+    {
+      "id": "q-07",
+      "kind": "question",
+      "output_text": "दरवाजे पर कौन खड़ा है?"
+    },
+    {
+      "id": "q-08",
+      "kind": "question",
+      "output_text": "इस किताब की कीमत कितनी है?"
+    },
+    {
+      "id": "q-09",
+      "kind": "question",
+      "output_text": "आपने खाने में क्या बनाया है?"
+    },
+    {
+      "id": "q-10",
+      "kind": "question",
+      "output_text": "तुम्हारा नाम क्या है?"
+    },
+    {
+      "id": "q-11",
+      "kind": "question",
+      "output_text": "आप कल आ रहे हैं ना।"
+    },
+    {
+      "id": "q-12",
+      "kind": "question",
+      "output_text": "खाना अच्छा बना है न।"
+    },
+    {
+      "id": "q-13",
+      "kind": "question",
+      "output_text": "मैं शाम को फोन करता हूँ, ठीक है ना।"
+    },
+    {
+      "id": "q-14",
+      "kind": "question",
+      "output_text": "तुमने खाना खा लिया।"
+    },
+    {
+      "id": "q-15",
+      "kind": "question",
+      "output_text": "आप डॉक्टर से मिल आए।"
+    },
+    {
+      "id": "q-16",
+      "kind": "question",
+      "output_text": "गाड़ी समय पर पहुँच गई थी।"
+    },
+    {
+      "id": "q-17",
+      "kind": "question",
+      "output_text": "क्या आप मेरी मदद कर सकते हैं?"
+    },
+    {
+      "id": "q-18",
+      "kind": "question",
+      "output_text": "क्या आप हिंदी बोलते हैं?"
+    },
+    {
+      "id": "q-19",
+      "kind": "question",
+      "output_text": "क्या आपने Meeting का Time Change किया?"
+    },
+    {
+      "id": "q-20",
+      "kind": "question",
+      "output_text": "आपका laptop ठीक हो गया।"
+    },
+    {
+      "id": "q-21",
+      "kind": "question",
+      "output_text": "Project की Deadline कब है?"
+    },
+    {
+      "id": "q-22",
+      "kind": "question",
+      "output_text": "आप चाय लेंगे या कॉफी?"
+    },
+    {
+      "id": "q-23",
+      "kind": "question",
+      "output_text": "हम आज जाएँ या कल।"
+    },
+    {
+      "id": "q-24",
+      "kind": "question",
+      "output_text": "यह फैसला किसने लिया?"
+    },
+    {
+      "id": "q-25",
+      "kind": "question",
+      "output_text": "आप किसके साथ आए हैं?"
+    },
+    {
+      "id": "q-26",
+      "kind": "question",
+      "output_text": "अगर बारिश हो गई तो कार्यक्रम कहाँ होगा?"
+    },
+    {
+      "id": "q-27",
+      "kind": "question",
+      "output_text": "जो सामान कल आया था, वो किसने भेजा था।"
+    },
+    {
+      "id": "q-28",
+      "kind": "question",
+      "output_text": "मुझे बताइए कि आप कब आएँगे?"
+    },
+    {
+      "id": "q-29",
+      "kind": "question",
+      "output_text": "आपकी तबीयत अब कैसी है?"
+    },
+    {
+      "id": "q-30",
+      "kind": "question",
+      "output_text": "घर पर सब कैसे हैं?"
+    },
+    {
+      "id": "s-01",
+      "kind": "statement",
+      "output_text": "मैं कल ऑफिस आऊँगा।"
+    },
+    {
+      "id": "s-02",
+      "kind": "statement",
+      "output_text": "यह ट्रेन दिल्ली जाती है।"
+    },
+    {
+      "id": "s-03",
+      "kind": "statement",
+      "output_text": "उसने बताया कि क्या करना है।"
+    },
+    {
+      "id": "s-04",
+      "kind": "statement",
+      "output_text": "मुझे पता है कि आप क्या सोच रहे हैं।"
+    },
+    {
+      "id": "s-05",
+      "kind": "statement",
+      "output_text": "रिजल्ट अगले हफ्ते आएगा।"
+    },
+    {
+      "id": "s-06",
+      "kind": "statement",
+      "output_text": "मेरा ऑफिस नोएडा में है।"
+    },
+    {
+      "id": "s-07",
+      "kind": "statement",
+      "output_text": "यह मशीन बिजली से चलती है।"
+    },
+    {
+      "id": "s-08",
+      "kind": "statement",
+      "output_text": "जो कौन भी आए उसे बैठा दीजिए।"
+    },
+    {
+      "id": "s-09",
+      "kind": "statement",
+      "output_text": "किताब की कीमत दो सौ रुपये है।"
+    },
+    {
+      "id": "s-10",
+      "kind": "statement",
+      "output_text": "मैंने Meeting का Time Change कर दिया है।"
+    },
+    {
+      "id": "s-11",
+      "kind": "statement",
+      "output_text": "खाना बहुत अच्छा बना है।"
+    },
+    {
+      "id": "s-12",
+      "kind": "statement",
+      "output_text": "मैं शाम को फोन कर दूँगा।"
+    }
+  ]
+}

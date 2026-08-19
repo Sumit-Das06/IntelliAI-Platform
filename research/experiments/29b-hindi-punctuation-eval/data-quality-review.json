@@ -1,0 +1,30 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "phase": "spontaneous-data-quality-review",
+  "rows": 60,
+  "total_words": 1087,
+  "marks": {
+    "danda": 91,
+    "comma": 79,
+    "question": 17
+  },
+  "marks_per_100_words": 17.2,
+  "sentences": 108,
+  "sentence_length_words": {
+    "mean": 10.06,
+    "median": 8.5,
+    "min": 1,
+    "max": 38
+  },
+  "code_switch_rows_with_latin": 2,
+  "filler_token_count": 85,
+  "filler_tokens_per_100_words": 7.82,
+  "fragment_rows_le4_words": 4,
+  "uncertain_rows": 24,
+  "honest_notes": [
+    "60 rows / 1087 words is SMALL - it bounds confidence, not a final verdict",
+    "annotations are single-annotator AI, text-only, PROVISIONAL pending founder review",
+    "clips are 2-21s utterances; long multi-minute spontaneous dictation remains unmeasured",
+    "only 2/60 rows contain Latin script: this slice barely exercises Hinglish (edge/question probes cover it)"
+  ]
+}

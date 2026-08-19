@@ -1,0 +1,135 @@
+{
+  "selection": "best and WORST lead-wordcopy rows on the spontaneous domain",
+  "good": [
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-000462",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "अरे अभी तो आलू हुआ है, गेहूँ हुआ होने वाला है, तोरई हुआ है, मटर किए हुए हैं। क्या चीज़ लेना है आपको?",
+      "output": "अरे अभी तो आलू हुआ है, गेहूँ हुआ होने वाला है, तोरई हुआ है, मटर किए हुए हैं। क्या चीज़ लेना है आपको?"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-000469",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "गोभी भी अभी लेना है और क्या सब टमाटर भी लेना है।",
+      "output": "गोभी भी अभी लेना है और क्या सब टमाटर भी लेना है।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-000919",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "हमारी भाषा वो नहीं समझ पाते, उनकी भाषा हम नहीं समझ पाते है। इसलिए समझने में थोड़ी दिक्कत होती है। हम लोगों की तो भाषा हिंदी ही है।",
+      "output": "हमारी भाषा वो नहीं समझ पाते, उनकी भाषा हम नहीं समझ पाते है। इसलिए समझने में थोड़ी दिक्कत होती है। हम लोगों की तो भाषा हिंदी ही है।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001324",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "सबसे खूबसूरत हाइक।",
+      "output": "सबसे खूबसूरत हाइक।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001336",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "ये क्या कहते हैं वो?",
+      "output": "ये क्या कहते हैं वो?"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001340",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "दिखाई देते हैं और इन्द्रधनुष में।",
+      "output": "दिखाई देते हैं और इन्द्रधनुष में।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001442",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "तो आप सॉप पे एक बार आ जाऍं तो हम आपको बता दें कि क्या चाहिए, कैसा लग रहा है।",
+      "output": "तो आप सॉप पे एक बार आ जाऍं तो हम आपको बता दें कि क्या चाहिए, कैसा लग रहा है।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001486",
+      "invariant": "PASS",
+      "f1": 1.0,
+      "boundary_f1": 1.0,
+      "reference": "जी सर, मुझे ना ज़रा खाना ऑर्डर करना था।",
+      "output": "जी सर, मुझे ना ज़रा खाना ऑर्डर करना था।"
+    }
+  ],
+  "bad": [
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001270",
+      "invariant": "PASS",
+      "f1": 0.0,
+      "boundary_f1": 0.6667,
+      "reference": "जी सर, चल रहा है। आप सर बताइए, आपकी क्या खबर है?",
+      "output": "जी सर चल रहा है, आप सर बताइए आपकी क्या खबर है।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001287",
+      "invariant": "PASS",
+      "f1": 0.0,
+      "boundary_f1": 1.0,
+      "reference": "जी जी, अब देखा जाए मैथ, मैथ तो थोड़ा हार्ड होता है न?",
+      "output": "जी जी अब देखा जाए मैथ मैथ तो थोड़ा हार्ड होता है न।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001325",
+      "invariant": "PASS",
+      "f1": 0.0,
+      "boundary_f1": 0.6667,
+      "reference": "क्या है? कौन सा की है?",
+      "output": "क्या है, कौन सा की है।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001455",
+      "invariant": "PASS",
+      "f1": 0.0,
+      "boundary_f1": 0.5,
+      "reference": "ठीक है ना? आ जाइए, आप सॉप पे विजिट कीजिए। ठीक है?",
+      "output": "ठीक है ना आ जाइए आप सॉप पे विजिट कीजिए, ठीक है।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001983",
+      "invariant": "PASS",
+      "f1": 0.0,
+      "boundary_f1": 1.0,
+      "reference": "छब्बीस सौ रूपये पड़ेगा बोरी का।",
+      "output": "छब्बीस सौ रूपये पड़ेगा बोरी का?"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001346",
+      "invariant": "PASS",
+      "f1": 0.3333,
+      "boundary_f1": 0.6667,
+      "reference": "बेनी ई बेनीहपिनारा कहते हैं। बेनीहपिनारा, उसमें सात रंग समाए थें। बे से बैगनी, ह से हरा, आसमानी, नीला, लाल।",
+      "output": "बेनी ई। बेनीहपिनारा कहते हैं, बेनीहपिनारा उसमें सात रंग समाए थें। बे से बैगनी ह से हरा आसमानी नीला लाल।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001907",
+      "invariant": "PASS",
+      "f1": 0.3333,
+      "boundary_f1": 0.5,
+      "reference": "हमारे हिंदू धर्म में पूजा पाठ किया जाता है अच्छे से। मना कि पूजा पाठ करते हैं लोग, अच्छा से रहते हैं।",
+      "output": "हमारे हिंदू धर्म में पूजा पाठ किया जाता है। अच्छे से मना कि पूजा पाठ करते हैं, लोग अच्छा से रहते हैं।"
+    },
+    {
+      "id": "hi-punct-spont-indicvoices-hindi-valid-0-001977",
+      "invariant": "PASS",
+      "f1": 0.3333,
+      "boundary_f1": 0.5,
+      "reference": "ठीक है, डव नोट कर लिया। और बता, उसका दो सौ बीस रूपये हैं।",
+      "output": "ठीक है डव नोट कर लिया और बता। उसका दो सौ बीस रूपये हैं।"
+    }
+  ]
+}

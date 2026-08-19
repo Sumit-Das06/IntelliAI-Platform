@@ -1,0 +1,119 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "target": "ep",
+  "system": "lead-wordcopy",
+  "rows": 22,
+  "wall_seconds": 0.49,
+  "predictions": [
+    {
+      "id": "e-01",
+      "kind": "acronym",
+      "output_text": "रोलैंडो मेंडोज़ा ने अपनी M16 राइफल से फायर किया।"
+    },
+    {
+      "id": "e-02",
+      "kind": "acronym",
+      "output_text": "इसे केमिकल का pH कहा जाता है।"
+    },
+    {
+      "id": "e-03",
+      "kind": "acronym",
+      "output_text": "वाहन 1200 GMT पर हटाया गया।"
+    },
+    {
+      "id": "e-04",
+      "kind": "acronym",
+      "output_text": "METI ने कहा कि Apple ने मामले गंभीरता से नहीं लिए।"
+    },
+    {
+      "id": "e-05",
+      "kind": "acronym",
+      "output_text": "चुनाव परिषद CEP में नौ सदस्य हैं।"
+    },
+    {
+      "id": "e-06",
+      "kind": "acronym-dotted-era",
+      "output_text": "यह मंदिर 400 AD से 1100 AD तक प्रसिद्ध रहा।"
+    },
+    {
+      "id": "e-07",
+      "kind": "url",
+      "output_text": "आप हमारी वेबसाइट intelliai.example.com पर जा सकते हैं।"
+    },
+    {
+      "id": "e-08",
+      "kind": "url",
+      "output_text": "जानकारी docs.example.org/help पर मिलेगी।"
+    },
+    {
+      "id": "e-09",
+      "kind": "email",
+      "output_text": "मुझे अपना बायोडाटा support@example.com पर भेज दीजिए।"
+    },
+    {
+      "id": "e-10",
+      "kind": "email",
+      "output_text": "शिकायत के लिए complaints@intelliai.example.com पर लिखिए।"
+    },
+    {
+      "id": "e-11",
+      "kind": "numbers-spoken",
+      "output_text": "मेरा नंबर नौ, आठ सात, छह पांच, चार, तीन, दो एक शून्य है।"
+    },
+    {
+      "id": "e-12",
+      "kind": "numbers-digits",
+      "output_text": "कुल रकम 2500 रुपये है और छूट 150 रुपये मिली।"
+    },
+    {
+      "id": "e-13",
+      "kind": "decimal",
+      "output_text": "ब्याज दर 7.5 प्रतिशत से बढ़कर 8.25 प्रतिशत हो गई।"
+    },
+    {
+      "id": "e-14",
+      "kind": "date",
+      "output_text": "मुझे 10 9 2023 को वाराणसी जाना है।"
+    },
+    {
+      "id": "e-15",
+      "kind": "date-format",
+      "output_text": "बैठक 15/08/2026 को सुबह दस बजे होगी।"
+    },
+    {
+      "id": "e-16",
+      "kind": "abbreviation-honorific",
+      "output_text": "डॉ। शर्मा और श्री वर्मा कल आएँगे।"
+    },
+    {
+      "id": "e-17",
+      "kind": "hinglish",
+      "output_text": "मैंने नया laptop खरीदा, उसकी battery life बहुत अच्छी है।"
+    },
+    {
+      "id": "e-18",
+      "kind": "hinglish-heavy",
+      "output_text": "please meeting का agenda share कर दीजिए, deadline कल है।"
+    },
+    {
+      "id": "e-19",
+      "kind": "latin-inside-hindi",
+      "output_text": "उसने WhatsApp पर message भेजा और OK लिख दिया।"
+    },
+    {
+      "id": "e-20",
+      "kind": "emoji",
+      "output_text": "बहुत बढ़िया। 👍 कल मिलते हैं।"
+    },
+    {
+      "id": "e-21",
+      "kind": "mixed-script",
+      "output_text": "टिकट PNR 4520167890 कन्फर्म हो गया है।"
+    },
+    {
+      "id": "e-22",
+      "kind": "camelcase",
+      "output_text": "TogiNet रेडियो पर यह शो फीचर हुआ था।"
+    }
+  ]
+}

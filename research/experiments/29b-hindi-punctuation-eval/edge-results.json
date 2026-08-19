@@ -1,0 +1,84 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "rule": "any lexical corruption = FAIL",
+  "systems": {
+    "lead-old": {
+      "probes": 22,
+      "corruptions": 13,
+      "verdict": "FAIL",
+      "corrupted": [
+        {
+          "id": "e-01",
+          "input": "रोलैंडो मेंडोज़ा ने अपनी M16 राइफल से फायर किया",
+          "output": "रोलैंडो मेंडोज़ा ने अपनी <Unk>16 राइफल से फायर किया।"
+        },
+        {
+          "id": "e-02",
+          "input": "इसे केमिकल का pH कहा जाता है",
+          "output": "इसे केमिकल का P<Unk> कहा जाता है।"
+        },
+        {
+          "id": "e-03",
+          "input": "वाहन 1200 GMT पर हटाया गया",
+          "output": "वाहन 1200 <UNK> पर हटाया गया।"
+        },
+        {
+          "id": "e-04",
+          "input": "METI ने कहा कि Apple ने मामले गंभीरता से नहीं लिए",
+          "output": "<UNK> ने कहा कि <unk>pple ने मामले गंभीरता से नहीं लिए।"
+        },
+        {
+          "id": "e-05",
+          "input": "चुनाव परिषद CEP में नौ सदस्य हैं",
+          "output": "चुनाव परिषद <UNK> में नौ सदस्य हैं।"
+        },
+        {
+          "id": "e-06",
+          "input": "यह मंदिर 400 AD से 1100 AD तक प्रसिद्ध रहा",
+          "output": "यह मंदिर 400 <Unk> से 1100 <UNk> तक प्रसिद्ध रहा।"
+        },
+        {
+          "id": "e-08",
+          "input": "जानकारी docs.example.org/help पर मिलेगी",
+          "output": "जानकारी DOCS.EXAMPLE.ORG<UNK>HELP पर मिलेगी।"
+        },
+        {
+          "id": "e-09",
+          "input": "मुझे अपना बायोडाटा support@example.com पर भेज दीजिए",
+          "output": "मुझे अपना बायोडाटा Support<UNK>Example.।COM पर भेज दीजिए।"
+        },
+        {
+          "id": "e-10",
+          "input": "शिकायत के लिए complaints@intelliai.example.com पर लिखिए",
+          "output": "शिकायत के लिए Complaints<UNK>INTELLIAI.EXAMPLE.।COM पर लिखिए।"
+        },
+        {
+          "id": "e-15",
+          "input": "बैठक 15/08/2026 को सुबह दस बजे होगी",
+          "output": "बैठक 15<UNK>08<UNK>2026 को सुबह दस बजे होगी।"
+        },
+        {
+          "id": "e-19",
+          "input": "उसने WhatsApp पर message भेजा और OK लिख दिया",
+          "output": "उसने <unk>hats<UNK>PP पर Message भेजा और <UNK> लिख दिया।"
+        },
+        {
+          "id": "e-21",
+          "input": "टिकट PNR 4520167890 कन्फर्म हो गया है",
+          "output": "टिकट <Unk> 4520167890 कन्फर्म हो गया है।"
+        },
+        {
+          "id": "e-22",
+          "input": "TogiNet रेडियो पर यह शो फीचर हुआ था",
+          "output": "<unk>ogi<Unk>et रेडियो पर यह शो फीचर हुआ था।"
+        }
+      ]
+    },
+    "lead-wordcopy": {
+      "probes": 22,
+      "corruptions": 0,
+      "verdict": "PASS",
+      "corrupted": []
+    }
+  }
+}

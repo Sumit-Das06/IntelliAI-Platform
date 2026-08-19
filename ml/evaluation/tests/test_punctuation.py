@@ -17,7 +17,9 @@ from intelliai_evaluation.punctuation import (
     SENTENCE_END_MARKS,
     SUPPORTED_MARKS,
     Counts,
+    MarkApplicationError,
     PunctuationDataset,
+    apply_marks,
     depunct,
     extract,
     invariant_holds,
@@ -212,3 +214,119 @@ class TestRulerIdentity:
         assert PUNCTUATION_RULER == "punct_slots@v1"
         assert SUPPORTED_MARKS == (DANDA, ",", "?", "!", ".")
         assert {DANDA, "?", "!", "."} == SENTENCE_END_MARKS
+
+
+class TestApplyMarks:
+    """The word-copy contract: original tokens verbatim, marks appended."""
+
+    def test_words_are_copied_verbatim(self) -> None:
+        text = "M16 rifle से pH GMT तक"
+        out = apply_marks(text, [[], [], [], [","], [], [], [DANDA]])
+        assert out == f"M16 rifle से, pH GMT तक{DANDA}"
+
+    def test_the_invariant_holds_by_construction(self) -> None:
+        # Every supported mark is category P: appending marks can never
+        # change the depunct word sequence.
+        cases = [
+            "M16 राइफल से फायर किया",
+            "site intelliai example com पर जाएँ",
+            "support example com पर भेजिए",
+            "डॉ शर्मा 400 AD से 1100 AD तक",
+            "कुल 2500 रुपये और 2 5 प्रतिशत छूट",
+        ]
+        for text in cases:
+            n = len(text.split())
+            marks: list[list[str]] = [[] for _ in range(n + 1)]
+            marks[-1] = [DANDA]
+            if n > 2:
+                marks[2] = [","]
+            out = apply_marks(text, marks)
+            assert invariant_holds(text, out), text
+            assert "unk" not in out.casefold()
+
+    def test_casing_is_untouched(self) -> None:
+        out = apply_marks("Apple ने कहा", [[], [], [], [DANDA]])
+        assert out.startswith("Apple ")
+
+    def test_empty_text_yields_only_slot_zero(self) -> None:
+        assert apply_marks("", [[]]) == ""
+        assert apply_marks("   ", [[]]) == ""
+
+    def test_marks_at_start_attach_before_the_first_token(self) -> None:
+        assert apply_marks("ठीक", [[","], [DANDA]]) == f",ठीक{DANDA}"
+
+    def test_whitespace_collapses_to_single_spaces(self) -> None:
+        out = apply_marks("एक   दो\tतीन", [[], [], [], [DANDA]])
+        assert out == f"एक दो तीन{DANDA}"
+
+    def test_slot_count_mismatch_is_refused(self) -> None:
+        with pytest.raises(MarkApplicationError):
+            apply_marks("एक दो", [[], [DANDA]])
+
+    def test_an_unsupported_mark_is_refused(self) -> None:
+        with pytest.raises(MarkApplicationError):
+            apply_marks("एक", [[], [";"]])
+
+    def test_output_scores_perfectly_against_itself(self) -> None:
+        text = "क्या आप कल आओगे"
+        out = apply_marks(text, [[], [], [], [], ["?"]])
+        pair = score_pair(out, out)
+        assert pair.aligned
+        assert pair.micro.f1 == 1.0
+
+
+class TestV2RowFields:
+    def test_domain_defaults_to_read_single_for_v1_rows(self) -> None:
+        dataset = load_punctuation_dataset(MANIFEST)
+        assert all(row.domain == "read-single" for row in dataset.rows)
+        assert all(row.members == () for row in dataset.rows)
+
+
+V2_MANIFEST = Path("ml/evaluation/punctuation/datasets/hi-punct-eval-v2.json")
+ASR_EVAL = Path("ml/evaluation/stt/datasets/stt-hi-public-eval-v1.json")
+
+
+class TestV2Manifest:
+    """hi-punct-eval@v2: two domains, both reconstructible, both word-safe."""
+
+    def test_the_v2_manifest_is_valid_and_pinned(self) -> None:
+        dataset = load_punctuation_dataset(V2_MANIFEST)
+        assert dataset.name == "hi-punct-eval"
+        assert dataset.version == 2
+        by_domain: dict[str, int] = {}
+        for row in dataset.rows:
+            by_domain[row.domain] = by_domain.get(row.domain, 0) + 1
+        assert by_domain == {"read-paragraph": 88, "spontaneous": 60}
+
+    def test_every_paragraph_is_reconstructible_from_its_members(self) -> None:
+        # The derived component's law: paragraph text IS the space-join of
+        # its member v1 rows, in order — no hand-written paragraphs.
+        v1 = load_punctuation_dataset(MANIFEST)
+        v1_text = {row.id: row.reference_text for row in v1.rows}
+        v2 = load_punctuation_dataset(V2_MANIFEST)
+        paragraphs = [row for row in v2.rows if row.domain == "read-paragraph"]
+        assert paragraphs
+        for row in paragraphs:
+            assert len(row.members) == 3
+            assert row.reference_text == " ".join(v1_text[m] for m in row.members)
+
+    def test_every_spontaneous_annotation_preserves_the_source_words(self) -> None:
+        # The annotation word law, pinned forever: punctuation was ADDED to
+        # the frozen ASR eval reference — never a word changed.
+        references = {
+            clip["id"]: clip["reference_text"]
+            for clip in json.loads(ASR_EVAL.read_text(encoding="utf-8"))["clips"]
+        }
+        v2 = load_punctuation_dataset(V2_MANIFEST)
+        spontaneous = [row for row in v2.rows if row.domain == "spontaneous"]
+        assert spontaneous
+        for row in spontaneous:
+            (clip_id,) = row.members
+            assert depunct(row.reference_text) == depunct(references[clip_id]), clip_id
+
+    def test_spontaneous_rows_keep_their_audio_identity(self) -> None:
+        v2 = load_punctuation_dataset(V2_MANIFEST)
+        for row in v2.rows:
+            if row.domain == "spontaneous":
+                assert row.source.files
+                assert row.source.sentence_id == row.members[0]

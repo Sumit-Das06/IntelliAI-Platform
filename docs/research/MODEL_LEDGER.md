@@ -64,7 +64,7 @@ entries is ordered by the living priorities
 | Fish-Speech | speech_synthesis | — | NC (2026-07-31) | Rejected | 2026-08-04 |
 | Piper (fork) | speech_synthesis | — | GPL-3.0 fork (2026-07-31) | Rejected | 2026-08-04 |
 | espeak-ng in-process phonemization | serving-chain component | — | GPL-3.0 (2026-08-03) | Rejected | 2026-08-04 |
-| punct_cap_seg_47_language (1-800-BAD-CODE) | punctuation_restoration (text post-processing) | 47 langs incl. HI+EN; HI benchmarked on hi-punct-eval@v1 | **Apache-2.0 (source, 2026-08-19)** | Researching — first benchmark done, integration decoder required (M29A) | 2026-08-19 |
+| punct_cap_seg_47_language (1-800-BAD-CODE) | punctuation_restoration (text post-processing) | 47 langs incl. HI+EN; HI benchmarked on hi-punct-eval@v1+v2 | **Apache-2.0 (source, 2026-08-19)** | Researching — word-copy decoder proven (invariant 100%, edges 0/22); spontaneous F1 0.575; gates pending founder ratification (M29B-DATA) | 2026-08-19 |
 | Cadence-Fast (AI4Bharat) | punctuation_restoration (text post-processing) | claims EN + 22 Indic incl. HI; unmeasured | **contradictory** — card `MIT` vs Gemma-3 base Terms of Use flow-down (2026-08-19) | Researching — benchmark BLOCKED pending license clarity | 2026-08-19 |
 
 ---
@@ -1203,6 +1203,50 @@ promising, needs better data**. Before any runtime integration
 (M29B): benchmark v2 with multi-sentence and spontaneous punctuated
 references, and the word-copy decoder as the integration contract.
 Production remains untouched; Hindi still serves unpunctuated.
+
+---
+
+## Milestone 29B-DATA — punctuation evaluation v2 + word-copy decoder (appended 2026-08-19)
+
+Full report:
+[2026-08-19-hindi-punctuation-evaluation-v2.md](2026-08-19-hindi-punctuation-evaluation-v2.md).
+New frozen benchmark `hi-punct-eval@v2` (148 rows: 88 deterministic
+3-sentence read paragraphs reconstructible from pinned v1 members + 60
+spontaneous IndicVoices references punctuated per the committed
+annotation-style-guide-v1 — single annotator, AI, text-only,
+**PROVISIONAL pending founder native-speaker review**). Question probe
+set (30 questions + 12 statement controls) and edge probe set (22
+corruption probes) committed as research probes.
+
+- **punct_cap_seg_47_language (1-800-BAD-CODE)** — *status unchanged
+  (Researching)* — **[EVIDENCE]** The M29A `<unk>` word-destruction
+  defect is CLOSED by construction: a research-only word-copy decoder
+  (model predicts marks; ORIGINAL input words copied verbatim via the
+  evaluation plane's `apply_marks`) measured invariant **100%** on
+  every surface (v1 265/265 vs old pipeline 96.23%; paragraphs 88/88
+  vs 88.64%; spontaneous 60/60; edge probes **0/22 corrupted vs the
+  old pipeline's 13/22**), with identical-or-better quality (v1 F1
+  0.242, paragraphs 0.2606, comma 0.389) and better operations (~10×
+  faster batch, warm load 0.88 s, RSS peak 428 MiB, 600 s tier
+  0.451 s with decoder cost 0.0006 s). First spontaneous-Hindi
+  measurement: micro F1 **0.5747**, boundary F1 0.7248 (P 0.7182 /
+  R 0.7315), comma F1 0.4462, question F1 0.5 — against PROVISIONAL
+  references. Questions: 21/30 (70%) overall, **21/23 (91.3%) on
+  lexically-cued questions**, 0/12 false positives; the 9 misses are
+  dominated by intonation-only questions no text system can recover.
+  M29A-proposed gates as measured: invariant/comma/latency/RAM PASS;
+  boundary F1 0.7441 (paragraphs) and question 70% sit just under the
+  proposed bars — revised gate framing is PROPOSED and awaits founder
+  decision — evidence:
+  [29b evidence](../../research/experiments/29b-hindi-punctuation-eval/)
+
+**Consequence for priorities:** classification **B — promising; the
+smallest next step is a FOUNDER REVIEW, not more code**: (1) ratify or
+amend the 60 spontaneous annotations (24 carry uncertainty flags) and
+the style guide; (2) ratify the revised gate set. If both ratify with
+gates passing, M29B-runtime (the M28 architecture behind the full test
+battery) is the next implementation milestone. Production remains
+untouched; Hindi still serves unpunctuated.
 
 ---
 

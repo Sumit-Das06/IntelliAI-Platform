@@ -1,0 +1,54 @@
+{
+  "manifest": {
+    "path": "ml/evaluation/punctuation/datasets/hi-punct-eval-v2.json",
+    "sha256": "edbddee8a1dd2a092955f6b21a7d38cf5d4b6c2a8eb13fe27350b8cacd753eff",
+    "samples": 148
+  },
+  "created": "2026-08-19",
+  "language": "hi",
+  "task": "punctuation-restoration",
+  "components": {
+    "read-paragraph": {
+      "rows": 88,
+      "construction": "deterministic: consecutive hi-punct-eval@v1 rows in groups of 3, dedup order, joined with single spaces; member ids recorded per row",
+      "derived_from": {
+        "dataset": "hi-punct-eval@v1",
+        "sha256": "3fa83ddb98cb2aafc3814c2cf4a385d309f8f79c7cf90699f83baefe7434a154"
+      },
+      "statistics": {
+        "danda": 81,
+        "comma": 266,
+        "question_mark": 1,
+        "exclamation": 1,
+        "full_stop": 240,
+        "sentence_boundaries": 323,
+        "words": 6606
+      }
+    },
+    "spontaneous": {
+      "rows": 60,
+      "selection": "stt-hi-public-eval@v1 natural clips with scenario Extempore or Conversation, ascending clip id, first 60",
+      "annotation": {
+        "style_guide": "research/experiments/29b-hindi-punctuation-eval/annotation-style-guide-v1.md",
+        "style_guide_version": 1,
+        "annotator": "single annotator: automated research assistant (AI, non-native, TEXT-ONLY); PROVISIONAL pending founder native-speaker review",
+        "annotated_on": "2026-08-19",
+        "uncertain_rows": 24,
+        "word_law": "builder-verified: depunct(annotated) == depunct(source) for every row"
+      },
+      "statistics": {
+        "danda": 91,
+        "comma": 79,
+        "question_mark": 17,
+        "exclamation": 0,
+        "full_stop": 0,
+        "sentence_boundaries": 108,
+        "words": 1087
+      }
+    }
+  },
+  "normalization": "punct_slots@v1",
+  "primary_ruler": "punctuation_f1_micro (per domain; domains never blindly averaged)",
+  "audio": "not vendored; identities recorded per row",
+  "notes": ""
+}

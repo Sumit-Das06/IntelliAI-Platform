@@ -1,0 +1,485 @@
+{
+  "selection": "stt-hi-public-eval@v1 natural clips with scenario Extempore/Conversation, ascending id, first 60",
+  "candidates": [
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000461",
+      "reference_text": "क्या क्या चीज लेना है हाँ",
+      "duration_seconds": 3.038,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000461.flac",
+      "sha256": "9910cf24dea166879fc5a8b0ae38526dffa95eb203467959a2a1cc54b5eb3d2c",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000462",
+      "reference_text": "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तोरई हुआ है मटर किए हुए हैं क्या चीज़ लेना है आपको",
+      "duration_seconds": 8.225,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000462.flac",
+      "sha256": "479cf16804d4acb4bc89b51ff0846e677dc50794398bc8a9b7e821a0b595634b",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000463",
+      "reference_text": "अरे फसल तो बहुत अच्छा हुआ है इस बार रेट भी है अच्छा खासा इस बार देखे हैं जो मटर का भी अच्छा खासा रेट रहा है लेना क्या चीज है आलू का भी रेट अच्छा खासा है",
+      "duration_seconds": 11.873,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000463.flac",
+      "sha256": "17df9a1f9865225d41c7687946c7df52ae3cd199f393b7b8c06a8f151214ad88",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000469",
+      "reference_text": "गोभी भी अभी लेना है और क्या सब टमाटर भी लेना है",
+      "duration_seconds": 3.711,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000469.flac",
+      "sha256": "7f2b24238eb1bf6d70c2dec232fcfed2b3b69d100cff5ff55cafe7da40be6c5f",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000470",
+      "reference_text": "अरे खूब हूँ बहुत अच्छा होता है हम लोग की सेवा भी करते हैं तो अच्छा किसाने हैं तो हम लोग सारे चीज करते हैं सब चीज उपजाते हैं सब चीज का",
+      "duration_seconds": 8.607,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000470.flac",
+      "sha256": "0a39e6c4a81ebf51c7a0a96451c40755d5a2b14bb038a64f3734b643026b665f",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000472",
+      "reference_text": "हाँ हाँ तो जरूरत हो है तो आइए लीजिए देखिए अपना देख लीजिए सफ हमसे",
+      "duration_seconds": 5.824,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000472.flac",
+      "sha256": "0d702c47c098c768894b53dade57dd6f83d5445bfcc10a9f2bfae5ccf94ec008",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000478",
+      "reference_text": "हाँ ठीक देख लीजिए",
+      "duration_seconds": 2.56,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000478.flac",
+      "sha256": "95b9f40216cf1ef83a96cb9af6013a429e849ad967893195d58786d0265add0b",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000479",
+      "reference_text": "अच्छा ठीक है आइएगा तब देख लीजिए देख लीजिए उसके बाद जाकर जाँच लेना सब कुछ",
+      "duration_seconds": 4.672,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000479.flac",
+      "sha256": "7d490ccd630ef5ea6aff8a9a93dc20910973e940d86094afad648d6bb1b1a8a7",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='45-60' district='Samastipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000916",
+      "reference_text": "देखिए ये हिंदी तो हमारी भाषा है मातृभाषा है और हम लोग हिंदी ही बोलते हैं जैसे कोई हमारी भाषा को नहीं जानते कहीं दूसरे मतलब का आते है",
+      "duration_seconds": 9.279,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000916.flac",
+      "sha256": "71b442ebc308c4f4f8cb49a420f55be915af40cf5e18b4a5d4d76dfe8195b52a",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000917",
+      "reference_text": "तो हमारी भाषा नहीं बोल पाते तो हम लोग थोड़ा बहुत इंग्लिश में बात करते हैं जितना मुझे आता है अब हम उतना",
+      "duration_seconds": 5.825,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000917.flac",
+      "sha256": "8840e47b0352b9acf8ec1487f7ac2391bae3c4134528096c6d85527fdf95a553",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000918",
+      "reference_text": "इंग्लिश में बात कर लेते है और थोड़ा बहुत इशारे में बात कर कर लेते है क्योंकि वो लोग समझ नहीं पाते जैसे कोई मतलब बिहार के हुए या तो कोई कही और के हुए तो जैसे हम",
+      "duration_seconds": 9.758,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000918.flac",
+      "sha256": "11d48a0648cb480abb057c01aa0eb48ccbf5d1ce3c8761d04f770987bec4b6cd",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000919",
+      "reference_text": "हमारी भाषा वो नहीं समझ पाते उनकी भाषा हम नहीं समझ पाते है इसलिए समझने में थोड़ी दिक्कत होती है हम लोगों की तो भाषा हिंदी ही है",
+      "duration_seconds": 7.457,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000919.flac",
+      "sha256": "2971f315d850dc77d2e1543a3bc60848c291b9f9f6e6beac933b826d0186248d",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000920",
+      "reference_text": "तो जैसे मतलब जैसे कोई खाना वाना बनाया फिर कुछ तो जैसे हम लोग हाथ उठा के बता देते है कि ऐसे है ये अच्छा है मतलब समझ जाते है कि ऐसा है मतलब",
+      "duration_seconds": 9.76,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000920.flac",
+      "sha256": "359b41bacf4e8e0d70961c908059e3103f9c9668f994e47e5133f6612c113fb6",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000922",
+      "reference_text": "कोई सेम सेम रहता है भाषा मतलब जो वो भी समझ सकते हैं और हम भी समझ सकते हैं बस यही है कि मतलब थोड़ा बहुत अंतर होता है उनकी भाषा समझने में मतलब",
+      "duration_seconds": 9.759,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000922.flac",
+      "sha256": "06bcf5c7986db55f4e804ff4527ff0aafcb352e2d8872561bcd6d38ce5e33f02",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000924",
+      "reference_text": "अंग्रेजी में बात वात कर लेते है थोड़ा बहुत और बाकी तो हिंदी हम लोग बोलते ही हैं और हिंदी हमें सबसे अच्छा लगता है इसलिए हम",
+      "duration_seconds": 7.166,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000924.flac",
+      "sha256": "27490dfb06247adbb6f465f105f537ea2b2db3babff61b1c19f3fa3b606a56b9",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000926",
+      "reference_text": "इसलिए हम मतलब जितना बात करते हैं थोड़ा बहुत बात कर लेते हैं और बाकी कोई दिक्कत नहीं है सब ठीक है",
+      "duration_seconds": 5.342,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-000926.flac",
+      "sha256": "56db15e769ddb66d010e0ecf37809dc1c059c4b2f6e6491a7535e65fc0b34b23",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Jaunpur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001270",
+      "reference_text": "जी सर चल रहा है आप सर बताइए आपकी क्या खबर है",
+      "duration_seconds": 3.904,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001270.flac",
+      "sha256": "0f1e126c022bc27a6b1ec568e3b0293c538c371c6092aaafd232ad9a309875e6",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001272",
+      "reference_text": "और सब ठीक है सर और स्टूडेन्ट लोग का क्या हालचाल है",
+      "duration_seconds": 3.136,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001272.flac",
+      "sha256": "7d3fe74c1e59cff0b81c2fe93af4ec2d9fe33adb327a710c59da3817588ea227",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001275",
+      "reference_text": "जी नहीं देखिए सबको बोल तो रहा है कि ठीक ही गया इग्जाम",
+      "duration_seconds": 4.961,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001275.flac",
+      "sha256": "4b164971afb5e5ad720045e9a141b41ad4b98cfb16336dd5c8aa1f8f561c44d0",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001276",
+      "reference_text": "जी इग्जाम तो अच्छा ही रहा लेकिन इस बार पेपर भी हार्ड आ गया था बोर्ड की तरफ से",
+      "duration_seconds": 6.688,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001276.flac",
+      "sha256": "40a49d211a8872913c1255cdf5023079d276ff24146e7903daad68df598e5bca",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001283",
+      "reference_text": "और इधर भी तो अच्छा ही गया है इन लोगों का इग्ज़ाम कह तो रहे हैं सब",
+      "duration_seconds": 4.478,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001283.flac",
+      "sha256": "9858c7fe0aefed8da271367514b25687eef5fed8751d159463b4f49872348387",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001284",
+      "reference_text": "आ आगे देखिए कि क्या होता है",
+      "duration_seconds": 2.464,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001284.flac",
+      "sha256": "33c2abd733788a82eef8906e3f5ed24539b1c11aec229ed3d4fd5827b21700fb",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001287",
+      "reference_text": "जी जी अब देखा जाए मैथ मैथ तो थोड़ा हार्ड होता है न",
+      "duration_seconds": 6.88,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001287.flac",
+      "sha256": "8c133b024d96e272ee6c5e9d3ba4f5d9f36562842f76c91fa86476669ef838c9",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001294",
+      "reference_text": "जी ठीक है सर",
+      "duration_seconds": 2.174,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001294.flac",
+      "sha256": "a8b83a61f16bb56d64a7d7de6d2f1cef6907cb6990b801d482ad485a589e177e",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Vaishali'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001324",
+      "reference_text": "सबसे खूबसूरत हाइक",
+      "duration_seconds": 3.261,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001324.flac",
+      "sha256": "09aff776d6ed5fd8c372f344661e4e9d8735c910dfc765789b7c297870af3b6a",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001325",
+      "reference_text": "क्या है कौन सा की है",
+      "duration_seconds": 3.178,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001325.flac",
+      "sha256": "62eb634a70093ecee73af3bfd2ed56a15d37ae6bc46d7eead640be01b667072d",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001336",
+      "reference_text": "ये क्या कहते हैं वो",
+      "duration_seconds": 2.962,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001336.flac",
+      "sha256": "29debba8b8af04f54574378012641e47a86aae1f8838fead05fec0a13d677b86",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001337",
+      "reference_text": "सप्त भऍं सत भैया क्या कहें <unintelligible> क्या होता है ये विज्ञान का भाषा में क्या बोलते हैं सतरंगा सतरंगा यानि इन्द्रधनुष इन्दधनुष है सूर्यास्त और सूर्योदय के समय ही होता है जबकि आकाश में बादल घिरे रहते हैं",
+      "duration_seconds": 21.089,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001337.flac",
+      "sha256": "2132bc6dde5d6856bb4030fdd2b9ccdde0a0bc4edbf66dd9f8e0653bc2ce5f1b",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001340",
+      "reference_text": "दिखाई देते हैं और इन्द्रधनुष में",
+      "duration_seconds": 4.466,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001340.flac",
+      "sha256": "1708e9ff78c253faa4141319e5a4b17cd20372bd33d5aed95059d7ab95a9da26",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001342",
+      "reference_text": "सफेद सूर्यास्त का जो सुर्य सुर्य का जो किरण है वो सफेद रंग है और सफेद रंग सात रंगों का मिश्रण है ये सात रंग",
+      "duration_seconds": 16.009,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001342.flac",
+      "sha256": "1358f33f3a23992951f23f56e7a692fefc73409035dda6f9d644d6749e924d90",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001346",
+      "reference_text": "बेनी ई बेनीहपिनारा कहते हैं बेनीहपिनारा उसमें सात रंग समाए थें बे से बैगनी ह से हरा आसमानी नीला लाल",
+      "duration_seconds": 15.358,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001346.flac",
+      "sha256": "1b4f33dc79e9fc1b7a4cdf5a9629d1c5f06add0d0a27352f082a04c6697bd769",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001347",
+      "reference_text": "इत्यादि सब जो सात रंग हैं वे सुर वैसे ही उसमें समाहित हैं उसी को सौर केन्द्र कहते हैं वैज्ञानिक दृश्य में बेनीहपिनाला जिसमें सात रंग उसमें समाहित हैं",
+      "duration_seconds": 14.256,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001347.flac",
+      "sha256": "35ded7ed719d0759963f48f4138ec56a829036c64a9f608daf76213fc322f740",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Male' age_group='60+' district='Begusarai'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001437",
+      "reference_text": "नमस्कार मैं सर रेस्टोरेंट से बात कर रहा हूँ आप",
+      "duration_seconds": 2.518,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001437.flac",
+      "sha256": "a82532e56b4ae2fc3a72209a24fd047aeb948c64d893e3ffc9ab83f3e96531d7",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001440",
+      "reference_text": "आपको बता दें अगर आप सादी ले जाओगे तो तीन सौ रुपए मिलेगी आपको और अगर आप उसे ये फ़्राई करवा के या सब्जी बनवा के ले जाओगे तो आपको साढ़े चार सौ रुपए की पड़ जाएगी तो",
+      "duration_seconds": 11.006,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001440.flac",
+      "sha256": "121bb6bcb55b7a25a3476b22e79ec3e6123066ad8141dff6185100d5636c6a78",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001441",
+      "reference_text": "हाँ वेराइटी तो ढेर है आप आके देख सकते हो जैसे आपको किसी चीज की जरूरत मतलब किसी अलग तरीके की जरूरत है तो हम उसे बाहर से बुलवा के भी आपको दे सकते हैं",
+      "duration_seconds": 8.07,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001441.flac",
+      "sha256": "f22ad9bf624f1c51df26cb775cb5f352ac0419745d1aa6a84ced31748e057b84",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001442",
+      "reference_text": "तो आप सॉप पे एक बार आ जाऍं तो हम आपको बता दें कि क्या चाहिए कैसा लग रहा है",
+      "duration_seconds": 5.683,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001442.flac",
+      "sha256": "958bebaa5fc55f5a714898862ba94d7684e32d22d98afb51c5df536c5d86a5e6",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001444",
+      "reference_text": "हाँ अब मार्केट है आपके यहाँ वैसे तो हमारे यहाँ सबसे ज़्यादा मतलब हमारे सॉप का बोले तो सबसे पसंदीदा चीज",
+      "duration_seconds": 6.417,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001444.flac",
+      "sha256": "1c8d27652db71a4af46fde30e1be681883afad66a5c221a9a626b8610443cb7b",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001450",
+      "reference_text": "ठीक है ना हम आपको बता देते हैं आपके हिसाब से आपको क्या लगेगा",
+      "duration_seconds": 4.003,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001450.flac",
+      "sha256": "7da1f3b39cf6b84167ed9ca34b2cc2dfba121b1b73d44ea622c6fcb92432dfc9",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001451",
+      "reference_text": "वैसे आप हमारी दुकान का एक बार रोहू जो फिस बनाते हैं हमारे वर्कर्स उसका टेस्ट करके देखिएगा",
+      "duration_seconds": 5.498,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001451.flac",
+      "sha256": "c063cca9e8023f8bd53d4eaeef566e264867ed98000468fdfed606cf3aec78de",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001455",
+      "reference_text": "ठीक है ना आ जाइए आप सॉप पे विजिट कीजिए ठीक है",
+      "duration_seconds": 2.847,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001455.flac",
+      "sha256": "65e9c18c2a56f543a970fa626c651193e470d57ca37d90648a2e5a4330654821",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001485",
+      "reference_text": "हाँ जी सर नमस्कार क्या आप सुइगी से बात कर रहे हैं",
+      "duration_seconds": 2.369,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001485.flac",
+      "sha256": "0e96e90b556112a68275a2c206fc85d5c6642d2fc1ac45abfa389cd9695e81e5",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='18-30' district='Gwalior'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001486",
+      "reference_text": "जी सर मुझे ना ज़रा खाना ऑर्डर करना था",
+      "duration_seconds": 2.176,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001486.flac",
+      "sha256": "4004690f5a24ca6835597bcd0fa7d09ebe0baeb5e29bbbf25218786728553add",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='18-30' district='Gwalior'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001487",
+      "reference_text": "सर आप लच्छा पराठा कर दीजिए",
+      "duration_seconds": 2.177,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001487.flac",
+      "sha256": "ac539b7f381d8291ad9bdb709ec81f89b964f0ae32b99199cb2e55a0fccd051b",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='18-30' district='Gwalior'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001495",
+      "reference_text": "सर इसमें रसगुल्ला रसमलाई और रसगुल्ला रख दीजिएगा",
+      "duration_seconds": 3.232,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001495.flac",
+      "sha256": "938ad270858e8e192363659c03806f87358a3420ae7499d64ef078c542ff6821",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='18-30' district='Gwalior'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001496",
+      "reference_text": "सर इसमें अभी आइसक्रीम भी ऐड करवानी है मुझे",
+      "duration_seconds": 2.848,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001496.flac",
+      "sha256": "4c9ac7aef38fcbacd44b033cb7a7450b827a6ce25137dc3df2dffb0fb5aa9e33",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='18-30' district='Gwalior'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001545",
+      "reference_text": "नार्वे स्वीडन डेनमार्क जर्मनी पोलैंड",
+      "duration_seconds": 3.661,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001545.flac",
+      "sha256": "ba95d5d6bbf9a32119613711c689729ec3b88eb169b7cece398616dbaddd26c7",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='18-30' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001701",
+      "reference_text": "हाँ हाँ मैं तेवर एजेंट हूँ",
+      "duration_seconds": 2.785,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001701.flac",
+      "sha256": "c771acc890aca5ccc1a999beb60c8313e10d3064f66a4f89455a2338323af594",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='60+' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001712",
+      "reference_text": "पंद्रह लोगों का ख़र्च ज्या पंद्रह लोगों का ख़र्च ज़्यादा हो <unintelligible>",
+      "duration_seconds": 3.519,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001712.flac",
+      "sha256": "f0f1f7d6c35eaa2d4cbf931890d206f66619aa17fadb4eaa605b2516585c9f81",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='60+' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001715",
+      "reference_text": "नहीं नहीं नहीं नहीं",
+      "duration_seconds": 2.155,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001715.flac",
+      "sha256": "f911b412609f669ac8d66060fcbdcbb3ca05dfeb7a469d74efd034e0149d6e16",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Female' age_group='60+' district='Betul'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001907",
+      "reference_text": "हमारे हिंदू धर्म में पूजा पाठ किया जाता है अच्छे से मना कि पूजा पाठ करते हैं लोग अच्छा से रहते हैं",
+      "duration_seconds": 9.471,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001907.flac",
+      "sha256": "68db0af99beec9cdf9a9bfb4d73fd2675ca78c6dbb5df9e46062eb9665e84959",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001908",
+      "reference_text": "और कहीं भी मना पेड़ पौधे भी कोई भी काम अच्छे से करते हैं पेड़ पौधे भी देखते हैं तो उसमें पूजा पाठ करने लगते हैं",
+      "duration_seconds": 8.608,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001908.flac",
+      "sha256": "0819216704d17f14c28518d3f9359943671c5cfa2f874db127f7da38364e4c71",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001910",
+      "reference_text": "अच्छा करते हैं तो वो लोग झूठ नहीं बोलते हैं अच्छा मना ही बोलते हैं चलते हैं झूठ नहीं बोलते हैं लोग",
+      "duration_seconds": 8.13,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001910.flac",
+      "sha256": "36dab753f76c52f26574ab69dbe3f6dfb2d857acc23f8e3c501e50bc3bfff86d",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001911",
+      "reference_text": "हमारे भी माने कि अथवा में अच्छे अच्छे से बात होती है और पूजा पाठ करने के लिए तो अच्छे ही नहीं पूजा पाठ करते हैं माने कि",
+      "duration_seconds": 9.46,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001911.flac",
+      "sha256": "8bf738b086498d6d7a05739a010cd94acb28684e7d7558396e7491b8e60f695d",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001912",
+      "reference_text": "सब कुछ भगवान से बढ़ कर माता पिता होते हैं उसका एक पूजा पाठ करना चाहिए भगवान बोलते हैं माता पिता की भी पूजा करिए अच्छे से और उसको अपना देवता मानिए",
+      "duration_seconds": 11.982,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001912.flac",
+      "sha256": "bd56fe0c21f3a9f7021e0106bce74de8264de3139721a250f36be91931165b48",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001913",
+      "reference_text": "अच्छे से देख भाल करिए अस सेवा सत्स सत्कार करिए वह और माने कि",
+      "duration_seconds": 8.416,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001913.flac",
+      "sha256": "4606a09514bd09d3b17c1382d0bb88ac31dda38f712c958d315e29b31b7a1a5f",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001914",
+      "reference_text": "सब कुछ हिंदू हैं तो करना पड़ेगा ना माता पिता को अच्छा से सेवा संस्कार सब कुछ दे माता पिता देते हैं",
+      "duration_seconds": 7.744,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001914.flac",
+      "sha256": "3f8b5cd5bbe3b9035b4a133fef4e3f3f3365410f7fbeb6818de7bcad6cc99162",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001915",
+      "reference_text": "तो बच्चे माने बड़े हो कर के माता पिता की भी सेवा सत्कार कर देते हैं करना चाहिए वही बात है और जो भी माने कि जो",
+      "duration_seconds": 9.28,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001915.flac",
+      "sha256": "9e3b8bcb18c873886c34aba5b3e63a7f60af1c00f398e126a1490bbec80c3d73",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Extempore' gender='Female' age_group='30-45' district='Ghazipur'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001977",
+      "reference_text": "ठीक है डव नोट कर लिया और बता उसका दो सौ बीस रूपये हैं",
+      "duration_seconds": 5.237,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001977.flac",
+      "sha256": "6ae21cb0ebfeb038ce4cef238fc96fea4aa105333e02efde4dac323301af3fc2",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='30-45' district='Darbhanga'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001980",
+      "reference_text": "एक दम क्वालिटी में कोई शिकायत नहीं क्वालिटी हमारे यहाँ की जेनुइन मिलेगी आपको उस में आपको कोई शिकायत करने का मौक़ा नहीं मिलेगा",
+      "duration_seconds": 6.433,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001980.flac",
+      "sha256": "6076b2032e20420fae287a7fa95a7053dfecdca0b4ad0e9249c311c00d7c374e",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='30-45' district='Darbhanga'"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001983",
+      "reference_text": "छब्बीस सौ रूपये पड़ेगा बोरी का",
+      "duration_seconds": 2.119,
+      "path": "indicvoices/hindi/valid/indicvoices-hindi-valid-0-001983.flac",
+      "sha256": "78883b82c80f012006535216da3490f93eb738476cdae355931cd3ed1269f004",
+      "notes": "ai4bharat/IndicVoices/hindi/valid scenario='Conversation' gender='Male' age_group='30-45' district='Darbhanga'"
+    }
+  ]
+}
