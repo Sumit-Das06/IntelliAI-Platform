@@ -1,0 +1,69 @@
+{
+  "slice": "read-paragraph",
+  "system": "no-op",
+  "corpus": {
+    "ruler": "punct_slots@v1",
+    "rows": 88,
+    "aligned_rows": 88,
+    "invariant_failures": 0,
+    "invariant_pass_rate": 1.0,
+    "micro": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 589,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "per_mark": {
+      "।": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 81,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      ",": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 266,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "?": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "!": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      ".": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 240,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "sentence_boundary": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 320,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  }
+}

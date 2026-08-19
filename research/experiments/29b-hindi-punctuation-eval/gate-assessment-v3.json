@@ -1,0 +1,99 @@
+{
+  "experiment": "29b-hindi-punctuation-eval",
+  "phase": "m29c-ratified gate assessment",
+  "benchmark": "hi-punct-eval@v3 (sha256 e92d43c2cdef53cfb7110c1c977074cbd2fb0fb40ef51645d6adc53fe545fa45)",
+  "review_basis": {
+    "type": "text-only linguistic review based on M29B style guide",
+    "limit": "Not a native-speaker/audio review; intonation-dependent cases are flagged for audio/native review.",
+    "gate_bearing_slice": "spontaneous-ratified51 (audio-flagged rows excluded)"
+  },
+  "m29a_proposed_gates": [
+    {
+      "gate": "word-preservation invariant 100%",
+      "measured": {
+        "read-paragraph": 1.0,
+        "spontaneous-all60": 1.0,
+        "edge_probes_corruptions": 0
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "boundary F1 >= 0.75 (multi-sentence)",
+      "measured": {
+        "read-paragraph": 0.7441,
+        "ratified51": 0.7363
+      },
+      "verdict": "FAIL"
+    },
+    {
+      "gate": "boundary recall >= 0.85",
+      "measured": {
+        "read-paragraph": 0.9313,
+        "ratified51": 0.7528
+      },
+      "verdict": "FAIL"
+    },
+    {
+      "gate": "boundary precision >= 0.65",
+      "measured": {
+        "read-paragraph": 0.6195,
+        "ratified51": 0.7204
+      },
+      "verdict": "FAIL"
+    },
+    {
+      "gate": "comma F1 >= 0.30",
+      "measured": {
+        "read-paragraph": 0.389,
+        "ratified51": 0.4333
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "question probes >= 80% correct (as written in M29A)",
+      "measured": {
+        "pct_all_questions": 70.0
+      },
+      "verdict": "FAIL"
+    },
+    {
+      "gate": "latency p95 <= 10% of STT p50",
+      "measured": {
+        "600s_total_seconds": 0.451
+      },
+      "verdict": "PASS (dev box; deploy-box re-ladder still required)"
+    },
+    {
+      "gate": "RAM <= 700 MiB",
+      "measured": {
+        "rss_peak_mib": 427.9
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "ASR CER/WER byte-identical with stage on/off",
+      "measured": "no runtime stage exists in this milestone",
+      "verdict": "NOT APPLICABLE (moves to M29B-runtime)"
+    }
+  ],
+  "revised_proposed_gates": [
+    {
+      "gate": "questions: >= 85% on LEXICALLY-CUED + 0 statement false positives",
+      "status": "PROPOSED — REQUIRES APPROVAL",
+      "measured": {
+        "lexically_cued_pct": 91.3,
+        "statement_false_positives": 0
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "boundary F1 >= 0.70 AND >= rules + 0.25 absolute (multi-sentence)",
+      "status": "PROPOSED — REQUIRES APPROVAL",
+      "measured": {
+        "read-paragraph": 0.7441,
+        "rules_read-paragraph": 0.4216
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

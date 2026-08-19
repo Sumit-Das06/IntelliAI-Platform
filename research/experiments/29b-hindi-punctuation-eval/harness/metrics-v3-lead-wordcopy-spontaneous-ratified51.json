@@ -1,0 +1,69 @@
+{
+  "slice": "spontaneous-ratified51",
+  "system": "lead-wordcopy",
+  "corpus": {
+    "ruler": "punct_slots@v1",
+    "rows": 51,
+    "aligned_rows": 51,
+    "invariant_failures": 0,
+    "invariant_pass_rate": 1.0,
+    "micro": {
+      "true_positives": 86,
+      "false_positives": 52,
+      "false_negatives": 78,
+      "precision": 0.6232,
+      "recall": 0.5244,
+      "f1": 0.5695
+    },
+    "per_mark": {
+      "।": {
+        "true_positives": 56,
+        "false_positives": 30,
+        "false_negatives": 23,
+        "precision": 0.6512,
+        "recall": 0.7089,
+        "f1": 0.6788
+      },
+      ",": {
+        "true_positives": 26,
+        "false_positives": 19,
+        "false_negatives": 49,
+        "precision": 0.5778,
+        "recall": 0.3467,
+        "f1": 0.4333
+      },
+      "?": {
+        "true_positives": 4,
+        "false_positives": 1,
+        "false_negatives": 6,
+        "precision": 0.8,
+        "recall": 0.4,
+        "f1": 0.5333
+      },
+      "!": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      ".": {
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "sentence_boundary": {
+      "true_positives": 67,
+      "false_positives": 26,
+      "false_negatives": 22,
+      "precision": 0.7204,
+      "recall": 0.7528,
+      "f1": 0.7363
+    }
+  }
+}

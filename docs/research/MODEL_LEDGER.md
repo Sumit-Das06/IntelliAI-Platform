@@ -1250,4 +1250,32 @@ untouched; Hindi still serves unpunctuated.
 
 ---
 
+## Milestone 29C — founder review applied; ratified gate assessment (appended 2026-08-19)
+
+Full report:
+[2026-08-19-hindi-punctuation-ratification-m29c.md](2026-08-19-hindi-punctuation-ratification-m29c.md).
+The founder-supplied text-only review of the 60 spontaneous annotations
+(49 APPROVE / 2 comma-only REVISE / 9 AUDIO_REVIEW_REQUIRED) is applied
+as **`hi-punct-eval@v3`** (v2 frozen as the pre-review record; inputs
+byte-identical, so the committed predictions re-score deterministically).
+
+- **punct_cap_seg_47_language (1-800-BAD-CODE)** — *status unchanged
+  (Researching)* — **[EVIDENCE]** On the text-ratified 51-row slice:
+  micro F1 0.5695, boundary F1 0.7363 (P 0.7204 / R 0.7528), comma F1
+  0.4333, invariant 100%. Gate verdicts: M29A-as-written — invariant/
+  comma/latency/RAM PASS; boundary F1/recall/precision and question-80%
+  FAIL by small margins. M29B revised-proposed gates — BOTH PASS
+  (questions 91.3% lexically-cued + 0 false positives; boundary F1
+  0.7441 ≥ 0.70 and ≥ rules + 0.25). The audio-flagged 9 rows score
+  lower on boundaries (0.667) than the ratified 51 (0.736) —
+  validating their exclusion. **The remaining decision is the
+  founder's gate choice**: approve the revised gates → M29B-runtime
+  unblocked; hold the original bars → a new model-improvement research
+  cycle. Open items: audio/native review of the 9 flagged rows; final
+  native-speaker confirmation (the review itself is text-only) —
+  evidence:
+  [gate assessment](../../research/experiments/29b-hindi-punctuation-eval/gate-assessment-v3.json)
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

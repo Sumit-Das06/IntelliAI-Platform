@@ -1,0 +1,54 @@
+{
+  "source_file": "spontaneous-annotations.json",
+  "review_type": "text-only linguistic review based on M29B style guide",
+  "important_limit": "Not a native-speaker/audio review; intonation-dependent cases are flagged for audio/native review.",
+  "style_guide": "annotation-style-guide-v1.md",
+  "received": "2026-08-19 (founder-supplied review document, delivered in-conversation)",
+  "record_note": "Reconstructed faithfully from the founder-supplied review document: statuses, counts, and English review reasons copied; the two REVISE texts are comma-only insertions applied to the original annotation words (the review states the revisions change no words, and the v3 builder re-verifies the word law against the frozen ASR eval references).",
+  "rows_total": 60,
+  "rows_uncertain_original": 24,
+  "counts": {
+    "approve": 49,
+    "revise": 2,
+    "audio_review_required": 9
+  },
+  "revisions": [
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000472",
+      "review_status": "REVISE",
+      "revised_punctuated": "हाँ हाँ, तो जरूरत हो है तो आइए लीजिए। देखिए, अपना देख लीजिए सफ हमसे।",
+      "review_reason": "देखिए is an utterance-initial discourse cue; the style guide allows a comma before the following clause. The rest is left unchanged because the transcript wording is not ours to edit.",
+      "audio_review_required": false
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000918",
+      "review_status": "REVISE",
+      "revised_punctuated": "इंग्लिश में बात कर लेते है और थोड़ा बहुत इशारे में बात कर कर लेते है क्योंकि वो लोग समझ नहीं पाते। जैसे कोई मतलब बिहार के हुए, या तो कोई कही और के हुए, तो जैसे हम।",
+      "review_reason": "Adding commas around the coordinated/discourse chunks improves readability without changing words. This remains a style judgment; audio review is useful but not strictly required.",
+      "audio_review_required": false
+    }
+  ],
+  "audio_review_required_ids": [
+    "indicvoices-hindi-valid-0-000461",
+    "indicvoices-hindi-valid-0-000469",
+    "indicvoices-hindi-valid-0-000920",
+    "indicvoices-hindi-valid-0-001272",
+    "indicvoices-hindi-valid-0-001325",
+    "indicvoices-hindi-valid-0-001337",
+    "indicvoices-hindi-valid-0-001444",
+    "indicvoices-hindi-valid-0-001908",
+    "indicvoices-hindi-valid-0-001913"
+  ],
+  "audio_review_reasons": {
+    "indicvoices-hindi-valid-0-000461": "Trailing हाँ could be a tag/question continuation; text alone cannot reliably determine whether the first clause ends with ? or how the tag should attach.",
+    "indicvoices-hindi-valid-0-000469": "The aside phrase is ambiguous from text alone; a comma/question boundary may depend on delivery.",
+    "indicvoices-hindi-valid-0-000920": "Heavy filler repetition creates multiple defensible comma placements; text alone cannot establish the intended prosodic breaks.",
+    "indicvoices-hindi-valid-0-001272": "The first clause may be a genuine question or an intonation-dependent statement; text alone is insufficient.",
+    "indicvoices-hindi-valid-0-001325": "Fragmented/self-directed questions may carry prosodic uncertainty; punctuation is plausible but audio would improve confidence.",
+    "indicvoices-hindi-valid-0-001337": "Highly fragmented speech with multiple possible boundaries; text-only review cannot reliably resolve all comma/question/fragment decisions.",
+    "indicvoices-hindi-valid-0-001444": "मतलब is a discourse filler and the clip is truncated; comma placement and final boundary are style-sensitive.",
+    "indicvoices-hindi-valid-0-001908": "The opening is disfluent and the first boundary is ambiguous; audio would help decide comma vs sentence break.",
+    "indicvoices-hindi-valid-0-001913": "The fragment is highly disfluent; the exact internal boundary cannot be confidently determined from text alone."
+  },
+  "all_other_rows": "APPROVE with the annotation text unchanged (49 rows): 'No punctuation change identified in this text-only review.' (a few APPROVE rows carry guide-citation reasons for truncation/tag-question handling; none change text)"
+}

@@ -1,0 +1,45 @@
+{
+  "manifest": {
+    "path": "ml/evaluation/punctuation/datasets/hi-punct-eval-v3.json",
+    "sha256": "e92d43c2cdef53cfb7110c1c977074cbd2fb0fb40ef51645d6adc53fe545fa45",
+    "samples": 148
+  },
+  "created": "2026-08-19",
+  "language": "hi",
+  "task": "punctuation-restoration",
+  "derived_from": {
+    "dataset": "hi-punct-eval@v2",
+    "sha256": "edbddee8a1dd2a092955f6b21a7d38cf5d4b6c2a8eb13fe27350b8cacd753eff"
+  },
+  "review": {
+    "record": "research/experiments/29b-hindi-punctuation-eval/spontaneous-annotations-review.json",
+    "review_type": "text-only linguistic review based on M29B style guide",
+    "important_limit": "Not a native-speaker/audio review; intonation-dependent cases are flagged for audio/native review.",
+    "counts": {
+      "approve": 49,
+      "revise": 2,
+      "audio_review_required": 9
+    },
+    "revised_rows": [
+      "indicvoices-hindi-valid-0-000472",
+      "indicvoices-hindi-valid-0-000918"
+    ],
+    "audio_review_required_rows": [
+      "indicvoices-hindi-valid-0-000461",
+      "indicvoices-hindi-valid-0-000469",
+      "indicvoices-hindi-valid-0-000920",
+      "indicvoices-hindi-valid-0-001272",
+      "indicvoices-hindi-valid-0-001325",
+      "indicvoices-hindi-valid-0-001337",
+      "indicvoices-hindi-valid-0-001444",
+      "indicvoices-hindi-valid-0-001908",
+      "indicvoices-hindi-valid-0-001913"
+    ],
+    "text_ratified_spontaneous_rows": 51
+  },
+  "input_compatibility": "builder-verified: punctuation-stripped inputs are byte-identical to hi-punct-eval@v2's, so v2 harness predictions remain valid",
+  "normalization": "punct_slots@v1",
+  "primary_ruler": "punctuation_f1_micro (per domain; domains never blindly averaged)",
+  "audio": "not vendored; identities recorded per row",
+  "notes": ""
+}

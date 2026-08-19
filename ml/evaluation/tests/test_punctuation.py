@@ -330,3 +330,57 @@ class TestV2Manifest:
             if row.domain == "spontaneous":
                 assert row.source.files
                 assert row.source.sentence_id == row.members[0]
+
+
+V3_MANIFEST = Path("ml/evaluation/punctuation/datasets/hi-punct-eval-v3.json")
+
+
+class TestV3Manifest:
+    """hi-punct-eval@v3: v2 + the founder review — nothing else changed."""
+
+    def test_the_v3_manifest_is_valid_and_pinned(self) -> None:
+        dataset = load_punctuation_dataset(V3_MANIFEST)
+        assert dataset.name == "hi-punct-eval"
+        assert dataset.version == 3
+        by_domain: dict[str, int] = {}
+        for row in dataset.rows:
+            by_domain[row.domain] = by_domain.get(row.domain, 0) + 1
+        assert by_domain == {"read-paragraph": 88, "spontaneous": 60}
+
+    def test_paragraphs_are_verbatim_copies_of_v2(self) -> None:
+        v2 = {r.id: r for r in load_punctuation_dataset(V2_MANIFEST).rows}
+        v3 = load_punctuation_dataset(V3_MANIFEST)
+        for row in v3.rows:
+            if row.domain == "read-paragraph":
+                assert row.reference_text == v2[row.id].reference_text
+
+    def test_exactly_two_rows_were_revised_and_only_with_supported_marks(self) -> None:
+        # The founder review: 49 approved unchanged, 2 comma-only revisions.
+        v2 = {r.id: r for r in load_punctuation_dataset(V2_MANIFEST).rows}
+        v3 = load_punctuation_dataset(V3_MANIFEST)
+        changed = [row for row in v3.rows if row.reference_text != v2[row.id].reference_text]
+        assert len(changed) == 2
+        for row in changed:
+            assert row.domain == "spontaneous"
+            extra = set(row.reference_text) - set(v2[row.id].reference_text)
+            assert extra <= set(SUPPORTED_MARKS)
+
+    def test_v3_spontaneous_rows_still_preserve_the_asr_words(self) -> None:
+        references = {
+            clip["id"]: clip["reference_text"]
+            for clip in json.loads(ASR_EVAL.read_text(encoding="utf-8"))["clips"]
+        }
+        v3 = load_punctuation_dataset(V3_MANIFEST)
+        for row in v3.rows:
+            if row.domain == "spontaneous":
+                assert depunct(row.reference_text) == depunct(references[row.members[0]])
+
+    def test_restorer_inputs_are_identical_across_v2_and_v3(self) -> None:
+        # The revisions added only punctuation, so the committed v2 harness
+        # predictions remain valid for v3 scoring.
+        v2 = {r.id: r for r in load_punctuation_dataset(V2_MANIFEST).rows}
+        v3 = load_punctuation_dataset(V3_MANIFEST)
+        for row in v3.rows:
+            assert strip_punctuation_for_input(row.reference_text) == (
+                strip_punctuation_for_input(v2[row.id].reference_text)
+            )
