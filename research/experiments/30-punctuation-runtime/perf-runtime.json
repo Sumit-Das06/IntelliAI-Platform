@@ -1,0 +1,45 @@
+{
+  "experiment": "30-punctuation-runtime",
+  "phase": "production-wrapper performance (development machine - NOT an SLA)",
+  "cpu_logical_cores": 24,
+  "warm_disk_load_seconds": 0.58,
+  "rss_mib": {
+    "python_baseline": 39.3,
+    "after_load": 314.2,
+    "after_all": 325.9,
+    "peak": 436.8
+  },
+  "tiers": {
+    "5s": {
+      "input_chars": 260,
+      "latency_seconds_best_of_3": 0.01,
+      "applied": true
+    },
+    "30s": {
+      "input_chars": 412,
+      "latency_seconds_best_of_3": 0.019,
+      "applied": true
+    },
+    "120s": {
+      "input_chars": 1467,
+      "latency_seconds_best_of_3": 0.055,
+      "applied": true
+    },
+    "300s": {
+      "input_chars": 3782,
+      "latency_seconds_best_of_3": 0.142,
+      "applied": true
+    },
+    "600s": {
+      "input_chars": 7340,
+      "latency_seconds_best_of_3": 0.267,
+      "applied": true
+    }
+  },
+  "concurrent_burst": {
+    "requests": 4,
+    "tier": "30s",
+    "wall_seconds": 0.051,
+    "note": "shared ONNX session, 4 worker threads"
+  }
+}

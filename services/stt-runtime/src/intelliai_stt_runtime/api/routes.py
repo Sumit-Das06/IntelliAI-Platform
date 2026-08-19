@@ -32,6 +32,7 @@ from intelliai_runtime_core import (
 from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, ROUTE_TRANSCRIBE
 from intelliai_stt_runtime.engines import TranscriptionEngine
+from intelliai_stt_runtime.engines.punctuation import PunctuationRestorer
 from intelliai_stt_runtime.identity import SERVICE_NAME, runtime_metadata
 from intelliai_stt_runtime.pipeline import MediaPipeline, PipelineOutput
 
@@ -167,12 +168,18 @@ def _ingest_and_transcribe(
     engine: TranscriptionEngine,
     payload: bytes,
     request: TranscriptionRequest,
-) -> tuple[PipelineOutput, TranscriptionResult, float]:
+    punctuator: PunctuationRestorer | None,
+) -> tuple[PipelineOutput, TranscriptionResult, float, float | None]:
     """Stages 1-5 plus handoff, as one blocking unit on a pool slot.
 
     The handoff stage's short-circuit: when VAD found no speech, the
     correct transcript is empty and NO engine runs — silence can never
     reach a model and come back as hallucinated words.
+
+    The punctuation stage (M30) rides the SAME pool slot after the final
+    transcript exists (post chunk-merge for long audio): fail-open, gated
+    on the route-resolved language, words copied verbatim by contract.
+    Silence short-circuits before it, so empty text never meets the model.
     """
     output = pipeline.process(payload)
     inference_started = time.perf_counter()
@@ -185,7 +192,12 @@ def _ingest_and_transcribe(
             duration_seconds=output.audio.duration_seconds,
         )
     inference_ms = (time.perf_counter() - inference_started) * 1000.0
-    return output, result, inference_ms
+    punctuation_ms: float | None = None
+    if punctuator is not None and result.text:
+        stage = punctuator.restore_safely(result, request.language)
+        result = stage.result
+        punctuation_ms = stage.elapsed_ms
+    return output, result, inference_ms, punctuation_ms
 
 
 @router.post(ROUTE_TRANSCRIBE)
@@ -207,23 +219,34 @@ async def transcribe(
     manager: ModelManager[TranscriptionEngine] = request.app.state.manager
     pipeline: MediaPipeline = request.app.state.pipeline
     pool: WorkerPool = request.app.state.pool
+    punctuator: PunctuationRestorer | None = request.app.state.punctuator
     loaded = manager.lookup(transcription_request.model)
 
     payload = await file.read()
     # Admission happens BEFORE any expensive work: pipeline decode and
     # inference share one bounded slot, so ffmpeg concurrency is capped
     # by the same honest limit as the engines.
-    output, result, inference_ms = await pool.run(
-        partial(_ingest_and_transcribe, pipeline, loaded.engine, payload, transcription_request)
+    output, result, inference_ms, punctuation_ms = await pool.run(
+        partial(
+            _ingest_and_transcribe,
+            pipeline,
+            loaded.engine,
+            payload,
+            transcription_request,
+            punctuator,
+        )
     )
 
+    stages = {**output.timings_ms, "inference": inference_ms}
+    if punctuation_ms is not None:
+        stages["punctuation"] = punctuation_ms
     envelope = RuntimeResponse[TranscriptionResult](
         output=result,
         model=loaded.artifact,
         usage=(Usage(unit=UsageUnit.AUDIO_SECONDS, amount=output.audio.duration_seconds),),
         timing=RuntimeTiming(
             total_ms=(time.perf_counter() - started) * 1000.0,
-            stages={**output.timings_ms, "inference": inference_ms},
+            stages=stages,
         ),
         runtime=runtime_metadata(),
     )

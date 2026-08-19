@@ -1,0 +1,41 @@
+{
+  "experiment": "30-punctuation-runtime",
+  "phase": "asr-non-regression (HARD gate)",
+  "corpus_metrics_off": {
+    "wer_unicode": 0.24063842848373235,
+    "substitution_rate": 0.1801718845917741,
+    "insertion_rate": 0.026396562308164517,
+    "deletion_rate": 0.03406998158379374,
+    "excess_word_ratio": 0.016881522406384283,
+    "cer_unicode": 0.1161165317279081,
+    "hallucinated_words": 0.0,
+    "recognition_rtf": 0.22478682437170106
+  },
+  "corpus_metrics_on": {
+    "wer_unicode": 0.24063842848373235,
+    "substitution_rate": 0.1801718845917741,
+    "insertion_rate": 0.026396562308164517,
+    "deletion_rate": 0.03406998158379374,
+    "excess_word_ratio": 0.016881522406384283,
+    "cer_unicode": 0.1161165317279081,
+    "hallucinated_words": 0.0,
+    "recognition_rtf": 0.2436995308944763
+  },
+  "accuracy_metrics_byte_identical": true,
+  "accuracy_metrics_compared": [
+    "wer_unicode",
+    "substitution_rate",
+    "insertion_rate",
+    "deletion_rate",
+    "excess_word_ratio",
+    "cer_unicode",
+    "hallucinated_words"
+  ],
+  "recognition_rtf_delta_not_gated": 0.01891,
+  "clips": 153,
+  "word_stream_mismatches": [],
+  "non_v1_mark_changes": [],
+  "clips_with_marks_added": 150,
+  "total_v1_marks_added": 440,
+  "verdict": "PASS"
+}

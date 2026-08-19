@@ -248,10 +248,12 @@ staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (t
 	docker run --rm -v intelliai_modelcache:/models \
 	  -v "$(CURDIR)/models/qwen3-asr-0.6b:/src-base:ro" \
 	  -v "$(CURDIR)/models/qwen3-asr-0.6b-hi-ft-e3:/src-e3:ro" \
-	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b /models/qwen3-asr-0.6b-hi-ft-e3 \
+	  -v "$(CURDIR)/models/punct-cap-seg-47:/src-punct:ro" \
+	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b /models/qwen3-asr-0.6b-hi-ft-e3 /models/punct-cap-seg-47 \
 	  && cp -r /src-base/v1 /models/qwen3-asr-0.6b/ \
 	  && cp -r /src-e3/v1 /models/qwen3-asr-0.6b-hi-ft-e3/ \
-	  && ls -la /models/qwen3-asr-0.6b/v1 /models/qwen3-asr-0.6b-hi-ft-e3/v1"
+	  && cp -r /src-punct/v1 /models/punct-cap-seg-47/ \
+	  && ls -la /models/qwen3-asr-0.6b/v1 /models/qwen3-asr-0.6b-hi-ft-e3/v1 /models/punct-cap-seg-47/v1"
 
 # ── Local production-shaped stack (M25; see docs/ops/local-tunnel.md) ─
 # The EXACT production architecture (base + Caddy edge) with the ONE

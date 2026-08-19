@@ -1,0 +1,94 @@
+{
+  "experiment": "30-punctuation-runtime",
+  "phase": "approved-gates through the PRODUCTION wrapper (v1 mark scope)",
+  "benchmark": "hi-punct-eval@v3 (sha256 e92d43c2cdef53cfb7110c1c977074cbd2fb0fb40ef51645d6adc53fe545fa45)",
+  "wrapper": "intelliai_stt_runtime.engines.punctuation.PunctuationRestorer",
+  "slices": {
+    "read-paragraph": {
+      "rows": 88,
+      "micro_f1": 0.2606,
+      "boundary_f1": 0.7441,
+      "boundary_precision": 0.6195,
+      "boundary_recall": 0.9313,
+      "comma_f1": 0.389,
+      "question_f1": 0.0,
+      "invariant_pass_rate": 1.0
+    },
+    "spontaneous-all60": {
+      "rows": 60,
+      "micro_f1": 0.5731,
+      "boundary_f1": 0.713,
+      "boundary_precision": 0.713,
+      "boundary_recall": 0.713,
+      "comma_f1": 0.4361,
+      "question_f1": 0.5,
+      "invariant_pass_rate": 1.0
+    },
+    "spontaneous-ratified51": {
+      "rows": 51,
+      "micro_f1": 0.5733,
+      "boundary_f1": 0.7222,
+      "boundary_precision": 0.7143,
+      "boundary_recall": 0.7303,
+      "comma_f1": 0.4333,
+      "question_f1": 0.5333,
+      "invariant_pass_rate": 1.0
+    }
+  },
+  "questions": {
+    "correct": 21,
+    "missed": 9,
+    "statement_false_positives": 0,
+    "lexically_cued_pct": 91.3
+  },
+  "edge_probes": {
+    "total": 22,
+    "corruptions": 0,
+    "corrupted": []
+  },
+  "approved_gates": [
+    {
+      "gate": "word invariant = 100%",
+      "measured": {
+        "read-paragraph": 1.0,
+        "spontaneous-all60": 1.0,
+        "spontaneous-ratified51": 1.0
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "lexically-cued question accuracy >= 85%",
+      "measured": 91.3,
+      "verdict": "PASS"
+    },
+    {
+      "gate": "statement false positives = 0",
+      "measured": 0,
+      "verdict": "PASS"
+    },
+    {
+      "gate": "boundary F1 >= 0.70 (multi-sentence)",
+      "measured": {
+        "read-paragraph": 0.7441,
+        "ratified51": 0.7222
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "boundary F1 >= rules + 0.25 absolute",
+      "measured": {
+        "lead": 0.7441,
+        "rules": 0.4216
+      },
+      "verdict": "PASS"
+    },
+    {
+      "gate": "comma F1 >= 0.30",
+      "measured": {
+        "read-paragraph": 0.389,
+        "ratified51": 0.4333
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

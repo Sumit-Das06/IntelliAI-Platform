@@ -64,7 +64,7 @@ entries is ordered by the living priorities
 | Fish-Speech | speech_synthesis | — | NC (2026-07-31) | Rejected | 2026-08-04 |
 | Piper (fork) | speech_synthesis | — | GPL-3.0 fork (2026-07-31) | Rejected | 2026-08-04 |
 | espeak-ng in-process phonemization | serving-chain component | — | GPL-3.0 (2026-08-03) | Rejected | 2026-08-04 |
-| punct_cap_seg_47_language (1-800-BAD-CODE) | punctuation_restoration (text post-processing) | 47 langs incl. HI+EN; HI benchmarked on hi-punct-eval@v1+v2 | **Apache-2.0 (source, 2026-08-19)** | Researching — word-copy decoder proven (invariant 100%, edges 0/22); spontaneous F1 0.575; gates pending founder ratification (M29B-DATA) | 2026-08-19 |
+| punct_cap_seg_47_language (1-800-BAD-CODE) | punctuation_restoration (text post-processing) | 47 langs incl. HI+EN; HI gated on hi-punct-eval@v3 | **Apache-2.0 (source, 2026-08-19)** | **Approved for Adoption** — runtime-integrated as `punct-cap-seg-47@v1`, staged 22/22, all approved gates PASS; PRODUCTION ACTIVATION PENDING (M30) | 2026-08-19 |
 | Cadence-Fast (AI4Bharat) | punctuation_restoration (text post-processing) | claims EN + 22 Indic incl. HI; unmeasured | **contradictory** — card `MIT` vs Gemma-3 base Terms of Use flow-down (2026-08-19) | Researching — benchmark BLOCKED pending license clarity | 2026-08-19 |
 
 ---
@@ -1275,6 +1275,43 @@ byte-identical, so the committed predictions re-score deterministically).
   native-speaker confirmation (the review itself is text-only) —
   evidence:
   [gate assessment](../../research/experiments/29b-hindi-punctuation-eval/gate-assessment-v3.json)
+
+---
+
+## Milestone 30 — Hindi punctuation runtime IMPLEMENTED and STAGED (appended 2026-08-19)
+
+Full report:
+[../milestones/30-hindi-punctuation-runtime.md](../milestones/30-hindi-punctuation-runtime.md).
+Dossier (framework §11, first non-transcription entry):
+[models/punct-cap-seg-dossier.md](models/punct-cap-seg-dossier.md).
+
+- **punct_cap_seg_47_language (1-800-BAD-CODE)** — **Approved for
+  Adoption (capability implemented; PRODUCTION ACTIVATION PENDING)** —
+  **[FACT]** The founder approved the M29C revised gates; M30 shipped
+  the stage on the approved architecture: vendored ONNX wrapper +
+  word-copy decoder in the STT runtime (`punct-cap-seg-47@v1`, seeded,
+  hash-verified, fail-open, hi-route gating, post-chunk-merge, one
+  shared session), additive contract field `raw_text`, provenance
+  raw → punctuated → corrected with billing untouched. **[EVIDENCE]**
+  Phase-20 HARD gate PASS: frozen-eval accuracy metrics byte-identical
+  OFF vs ON (CER 0.11612 / WER 0.24064), 153/153 word streams equal,
+  440 v1 marks added on 150 clips. All six approved gates PASS through
+  the SHIPPING wrapper (invariant 100%, cued questions 91.3% + 0 FP,
+  boundary F1 0.7441/0.7222, comma 0.389/0.433, edges 0/22). Staging
+  battery through the production-shaped stack 22/22 incl. long-audio
+  join law with punctuation, silence safety, contribution ON/OFF,
+  correction, three client contract shapes, restart recovery, and the
+  live disable/rollback drill. Perf (dev box): 600 s → 0.267 s, RSS
+  peak 436.8 MiB, warm load 0.58 s. Production remains OFF
+  (`INTELLIAI_STT_PUNCTUATION_ENABLED: "false"` pinned + guard-tested);
+  activation is a separate promotion decision (deploy-box re-ladder,
+  audio-flagged-row review, reviewed flag flip) — evidence:
+  [30 evidence](../../research/experiments/30-punctuation-runtime/)
+
+**Consequence for priorities:** the punctuation program is
+implementation-complete and staged. Hindi's remaining path to users is
+DEPLOYMENT: the Hostinger milestone now carries both the E3 promotion
+(M26) and the punctuation flag decision, each with its own gates.
 
 ---
 

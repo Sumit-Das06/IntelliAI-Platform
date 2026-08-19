@@ -47,6 +47,11 @@ services:
   stt-runtime:
     environment:
       INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3
+      # M30 staging battery: the punctuation stage runs here (and only
+      # here) so the production-shaped stack can prove it end to end
+      # before any production enable is even proposed.
+      INTELLIAI_STT_PUNCTUATION_ENABLED: "true"
+      INTELLIAI_STT_PUNCTUATION_LANGUAGES: hi,hi-IN
 
 volumes:
   caddydata:

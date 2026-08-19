@@ -24,6 +24,10 @@ dependencies = [
 whisper = [
     "faster-whisper>=1.1",
 ]
+punctuation = [
+    "onnxruntime>=1.28",
+    "sentencepiece>=0.2",
+]
 
 [tool.uv.sources]
 intelliai-runtime-contract = { workspace = true }

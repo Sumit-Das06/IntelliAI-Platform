@@ -26,6 +26,7 @@ FOUNDATION_MODEL_LIBS = {
     "tensorflow",
     "transformers",
     "onnxruntime",
+    "sentencepiece",
     "openvino",
     "vllm",
     "librosa",

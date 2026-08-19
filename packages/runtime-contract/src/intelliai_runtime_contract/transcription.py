@@ -49,6 +49,13 @@ class TranscriptionResult(ContractModel):
     language: str = Field(min_length=1)
     duration_seconds: float = Field(ge=0)
     segments: tuple[TranscriptionSegment, ...] = ()
+    # The pre-stage transcript when a text post-stage (e.g. punctuation
+    # restoration) rewrote `text`; None when no stage changed anything.
+    # The gateway stores it as the immutable original_transcript so
+    # training provenance always carries the machine's RAW words.
+    # Added additively under contract v1 (ADR-0016 evolution rules);
+    # real consumer: the gateway's collection service (Milestone 30).
+    raw_text: str | None = None
 
 
 TranscriptionResponse = RuntimeResponse[TranscriptionResult]

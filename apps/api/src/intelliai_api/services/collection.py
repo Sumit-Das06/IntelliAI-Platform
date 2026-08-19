@@ -174,7 +174,18 @@ class DataCollectionService:
                     audio_key=key,
                     duration_seconds=Decimal(str(round(outcome.audio_seconds, 3))),
                     file_size_bytes=len(audio),
-                    original_transcript=outcome.result.text,
+                    # The flywheel's ground truth is the machine's RAW
+                    # words: when a text post-stage (punctuation, M30)
+                    # rewrote `text`, the runtime carries the pre-stage
+                    # transcript in raw_text and THAT is the immutable
+                    # original; the served (punctuated) text is what
+                    # current_transcript starts from and what the user
+                    # corrects. No stage → raw_text is None → the pre-M30
+                    # birth law (current == original) holds unchanged.
+                    original_transcript=outcome.result.raw_text or outcome.result.text,
+                    served_transcript=(
+                        outcome.result.text if outcome.result.raw_text is not None else None
+                    ),
                     model_name=str(lineage.get("artifact") or outcome.public_model_id),
                     model_version=_version_of(lineage),
                     lineage=lineage,
@@ -198,6 +209,20 @@ class DataCollectionService:
                         "client_source": client_source.value,
                     },
                 )
+                if outcome.result.raw_text is not None:
+                    # Provenance of the text post-stage (M30): raw ASR →
+                    # punctuated → (later) human corrected. Event names are
+                    # public; detail never is — and even here the restorer
+                    # is named by its product-safe version, never by an
+                    # engine or vendor name.
+                    await self._samples.record_event(
+                        sample.id,
+                        "punctuated",
+                        detail={
+                            "stage": "punctuation-restoration",
+                            "restorer": "hi-punct-v1",
+                        },
+                    )
         except Exception:
             # The object above is now orphaned; name it so the future
             # lifecycle sweep can find it. The savepoint rollback keeps

@@ -116,7 +116,7 @@ enable_error_code = ["ignore-without-code"]
 # installed-but-untyped on inference machines (import-untyped). This scoped
 # override is the one sanctioned exception to strict imports — engines only.
 [[tool.mypy.overrides]]
-module = ["faster_whisper.*", "numpy.*", "kokoro.*", "misaki.*", "torch.*"]
+module = ["faster_whisper.*", "numpy.*", "kokoro.*", "misaki.*", "torch.*", "onnxruntime.*", "sentencepiece.*"]
 ignore_missing_imports = true
 
 # pyarrow ships no usable type stubs; it is confined to ml/datasets ingestion

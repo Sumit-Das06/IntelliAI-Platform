@@ -1,0 +1,116 @@
+{
+  "experiment": "30-punctuation-runtime",
+  "phase": "staging-battery",
+  "results": [
+    {
+      "item": "hi-short punctuated",
+      "verdict": "PASS",
+      "note": "क्या क्या चीज़ें लेना है हाँ।"
+    },
+    {
+      "item": "en bypass (no danda)",
+      "verdict": "PASS",
+      "note": "And so, my fellow Americans, ask not what your country can do for you. Ask what "
+    },
+    {
+      "item": "auto no-language 200",
+      "verdict": "PASS",
+      "note": "या, क्या चीजी लेना है?"
+    },
+    {
+      "item": "hi-5s punctuated",
+      "verdict": "PASS",
+      "note": "wall=1.0s enders=1"
+    },
+    {
+      "item": "hi-30s punctuated",
+      "verdict": "PASS",
+      "note": "wall=5.4s enders=9"
+    },
+    {
+      "item": "hi-120s punctuated",
+      "verdict": "PASS",
+      "note": "wall=31.7s enders=28"
+    },
+    {
+      "item": "hi-300s punctuated",
+      "verdict": "PASS",
+      "note": "wall=77.7s enders=68"
+    },
+    {
+      "item": "hi-600s punctuated",
+      "verdict": "PASS",
+      "note": "wall=168.2s enders=183"
+    },
+    {
+      "item": "300s verbose_json join law",
+      "verdict": "PASS",
+      "note": "segments=4"
+    },
+    {
+      "item": ">600s refused 400",
+      "verdict": "PASS",
+      "note": "400"
+    },
+    {
+      "item": "silence-6s empty",
+      "verdict": "PASS",
+      "note": "''"
+    },
+    {
+      "item": "noise-quiet-6s empty",
+      "verdict": "PASS",
+      "note": "''"
+    },
+    {
+      "item": "question clip",
+      "verdict": "PASS",
+      "note": "हाँ जी सर नमस्कार, क्या आप सुईजी से बात कर रहे हैं?"
+    },
+    {
+      "item": "contribution ON collects",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "item": "contribution OFF skips",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "item": "correction 200",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "item": "web client punctuated",
+      "verdict": "PASS",
+      "note": "क्या क्या चीज़ लेना है हाँ?"
+    },
+    {
+      "item": "android client punctuated",
+      "verdict": "PASS",
+      "note": "क्या क्या चीज़ें लेना है हाँ।"
+    },
+    {
+      "item": "ios client punctuated",
+      "verdict": "PASS",
+      "note": "क्या क्या चीज़ें लेना है हाँ।"
+    },
+    {
+      "item": "android == ios output",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "item": "restart recovery punctuated",
+      "verdict": "PASS",
+      "note": "क्या क्या चीज़ें लेना है हाँ।"
+    },
+    {
+      "item": "disable/rollback drill",
+      "verdict": "PASS",
+      "note": "क्या क्या चीज़ें लेना है हाँ"
+    }
+  ]
+}

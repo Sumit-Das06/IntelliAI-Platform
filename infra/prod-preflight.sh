@@ -88,6 +88,22 @@ else
   fail "the promoted Hindi artifact is missing: $E3_GGUF — place the E3 GGUFs under models/ (see docs/ops/model-rollout.md), then 'make staging-seed-models' seeds the model volume"
 fi
 
+# ── 4c. Punctuation stage artifacts must be seedable when ENABLED (M30) ──
+# Production ships with the stage OFF; if an overlay/env enables it, the
+# runtime refuses to start without the seeded, hash-verified files — catch
+# that at preflight, not at deploy.
+PUNCT_ENABLED="${INTELLIAI_STT_PUNCTUATION_ENABLED:-false}"
+if [ "$PUNCT_ENABLED" = "true" ]; then
+  PUNCT_ONNX="models/punct-cap-seg-47/v1/punct_cap_seg_47lang.onnx"
+  if [ -f "$PUNCT_ONNX" ]; then
+    note "punctuation artifacts present for seeding ($PUNCT_ONNX)"
+  else
+    fail "punctuation is ENABLED but its artifact is missing: $PUNCT_ONNX — seed models/punct-cap-seg-47/v1/ then 'make staging-seed-models'"
+  fi
+else
+  note "punctuation stage disabled (INTELLIAI_STT_PUNCTUATION_ENABLED=$PUNCT_ENABLED)"
+fi
+
 # ── 5. the env file stays private ───────────────────────────────────────
 if command -v stat >/dev/null 2>&1; then
   mode="$(stat -c '%a' "$ENV_FILE" 2>/dev/null || echo '')"

@@ -42,16 +42,21 @@ class SpeechSampleRepository:
         client_version: str | None = None,
         app_locale: str | None = None,
         idempotency_key: str | None = None,
+        served_transcript: str | None = None,
     ) -> SpeechSample:
         """Create a sample in its birth state.
 
-        ``current_transcript`` starts equal to ``original_transcript`` by
-        rule, not by caller choice: the original is the immutable machine
-        output and the current one evolves from it. Status starts at the
-        column default (collected); the caller records the matching
-        lifecycle event via :meth:`record_event`. ``public_id`` may be
-        supplied when the caller minted it first (the object key embeds
-        it); omitted, the model default mints one.
+        ``current_transcript`` starts as WHAT THE USER WAS SHOWN, by rule,
+        not by caller choice: ``original_transcript`` is the immutable
+        machine output, and when a backend text post-stage (punctuation,
+        M30) rewrote what was served, ``served_transcript`` carries that
+        text and the current one evolves from IT. With no stage (the
+        overwhelming default), served is None and current starts equal to
+        original — the pre-M30 law unchanged. Status starts at the column
+        default (collected); the caller records the matching lifecycle
+        event via :meth:`record_event`. ``public_id`` may be supplied when
+        the caller minted it first (the object key embeds it); omitted,
+        the model default mints one.
         """
         minted: dict[str, str] = {"public_id": public_id} if public_id is not None else {}
         sample = SpeechSample(
@@ -61,7 +66,7 @@ class SpeechSampleRepository:
             duration_seconds=duration_seconds,
             file_size_bytes=file_size_bytes,
             original_transcript=original_transcript,
-            current_transcript=original_transcript,
+            current_transcript=served_transcript or original_transcript,
             model_name=model_name,
             model_version=model_version,
             lineage=lineage or {},

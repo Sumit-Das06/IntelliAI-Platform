@@ -26,6 +26,11 @@ from intelliai_stt_runtime.api.errors import register_error_handlers
 from intelliai_stt_runtime.api.routes import router
 from intelliai_stt_runtime.config import Settings
 from intelliai_stt_runtime.engines import TranscriptionEngine
+from intelliai_stt_runtime.engines.punctuation import (
+    PUNCTUATION_FILES,
+    PunctuationRestorer,
+    load_punctuation,
+)
 from intelliai_stt_runtime.identity import SERVICE_NAME
 from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline, canonical_audio
 from intelliai_stt_runtime.slots import build_slot_specs
@@ -89,7 +94,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         # before it loads models or accepts traffic.
         await asyncio.to_thread(pipeline.verify)
         await manager.startup()
+        if settings.punctuation_enabled:
+            # Same startup law as every engine: an ENABLED stage with
+            # missing or mishashed artifacts refuses to serve — the store
+            # verifies before the model exists. Request-time problems are
+            # fail-open; deployment problems are loud.
+            store = ArtifactStore(settings.model_dir)
+            local_dir = await asyncio.to_thread(store.ensure, PUNCTUATION_FILES)
+            app.state.punctuator = await asyncio.to_thread(
+                load_punctuation,
+                local_dir,
+                languages=settings.punctuation_languages.split(","),
+                timeout_ms=settings.punctuation_timeout_ms,
+            )
         yield
+        punctuator: PunctuationRestorer | None = app.state.punctuator
+        if punctuator is not None:
+            punctuator.close()
         await manager.shutdown()
         pool.shutdown()
 
@@ -98,6 +119,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.manager = manager
     app.state.pipeline = pipeline
     app.state.pool = pool
+    app.state.punctuator = None  # set by the lifespan when the stage is enabled
 
     @app.middleware("http")
     async def request_context(

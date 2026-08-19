@@ -283,3 +283,38 @@ def test_the_prod_example_requires_generation_not_reuse() -> None:
         )
     # And the off-box backup interface is declared (empty until supplied).
     assert "INTELLIAI_BACKUP_S3_URL=" in ENV_PROD_EXAMPLE
+
+
+def test_punctuation_ships_off_in_prod_and_on_only_in_the_local_stage() -> None:
+    # M30: the Hindi punctuation stage is IMPLEMENTED but production stays
+    # OFF until its own promotion decision — explicit in the overlay, never
+    # inherited from a stray dev variable. The local production-shaped
+    # stack is the ONLY committed deployment that enables it (the staging
+    # battery runs there), and it whitelists exactly the approved route.
+    assert 'INTELLIAI_STT_PUNCTUATION_ENABLED: "false"' in PROD_OVERLAY
+    local_prod = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    assert 'INTELLIAI_STT_PUNCTUATION_ENABLED: "true"' in local_prod
+    assert "INTELLIAI_STT_PUNCTUATION_LANGUAGES: hi,hi-IN" in local_prod
+    # The base compose must not default the stage on anywhere:
+    assert "PUNCTUATION" not in COMPOSE
+
+
+def test_preflight_refuses_an_enabled_stage_without_seeded_artifacts() -> None:
+    preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
+    assert "INTELLIAI_STT_PUNCTUATION_ENABLED" in preflight
+    assert "punct-cap-seg-47/v1/punct_cap_seg_47lang.onnx" in preflight
+
+
+def test_the_punctuation_stage_defaults_off_and_pins_the_hindi_whitelist() -> None:
+    # The Settings default is the deployment law: OFF everywhere unless a
+    # reviewed overlay says otherwise, and the v1 whitelist is the
+    # promoted Hindi route only.
+    import sys
+
+    sys.path.insert(0, str(REPO / "services/stt-runtime/src"))
+    from intelliai_stt_runtime.config import Settings as SttSettings
+
+    defaults = SttSettings()
+    assert defaults.punctuation_enabled is False
+    assert defaults.punctuation_languages == "hi,hi-IN"
+    assert defaults.punctuation_timeout_ms > 0

@@ -47,6 +47,11 @@ services:
       # (hash-verified at load); the preflight refuses a prod start
       # without them.
       INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3
+      # M30: the Hindi punctuation stage is IMPLEMENTED but production
+      # stays OFF until its own promotion decision passes the full gate
+      # battery — explicit here so a stray dev variable can never enable
+      # a stage this deployment has not approved.
+      INTELLIAI_STT_PUNCTUATION_ENABLED: "false"
 
 volumes:
   caddydata:

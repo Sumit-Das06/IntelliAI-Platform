@@ -74,6 +74,22 @@ class Settings(BaseSettings):
     qwen3_chunk_overlap_seconds: float = Field(default=5.0, ge=0)
     qwen3_chunk_snap_radius_seconds: float = Field(default=8.0, ge=0)
 
+    # ── hindi punctuation stage (Milestone 30) ──────────────────────────
+    # A post-STT text stage: predicts punctuation positions and copies the
+    # original words verbatim (the word-copy contract, M29B/M29C). OFF by
+    # default everywhere; production stays OFF until its own promotion
+    # decision. The stage is FAIL-OPEN at request time — but an ENABLED
+    # deployment with unseeded/mishashed artifacts refuses to start, the
+    # same law as every other artifact.
+    punctuation_enabled: bool = False
+    # Route-resolved language tags the stage applies to (comma-separated).
+    # Gating is by the REQUESTED language (the route the gateway resolved),
+    # never by a client's "auto" — no language, no stage.
+    punctuation_languages: str = "hi,hi-IN"
+    # The stage's request-time safety net; measured 600 s-tier latency is
+    # ~0.45 s on the dev box, so 3 s is generous without masking hangs.
+    punctuation_timeout_ms: float = Field(default=3000.0, gt=0)
+
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be
     # ignored silently and a deployment meant to serve whisper would
