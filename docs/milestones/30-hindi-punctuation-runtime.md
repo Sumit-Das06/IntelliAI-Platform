@@ -175,7 +175,10 @@ Runtime 205 (+19 new stage tests incl. real-model laws) · contract 46
 (+raw_text) · api 629 (+3 provenance, +3 ops guards) · evaluation 677 ·
 datasets 81 · training 17 — all green; ruff + format clean; mypy strict
 clean (329 files); `sentencepiece` added to the engine-isolation
-denylist (guard strengthened). CI: §CI§
+denylist (guard strengthened). CI green on the M30 commit (`d643c6d`).
+Client suites: unchanged and not re-runnable in this environment (no
+JDK, no Mac) — M30 touched zero client code; client contracts were
+verified LIVE in the staging battery.
 
 ## 13. Security / privacy (Phase 23)
 
