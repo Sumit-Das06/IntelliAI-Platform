@@ -106,7 +106,12 @@ and cached — no re-admission, no rebuild, no client change. Drilled
 against the running Docker stack in M25, both directions, in seconds.
 No automatic per-request fallback exists (standing M16 decision).
 
-## 9. Deployment status — the explicit distinction
+## 9. The promotion commit
+
+`c5a3147` — `feat(model): promote qwen e3 as hindi production model`
+(CI green). Rollback = `git revert c5a3147`.
+
+## 10. Deployment status — the explicit distinction
 
 ```
 Production route in REPOSITORY:   Hindi → qwen3-asr-0.6b-hi-ft-e3@v1
