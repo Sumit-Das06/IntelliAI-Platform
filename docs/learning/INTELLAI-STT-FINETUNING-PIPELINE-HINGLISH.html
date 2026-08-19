@@ -1,0 +1,1788 @@
+<title>STT Fine-Tuning Pipeline Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f7f4;
+  --surface: #ffffff;
+  --ink: #24272e;
+  --ink-soft: #5b6069;
+  --accent: #35507a;
+  --accent-ink: #ffffff;
+  --rule: #dcdcd4;
+  --code-bg: #eeeee8;
+  --code-ink: #3a3f36;
+  --table-stripe: #f1f1ea;
+  --mark: #7a5a35;
+}
+:root:not([data-theme="light"]) { }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1d21;
+    --surface: #23262c;
+    --ink: #e6e4dd;
+    --ink-soft: #a3a49b;
+    --accent: #8fb0e0;
+    --accent-ink: #16181c;
+    --rule: #3a3d44;
+    --code-bg: #2a2d34;
+    --code-ink: #d5d3ca;
+    --table-stripe: #26292f;
+    --mark: #d0aa72;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1d21;
+  --surface: #23262c;
+  --ink: #e6e4dd;
+  --ink-soft: #a3a49b;
+  --accent: #8fb0e0;
+  --accent-ink: #16181c;
+  --rule: #3a3d44;
+  --code-bg: #2a2d34;
+  --code-ink: #d5d3ca;
+  --table-stripe: #26292f;
+  --mark: #d0aa72;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Mukta", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+.wrap { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem 5rem; }
+header.doc {
+  border-bottom: 3px solid var(--accent);
+  padding: 3rem 0 1.5rem;
+  margin-bottom: 2rem;
+}
+header.doc .eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+header.doc h1 {
+  font-size: 2rem;
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+  text-wrap: balance;
+  font-weight: 700;
+}
+header.doc p.sub { color: var(--ink-soft); margin: 0; max-width: 38rem; }
+nav.toc {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.1rem 1.4rem;
+  margin: 0 0 2.5rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+nav.toc .toc-title {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+}
+nav.toc ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 2rem; }
+nav.toc li { margin: 0.15rem 0; break-inside: avoid; }
+nav.toc a { color: var(--ink); text-decoration: none; }
+nav.toc a:hover { color: var(--accent); }
+h1, h2, h3 { line-height: 1.3; text-wrap: balance; }
+h1 { font-size: 1.7rem; margin: 3rem 0 1rem; }
+h2 {
+  font-size: 1.35rem;
+  margin: 3rem 0 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  color: var(--accent);
+  font-weight: 700;
+}
+h3 { font-size: 1.08rem; margin: 2rem 0 0.6rem; }
+a { color: var(--accent); }
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.6rem 1.1rem;
+  border-left: 4px solid var(--accent);
+  background: var(--surface);
+  border-radius: 0 8px 8px 0;
+  color: var(--ink-soft);
+}
+blockquote p { margin: 0.4rem 0; }
+code {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.86em;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+pre {
+  background: var(--code-bg);
+  color: var(--code-ink);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+pre.mermaid { line-height: 1.45; }
+table {
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.92rem;
+  width: 100%;
+}
+.table-scroll { overflow-x: auto; }
+th, td {
+  border: 1px solid var(--rule);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+tbody tr:nth-child(even) { background: var(--table-stripe); }
+strong { font-weight: 700; }
+hr { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+li { margin: 0.25rem 0; }
+@media (max-width: 640px) {
+  nav.toc ul { columns: 1; }
+  header.doc h1 { font-size: 1.55rem; }
+}
+</style>
+<div class="wrap">
+<header class="doc">
+  <p class="eyebrow">IntelliAI · Learning Handbook</p>
+  <h1>STT Fine-Tuning Pipeline — Complete Hinglish Guide</h1>
+  <p class="sub">User speech se production promotion tak — actual repository
+  code par based, har file/function/number verified. Padhne ka time: 1–2 ghante.</p>
+</header>
+<nav class="toc"><div class="toc-title">Sections</div><div class="toc">
+<ul>
+<li><a href="#intelliai-stt-fine-tuning-pipeline-complete-hinglish-guide">IntelliAI STT Fine-Tuning Pipeline — Complete Hinglish Guide</a><ul>
+<li><a href="#the-big-picture-poora-safar-ek-nazar-mein">THE BIG PICTURE — poora safar ek nazar mein</a></li>
+<li><a href="#section-1-hum-problem-kya-solve-kar-rahe-hain">SECTION 1 — Hum problem kya solve kar rahe hain?</a></li>
+<li><a href="#section-2-data-kahan-se-aata-hai">SECTION 2 — Data kahan se aata hai?</a><ul>
+<li><a href="#2a-user-data-future-ka-raasta">2a. User data (future ka raasta)</a></li>
+<li><a href="#2b-public-training-data-jo-actually-use-hua">2b. Public training data (jo actually use hua)</a></li>
+</ul>
+</li>
+<li><a href="#section-3-speech-sample-kaise-banta-hai-backend-flow">SECTION 3 — Speech Sample kaise banta hai (backend flow)</a></li>
+<li><a href="#section-4-dataset-aur-dataset-version">SECTION 4 — Dataset aur Dataset Version</a></li>
+<li><a href="#section-5-training-data-preparation-validation-ka-pehra">SECTION 5 — Training data preparation (validation ka pehra)</a></li>
+<li><a href="#section-6-jsonl-training-manifest-kya-hai">SECTION 6 — JSONL Training Manifest kya hai?</a></li>
+<li><a href="#section-7-speaker-disjointness-kyun-zaroori-hai">SECTION 7 — Speaker disjointness kyun zaroori hai</a></li>
+<li><a href="#section-8-qwen-training-pipeline-sabse-important-section">SECTION 8 — Qwen training pipeline (sabse important section)</a><ul>
+<li><a href="#step-0-base-model-snapshot">Step 0 — Base model snapshot</a></li>
+<li><a href="#step-1-config">Step 1 — Config</a></li>
+<li><a href="#step-2-data-loading">Step 2 — Data loading</a></li>
+<li><a href="#step-3-model-freeze">Step 3 — Model + freeze</a></li>
+<li><a href="#step-4-batch-banana">Step 4 — Batch banana</a></li>
+<li><a href="#step-5-training-loop">Step 5 — Training loop</a></li>
+</ul>
+</li>
+<li><a href="#section-9-rtx-5070-8-gb-kaafi-kyun-tha">SECTION 9 — RTX 5070 (8 GB) kaafi kyun tha?</a></li>
+<li><a href="#section-10-e1-pehla-fine-tune-whisper-lora-failed">SECTION 10 — E1: pehla fine-tune (Whisper LoRA) — FAILED</a></li>
+<li><a href="#section-11-e1b-problem-sirf-learning-rate-ka-nahi-tha">SECTION 11 — E1b: "problem sirf learning rate ka nahi tha"</a></li>
+<li><a href="#section-12-qwen-e1-e2-data-hi-bottleneck-tha">SECTION 12 — Qwen E1 → E2: "data hi bottleneck tha"</a></li>
+<li><a href="#section-13-e3-retention-mix-product-jeeta">SECTION 13 — E3: retention mix — PRODUCT jeeta</a></li>
+<li><a href="#section-14-checkpoints-photo-album-of-training">SECTION 14 — Checkpoints: photo album of training</a></li>
+<li><a href="#section-15-evaluation-pipeline-report-card-kaise-banta-hai">SECTION 15 — Evaluation pipeline (report card kaise banta hai)</a></li>
+<li><a href="#section-16-cer-wer-hallucination-bilkul-basic-se">SECTION 16 — CER / WER / Hallucination — bilkul basic se</a></li>
+<li><a href="#section-17-frozen-evaluation-set-kyun">SECTION 17 — Frozen evaluation set kyun?</a></li>
+<li><a href="#section-18-model-export-training-checkpoint-serving-artifact">SECTION 18 — Model Export: training checkpoint → serving artifact</a></li>
+<li><a href="#section-19-serving-adapter-request-se-transcript-tak">SECTION 19 — Serving Adapter: request se transcript tak</a></li>
+<li><a href="#section-20-long-audio-m19-ka-design">SECTION 20 — Long Audio (M19 ka design)</a></li>
+<li><a href="#section-21-web-android-ios-teen-clients-ek-backend">SECTION 21 — Web / Android / iOS: teen clients, EK backend</a></li>
+<li><a href="#section-22-production-promotion-research-se-production-tak">SECTION 22 — Production Promotion: research se production tak</a></li>
+<li><a href="#section-23-complete-end-to-end-diagram">SECTION 23 — Complete End-to-End Diagram</a></li>
+<li><a href="#section-24-follow-one-request-in-code-hindi-dictation-android-se">SECTION 24 — "Follow one request in code" (Hindi dictation, Android se)</a></li>
+<li><a href="#section-25-follow-one-training-sample-e3-ka-ek-clip">SECTION 25 — "Follow one training sample" (E3 ka ek clip)</a></li>
+<li><a href="#section-26-common-terms-cheat-sheet">SECTION 26 — Common Terms Cheat Sheet</a></li>
+<li><a href="#section-27-debugging-guide-kahan-dekhna-hai">SECTION 27 — Debugging Guide (kahan dekhna hai)</a></li>
+<li><a href="#section-28-bossinterview-explanations">SECTION 28 — Boss/Interview Explanations</a><ul>
+<li><a href="#how-i-explain-our-fine-tuning-pipeline-in-2-minutes">"How I explain our fine-tuning pipeline in 2 minutes"</a></li>
+<li><a href="#how-i-explain-e1-e2-e3">"How I explain E1 → E2 → E3"</a></li>
+<li><a href="#why-didnt-we-just-fine-tune-whisper">"Why didn't we just fine-tune Whisper?"</a></li>
+<li><a href="#why-qwen">"Why Qwen?"</a></li>
+<li><a href="#why-did-e2-beat-e3-on-cer-but-e3-was-selected">"Why did E2 beat E3 on CER but E3 was selected?"</a></li>
+<li><a href="#how-do-you-ensure-training-data-does-not-leak-into-evaluation">"How do you ensure training data does not leak into evaluation?"</a></li>
+<li><a href="#how-do-you-deploy-the-trained-model">"How do you deploy the trained model?"</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#my-mental-model">My Mental Model</a></li>
+</ul>
+</div>
+</nav>
+<h1 id="intelliai-stt-fine-tuning-pipeline-complete-hinglish-guide">IntelliAI STT Fine-Tuning Pipeline — Complete Hinglish Guide</h1>
+<blockquote>
+<p>Ye document humari ACTUAL repository ke code par based hai — har file,
+function, aur number committed code/records se verify kiya gaya hai.
+Padhne ka time: 1–2 ghante. Style: simple Hinglish, zero assumed ML
+knowledge.</p>
+</blockquote>
+<hr />
+<h2 id="the-big-picture-poora-safar-ek-nazar-mein">THE BIG PICTURE — poora safar ek nazar mein</h2>
+<pre><code>User Speech                        ← user bolta hai (Web/Android/iOS)
+     ↓
+Speech Sample                      ← (consent ho to) audio + transcript store
+     ↓
+Correction                         ← user galti sudhaarta hai
+     ↓
+Dataset                            ← samples ka collection (rules ke saath)
+     ↓
+Dataset Version                    ← FREEZE: membership lock ho gayi
+     ↓
+Training Preparation               ← validation + manifest banana
+     ↓
+Training Manifest (JSONL)          ← training ki final shopping list
+     ↓
+Qwen3-ASR Fine-tuning              ← GPU par model seekhta hai
+     ↓
+Checkpoints                        ← har 300 steps par model ki photo
+     ↓
+Evaluation                         ← frozen benchmark par report card
+     ↓
+Export                             ← HF checkpoint → serving format
+     ↓
+GGUF                               ← llama.cpp ka model format
+     ↓
+Qwen Runtime                       ← pinned llama-server serve karta hai
+     ↓
+IntelliAI API                      ← POST /v1/audio/transcriptions
+     ↓
+Web / Android / iOS                ← transcript user tak wapas
+</code></pre>
+<p>Kaun sa hissa kya hai:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User speech → Speech Sample → Correction</td>
+<td><strong>DATA COLLECTION</strong></td>
+</tr>
+<tr>
+<td>Consent, license, speaker rules, freeze</td>
+<td><strong>DATA GOVERNANCE</strong></td>
+</tr>
+<tr>
+<td>Dataset Version → Manifest</td>
+<td><strong>DATA PREPARATION</strong></td>
+</tr>
+<tr>
+<td>Fine-tuning → Checkpoints</td>
+<td><strong>TRAINING</strong></td>
+</tr>
+<tr>
+<td>Frozen benchmark, CER/WER, probes</td>
+<td><strong>EVALUATION</strong></td>
+</tr>
+<tr>
+<td>Export → GGUF → SHA pin</td>
+<td><strong>MODEL PACKAGING</strong></td>
+</tr>
+<tr>
+<td>Runtime → API → clients</td>
+<td><strong>SERVING</strong></td>
+</tr>
+<tr>
+<td>Proposal → approval → catalog</td>
+<td><strong>PRODUCTION PROMOTION</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="section-1-hum-problem-kya-solve-kar-rahe-hain">SECTION 1 — Hum problem kya solve kar rahe hain?</h2>
+<p><strong>Kahani shuru se:</strong></p>
+<ol>
+<li>
+<p><strong>Whisper pehle kyun tha?</strong> OpenAI ka Whisper ek ready-made, MIT-license,
+   ~100 bhashaon wala STT model hai. Day-1 par sabse safe choice — install
+   karo, chal jaata hai. Humne <code>whisper-small</code> (Systran faster-whisper
+   conversion) se shuruaat ki. English par ye bahut accha tha (WER 0.0
+   humari eval par), lekin <strong>Hindi par kamzor: CER 0.3629</strong> (matlab har 100
+   characters mein ~36 galat).</p>
+</li>
+<li>
+<p><strong>Qwen kyun test kiya?</strong> Hindi improve karni thi. Pehle humne Whisper ko
+   hi fine-tune karne ki koshish ki (E1/E1b — Section 10-11, dono fail).
+   Phir Alibaba ka <strong>Qwen3-ASR 0.6B</strong> test kiya — ek chhota audio-LLM.
+   Bina kisi training ke, out-of-the-box: <strong>Hindi CER 0.1457</strong> — Whisper se
+   <strong>60% behtar</strong>. Isliye Qwen Hindi-specialist ban gaya (research mein).</p>
+</li>
+<li>
+<p><strong>Fine-tuning kyun ki?</strong> 0.1457 accha tha par aur behtar ho sakta tha.
+   Fine-tuning = pehle se trained model ko APNI Hindi data par thoda aur
+   sikhana.</p>
+</li>
+</ol>
+<p><strong>Simple analogy:</strong> Socho ek doctor (pretrained model) jo MBBS kar chuka
+hai — general medicine jaanta hai. Fine-tuning matlab usko 6 mahine ki
+<strong>cardiology specialization</strong> karwana — wo doctor hi rehta hai, bas dil
+ke cases mein expert ho jaata hai. Hum Qwen ko "Hindi specialization"
+karwa rahe the.</p>
+<p><strong>Paanch words jo confuse karte hain:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pretrained model</strong></td>
+<td>Factory se aaya hua model (Qwen/Qwen3-ASR-0.6B, jaise Alibaba ne banaya)</td>
+</tr>
+<tr>
+<td><strong>Fine-tuned model</strong></td>
+<td>Humari data par aage sikhaya hua version (qwen-e3-hi-sft)</td>
+</tr>
+<tr>
+<td><strong>Checkpoint</strong></td>
+<td>Training ke beech model ki "photo" — us moment ke weights (checkpoint-1500)</td>
+</tr>
+<tr>
+<td><strong>Exported model</strong></td>
+<td>Serving format mein convert kiya hua (GGUF file) — training nahi kar sakta, sirf inference</td>
+</tr>
+<tr>
+<td><strong>Production model</strong></td>
+<td>Wo exported model jise catalog ne officially route kiya hai (<code>qwen3-asr-0.6b-hi-ft-e3@v1</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="section-2-data-kahan-se-aata-hai">SECTION 2 — Data kahan se aata hai?</h2>
+<h3 id="2a-user-data-future-ka-raasta">2a. User data (future ka raasta)</h3>
+<pre><code>User bolta hai → transcription → Speech Sample (consent ho to)
+→ correction → dataset membership → dataset version
+</code></pre>
+<p>Ye poora backend flow Section 3-4 mein detail se hai. <strong>Important sach:</strong>
+ab tak ke saare fine-tunes (E1/E2/E3) <strong>PUBLIC data</strong> par hue hain —
+customer audio kabhi training mein nahi gaya. User-data pipeline bana hua
+hai, ready hai, par abhi tak use training mein use nahi kiya.</p>
+<h3 id="2b-public-training-data-jo-actually-use-hua">2b. Public training data (jo actually use hua)</h3>
+<p>Har source ek <strong>registry</strong> mein pehle register hota hai — license, access,
+verification date ke saath:</p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/sources.py</code>
+<strong>Class:</strong> <code>SourceRecord</code> · <strong>Data:</strong> <code>SOURCES</code> tuple · <strong>Function:</strong> <code>usable_now()</code></p>
+<p><strong>Simple meaning:</strong> "Koi bhi byte use hone se PEHLE uska license record
+banta hai. Jo source use nahi ho sakta wo bhi register hota hai — BLOCKED
+ek status hai, chhupana nahi."</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Kya hai</th>
+<th>License</th>
+<th>Kyun use kiya</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IndicVoices</strong> (ai4bharat)</td>
+<td>Spontaneous Hindi speech, speaker-ids ke saath</td>
+<td>CC-BY-4.0</td>
+<td>Sabse bada Hindi backbone — real bolchal</td>
+</tr>
+<tr>
+<td><strong>Kathbath</strong> (ai4bharat)</td>
+<td>Clean read Hindi speech</td>
+<td>CC0</td>
+<td>Saaf-suthri padhi hui speech</td>
+</tr>
+<tr>
+<td><strong>FLEURS</strong> (google)</td>
+<td>Multi-language read speech</td>
+<td>CC-BY-4.0</td>
+<td>E3 ka <strong>English retention slice</strong> (en_us config)</td>
+</tr>
+<tr>
+<td><strong>Short-Hindi slice</strong></td>
+<td>IndicVoices ke hi 0.5–2 sec real clips</td>
+<td>CC-BY-4.0</td>
+<td>E2 mein 1-sec speech fail hui thi — ye slice usse theek karta hai</td>
+</tr>
+<tr>
+<td><strong>No-speech negatives</strong></td>
+<td>Generated silence/noise + real room-tone</td>
+<td>Synthetic + CC-BY-4.0 derivative</td>
+<td>Model ko sikhana ki "silence = kuch mat likho"</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Ingestion (data download + disk par rakhna):</strong></p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/ingest_fleurs.py</code>
+<strong>Function:</strong> <code>ingest_fleurs(config, split, data_root, ...)</code>
+<strong>Simple meaning:</strong> "FLEURS ke parquet shards download karo (retry +
+resume ke saath — <code>_download_shard</code>), har row ka audio original bytes
+mein disk par likho, aur ek candidates JSON banao."</p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/ingest_hf.py</code>
+<strong>Function:</strong> <code>ingest_hf(spec, ...)</code> — gated HuggingFace sources
+(IndicVoices/Kathbath) ke liye, token ke saath.</p>
+<p><strong>Revision pinning:</strong> har ingest apne saath <code>source_revision</code> record
+karta hai (HF dataset ka exact commit) — taaki 2 saal baad bhi pata ho
+data KIS version se aaya tha.</p>
+<p><strong>Negatives:</strong></p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/negatives.py</code>
+<strong>Function:</strong> <code>generate_negatives(...)</code>
+<strong>Simple meaning:</strong> "Seeded (deterministic) silence, halki noise, aur
+already-ingested clips ki sabse shaant 4-second windows banao — ye
+'no-speech' training examples hain."</p>
+<hr />
+<h2 id="section-3-speech-sample-kaise-banta-hai-backend-flow">SECTION 3 — Speech Sample kaise banta hai (backend flow)</h2>
+<pre><code>POST /v1/audio/transcriptions → STT runtime → transcript
+→ (optional) collection → Speech Sample → correction
+</code></pre>
+<p><strong>Step 1 — Request aati hai:</strong></p>
+<p><strong>File:</strong> <code>apps/api/src/intelliai_api/api/v1/audio/transcriptions.py</code>
+<strong>Function:</strong> <code>create_transcription(...)</code> (route: <code>POST /transcriptions</code>)
+<strong>Simple meaning:</strong> "Yahi WO endpoint hai jo Web, Android, iOS — sab use
+karte hain. Auth check hota hai, phir <code>TranscriptionService</code> ko kaam
+milta hai."</p>
+<p>Isi file mein:
+- <code>_parse_client(header)</code> — <code>X-IntelliAI-Client</code> header padhta hai
+  (<code>web</code>, <code>keyboard/1.0</code>, <code>ios-keyboard/1.0</code>). Unknown value kabhi
+  request fail nahi karti — <code>api</code> par fallback.
+- <code>_wants_contribution(header)</code> — sirf exact value <code>off</code> par contribution
+  band hoti hai.</p>
+<p><strong>Step 2 — Transcription hoti hai:</strong></p>
+<p><strong>File:</strong> <code>apps/api/src/intelliai_api/services/transcription.py</code>
+<strong>Class:</strong> <code>TranscriptionService</code> · <strong>Function:</strong> <code>transcribe(...)</code>
+<strong>Simple meaning:</strong> "Registry se model resolve karo, runtime ko audio
+bhejo, transcript wapas lo, usage event banao. Fail hui to
+<code>_record_failure</code> — failed request kabhi bill nahi hoti."</p>
+<p><strong>Step 3 — Collection (optional):</strong></p>
+<p><strong>File:</strong> <code>apps/api/src/intelliai_api/services/collection.py</code>
+<strong>Class:</strong> <code>DataCollectionService</code> · <strong>Functions:</strong> <code>collect(...)</code> → <code>_collect(...)</code>
+<strong>Simple meaning:</strong> "Agar org ne consent diya hai AUR user ne contribution
+off nahi kiya, to audio + transcript ek <strong>Speech Sample</strong> ban kar store
+hota hai. Collection kabhi transcription fail nahi kar sakti — error aaye
+to sample skip, user ko transcript phir bhi milta hai." (Ye humne live
+dekha bhi: ek enum mismatch par 200 mila, sample skip hua, error log hua.)</p>
+<p><strong>Sample ka structure:</strong></p>
+<p><strong>File:</strong> <code>apps/api/src/intelliai_api/db/models/speech_sample.py</code>
+Do sabse important columns:
+- <code>original_transcript</code> — model ne jo bola, <strong>hamesha immutable</strong>
+- <code>current_transcript</code> — correction ke baad evolve hota hai</p>
+<p><strong>Step 4 — Correction:</strong></p>
+<p><strong>Route:</strong> <code>POST /transcriptions/{sample_id}/correction</code>
+(function <code>correct_transcription</code> usi transcriptions.py mein)
+<strong>Service:</strong> <code>DataCollectionService.correct(...)</code>
+<strong>Simple meaning:</strong> "User ka sudhara hua text <code>current_transcript</code> mein
+jaata hai; original kabhi nahi badalta. Isi se training data ki quality
+sudharti hai bina history khoye."</p>
+<p><strong>Contribution OFF:</strong> header <code>X-IntelliAI-Contribution: off</code> → transcript
+milta hai, sample NAHI banta. <strong>Consent:</strong> org-level switch hai — server
+hi final ceiling hai, client kuch bhi bheje.</p>
+<hr />
+<h2 id="section-4-dataset-aur-dataset-version">SECTION 4 — Dataset aur Dataset Version</h2>
+<pre><code>Dataset  →  Dataset Version  →  DatasetVersionSample rows  →  frozen membership
+</code></pre>
+<p><strong>File:</strong> <code>apps/api/src/intelliai_api/db/models/dataset.py</code>
+<strong>Classes:</strong> <code>Dataset</code>, <code>DatasetVersion</code>, <code>DatasetVersionSample</code>, <code>DatasetPreparation</code></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Cheez</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dataset</strong></td>
+<td>Ek naam + eligibility rules ("mera Hindi corrections dataset")</td>
+</tr>
+<tr>
+<td><strong>Dataset Version</strong></td>
+<td>Ek FREEZE — "aaj jo samples eligible the, unki locked list"</td>
+</tr>
+<tr>
+<td><strong>DatasetVersionSample</strong></td>
+<td>Version ↔ sample ka join row, jisme <strong>frozen transcript</strong> copy hota hai</td>
+</tr>
+<tr>
+<td><strong>Sample</strong></td>
+<td>Ek recording + transcripts</td>
+</tr>
+<tr>
+<td><strong>Transcript vs frozen transcript</strong></td>
+<td>Sample ka <code>current_transcript</code> aage bhi badal sakta hai; version mein us moment ki COPY save ho jaati hai</td>
+</tr>
+<tr>
+<td><strong>Membership</strong></td>
+<td>"Kaun se samples is version mein hain"</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Service:</strong></p>
+<p><strong>File:</strong> <code>apps/api/src/intelliai_api/services/datasets.py</code>
+<strong>Class:</strong> <code>DatasetService</code>
+- <code>create_dataset(...)</code> — naya dataset
+- <code>preview(...)</code> — abhi kaun eligible hai (freeze se pehle jhalak)
+- <code>create_version(...)</code> — <strong>FREEZE</strong>: "eligible samples ki list + unke
+  transcripts ki copy ek hi database statement mein lock"
+- <code>prepare_version(...)</code> — frozen members se training manifest banana</p>
+<p><strong>Version freezing KYUN?</strong> Simple meaning: "Training ke time exactly yehi
+samples use honge. Baad mein database mein koi correction aaye ya sample
+delete ho, training manifest automatically change NAHI hoga. Isse har
+experiment reproducible rehta hai — 6 mahine baad bhi bata sakte ho ki
+model ne exactly kya dekha tha."</p>
+<p><em>(Note: ye user-data wala freeze system hai. E1/E2/E3 public data par
+chale, jahan wahi freeze discipline <code>ml/datasets</code> ke manifests se aayi —
+Section 5.)</em></p>
+<hr />
+<h2 id="section-5-training-data-preparation-validation-ka-pehra">SECTION 5 — Training data preparation (validation ka pehra)</h2>
+<p>Public-data side ka gate:</p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/validate.py</code>
+<strong>Function:</strong> <code>validate_samples(samples, expected_language, data_root, ...)</code>
+<strong>Simple meaning:</strong> "Har candidate ko ek-ek karke jancho. Jo fail ho, use
+CHUPKE mat hatao — REASON ke saath reject list mein likho."</p>
+<p>Har rejection ka naam hai (<code>RejectionReason</code> enum):</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Reject reason</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Audio file exist karti hai?</td>
+<td><code>AUDIO_MISSING</code></td>
+<td>Bina audio ke example bekaar</td>
+</tr>
+<tr>
+<td>Audio padhne layak hai?</td>
+<td><code>AUDIO_UNREADABLE</code></td>
+<td>Corrupt file</td>
+</tr>
+<tr>
+<td>2 sec se chhoti?</td>
+<td><code>DURATION_TOO_SHORT</code></td>
+<td>Corpus law: min 2.0s (<code>MIN_DURATION_SECONDS</code>)</td>
+</tr>
+<tr>
+<td>30 sec se lambi?</td>
+<td><code>DURATION_TOO_LONG</code></td>
+<td>Training window limit</td>
+</tr>
+<tr>
+<td>Transcript khali?</td>
+<td><code>EMPTY_TRANSCRIPT</code></td>
+<td>Bina label ke supervision nahi</td>
+</tr>
+<tr>
+<td>Language match?</td>
+<td><code>WRONG_LANGUAGE</code></td>
+<td>hi corpus mein ta clip nahi</td>
+</tr>
+<tr>
+<td>Duplicate audio?</td>
+<td><code>DUPLICATE_AUDIO</code></td>
+<td>Same bytes do baar nahi</td>
+</tr>
+<tr>
+<td>Eval ka clip?</td>
+<td><code>EVAL_CONTAMINATION</code></td>
+<td>Content-hash match → out (Section 7)</td>
+</tr>
+<tr>
+<td>Eval ka speaker?</td>
+<td><code>SPEAKER_IN_EVAL</code></td>
+<td>Roster match → out (Section 7)</td>
+</tr>
+<tr>
+<td><code>&lt;unintelligible&gt;</code> jaisa markup?</td>
+<td><code>MARKUP_IN_TRANSCRIPT</code></td>
+<td>(E2 se) markup wali rows DROP hoti hain — strip karna galat supervision deta</td>
+</tr>
+</tbody>
+</table></div>
+<p>Do special switches (dono OFF by default, taaki purane manifests
+byte-reproducible rahen):
+- <code>allow_no_speech=True</code> → <code>zxx</code> (no-speech) negatives allowed, EMPTY
+  transcript ke saath
+- <code>short_speech=True</code> → (E3 se) duration window ULOT jaata hai:
+  sirf <strong>[0.5s, 2.0s)</strong> admit hota hai (<code>SHORT_MIN_DURATION_SECONDS</code>)</p>
+<p><strong>Selection (kaunse accepted clips manifest mein jayenge):</strong></p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/curate.py</code>
+- <code>curate_by_budget(...)</code> — "sha256 ke ascending order mein clips lo jab
+  tak hours ka budget na bhar jaye" (deterministic, human-bias-free)
+- <code>curate_count(...)</code> — count-based (E3 ke slices: exactly 900/800 rows)</p>
+<p><strong>Likhna:</strong></p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/manifests.py</code>
+<strong>Function:</strong> <code>write_train_jsonl(samples, target)</code> → <code>ManifestPin</code> (path + <strong>sha256</strong> + counts)
+<strong>Function:</strong> <code>write_provenance(...)</code> — sidecar JSON: sources, licenses,
+rejections ki poori list, curation recipe.</p>
+<p><strong>Merge (E3 ka naya kadam):</strong></p>
+<p><strong>File:</strong> <code>ml/datasets/src/intelliai_datasets/merge.py</code>
+<strong>Functions:</strong> <code>read_part</code> (pin re-verify), <code>merge_rows</code> (id/path collision
+refuse), <code>enforce_language_shares</code> ("English 8% se zyada hui to merge
+REFUSE — trim nahi"), <code>write_merged_jsonl</code>.</p>
+<p><strong>CLI (poora flow commands mein):</strong> <code>ml/datasets/src/intelliai_datasets/cli.py</code>
+— verbs: <code>ingest-fleurs</code>, <code>ingest-hf</code>, <code>freeze-eval</code>, <code>freeze-train</code>,
+<code>make-negatives</code>, <code>merge-train</code>.</p>
+<p><strong>Ek validation fail ho to kya hota hai?</strong> Kuch nahi tootta — wo sample
+reject list mein reason ke saath chala jaata hai, baaki aage badhte hain.
+Provenance sidecar mein poori rejection ledger committed hai (E3 ke short
+slice mein 12,567 rejections recorded hain — har ek ka reason).</p>
+<hr />
+<h2 id="section-6-jsonl-training-manifest-kya-hai">SECTION 6 — JSONL Training Manifest kya hai?</h2>
+<p><strong>JSONL = JSON Lines.</strong> Simple meaning: "Ek text file jisme HAR LINE ek
+complete JSON object hai. Ek line = ek training example."</p>
+<p>Humara <strong>platform manifest</strong> (5 fields, <code>write_train_jsonl</code> se):</p>
+<pre><code class="language-json">{&quot;id&quot;:&quot;indicvoices-hindi-train-0-000123&quot;,&quot;audio&quot;:&quot;indicvoices/hindi/train/indicvoices-hindi-train-0-000123.flac&quot;,&quot;text&quot;:&quot;नमस्ते दुनिया&quot;,&quot;language&quot;:&quot;hi&quot;,&quot;duration_seconds&quot;:5.875}
+</code></pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Sample ki permanent pehchaan</td>
+</tr>
+<tr>
+<td><code>audio</code></td>
+<td>Data-root se RELATIVE path (machine-independent)</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>Transcript (NFC-normalized, near-verbatim)</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td><code>hi</code> / <code>en</code> / <code>zxx</code> (no-speech)</td>
+</tr>
+<tr>
+<td><code>duration_seconds</code></td>
+<td>Length</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Ye Qwen ke format mein kaise badalta hai?</strong></p>
+<p><strong>File:</strong> <code>ml/training/src/intelliai_training/qwen_manifest.py</code>
+<strong>Function:</strong> <code>convert_manifest(manifest_path, expected_sha256, ...)</code>
+<strong>Simple meaning:</strong> "Pehle manifest ka sha256 VERIFY karo (galat pin =
+training refuse — <code>load_manifest</code> in <code>ml/training/src/intelliai_training/manifest.py</code>).
+Phir har row ko Qwen ke official 2-field JSONL mein likho."</p>
+<p><strong>Function:</strong> <code>qwen_text(sample, language_tag)</code> — Qwen ki supervision string:</p>
+<pre><code class="language-json">{&quot;audio&quot;: &quot;indicvoices/hindi/train/....flac&quot;, &quot;text&quot;: &quot;language Hindi&lt;asr_text&gt;नमस्ते दुनिया&quot;}
+</code></pre>
+<p>Mapping <code>_LANGUAGE_HEADERS</code> mein: <code>hi→Hindi</code>, <code>en→English</code>, <code>zh→Chinese</code>,
+<code>zxx→None</code>. (In headers ka matlab Section 8 mein.)</p>
+<p><strong>Validation split:</strong> <code>split_validation(samples, fraction)</code> — pure
+id-hash function: <code>sha256(id) % 10000 &lt; fraction*10000</code> → validation.
+Simple meaning: "Kaunsa sample validation mein jayega ye uske NAAM se tay
+hota hai — koi randomness nahi, har machine par same split."</p>
+<hr />
+<h2 id="section-7-speaker-disjointness-kyun-zaroori-hai">SECTION 7 — Speaker disjointness kyun zaroori hai</h2>
+<p><strong>Problem simple example se:</strong> Socho aapne Rahul ki 100 recordings par
+model train kiya, aur exam bhi Rahul ki hi 10 recordings par liya. Model
+ne Hindi nahi, <strong>Rahul ki aawaaz</strong> seekh li ho sakti hai — exam ka score
+jhootha accha aayega. Naye speaker par phir bhi fail karega.</p>
+<p>Isliye law: <strong>TRAINING speakers ≠ EVALUATION speakers.</strong></p>
+<p><strong>Implementation (3 taale):</strong></p>
+<ol>
+<li><strong>Frozen eval speaker roster</strong> — humara benchmark
+   <code>stt-hi-public-eval@v1</code> 32 speakers ka hai; roster uske provenance
+   sidecar (<code>ml/datasets/manifests/stt-hi-public-eval-v1.provenance.json</code>)
+   mein frozen hai.</li>
+<li><strong>Speaker exclusion at freeze</strong> — <code>freeze-train</code> CLI eval-provenance
+   se roster padhta hai; <code>validate_samples(eval_speakers=...)</code> roster
+   speaker ki HAR clip reject karta hai (<code>SPEAKER_IN_EVAL</code>). E2 freeze
+   mein 101, E3 short-slice mein 151 rejections recorded.</li>
+<li><strong>Content-hash check</strong> — <code>validate_samples(eval_sha256=...)</code>: agar
+   kisi training candidate ke audio BYTES eval clip se match karein →
+   <code>EVAL_CONTAMINATION</code> reject. (E2 mein 149 pakde gaye.)</li>
+</ol>
+<p><strong>Hamesha ke liye pehra:</strong> <code>ml/training/tests/test_qwen_manifest.py</code> ka
+<code>test_training_and_eval_never_share_a_clip</code> — HAR frozen train manifest
+ko eval ke ids/paths ke against re-check karta hai, har test run par.</p>
+<hr />
+<h2 id="section-8-qwen-training-pipeline-sabse-important-section">SECTION 8 — Qwen training pipeline (sabse important section)</h2>
+<p>Poora flow, har step ke saath actual code:</p>
+<h3 id="step-0-base-model-snapshot">Step 0 — Base model snapshot</h3>
+<p><strong>File:</strong> <code>ml/training/src/intelliai_training/qwen_trainer.py</code>
+<strong>Function:</strong> <code>snapshot_base_model(config, cache_dir)</code>
+<strong>Simple meaning:</strong> "Pinned revision (<code>5eb14417…</code>) ka Qwen/Qwen3-ASR-0.6B
+local folder mein lao aur weights ka sha256 + size verify karo. Galat
+bytes = refuse."</p>
+<h3 id="step-1-config">Step 1 — Config</h3>
+<p><strong>File:</strong> <code>ml/training/src/intelliai_training/config.py</code>
+<strong>Class:</strong> <code>QwenTrainingConfig</code>
+<strong>Simple meaning:</strong> "Training ki har setting EK jagah, pinned: base
+revision, manifest path + sha, lr=1e-5, epochs=2, seed=20260817,
+Adafactor, bf16, frozen tower, effective batch 16." Experiment scripts
+(e.g. <code>research/experiments/23-qwen3-hi-ft-e3/run_full_e3.py</code>) sirf
+manifest/output_dir override karte hain.</p>
+<h3 id="step-2-data-loading">Step 2 — Data loading</h3>
+<p><code>load_manifest</code> (pin-verify) → <code>convert_manifest</code> (Qwen JSONL) →
+<code>split_validation</code>. Audio load: <strong>File:</strong> <code>ml/training/src/intelliai_training/audio_io.py</code>,
+<strong>Function:</strong> <code>decode_to_float32(path)</code> — koi bhi format → 16kHz float
+array.</p>
+<h3 id="step-3-model-freeze">Step 3 — Model + freeze</h3>
+<p><strong>Function:</strong> <code>load_wrapper(model_dir, device_map)</code> — official <code>qwen-asr</code>
+package ka <code>Qwen3ASRModel</code> (processor/tokenizer isi ke andar).
+<strong>Function:</strong> <code>freeze_audio_tower(model)</code>
+<strong>Simple meaning:</strong> "Model ke 782M parameters mein se audio-samajhne wala
+hissa (audio tower, 186M) LOCK kar do — sirf text-generate karne wala
+hissa (thinker, 596M) seekhega. Kaan already acche hain; humein bolne ka
+tareeka sikhana hai." <code>trainable_module(model)</code> thinker return karta hai.</p>
+<h3 id="step-4-batch-banana">Step 4 — Batch banana</h3>
+<p><strong>Class:</strong> <code>QwenCollator</code>
+<strong>Simple meaning:</strong> "Ek batch ke examples lo; har ek ke liye: audio
+process karo, prompt-side tokens ko <strong>-100 label</strong> do (unpar loss nahi
+lagta), sirf target text + EOS par loss lagta hai."</p>
+<p><strong>Ab wo teen magic strings:</strong></p>
+<ul>
+<li><code>language Hindi&lt;asr_text&gt;नमस्ते...</code> — "Ye Hindi hai, aur iska transcript
+  ye raha." Model EXACTLY isi format mein output dena seekhta hai.</li>
+<li><code>language English&lt;asr_text&gt;hello...</code> — English rows (E3 ka retention
+  slice) — model ko yaad rehta hai ki English bhi ek jawab hai.</li>
+<li><code>language None&lt;asr_text&gt;</code> — <strong>khali transcript ke saath</strong>. Simple
+  meaning: "Silence par sahi jawab KUCH NAHI likhna hai." Ye exact string
+  isliye chuni kyunki base model khud silence par yahi emit karta hai
+  (15E probe evidence) — aur serving adapter isi ko parse karke empty
+  result banata hai. Training aur serving ek hi bhasha bolte hain.</li>
+</ul>
+<h3 id="step-5-training-loop">Step 5 — Training loop</h3>
+<p><strong>Function:</strong> <code>train(config, max_steps=None)</code> → <code>QwenRunRecord</code>
+Andar HuggingFace <code>Trainer</code> chalta hai. Har step:</p>
+<ol>
+<li><strong>Forward pass</strong> — batch model se guzarta hai, model har position par
+   agla token predict karta hai</li>
+<li><strong>Loss</strong> — prediction vs asli transcript ka difference (cross-entropy).
+   Simple meaning: "Model prediction karta hai, actual se compare hota
+   hai, jo difference aata hai wahi loss hai."</li>
+<li><strong>Backward pass</strong> — loss se har trainable weight ka gradient nikalta
+   hai ("kis weight ko kitna ghumau ki galti kam ho")</li>
+<li><strong>Optimizer (Adafactor)</strong> — gradients ke hisaab se weights update</li>
+<li>Har 16 micro-batches par ek optimizer step (gradient accumulation)</li>
+<li>Har 300 steps: <strong>validation loss</strong> + <strong>checkpoint save</strong> (
+   <code>_InferableSnapshotCallback</code> har checkpoint ke andar <code>inferable/</code>
+   folder mein poora composite model bhi save karta hai, taaki seedha
+   <code>load_wrapper</code> se test ho sake)</li>
+</ol>
+<p><strong>Pehle smoke:</strong> <code>smoke_test(config, samples=8, steps=4, ...)</code> — poori
+pipeline ka 4-step rehearsal: load→collate→loss→backward→step→save→reload→
+transcribe. Bade run se pehle har experiment mein ye chala.</p>
+<hr />
+<h2 id="section-9-rtx-5070-8-gb-kaafi-kyun-tha">SECTION 9 — RTX 5070 (8 GB) kaafi kyun tha?</h2>
+<p>GPU memory kaun khaata hai: (1) model weights, (2) gradients,
+(3) optimizer state, (4) activations (forward pass ki yaadein), (5) logits.</p>
+<p>Humne har ek ko chhota kiya:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Trick</th>
+<th>Simple meaning</th>
+<th>Bachaya</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Frozen tower</strong> (596M trainable / 782M total)</td>
+<td>186M params ke gradients/optimizer-state ki zaroorat hi nahi</td>
+<td>~25% training memory</td>
+</tr>
+<tr>
+<td><strong>bf16</strong></td>
+<td>Har number 2 bytes ka (4 ki jagah)</td>
+<td>Weights ~1.5 GB only</td>
+</tr>
+<tr>
+<td><strong>Adafactor</strong></td>
+<td>AdamW ke 2-slots-per-param ki jagah factored state</td>
+<td>GBs of optimizer state</td>
+</tr>
+<tr>
+<td><strong>Gradient checkpointing</strong> (non-reentrant)</td>
+<td>Activations save mat karo; backward mein dobara compute karo</td>
+<td>Sabse bada activation kharcha ↓ (time thoda ↑)</td>
+</tr>
+<tr>
+<td><strong>Micro-batch 1 × accumulation 16</strong></td>
+<td>Ek waqt mein sirf 1 example GPU par; 16 ke gradients jama karke ek update</td>
+<td>Peak memory ↓, math same (effective batch 16)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Asli numbers:</strong> E2 peak <strong>5,105 MiB</strong>, E3 peak <strong>5,096 MiB</strong> — 8,150 MiB
+ke andar aaram se. (E2 mein ek baar 2×8 micro-batch par do 30-sec clips
+saath aa gaye the → OOM at step 378 → isi se 1×16 recipe bana.)</p>
+<hr />
+<h2 id="section-10-e1-pehla-fine-tune-whisper-lora-failed">SECTION 10 — E1: pehla fine-tune (Whisper LoRA) — FAILED</h2>
+<p><em>(Naming note: history mein do "E1" hain — ye WHISPER wala E1 hai;
+Qwen-line ka apna E1 Section 12 mein aata hai.)</em></p>
+<p><strong>Kahani:</strong> Humne socha — Whisper already production mein hai, usi ko
+Hindi par LoRA se fine-tune kar dete hain. 10 hours public Hindi
+(<code>hi-public-train@v1</code>, sha <code>a4748dee…</code>), local RTX 5070, 176 minute
+training, peak 3.4 GB. Training graphs bilkul healthy lag rahe the.</p>
+<p><strong>Result (frozen benchmark par):</strong> CER <strong>0.9049</strong> vs baseline 0.3629.
+Model PEHLE SE 2.5× KHARAB ho gaya. Aur <strong>hallucination probes</strong> fire
+hue — model ne aisi cheezein likhi jo audio mein thi hi nahi.</p>
+<p><strong>Terms:</strong>
+- <strong>CER</strong> (Character Error Rate) — 100 characters mein kitne galat
+- <strong>WER</strong> (Word Error Rate) — 100 words mein kitne galat
+- <strong>Hallucination probe</strong> — Section 16 mein detail</p>
+<p><strong>Seekh:</strong> Training loss ka accha dikhna aur model ka accha hona DO ALAG
+cheezein hain. Sirf frozen benchmark sach bolta hai. (Ye failure system
+ki jeet thi — kharab model promotion se pehle pakda gaya.)</p>
+<hr />
+<h2 id="section-11-e1b-problem-sirf-learning-rate-ka-nahi-tha">SECTION 11 — E1b: "problem sirf learning rate ka nahi tha"</h2>
+<p><strong>Hypothesis:</strong> Shayad over-training hua? Ya learning rate zyada thi? Ya
+galat checkpoint chuna?</p>
+<p><strong>Kya kiya:</strong>
+1. E1 ke purane checkpoints (500/1000/1500) ka sweep — CER 0.7295 /
+   0.8132 / 0.7319, probes 51/59/56. <strong>Damage step-500 tak ho chuka tha.</strong>
+2. Naya conservative retrain (<code>whisper-small-hi-lora-e1b</code>): kam steps
+   (600), validation-selected checkpoint, textbook-healthy training
+   (validation E1 se BEHTAR: 0.4064).</p>
+<p><strong>Result:</strong> Phir bhi fail — CER 0.7181, <strong>74 hallucinated probe words
+(program ka worst)</strong>. Interesting: substitutions baseline se BEHTAR thin
+(0.4236 vs 0.4764) — matlab model sun sahi raha tha, par <strong>bolna band
+karna nahi jaanta tha</strong> (insertions/repeat/stopping failure).</p>
+<p><strong>Lesson (exact):</strong> "Problem sirf learning rate ka nahi tha." Over-training,
+LR, checkpoint choice, validation-loss-as-proxy — sab refuted. Failure
+generation/stopping behavior mein thi. Isi ne Qwen-pivot ko justify kiya:
+base <strong>Qwen3-ASR 0.6B ne bina kisi training ke CER 0.1457</strong> diya (Whisper
+se −60%) — 15E mein adopt hua, aur M16-M20 mein uska poora
+serving/switching/production raasta bana.</p>
+<hr />
+<h2 id="section-12-qwen-e1-e2-data-hi-bottleneck-tha">SECTION 12 — Qwen E1 → E2: "data hi bottleneck tha"</h2>
+<p><strong>Qwen E1 (M21):</strong> Pehla QWEN fine-tune — wahi 10h corpus, official Qwen
+SFT recipe, frozen tower, RTX 5070. Result: CER 0.1457 → <strong>0.12477</strong>
+(−14.4%). English intact (WER 0.0). LEKIN ek regression: <strong>silence par
+model text bolne laga</strong> ("इस्ट्रिक्ट इस्ट्रिक्ट...") — kyunki corpus mein
+ek bhi no-speech example nahi tha.</p>
+<p><strong>E2 (M22) — sirf DATA badla, recipe wahi:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>Qwen E1</th>
+<th>E2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data</td>
+<td>10.0h, 3.3% rows mein <code>&lt;unintelligible&gt;</code> markup</td>
+<td><strong>27.27h</strong>, markup rows REJECTED (672), cleaned</td>
+</tr>
+<tr>
+<td>Negatives</td>
+<td>0</td>
+<td><strong>68 (0.5%)</strong> — <code>language None&lt;asr_text&gt;</code></td>
+</tr>
+<tr>
+<td>Recipe</td>
+<td>lr 1e-5, 2 epochs, Adafactor...</td>
+<td><strong>BILKUL SAME</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Ye acha science tha: <strong>ek baar mein ek variable.</strong> Hyperparameters
+andha-dhundh ghumane ki jagah humne poocha — "kya data hi problem hai?"</p>
+<p><strong>Result:</strong> CER <strong>0.11044</strong> (E1 se −11.5%, base se −24.2%). Silence
+regression <strong>FIX</strong> — step-30 tak hi negatives ka asar aa gaya tha, aur
+har checkpoint par silence → empty.</p>
+<p><strong>Par do NAYI data-composition regressions:</strong>
+1. <strong>English GAYAB</strong> — 27h pure Hindi ne English mita di. Early
+   checkpoints (300/600) English par chup; late (900+) English ko HINDI
+   MEIN TRANSLATE karne lage. (Checkpoint selection logic ne isko
+   record kiya: ck1200 select hua kyunki translation, silent-loss se kam
+   buri failure hai — M17 law: silent loss unforgivable.)
+2. <strong>1-second speech suppress</strong> — corpus ka 2s floor + "unsure to chup"
+   wale negatives = chhoti utterances par empty output.</p>
+<p><strong>Lesson:</strong> Data volume ne accuracy di, par data COMPOSITION ne do naye
+ghaav diye. Agla fix bhi data hi hoga — optimizer nahi.</p>
+<hr />
+<h2 id="section-13-e3-retention-mix-product-jeeta">SECTION 13 — E3: retention mix — PRODUCT jeeta</h2>
+<p><strong>Recipe (data ke alawa sab kuch frozen):</strong></p>
+<pre><code>E2 ka v2 corpus (13,492 rows, verbatim)     ← Hindi gain rakhna hai
+        +
+900 FLEURS English rows (5.92%)             ← English wapas lao
+        +
+800 REAL 0.5–2s Hindi clips (5.27%)         ← 1-sec speech wapas lao
+        +
+68 no-speech negatives (carried)            ← silence fix mat kho dena
+        ↓
+qwen-hi-public-train@v3 (30.11h, sha 6cfc585d…)
+        ↓
+SAME config → 1,840 steps, 3.3h, peak 5,096 MiB
+        ↓
+checkpoint sweep (600…1840) — HAR checkpoint par retention probes
+        ↓
+ck1500 selected
+        ↓
+GGUF export (sha e54586c4…)
+        ↓
+real serving adapter par official eval
+</code></pre>
+<p><strong>Numbers:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>Hindi CER</th>
+<th>English</th>
+<th>1s Hindi</th>
+<th>Silence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E2 best</td>
+<td><strong>0.11044</strong></td>
+<td>❌ WER 1.0 (gone)</td>
+<td>❌ empty</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>E3 ck1500</strong></td>
+<td>0.11612</td>
+<td>✅ <strong>WER 0.0</strong></td>
+<td>✅ transcribes (0.5s tak!)</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Sabse important product-thinking:</strong> E3 ka CER E2 se ~5% KHARAB hai.
+Phir bhi E3 chuna gaya. Kyun? <strong>Simple meaning:</strong> "E2 ek aisa specialist
+hai jo Hindi mein thoda behtar hai par English sunte hi ya to chup ho
+jaata hai ya usse Hindi mein translate kar deta hai — customer ke liye
+ye disaster hai. E3 Hindi mein lagbhag utna hi accha hai AUR English,
+chhoti speech, silence — sab sahi handle karta hai. <strong>Benchmark number
+model nahi hota; product hota hai.</strong>" (Aur E3 phir bhi base se −20% aur
+Whisper se −69% hai.)</p>
+<hr />
+<h2 id="section-14-checkpoints-photo-album-of-training">SECTION 14 — Checkpoints: photo album of training</h2>
+<p><strong>Checkpoint kya hai?</strong> Training ke dauraan model ke weights ki saved
+copy. Hum har 300 steps par save karte hain (<code>save_steps=300</code> in config):
+checkpoint-600, -900, -1200, -1500, -1800, -1840(final). Har ek ke andar
+<code>inferable/</code> folder — turant test-ready model.</p>
+<p><strong>Multiple kyun?</strong> Kyunki training aage badhna hamesha behtar hona nahi
+hota. E2 iska sabak hai: <strong>depth ke saath English ka failure mode
+BADALTA gaya</strong> (ck300/600: silence; ck900+: translation). Sirf final
+checkpoint lete to ye kabhi dikhta hi nahi.</p>
+<p><strong>Final hi kyun nahi?</strong> E3 mein validation loss final checkpoint (1840,
+loss 0.1759) par sabse acchi thi — par <strong>ck1500</strong> ne CER AUR WER dono mein
+jeeta. <strong>Validation loss ≠ best ASR model.</strong> Simple meaning: "Loss token
+prediction ki quality hai; humein transcript quality + English + silence
++ short-speech ka PACKAGE chahiye. Isliye selection GATES se hoti hai,
+loss se nahi."</p>
+<p><strong>Kaise select karte hain (E3 ka actual process):</strong>
+1. Har checkpoint par frozen benchmark (HF-side harness:
+   <code>research/experiments/21-qwen3-hi-finetuning/eval_checkpoint.py</code>)
+2. Har checkpoint par retention probes (JFK English, held-out English,
+   1s/2s Hindi, silence, noise —
+   <code>research/experiments/23-qwen3-hi-ft-e3/sweep_probes_e3.py</code>)
+3. Gates clean + best accuracy = winner.</p>
+<hr />
+<h2 id="section-15-evaluation-pipeline-report-card-kaise-banta-hai">SECTION 15 — Evaluation pipeline (report card kaise banta hai)</h2>
+<pre><code>frozen manifest → runner → serving artifact → inference → reference
+→ normalization → CER/WER → probes → RTF/RAM → EvalRun ledger
+</code></pre>
+<p><strong>Frozen manifest:</strong> <code>ml/evaluation/stt/datasets/stt-hi-public-eval-v1.json</code>
+— 151 natural clips + 2 synthetic probes, sha-pinned, <strong>kabhi nahi badla</strong>.
+<strong>Loader:</strong> <code>ml/evaluation/src/intelliai_evaluation/dataset.py</code> →
+<code>load_dataset(path)</code> (clip hashes verify hote hain).</p>
+<p><strong>Runner:</strong> <strong>File:</strong> <code>ml/evaluation/src/intelliai_evaluation/runner.py</code>
+<strong>Function:</strong> <code>run_stt_eval(...)</code>
+<strong>Simple meaning:</strong> "Live runtime ke against har clip bhejo (wahi
+<code>/v1/transcribe</code> jo product use karta hai), hypothesis lo, reference se
+compare karo, timing/memory noto, aur ek <code>EvalRun</code> record likho."</p>
+<p><strong>CLI:</strong> <code>python -m intelliai_evaluation run --dataset ... --url ...
+--manifest ... --model research:... --language hi --engine qwen3-asr --out ...</code></p>
+<p><strong>Normalization:</strong> <strong>File:</strong> <code>normalization.py</code>, <strong>Function:</strong>
+<code>profile_for(language)</code> — scoring se pehle text ka standard roop
+(punctuation/case rules), VERSIONED (<code>unicode_generic@v2</code>). Simple
+meaning: "'नमस्ते।' aur 'नमस्ते' ko ek hi maana jaye — par ye rules bhi
+pinned hain taaki ruler kabhi na badle."</p>
+<p><strong>Scoring:</strong> <strong>File:</strong> <code>accuracy.py</code> — <code>score(reference, hypothesis,
+profile)</code>, <code>cer_unicode</code>, <code>wer_unicode</code> → <code>WerBreakdown</code>
+(substitutions/insertions/deletions). Corpus-level number edit-SUMS se
+banta hai (per-clip averages se nahi).</p>
+<p><strong>Ledger:</strong> <strong>File:</strong> <code>results.py</code>, <strong>Class:</strong> <code>EvalRun</code> — har run ek
+committed JSON in <code>ml/evaluation/stt/results/</code> (append-only; 43 records
+ab tak). Identity, metrics, hardware, coverage — sab andar.</p>
+<hr />
+<h2 id="section-16-cer-wer-hallucination-bilkul-basic-se">SECTION 16 — CER / WER / Hallucination — bilkul basic se</h2>
+<p><strong>CER — Character Error Rate:</strong> "Reference ke har 100 characters par
+kitni galtiyan?" <strong>WER — Word Error Rate:</strong> wahi cheez words par.</p>
+<p><strong>Teen tarah ki galtiyan:</strong></p>
+<p>Reference: <code>मैं घर जा रहा हूँ</code>
+Hypothesis: <code>मैं कल घर जाता हूँ</code></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Kya hua</th>
+<th>Example yahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Substitution</strong></td>
+<td>Word badal gaya</td>
+<td><code>जा रहा</code> → <code>जाता</code></td>
+</tr>
+<tr>
+<td><strong>Insertion</strong></td>
+<td>Extra word aa gaya</td>
+<td><code>कल</code> (bola hi nahi tha)</td>
+</tr>
+<tr>
+<td><strong>Deletion</strong></td>
+<td>Word gayab</td>
+<td><code>रहा</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>WER = (S + I + D) / reference words.</p>
+<p><strong>Dono kyun?</strong> Hindi jaisi bhashaon mein word-splitting ambiguous hoti
+hai (<code>जा रहा</code> vs <code>जारहा</code>) — CER isse robust hai, isliye <strong>CER humara
+primary ruler</strong> hai; WER supporting.</p>
+<p><strong>Hallucination probe (humare system ka exact matlab):</strong> Do cheezein:
+1. <strong>Synthetic probes</strong> — benchmark mein 10s pure silence + 5s 440Hz tone
+   clips hain jinka correct transcript KHALI hai. Model ne wahan kuch
+   bhi likha = hallucination. <code>EvalRun</code> mein <code>hallucinated_words</code> metric.
+2. <strong>Marker probes</strong> (HF-side sweep) — output mein <code>&lt;asr_text&gt;</code>,
+   "language ", "transcribe" jaise template-bleed markers kabhi nahi
+   aane chahiye (<code>PROBE_MARKERS</code> in <code>eval_checkpoint.py</code>).</p>
+<p>E1(whisper-LoRA) 51-74 probe words ke saath fail hua tha; Qwen line mein
+har experiment <strong>0 probes</strong> raha.</p>
+<hr />
+<h2 id="section-17-frozen-evaluation-set-kyun">SECTION 17 — Frozen evaluation set kyun?</h2>
+<p><strong>Same audio. Same reference. Same ruler (cer_unicode). Same
+normalization (unicode_generic@v2). Same decode policy.</strong></p>
+<p>Simple meaning: "Agar exam ka paper har baar badle, to do students ke
+marks compare karna bekaar hai. Humara paper 15C (2026-08-11) se frozen
+hai — isliye ye table MEANINGFUL hai:"</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Hindi CER</th>
+<th>Kab measure hua</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Whisper-small</td>
+<td>0.3629 (fresh M24: 0.37617)</td>
+<td>15C / M24</td>
+</tr>
+<tr>
+<td>Qwen base</td>
+<td>0.1457</td>
+<td>15E</td>
+</tr>
+<tr>
+<td>Qwen E1</td>
+<td>0.12477</td>
+<td>M21</td>
+</tr>
+<tr>
+<td>Qwen E2</td>
+<td>0.11044</td>
+<td>M22</td>
+</tr>
+<tr>
+<td><strong>Qwen E3</strong></td>
+<td><strong>0.11612</strong></td>
+<td>M23</td>
+</tr>
+</tbody>
+</table></div>
+<p>Paanch alag mahino/hafton ke numbers seedha compare ho sakte hain kyunki
+ruler kabhi nahi hila. Isi liye eval set training se disjoint rakhna
+(Section 7) itna zaroori hai — warna paper leak ho jaata.</p>
+<hr />
+<h2 id="section-18-model-export-training-checkpoint-serving-artifact">SECTION 18 — Model Export: training checkpoint → serving artifact</h2>
+<p><strong>Do alag duniyaayein:</strong>
+- <strong>HF checkpoint</strong> — training ka format (safetensors, bf16, GPU/Python
+  stack chahiye). Research ke liye perfect, serving ke liye bhaari.
+- <strong>Serving artifact (GGUF)</strong> — llama.cpp ka format: quantized (Q8_0),
+  CPU par fast, ek single file. Production isi ko serve karta hai.</p>
+<p><strong>Exporter:</strong></p>
+<p><strong>File:</strong> <code>research/experiments/21-qwen3-hi-finetuning/convert_ft_to_gguf.py</code>
+<strong>Simple meaning:</strong> "Mainline llama.cpp ke paas Qwen3-ASR converter nahi
+hai. Isliye hum <strong>TEMPLATE REWRITE</strong> karte hain: official base GGUF ki
+poori structure (saari metadata keys, 311 tensor names, ordering, types)
+copy karo, aur SIRF tensor ke numbers apne fine-tuned weights se replace
+karo. Structure same = pinned llama-server bina shikayat load karta hai."</p>
+<p><strong>mmproj</strong> (audio tower ka GGUF): humne tower FREEZE kiya tha, isliye
+official mmproj (<code>41a342b5…</code>) <strong>byte-for-byte reuse</strong> hota hai.</p>
+<p><strong>"Base reconstruction" control — sabse bharosemand test:</strong> Humne
+exporter ko BASE weights par chalaya. Output official base GGUF se
+<strong>byte-for-byte identical</strong> nikla. Simple meaning: "Pipeline khud kuch
+nahi badalti — to fine-tuned export mein jo bhi difference hai, wo 100%
+TRAINING ka hai, conversion ka nahi."</p>
+<p><strong>SHA-256 pinning:</strong> Har artifact ka fingerprint code mein likha hai
+(<strong>File:</strong> <code>services/stt-runtime/src/intelliai_stt_runtime/engines/qwen3_asr.py</code>,
+<strong>Table:</strong> <code>ARTIFACT_SPECS</code>, entry <code>QWEN3_ASR_0_6B_HI_FT_E3_FILES</code>, model
+sha <code>e54586c4…</code>). Store load ke waqt bytes hash karke compare karta hai —
+galat file kabhi serve nahi ho sakti. Runtime binary bhi pinned hai
+(<code>RUNTIME_BINARY_PINS</code> — llama.cpp b10344 ke 6 files ke hashes).</p>
+<hr />
+<h2 id="section-19-serving-adapter-request-se-transcript-tak">SECTION 19 — Serving Adapter: request se transcript tak</h2>
+<pre><code>POST /v1/audio/transcriptions  → apps/api .../v1/audio/transcriptions.py (create_transcription)
+        ↓ auth
+registry                       → apps/api .../registry/catalog.py (default_registry) + registry.py (resolve)
+        ↓ language route       → hi → qwen3-asr-0.6b-hi-ft-e3 · en/default → whisper-small
+STT runtime HTTP               → services/stt-runtime .../api/routes.py (transcribe, /v1/transcribe)
+        ↓ slot lookup          → slots.py (build_slot_specs) — artifact → engine
+E3 adapter                     → engines/qwen3_asr.py (class Qwen3AsrEngine, .transcribe())
+        ↓
+llama-server (pinned b10344)   → engine ka child process, loopback-only
+        ↓
+TranscriptionResult            → packages/runtime-contract (text + segments)
+        ↓
+API response                   → {&quot;text&quot;: ...} ya verbose_json segments ke saath
+</code></pre>
+<p><strong>Hindi E3 tak kaise pahunchti hai:</strong> <code>create_transcription</code> →
+<code>TranscriptionService.transcribe</code> → <code>registry.resolve("intelliai-stt",
+language="hi")</code> → catalog ki <code>_ROUTES</code> table mein hi-route ka
+<code>artifact_id="qwen3-asr-0.6b-hi-ft-e3"</code> → runtime request mein wahi
+artifact naam jaata hai → runtime ka slot us artifact ko <code>Qwen3AsrEngine</code>
+se serve karta hai.</p>
+<p><strong>English Whisper tak:</strong> same raasta, bas <code>language="en"</code> par catalog
+<code>whisper-small</code> deta hai → runtime ka whisper slot (<strong>File:</strong>
+<code>engines/whisper.py</code>, <code>load_faster_whisper</code>).</p>
+<p><strong>Ek hi runtime process DONO models host karta hai</strong> (multi-slot:
+<code>INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3</code> —
+<code>infra/compose/prod.yml</code>).</p>
+<hr />
+<h2 id="section-20-long-audio-m19-ka-design">SECTION 20 — Long Audio (M19 ka design)</h2>
+<pre><code>≤120 sec       → DIRECT: poora audio ek baar mein Qwen ko
+120–600 sec    → CHUNKING: 100-sec windows, 5-sec overlap
+                 → har window decode → overlap ke words dedup-merge
+                 → EK final transcript
+&gt;600 sec       → 400 error (&quot;audio exceeds the 600s duration limit&quot;)
+</code></pre>
+<p><strong>Context badhana reject kyun hua?</strong> Test kiya tha (M19): bade context
+par memory/latency explode hoti hai aur quality lambi audio par girti
+hai. Chunking predictable hai: har chunk proven 100-sec regime mein
+chalta hai.</p>
+<p><strong>Code mein kahan hai:</strong> sab kuch <strong><code>services/stt-runtime/src/intelliai_stt_runtime/engines/qwen3_asr.py</code></strong> mein:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Kya karta hai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plan_windows(...)</code></td>
+<td>Windows ki list banata hai (stride = window − overlap; aakhri chhota tukda absorb)</td>
+</tr>
+<tr>
+<td><code>quietest_moment(...)</code></td>
+<td>Seam ko ±8s mein sabse SHAANT jagah par khiskata hai (word ke beech mein na kate)</td>
+</tr>
+<tr>
+<td><code>slice_audio(...)</code></td>
+<td>PCM bytes frame-exact kaat-ta hai</td>
+</tr>
+<tr>
+<td><code>merge_chunk_text(...)</code></td>
+<td>Overlap mein dono windows ne jo same words bole, unka dedup (normalized suffix/prefix match, 14-word horizon)</td>
+</tr>
+<tr>
+<td><code>Qwen3AsrEngine.transcribe(...)</code></td>
+<td>Dispatch: chhota → direct; lamba → ye poora dance</td>
+</tr>
+</tbody>
+</table></div>
+<p>Constants: <code>DEFAULT_DIRECT_AUDIO_SECONDS=120</code>, <code>DEFAULT_MAX_AUDIO_SECONDS=600</code>,
+<code>DEFAULT_CHUNK_WINDOW_SECONDS=100</code>, <code>DEFAULT_CHUNK_OVERLAP_SECONDS=5</code>.</p>
+<p><strong>Segments:</strong> har window ek segment banti hai real offsets ke saath; law:
+<code>" ".join(segment texts) == text</code>. <strong>Customer ke liye:</strong> ye sab INVISIBLE
+hai — EK request, EK response, EK usage event (+300s exactly), EK sample.
+Koi chunk fail ho (1 retry ke baad) to POORI request fail — <strong>partial
+transcript kabhi nahi</strong> (billed 0).</p>
+<hr />
+<h2 id="section-21-web-android-ios-teen-clients-ek-backend">SECTION 21 — Web / Android / iOS: teen clients, EK backend</h2>
+<pre><code>Web (browser)      ┐
+Android Keyboard   ├──→ POST /v1/audio/transcriptions → Auth → Registry → Model
+iOS Keyboard       ┘
+</code></pre>
+<p><strong>Client identity headers</strong> (<code>_parse_client</code> in transcriptions.py;
+enum <code>ClientSource</code> in <code>db/models/speech_sample.py</code>):</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Header</th>
+<th>Audio format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web STT Studio</td>
+<td><code>web/1.0</code></td>
+<td>webm (browser MediaRecorder)</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><code>keyboard/1.0</code></td>
+<td>wav 16kHz mono PCM16 (<code>apps/keyboard-android/.../WavRecorder.kt</code>)</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td><code>ios-keyboard/1.0</code></td>
+<td>wav 16kHz mono PCM16 (<code>apps/keyboard-ios/Shared/WavRecorder.swift</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Kya BADALTA hai clients ke beech:</strong> audio capture ka tareeka, UI,
+transcript insertion (Android <code>InputConnection</code> vs iOS
+<code>textDocumentProxy</code> vs Web textarea).</p>
+<p><strong>Kya NAHI badalta:</strong> endpoint, auth, language contract (Auto = language
+field OMIT; en/hi/ar), error envelope (<code>error.type</code> par branch),
+contribution header, correction endpoint, metering, routing, model. Hum
+isse LIVE verify kar chuke hain — founder ke apne Web + Android sessions
+mein Hindi → E3 aur English → whisper, dono clients se (M25 evidence).</p>
+<hr />
+<h2 id="section-22-production-promotion-research-se-production-tak">SECTION 22 — Production Promotion: research se production tak</h2>
+<p>Paanch alag states — inhe mix mat karo:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>State</th>
+<th>Matlab</th>
+<th>Humara example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Research model</strong></td>
+<td>Sirf experiments mein; <code>.invalid</code> URL, research namespace</td>
+<td>E1, E2</td>
+</tr>
+<tr>
+<td><strong>Promotion candidate</strong></td>
+<td>Saare gates pass; proposal PENDING</td>
+<td>E3 (M23-M24 ke dauraan)</td>
+</tr>
+<tr>
+<td><strong>Approved production model</strong></td>
+<td>Founder ne approve kiya; catalog mein route ACTIVE</td>
+<td><strong>E3 abhi (M26 se)</strong></td>
+</tr>
+<tr>
+<td><strong>Deployed model</strong></td>
+<td>Real server par chal raha</td>
+<td>❌ abhi nahi (Hostinger pending)</td>
+</tr>
+<tr>
+<td><strong>Live customer traffic</strong></td>
+<td>Customers use kar rahe</td>
+<td>❌ abhi nahi</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Promotion commit (M26, <code>c5a3147</code>):</strong> teen cheezein ek saath —
+(1) catalog mein E3 artifact + hi-route (approval record route par:
+"F-M26 — founder promotion decision, 2026-08-19"), (2) prod compose
+slots, (3) guards ka update. <strong>File:</strong> <code>apps/api/.../registry/catalog.py</code>.</p>
+<p><strong>Rollback:</strong> <code>git revert c5a3147</code> → Hindi wapas whisper-small.
+<strong>File:</strong> <code>registry/proposals.py</code> mein <code>ROLLBACK_HINDI_ROUTE</code> — exact
+target reviewed + test-pinned. Automatic per-request fallback JAAN BOOJH
+KAR nahi hai (M16 decision: fallback billing/latency ko kharab karta hai;
+rollback ek deliberate route change hai).</p>
+<hr />
+<h2 id="section-23-complete-end-to-end-diagram">SECTION 23 — Complete End-to-End Diagram</h2>
+<pre class="mermaid">flowchart TD
+    U[User] --> W[Web] & A[Android Keyboard] & I[iOS Keyboard]
+    W & A & I --> EP["POST /v1/audio/transcriptions"]
+    EP --> AUTH[Auth - API key] --> VAL[Validation] --> REG[Registry resolve]
+    REG -->|hi / hi-IN| Q[Qwen E3 route]
+    REG -->|en / default| WH[Whisper-small route]
+    Q --> CH{"> 120 sec?"}
+    CH -->|no| QA[Qwen3AsrEngine direct]
+    CH -->|yes| CHK[100s windows + 5s overlap merge] --> QA
+    QA --> LS[llama-server b10344 pinned]
+    WH --> FW[faster-whisper]
+    LS & FW --> T[Transcript]
+    T --> MET[Metering - one usage event] --> COL{Consent + contribution?}
+    COL -->|yes| SS[Speech Sample]
+    COL -->|no| RESP[Response to user]
+    SS --> CORR[Correction - original immutable] --> DS[Dataset]
+    DS --> DV[Dataset Version - FREEZE]
+    DV --> PREP[Preparation + validation]
+    PREP --> MAN[Training Manifest JSONL - sha pinned]
+    MAN --> FT[Qwen fine-tuning - RTX 5070]
+    FT --> CKPT[Checkpoints every 300 steps]
+    CKPT --> EV[Frozen evaluation + retention gates]
+    EV --> EXP[GGUF export - template rewrite]
+    EXP --> ART[Artifact + SHA pin]
+    ART --> PROM[Promotion proposal to founder approval to catalog]
+    PROM -.->|next model version| REG
+    SS -.-> RESP
+</pre>
+<p><em>(Loop dekho: serving se data banta hai, data se agla model, agla model
+phir serve hota hai — ye flywheel hai.)</em></p>
+<hr />
+<h2 id="section-24-follow-one-request-in-code-hindi-dictation-android-se">SECTION 24 — "Follow one request in code" (Hindi dictation, Android se)</h2>
+<p>User Android keyboard par mic dabata hai, Hindi bolta hai:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Kya hua</th>
+<th>File / Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>16kHz WAV record</td>
+<td><code>apps/keyboard-android/.../audio/WavRecorder.kt</code> + <code>WavEncoder.kt</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Request bani: multipart, <code>language=hi</code>, header <code>keyboard/1.0</code></td>
+<td><code>.../api/IntelliAIApiClient.kt</code> → <code>transcribe()</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Gateway ne receive kiya</td>
+<td><code>apps/api/.../api/v1/audio/transcriptions.py</code> → <code>create_transcription</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>API key verify</td>
+<td>auth dependency (<code>services/auth.py</code> ke through)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Client header parse</td>
+<td><code>_parse_client</code> → <code>ClientSource.KEYBOARD, "1.0"</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Service orchestration</td>
+<td><code>services/transcription.py</code> → <code>TranscriptionService.transcribe</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Route resolve</td>
+<td><code>registry/registry.py</code> → <code>resolve("intelliai-stt", language="hi")</code> → catalog se <code>qwen3-asr-0.6b-hi-ft-e3</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Runtime call</td>
+<td>runtime client → <code>POST /v1/transcribe</code> (stt-runtime)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Runtime route</td>
+<td><code>services/stt-runtime/.../api/routes.py</code> → <code>transcribe()</code> → slot lookup</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Engine decode</td>
+<td><code>engines/qwen3_asr.py</code> → <code>Qwen3AsrEngine.transcribe()</code> (≤120s to direct) — llama-server child se</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Result envelope wapas</td>
+<td><code>RuntimeResponse[TranscriptionResult]</code> (text + segments + usage seconds)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Usage event</td>
+<td><code>TranscriptionService</code> — EK event, audio-seconds ke saath</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Collection</td>
+<td><code>services/collection.py</code> → <code>DataCollectionService.collect</code> (consent + contribution check) → Speech Sample + <code>X-IntelliAI-Sample</code> header</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Phone par insert</td>
+<td>Android <code>DictationController</code> → <code>InputConnection</code> commit</td>
+</tr>
+</tbody>
+</table></div>
+<p>Har step humne real drills mein verify kiya hai (M24/M25 evidence JSONs).</p>
+<hr />
+<h2 id="section-25-follow-one-training-sample-e3-ka-ek-clip">SECTION 25 — "Follow one training sample" (E3 ka ek clip)</h2>
+<p>Clip: <code>indicvoices-hindi-train-0-000123</code> (illustrative id, real pattern):</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Stage</th>
+<th>File / Function</th>
+<th>Input → Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Ingest</td>
+<td><code>ingest_hf.py</code> → <code>ingest_hf</code></td>
+<td>HF parquet row → <code>ml/datasets/data/indicvoices/.../*.flac</code> + candidates JSON entry (sha256, speaker_id, revision)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Validation</td>
+<td><code>validate.py</code> → <code>validate_samples</code></td>
+<td>candidate → accepted (2–30s ✓, hi ✓, no markup ✓, eval-hash/speaker ✗ match)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Curation</td>
+<td><code>curate.py</code> → <code>curate_by_budget</code></td>
+<td>accepted pool → selected (sha-order, 30h budget)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Freeze</td>
+<td><code>manifests.py</code> → <code>write_train_jsonl</code></td>
+<td>selected → v2 JSONL line + provenance</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Merge (E3)</td>
+<td><code>merge.py</code> → <code>merge_rows</code>/<code>write_merged_jsonl</code></td>
+<td>v2 line VERBATIM → v3 JSONL (sha <code>6cfc585d…</code>)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Pin-verify + convert</td>
+<td><code>manifest.py</code> → <code>load_manifest</code>; <code>qwen_manifest.py</code> → <code>convert_manifest</code>/<code>qwen_text</code></td>
+<td>v3 row → <code>{"audio": "...", "text": "language Hindi&lt;asr_text&gt;..."}</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Split</td>
+<td><code>manifest.py</code> → <code>split_validation</code></td>
+<td>id-hash → train ya validation</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Batch</td>
+<td><code>qwen_trainer.py</code> → <code>QwenCollator</code></td>
+<td>audio decode (<code>audio_io.decode_to_float32</code>) + tokens + labels (-100 prompt par)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Learn</td>
+<td><code>qwen_trainer.py</code> → <code>train</code></td>
+<td>forward → loss → backward → Adafactor step (1×16 accumulation)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Checkpoint</td>
+<td><code>_InferableSnapshotCallback</code></td>
+<td>step 1500 par <code>checkpoints/checkpoint-1500/inferable/</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Evaluate</td>
+<td><code>eval_checkpoint.py</code> + <code>sweep_probes_e3.py</code></td>
+<td>ck1500 = CER best + gates clean → selected</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Export</td>
+<td><code>convert_ft_to_gguf.py</code></td>
+<td>HF checkpoint → GGUF <code>e54586c4…</code> (official structure par rewrite)</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Official verdict</td>
+<td><code>intelliai_evaluation run</code> → <code>runner.run_stt_eval</code></td>
+<td>served artifact par frozen eval → EvalRun <code>...-hi-ft-e3-hi-m23.json</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="section-26-common-terms-cheat-sheet">SECTION 26 — Common Terms Cheat Sheet</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>STT / ASR</strong></td>
+<td>Speech-to-Text / Automatic Speech Recognition — bolna → likhna</td>
+</tr>
+<tr>
+<td><strong>Fine-tuning</strong></td>
+<td>Trained model ko apne data par aage sikhana</td>
+</tr>
+<tr>
+<td><strong>LoRA</strong></td>
+<td>Chhote add-on weights se sasta fine-tuning (whisper E1/E1b mein use hua; Qwen mein full-param SFT)</td>
+</tr>
+<tr>
+<td><strong>SFT</strong></td>
+<td>Supervised Fine-Tuning — labeled (audio+transcript) pairs se sikhana</td>
+</tr>
+<tr>
+<td><strong>Checkpoint</strong></td>
+<td>Training ke beech weights ki saved photo</td>
+</tr>
+<tr>
+<td><strong>Epoch</strong></td>
+<td>Poore dataset ka ek chakkar (humne 2 chalaye)</td>
+</tr>
+<tr>
+<td><strong>Batch</strong></td>
+<td>Ek saath process hone wale examples (effective 16)</td>
+</tr>
+<tr>
+<td><strong>Gradient</strong></td>
+<td>"Is weight ko kis disha mein kitna ghumao" ka hisaab</td>
+</tr>
+<tr>
+<td><strong>Learning rate</strong></td>
+<td>Har update ka step-size (1e-5 = bahut chhote kadam)</td>
+</tr>
+<tr>
+<td><strong>Optimizer</strong></td>
+<td>Gradients se weights update karne wala algorithm</td>
+</tr>
+<tr>
+<td><strong>Adafactor</strong></td>
+<td>Kam-memory optimizer (AdamW ka kifayati cousin)</td>
+</tr>
+<tr>
+<td><strong>bf16</strong></td>
+<td>2-byte numbers — aadhi memory, training-stable</td>
+</tr>
+<tr>
+<td><strong>Gradient checkpointing</strong></td>
+<td>Activations dobara compute karke memory bachana</td>
+</tr>
+<tr>
+<td><strong>CER / WER</strong></td>
+<td>Character/Word Error Rate — kam = behtar</td>
+</tr>
+<tr>
+<td><strong>RTF</strong></td>
+<td>Real-Time Factor — 0.2 matlab 10s audio 2s mein process</td>
+</tr>
+<tr>
+<td><strong>GGUF</strong></td>
+<td>llama.cpp ka model file format (serving)</td>
+</tr>
+<tr>
+<td><strong>mmproj</strong></td>
+<td>Audio tower ka GGUF sathi (hum official reuse karte hain)</td>
+</tr>
+<tr>
+<td><strong>llama.cpp</strong></td>
+<td>CPU-fast inference engine (pinned build b10344)</td>
+</tr>
+<tr>
+<td><strong>EvalRun</strong></td>
+<td>Ek evaluation ka committed JSON record (append-only ledger)</td>
+</tr>
+<tr>
+<td><strong>Manifest</strong></td>
+<td>Training/eval samples ki sha-pinned list</td>
+</tr>
+<tr>
+<td><strong>Dataset Version</strong></td>
+<td>Frozen membership — training ka locked menu</td>
+</tr>
+<tr>
+<td><strong>Speaker disjointness</strong></td>
+<td>Train aur eval mein same speaker kabhi nahi</td>
+</tr>
+<tr>
+<td><strong>Artifact SHA</strong></td>
+<td>Model file ka fingerprint — load par verify hota hai</td>
+</tr>
+<tr>
+<td><strong>Promotion</strong></td>
+<td>Research model ko catalog mein production route dena</td>
+</tr>
+<tr>
+<td><strong>Canary</strong></td>
+<td>Naye model ko pehle thode traffic par aazmana (90/10)</td>
+</tr>
+<tr>
+<td><strong>Rollback</strong></td>
+<td>Route wapas purane model par — git revert, seconds mein</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="section-27-debugging-guide-kahan-dekhna-hai">SECTION 27 — Debugging Guide (kahan dekhna hai)</h2>
+<p><strong>Training fail ho rahi hai:</strong>
+→ Pehle <code>smoke_test</code> chalao (<code>qwen_trainer.py</code>) — 4 steps mein poori
+pipeline test. Manifest pin error? → <code>load_manifest</code> ka message (sha
+mismatch = data badal gaya). OOM? → config mein <code>per_device_batch_size=1,
+gradient_accumulation=16</code> (E2 lesson). Base download issue? →
+<code>snapshot_base_model</code> ka size/sha guard.</p>
+<p><strong>Loss ghat raha hai par CER kharab:</strong>
+→ E1b ka sabak: validation loss decode-health ka proxy NAHI hai.
+<code>eval_checkpoint.py</code> se HF-side CER + <code>probe_hits</code>/<code>empty_outputs</code> dekho,
+aur <code>worst_clips</code> — pattern dikhega (repeats? empty? wrong language?).</p>
+<p><strong>Model silence par hallucinate karta hai:</strong>
+→ Training corpus mein negatives check karo: converted JSONL mein
+<code>language None&lt;asr_text&gt;</code> rows hain? (<code>run_smoke_e2.py</code> pattern yehi
+verify karta hai). Ratio ~0.5% kaafi tha (E2 evidence, step-30 par asar).</p>
+<p><strong>Export chalta hai par runtime fail:</strong>
+→ (1) <code>ARTIFACT_SPECS</code> mein sha REGISTERED hai? — runtime "artifact
+identity is determined by them" bolkar refuse karega (ye guard humne
+live dekha M25 mein). (2) Store hash-verify: placed file ka sha spec se
+match? (3) mmproj official wala hai? (4) <code>RUNTIME_BINARY_PINS</code> — sahi
+llama.cpp build?</p>
+<p><strong>Hindi ab bhi Whisper par ja rahi hai:</strong>
+→ <code>registry/catalog.py</code> ki <code>_ROUTES</code> (hi-route ka artifact_id kya hai?)
+→ gateway kis registry profile par hai (<code>INTELLIAI_REGISTRY_PROFILE</code>)
+→ runtime slots env (<code>INTELLIAI_STT_SLOTS</code> mein E3 declared?) → runtime
+logs mein <code>transcription_completed</code> ka <code>artifact</code> field sach bolta hai.</p>
+<p><strong>Web chalta hai, Android nahi:</strong>
+→ Android-side: server address setting (HTTPS? — release cleartext
+refuse karta hai <code>ServerAddress.validate</code>), API key, 150s call cap (long
+audio par client timeout — documented). Backend-side: dono SAME endpoint
+use karte hain, to backend mein farak nahi ho sakta — gateway logs mein
+<code>X-IntelliAI-Client</code> se request aayi bhi ya nahi, wahi pehla sawaal.</p>
+<p><strong>Sample collect nahi ho raha:</strong>
+→ Checklist: (1) org consent granted? (<code>grant-consent</code> CLI), (2) request
+mein <code>X-IntelliAI-Contribution: off</code> to nahi? (3) response mein
+<code>X-IntelliAI-Sample</code> header aaya? (4) api logs mein
+<code>collection.record_failed</code> — collection kabhi request fail nahi karti,
+error yahan chhupa hoga (jaise enum mismatch wala case).</p>
+<hr />
+<h2 id="section-28-bossinterview-explanations">SECTION 28 — Boss/Interview Explanations</h2>
+<h3 id="how-i-explain-our-fine-tuning-pipeline-in-2-minutes">"How I explain our fine-tuning pipeline in 2 minutes"</h3>
+<p>"Humara pipeline ek closed loop hai. Products (Web, Android, iOS) ek hi
+API par speech bhejte hain; consent ho to audio+transcript Speech Sample
+ban kar store hota hai, user corrections se quality sudharti hai. Training
+ke liye hum data ko FREEZE karte hain — sha-pinned manifest — taaki har
+experiment reproducible ho. Phir Qwen3-ASR 0.6B ko apne 8GB laptop GPU
+par fine-tune karte hain: audio-tower frozen, sirf text-side seekhta hai,
+memory tricks (bf16, Adafactor, gradient checkpointing) se 5GB mein ho
+jaata hai. Har 300 steps par checkpoint, aur selection sirf accuracy se
+nahi — English retention, silence safety, short-speech — poore gate-table
+se hoti hai, ek FROZEN benchmark par jo kabhi nahi badla. Jeeta hua
+checkpoint GGUF mein export hota hai — humara exporter proven hai kyunki
+base weights par wo official file byte-for-byte reproduce karta hai. Wo
+artifact sha-pinned hoke pinned llama.cpp runtime se serve hota hai, aur
+promotion ek reviewed git commit hai jiska rollback ek revert hai. Result:
+Hindi par Whisper se 69% kam errors, teeno clients se live verified."</p>
+<h3 id="how-i-explain-e1-e2-e3">"How I explain E1 → E2 → E3"</h3>
+<p>"Teen experiments, teen sawaal. E1 ne poocha 'kya pipeline kaam karti
+hai?' — haan: 10 ghante data par CER 14% se 12.5% aaya, par ek seekh mili:
+corpus mein silence ke examples nahi the to model silence par bhi bolne
+laga. E2 ne poocha 'kya data hi bottleneck hai?' — recipe bilkul same
+rakhi, sirf data 27 ghante clean kiya aur 0.5% no-speech examples daale:
+CER 11% aaya, silence fix — par 27 ghante PURE Hindi ne English mita di
+aur 1-second speech dabaa di. E3 ne poocha 'kya composition se dono
+regressions theek ho sakti hain?' — E2 ka data + 6% English + 800 chhoti
+real Hindi clips: English wapas (WER 0.0), 0.5-second speech tak
+transcribe, silence safe — Hindi mein sirf 5% giveback. Har baar EK
+variable badla, isliye har jawab clean hai."</p>
+<h3 id="why-didnt-we-just-fine-tune-whisper">"Why didn't we just fine-tune Whisper?"</h3>
+<p>"Kiya tha — do baar. E1 mein Whisper LoRA ne CER 0.36 se 0.90 kar diya,
+E1b mein conservative retrain ne bhi 0.72 diya aur 74 hallucinated words
+— program ka worst. Interesting ye tha ki training graphs bilkul healthy
+the; failure generation/stopping behavior mein thi jo humare setup mein
+Whisper ke saath theek nahi ho rahi thi. Usi waqt base Qwen3-ASR ne BINA
+kisi training ke 0.1457 diya — Whisper se 60% behtar. Data-driven pivot
+tha, prediction nahi."</p>
+<h3 id="why-qwen">"Why Qwen?"</h3>
+<p>"Teen wajah: (1) Measured accuracy — Hindi par out-of-the-box 60% behtar,
+frozen benchmark par, replicated. (2) Operations — 0.6B chhota model,
+CPU par ~16× real-time throughput vs Whisper ka ~4.6×, matlab same server
+par 3× concurrent calls. (3) License — Apache-2.0, commercial-safe.
+Concentration risk hum jaante hain aur documented hai."</p>
+<h3 id="why-did-e2-beat-e3-on-cer-but-e3-was-selected">"Why did E2 beat E3 on CER but E3 was selected?"</h3>
+<p>"Kyunki hum benchmark nahi, PRODUCT ship karte hain. E2 Hindi mein 0.11044
+tha, E3 0.11612 — 5% ka farak. Par E2 English sunte hi ya chup ho jaata
+tha ya Hindi mein TRANSLATE karta tha — customer ke liye catastrophic,
+aur hamara apna gate-table usse promotion ke liye disqualify karta hai.
+E3 ne English WER 0.0 rakha, 0.5-second speech transcribe ki, silence
+safe rakha — aur phir bhi Whisper se 69% behtar raha. Slightly-worse
+specialist jo sab kuch sambhalta hai &gt; slightly-better specialist jo
+English todta hai."</p>
+<h3 id="how-do-you-ensure-training-data-does-not-leak-into-evaluation">"How do you ensure training data does not leak into evaluation?"</h3>
+<p>"Teen mechanical taale, koi manual promise nahi. Ek: evaluation set ke 32
+speakers ka roster frozen hai, aur training freeze ke waqt roster ke KISI
+speaker ki KOI clip reject hoti hai — E3 ke slice mein 151 aisi rejections
+recorded hain. Do: content-hash check — audio bytes ka sha256 eval se
+match kare to reject. Teen: ek permanent test har run par HAR frozen
+training manifest ko eval ke ids/paths ke against re-checkta hai. Aur
+har rejection reason ke saath committed hai — audit trail zinda hai."</p>
+<h3 id="how-do-you-deploy-the-trained-model">"How do you deploy the trained model?"</h3>
+<p>"Deployment = seed + declare + route, sab verified. Checkpoint GGUF mein
+export hota hai (structure-preserving rewrite, base-reconstruction se
+proven), uska sha256 runtime ke admission table mein pinned hota hai —
+weights deliberately downloadable NAHI hain, deployment unhe model volume
+mein seed karta hai aur store har load par hash verify karta hai. Compose
+mein slot declare hota hai (exact artifact, kabhi generic naam nahi), aur
+catalog ka route decide karta hai kaun si language usse milegi. Promotion
+ek reviewed commit hai (E3 ka <code>c5a3147</code>); rollback uska git revert. Abhi
+ye sab repository + local production-shaped stack mein proven hai — real
+VPS deployment agla milestone hai jab Hostinger milega."</p>
+<hr />
+<h1 id="my-mental-model">My Mental Model</h1>
+<pre><code>DATA        →  bolne walon ki awaaz + sahi transcript ikattha karo
+FREEZE      →  jo use hoga usko lock karo (sha256), taaki kal koi badle na
+VALIDATE    →  har clip ko jancho; jo reject ho, REASON ke saath likho
+MANIFEST    →  training ki final list — ek line, ek example
+TRAIN       →  frozen tower, chhote kadam (1e-5), har 300 steps par photo
+CHECKPOINT  →  photos mein se winner GATES chunte hain, loss nahi
+EVALUATE    →  frozen paper par exam — wahi 153 clips, wahi ruler, hamesha
+EXPORT      →  winner ko GGUF banao — pipeline proven, sha pinned
+SERVE       →  pinned runtime, catalog ka route, teen clients, ek API
+PROMOTE     →  founder ka commit; rollback ek revert — dono reviewed
+</code></pre>
+<ul>
+<li><strong>DATA</strong>: Real speech + sahi labels ke bina kuch nahi hota.</li>
+<li><strong>FREEZE</strong>: Reproducibility ka matlab hai — kal wahi result dobara bana sako.</li>
+<li><strong>VALIDATE</strong>: Chupke kuch nahi girta; har rejection ki receipt hai.</li>
+<li><strong>MANIFEST</strong>: Training ne EXACTLY kya dekha — ek file, ek hash.</li>
+<li><strong>TRAIN</strong>: Chhota GPU bhi kaafi hai agar memory ka hisaab sahi ho.</li>
+<li><strong>CHECKPOINT</strong>: Aage badhna hamesha behtar hona nahi — beech ki photo jeet sakti hai.</li>
+<li><strong>EVALUATE</strong>: Ek hi ruler se naapo, warna numbers jhooth bolte hain.</li>
+<li><strong>EXPORT</strong>: Training ka model aur serving ka model do roop hain — conversion PROVEN honi chahiye.</li>
+<li><strong>SERVE</strong>: Route code mein likha hai, drift nahi kar sakta.</li>
+<li><strong>PROMOTE</strong>: Model change ek reviewed decision hai, kabhi accident nahi.</li>
+</ul>
+</div>
