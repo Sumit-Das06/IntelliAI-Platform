@@ -332,6 +332,10 @@ def test_seeding_is_a_prod_prerequisite_and_pinned() -> None:
     seed = makefile[makefile.index("\nseed-models:") : makefile.index("\nstaging-seed-models:")]
     assert "alpine:3.20" in seed
     assert "if [ -d /src/punct-cap-seg-47/v1 ]" in seed
+    # The M31 clean-Linux rehearsal: a root-owned seeded volume crash-loops
+    # the non-root runtime on a fresh box. The seed must hand ownership to
+    # the runtime's app user (uid 999) every time.
+    assert "chown -R 999:999 /models" in seed
     assert ":latest" not in makefile
 
 

@@ -1,0 +1,56 @@
+{
+  "experiment": "31-production-readiness",
+  "phase": "clean-Linux deployment rehearsal (WSL2 Ubuntu, shared Docker Desktop daemon)",
+  "date": "2026-08-19/20",
+  "method": "fresh git clone of the committed state (8706e53) into the WSL filesystem; weights transferred per the documented step; disposable generated secrets; COMPOSE_PROJECT_NAME=intelliai-m31 for full container/volume isolation; the exact make-recipe commands run verbatim; full teardown (down -v) afterward",
+  "flow_results": [
+    {"step": "git clone (committed state only)", "verdict": "PASS", "note": "no uncommitted-file dependency surfaced"},
+    {"step": "weight transfer models/ (972MB base + 972MB E3 + 224MB punctuation)", "verdict": "PASS"},
+    {"step": "disposable .env (openssl-generated secrets, DOMAIN=localhost)", "verdict": "PASS"},
+    {"step": "preflight (prod-preflight.sh, local-prod overlay)", "verdict": "PASS", "note": "E3 seed check, punctuation posture, compose config, Caddyfile validate all ok"},
+    {"step": "seed-models (fresh volume)", "verdict": "PASS after fix", "note": "FINDING 3 below - root-owned volume crash-looped the non-root runtime"},
+    {"step": "build (api + stt-runtime images on Linux)", "verdict": "PASS after retry", "note": "FINDING 2 below - one transient uv wheel-download stall"},
+    {"step": "up + healthchecks", "verdict": "PASS", "note": "runtime ready with slots whisper-small+E3 ready AND punctuation:ready (the new M31 readiness field, live)"},
+    {"step": "alembic migrate", "verdict": "PASS", "note": "head a3f8c2d94e61"},
+    {"step": "health reads (gateway live/ready + runtime ready)", "verdict": "PASS"},
+    {"step": "bootstrap org + API key inside the stack", "verdict": "PASS", "note": "FINDING 5 - docs example used an invalid --usage-origin value; internal_qa is the valid choice"},
+    {"step": "REAL Hindi transcription through the Caddy HTTPS edge", "verdict": "PASS", "note": "punctuated output: danda arrived end-to-end on the fresh box"},
+    {"step": "full prod-smoke (10 checks incl. punctuation posture + edge headers + 401 law + real transcription)", "verdict": "PASS", "note": "SMOKE OK"},
+    {"step": "teardown (down -v, clone removed)", "verdict": "PASS"}
+  ],
+  "findings_and_fixes": [
+    {
+      "id": 1,
+      "finding": "fresh Ubuntu has no `make` (and no git/curl before docker install) - every deploy command is a make target",
+      "fix": "docs/ops/deployment.md section 1-3 now installs git+make+curl explicitly"
+    },
+    {
+      "id": 2,
+      "finding": "api image build failed once on a transient uv wheel-download stall; the runtime Dockerfile had the M25 UV_HTTP_TIMEOUT=300 posture, the api Dockerfile did not",
+      "fix": "infra/docker/api.Dockerfile now sets UV_HTTP_TIMEOUT=300 (parity)"
+    },
+    {
+      "id": 3,
+      "finding": "BLOCKING: seeding a FRESH model volume via the root alpine container leaves /models owned by root; the non-root runtime (uid 999) cannot mkdir whisper-small and crash-loops. Invisible on the workstation because its volume predated seeding",
+      "fix": "make seed-models now chown -R 999:999 /models every run; guard-tested in test_ops_configuration"
+    },
+    {
+      "id": 4,
+      "finding": "prod-smoke.sh read the punctuation posture from the environment only; the local-prod overlay declares it in compose, so the smoke failed a correctly-configured stack",
+      "fix": "smoke posture is now overlay-aware (overlay declaration wins, env is the fallback)"
+    },
+    {
+      "id": 5,
+      "finding": "smoke/backup scripts honor INTELLIAI_PROJECT for non-default compose project names (worked as designed once passed); CRLF only entered via a manual Windows working-tree copy - git-committed scripts are LF and safe",
+      "fix": "no repo change needed; recorded for operator awareness"
+    }
+  ],
+  "hostinger_only_remainder": [
+    "real domain + DNS + Let's Encrypt issuance (rehearsal ran DOMAIN=localhost internal CA)",
+    "production secrets on the box",
+    "off-box backup destination + cron",
+    "VPS performance re-ladder",
+    "uptime monitoring",
+    "real customer canary"
+  ]
+}

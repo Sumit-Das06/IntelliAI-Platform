@@ -61,7 +61,14 @@ echo "$runtime_ready" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"' \
 note "stt-runtime ready (artifacts hash-verified at load — ready IS the artifact check)"
 
 # ── 4b. Punctuation stage posture matches the declared config (M31) ─────
+# The declared posture lives in the OVERLAY first (local-prod enables the
+# stage in compose), the environment second — read both, overlay wins.
 PUNCT_ENABLED="${INTELLIAI_STT_PUNCTUATION_ENABLED:-false}"
+if grep -q 'INTELLIAI_STT_PUNCTUATION_ENABLED: "true"' "$OVERLAY" 2>/dev/null; then
+  PUNCT_ENABLED=true
+elif grep -q 'INTELLIAI_STT_PUNCTUATION_ENABLED: "false"' "$OVERLAY" 2>/dev/null; then
+  PUNCT_ENABLED=false
+fi
 if [ "$PUNCT_ENABLED" = "true" ]; then
   echo "$runtime_ready" | grep -q '"punctuation"[[:space:]]*:[[:space:]]*"ready"'     || fail "punctuation is ENABLED but the runtime does not report it ready: $runtime_ready"
   note "punctuation stage ready"

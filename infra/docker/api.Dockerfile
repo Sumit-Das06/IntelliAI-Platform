@@ -9,6 +9,11 @@
 # ── Stage 1: builder ────────────────────────────────────────────────────
 FROM python:3.12-slim AS builder
 
+# Same network-resilience posture as the runtime image (M25 lesson,
+# re-confirmed by the M31 clean rehearsal: one transient wheel-download
+# stall failed the whole build on a fresh box).
+ENV UV_HTTP_TIMEOUT=300
+
 COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /usr/local/bin/uv
 
 ENV UV_COMPILE_BYTECODE=1 \

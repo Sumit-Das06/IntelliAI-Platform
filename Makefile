@@ -244,7 +244,7 @@ staging-up: ## Start the LOCAL staging stack (hi→Qwen, everything else→Whisp
 staging-down: ## Stop the local staging stack (data volumes preserved)
 	docker compose -f docker-compose.yml -f infra/compose/local-staging.yml down
 
-seed-models: ## Seed the model volume from models/ (E3 + base GGUFs required; punctuation copied when present)
+seed-models: ## Seed the model volume (chown to runtime uid 999 - the M31 rehearsal found root-owned seeds crash-loop a fresh box)
 	docker run --rm -v $${COMPOSE_PROJECT_NAME:-intelliai}_modelcache:/models \
 	  -v "$(CURDIR)/models:/src:ro" \
 	  alpine:3.20 sh -c "mkdir -p /models/qwen3-asr-0.6b /models/qwen3-asr-0.6b-hi-ft-e3 \
@@ -253,6 +253,7 @@ seed-models: ## Seed the model volume from models/ (E3 + base GGUFs required; pu
 	  && if [ -d /src/punct-cap-seg-47/v1 ]; then mkdir -p /models/punct-cap-seg-47 \
 	  && cp -r /src/punct-cap-seg-47/v1 /models/punct-cap-seg-47/; \
 	  else echo 'punctuation artifact not present locally - skipped (stage is OFF unless seeded)'; fi \
+	  && chown -R 999:999 /models \
 	  && ls -la /models"
 
 staging-seed-models: seed-models ## Back-compat alias (the seeding path now serves prod AND staging)

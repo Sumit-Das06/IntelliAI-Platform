@@ -47,9 +47,13 @@ paste them into chat, tickets, or this repository.
 
 ```bash
 # on the VPS
-curl -fsSL https://get.docker.com | sh          # Docker Engine + compose plugin
+apt-get update && apt-get install -y git make curl   # a fresh Ubuntu ships with NONE of these
+curl -fsSL https://get.docker.com | sh               # Docker Engine + compose plugin
 git clone <repo> /opt/intelliai && cd /opt/intelliai
 ```
+
+(`make` missing on a fresh box was found the hard way by the M31 clean
+rehearsal — every deploy command below is a make target.)
 
 Create the DNS A record now — certificate issuance at step 6 needs it
 already resolving. **Pick the region deliberately**: data residency is a
