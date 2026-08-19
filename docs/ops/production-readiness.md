@@ -56,13 +56,23 @@
 - [ ] Off-box backup destination
 - [ ] Uptime monitor account (keyword matching on `"healthy"`)
 
-## Promotion (Hindi → Qwen; deliberately PENDING)
+## Promotion (Hindi → Qwen E3; APPROVED at M26)
 
-- [ ] Qwen promotion proposal reviewed by the founder (`registry/proposals.py`, evidence in `MODEL_LEDGER.md`)
-- [ ] Switch approved (the one-commit diff in `model-rollout.md`: compose slots + catalog route + guard updates)
-- [ ] Rollback path re-read and approved (git revert; whisper stays pinned + cached)
-- [ ] Canary shape approved (which tenants, what watch period, what abort criteria)
-- [ ] VPS capacity re-measured for long audio (~4–5 concurrent 300 s per deployment, ~4 GiB steady-state slot RSS — Windows-measured; re-measure on VPS hardware)
+- [x] Promotion proposal reviewed and APPROVED by the founder, 2026-08-19
+      (`qwen3-asr-0.6b-hi-ft-e3@v1`; approval record on the catalog route,
+      evidence chain in `MODEL_LEDGER.md` and the M24 readiness report)
+- [x] Switch landed (the one-commit diff: compose slots + catalog route +
+      guard updates — the M26 promotion commit)
+- [x] Rollback path reviewed (git revert of the promotion commit;
+      whisper-small stays pinned + cached; `ROLLBACK_HINDI_ROUTE`)
+- [ ] Canary shape approved (which tenants, what watch period, what abort
+      criteria) — a DEPLOYMENT decision, still open
+- [ ] VPS capacity re-measured for long audio (~4–5 concurrent 300 s per
+      deployment, ~4 GiB steady-state slot RSS — Windows-measured;
+      re-measure on VPS hardware) — deployment milestone
+- [ ] E3 weights seeded on the VPS (`models/qwen3-asr-0.6b-hi-ft-e3/v1/` →
+      `make staging-seed-models`; the preflight refuses to start without
+      them — the artifact is deliberately not downloadable)
 
 ## Alerts to configure on day one (Phase 12 catalogue)
 

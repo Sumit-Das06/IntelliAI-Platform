@@ -76,6 +76,18 @@ else
   note "INTELLIAI_ENV=prod, no staging profile"
 fi
 
+# ── 4b. The promoted Hindi artifact must be seedable (M26) ──────────────
+# The E3 weights are research-provenance and deliberately NOT hosted at
+# a resolvable URL: the store serves them from local placement,
+# hash-verified at load. A deployment without the bytes would crash-loop
+# at startup — say it here instead.
+E3_GGUF="models/qwen3-asr-0.6b-hi-ft-e3/v1/Qwen3-ASR-0.6B-Q8_0.gguf"
+if [ -f "$E3_GGUF" ]; then
+  note "promoted Hindi artifact present for seeding ($E3_GGUF)"
+else
+  fail "the promoted Hindi artifact is missing: $E3_GGUF — place the E3 GGUFs under models/ (see docs/ops/model-rollout.md), then 'make staging-seed-models' seeds the model volume"
+fi
+
 # ── 5. the env file stays private ───────────────────────────────────────
 if command -v stat >/dev/null 2>&1; then
   mode="$(stat -c '%a' "$ENV_FILE" 2>/dev/null || echo '')"

@@ -1128,4 +1128,34 @@ this laptop.
 
 ---
 
+## Milestone 26 — Hindi promotion APPROVED and activated in the repository (appended 2026-08-19)
+
+Full report:
+[../milestones/26-qwen-e3-production-promotion.md](../milestones/26-qwen-e3-production-promotion.md).
+
+- **`qwen3-asr-0.6b-hi-ft-e3@v1`** — **APPROVED HINDI PRODUCTION
+  ARTIFACT (repository state; NOT yet deployed, NO live traffic)** —
+  **[FACT]** The founder approved the promotion on 2026-08-19 on the
+  M23→M24→M25 evidence chain (all eight research gates; −69% relative
+  CER vs the whisper-small incumbent through the real product path;
+  production-shaped Docker stack verified by real founder-driven Web
+  and Android sessions through a live Cloudflare tunnel). The M26
+  promotion commit moved the live catalog route `hi →
+  qwen3-asr-0.6b-hi-ft-e3` with the approval record riding on the
+  route evidence, declared the exact artifact in the prod compose
+  slots, updated the guards to pin the NEW posture, and retired the
+  pending-proposal state (no proposal is now pending). Weights
+  distribute by seeding (deliberately non-downloadable; store
+  hash-verify at load; preflight-enforced). **Rollback**: git revert
+  of the promotion commit → `hi → whisper-small`
+  (`ROLLBACK_HINDI_ROUTE`, test-pinned; drilled in M25). E1/E2/base
+  artifacts preserved as research history and comparison anchors.
+
+**Consequence for priorities:** the Hindi program's model decision is
+made. What remains is DEPLOYMENT: Hostinger VPS + domain + secrets,
+E3 seeding on the box, Linux re-ladder on VPS hardware, and the real
+production canary — a separate milestone with its own gates.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

@@ -162,17 +162,20 @@ _RESEARCH_HI_FT_E3: Final = (
     "https://research-artifacts.intelliai.invalid/m23/qwen3-asr-0.6b-hi-ft-e3"
 )
 
-#: Milestone 23: the E3 retention-mix candidate — checkpoint-1500 of
+#: Milestone 23: the E3 retention-mix fine-tune — checkpoint-1500 of
 #: qwen-e3-hi-sft (base 5eb14417…, manifest qwen-hi-public-train@v3
 #: 6cfc585d… = v2 verbatim + 5.92% FLEURS-en + a bounded [0.5s, 2.0s)
 #: short-Hindi slice, seed 20260817, micro-batch 1 x acc 16; run record
 #: in research/experiments/23-qwen3-hi-ft-e3). Same byte-exact
 #: template-rewrite export and same official mmproj as E1/E2 (tower
-#: frozen). RESEARCH ONLY. The retention sweep held at every
-#: checkpoint: JFK English WER 0.0, held-out English stays English,
-#: 1 s Hindi transcribes, silence/noise stay empty — the E2 failure
-#: modes absent at all depths for ~4.6% relative Hindi giveback vs
-#: E2's best (HF-side 0.11612 vs 0.11100).
+#: frozen). The retention sweep held at every checkpoint: JFK English
+#: WER 0.0, 1 s Hindi transcribes, silence/noise stay empty. **M26:
+#: PROMOTED — the approved Hindi production artifact (founder decision
+#: 2026-08-19; catalog route + approval record in apps/api
+#: registry/catalog.py).** The URL stays deliberately non-resolvable:
+#: E3 is distributed by SEEDING into the model volume, and the store
+#: hash-verifies the placed bytes at every load exactly like a
+#: downloaded artifact.
 QWEN3_ASR_0_6B_HI_FT_E3_FILES: Final = ArtifactSpec(
     artifact="qwen3-asr-0.6b-hi-ft-e3",
     version=1,

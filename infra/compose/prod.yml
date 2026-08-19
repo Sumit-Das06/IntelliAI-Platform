@@ -41,8 +41,12 @@ services:
   stt-runtime:
     environment:
       # Explicit in prod, never inherited from a stray dev variable: this
-      # deployment hosts the real engine.
-      INTELLIAI_STT_SLOTS: whisper
+      # deployment hosts the incumbent AND the promoted Hindi specialist
+      # (M26 founder decision — the catalog routes hi to E3). The E3
+      # weights are distributed by SEEDING into the model volume
+      # (hash-verified at load); the preflight refuses a prod start
+      # without them.
+      INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3
 
 volumes:
   caddydata:

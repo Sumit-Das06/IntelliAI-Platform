@@ -52,48 +52,54 @@ traffic.
 - A rollout with no `quality_baseline` update is a smell: what
   measurement justified it?
 
-## The prepared (and deliberately DISABLED) promotion: Hindi → Qwen3-ASR
+## The ACTIVE promotion: Hindi → Qwen3-ASR E3 (approved at M26)
 
-*(added at Milestone 20; status: PENDING, exactly as the ledger says)*
+*(prepared at M17/M20 for the base candidate; superseded by the E3
+fine-tune at M24; APPROVED by the founder 2026-08-19 and ACTIVATED by
+the Milestone 26 promotion commit)*
 
-The candidate is fully validated (accuracy, switching, canary prep,
-product path, 600 s long audio — `docs/research/MODEL_LEDGER.md`), and
-every artifact of the promotion already exists in the repository:
+The repository's production configuration now routes:
 
-- the **proposal route** in `apps/api/src/intelliai_api/registry/proposals.py`
-  (active only under the staging profile, which production refuses by
-  validator);
-- the **runtime image** already carries the pinned llama.cpp layer and
-  the qwen artifact pins — hosting it is a declaration, not a build;
-- the **guards** that keep it disabled:
-  `test_research_engines_never_appear_in_committed_deployments` (no
-  committed compose may say `qwen3`),
-  `test_the_staging_registry_profile_is_never_committed_configuration`,
-  and the settings validator refusing `staging`+`prod`.
+    hi / hi-IN → qwen3-asr-0.6b-hi-ft-e3@v1   (approved specialist)
+    en / default / ar → whisper-small          (incumbent, unchanged)
 
-Promoting it, when the founder decides, is ONE reviewed commit that
-moves three things together — loud by construction, because each is
-individually guard-pinned today:
+The promotion landed exactly as this document rehearsed — one reviewed
+commit moving three things together:
 
-1. `infra/compose/prod.yml`: `INTELLIAI_STT_SLOTS: whisper` →
-   `whisper,qwen3-asr` (the deployment now hosts the artifact;
-   first boot downloads ~1 GB hash-verified — allow the healthcheck's
-   start period, and raise it in the same commit if the VPS link is
-   slow).
-2. The catalog: the hi route moves from the incumbent to
-   `qwen3-asr-0.6b` with its `quality_baseline`
-   (`2026-08-12-qwen3-asr-adapter-evaluation`), promoted from
-   proposals.py into catalog.py — the same diff the staging profile
-   has been exercising since M18.
-3. The guards: the two tests above are UPDATED in the same commit to
-   pin the new posture (the diff that flips them is the review).
+1. `infra/compose/prod.yml`: `INTELLIAI_STT_SLOTS:
+   whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3` — the deployment hosts
+   the EXACT approved artifact, never the generic family (a bare
+   `qwen3-asr` would resolve to the base challenger and is
+   guard-forbidden).
+2. The catalog: the hi route serves `qwen3-asr-0.6b-hi-ft-e3` with the
+   founder's approval record and the full evidence chain riding on the
+   route (`quality_baseline`
+   `2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23`,
+   `production_benchmark` `2026-08-18-qwen3-e3-cpu-ladder`).
+3. The guards: updated in the same commit to pin the NEW posture —
+   Hindi must resolve to E3 exactly; base/E1/E2 stay forbidden in every
+   committed deployment; the staging profile still refuses `prod`.
 
-Rollback stays `git revert` of that one commit: whisper is still
-pinned, still cached in the model volume, and the ledger's lineage
-marks the boundary. Capacity facts to price in before the decision
-(measured, M19): ~4–5 concurrent 300 s long requests per deployment,
-~4 GiB steady-state RSS per busy long-audio slot — re-measure both on
-the VPS before enabling long audio for customers.
+**Weights distribution**: E3 is deliberately NOT downloadable (its URL
+never resolves). Deployment SEEDS the bytes into the model volume
+(`models/qwen3-asr-0.6b-hi-ft-e3/v1/` + `make staging-seed-models`);
+the store hash-verifies the placed files at every load exactly like a
+downloaded artifact, and `prod-check` refuses to proceed without them.
+
+**Rollback** stays `git revert` of the promotion commit: Hindi returns
+to whisper-small (the reviewed `ROLLBACK_HINDI_ROUTE` in proposals.py
+restates the target verbatim, test-pinned), the incumbent is still
+registered and cached, and no client or image changes. Rollback is a
+deliberate route change — automatic per-request fallback does not
+exist, by the standing M16 decision. The flip was last drilled against
+the running Docker stack in M25 (`rollback-drill.json`): seconds, both
+directions.
+
+**Deployment status**: the promotion is a REPOSITORY state. Nothing is
+deployed — Hostinger, DNS, certificates, secrets, canary, and the VPS
+capacity re-measurement (~4–5 concurrent 300 s long requests, ~4 GiB
+steady-state RSS per busy long-audio slot — Windows-measured) all
+belong to the future deployment milestone.
 
 ## What the future ML milestone adds (not now)
 

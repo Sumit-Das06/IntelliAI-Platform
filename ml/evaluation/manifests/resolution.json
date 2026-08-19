@@ -31,9 +31,17 @@
         {
           "language": "hi",
           "status": "available",
-          "artifact": "whisper-small",
+          "artifact": "qwen3-asr-0.6b-hi-ft-e3",
           "artifact_version": 1,
-          "deployment": "stt-runtime"
+          "deployment": "stt-runtime",
+          "evidence": {
+            "corpus": "stt-hi-public-eval@v1",
+            "corpus_ownership": "adopted",
+            "quality_baseline": "2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23",
+            "production_benchmark": "2026-08-18-qwen3-e3-cpu-ladder",
+            "approval": "F-M26 — founder promotion decision, 2026-08-19 (docs/milestones/26-qwen-e3-production-promotion.md); readiness evidence: docs/research/2026-08-18-qwen3-hi-e3-promotion-readiness.md",
+            "approved_on": "2026-08-19"
+          }
         },
         {
           "language": "ar",

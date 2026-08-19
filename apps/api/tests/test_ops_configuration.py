@@ -37,9 +37,11 @@ def test_every_published_port_in_the_base_stack_is_loopback_bound() -> None:
 def test_only_caddy_faces_the_internet_in_the_prod_overlay() -> None:
     ports = re.findall(r'-\s*"(\d+:\d+)"', PROD_OVERLAY)
     assert sorted(ports) == ["443:443", "80:80"], ports
-    # And the overlay pins the production posture explicitly.
+    # And the overlay pins the production posture explicitly — since the
+    # M26 promotion that means the incumbent PLUS the approved Hindi
+    # specialist, named exactly (never a generic or mutable reference).
     assert "INTELLIAI_ENV: prod" in PROD_OVERLAY
-    assert "INTELLIAI_STT_SLOTS: whisper" in PROD_OVERLAY
+    assert "INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3" in PROD_OVERLAY
 
 
 def test_the_staging_registry_profile_is_never_committed_configuration() -> None:
@@ -92,14 +94,25 @@ def test_the_local_prod_overlay_is_e3_shaped_and_unreachable_from_prod() -> None
         assert "trycloudflare" not in text
 
 
-def test_research_engines_never_appear_in_committed_deployments() -> None:
-    # Milestone 16 production-disabled guard: the qwen3-asr engine is
-    # research-only until the switching gates pass and a founder promotes
-    # it via the catalog (docs/ops/model-rollout.md). No committed compose
-    # file may declare it — a research candidate reaching a deployment
-    # declaration must be a loud, reviewed diff, never drift.
-    for overlay in (COMPOSE, PROD_OVERLAY):
-        assert "qwen3" not in overlay.lower()
+def test_research_artifacts_never_appear_in_committed_deployments() -> None:
+    # Milestone 16 production-disabled guard, M26 form: the founder
+    # promoted EXACTLY qwen3-asr-0.6b-hi-ft-e3 (docs/ops/model-rollout.md).
+    # Research-only artifacts — the base challenger, E1, E2 — must never
+    # reach a committed deployment declaration, and the base dev stack
+    # still hosts the incumbent only.
+    assert "qwen3" not in COMPOSE.lower()
+    local_prod = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    for overlay in (PROD_OVERLAY, local_prod):
+        for research_only in (
+            "qwen3-asr,",  # a bare family slot would resolve to the base artifact
+            "qwen3-asr\n",
+            "qwen3-asr-0.6b-hi-ft-e1",
+            "qwen3-asr-0.6b-hi-ft-e2",
+            "qwen3-asr:qwen3-asr-0.6b\n",
+        ):
+            assert research_only not in overlay
+        # The one sanctioned declaration, exact:
+        assert "qwen3-asr:qwen3-asr-0.6b-hi-ft-e3" in overlay
 
 
 def test_secrets_are_required_never_defaulted_in_compose() -> None:

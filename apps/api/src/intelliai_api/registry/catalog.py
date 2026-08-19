@@ -39,6 +39,35 @@ _ARTIFACTS = (
             source="https://huggingface.co/Systran/faster-whisper-small",
         ),
     ),
+    # ── The M26 promotion: the approved Hindi specialist ────────────────
+    # Identity pinned end to end; the promotion evidence chain is M23
+    # (training + eight research gates) → M24 (promotion readiness vs the
+    # incumbent through the real product path) → M25 (production-shaped
+    # stack + real Web/Android verification). Identity re-verified by
+    # research/experiments/24-e3-promotion/identity.json.
+    ArtifactRecord(
+        id="qwen3-asr-0.6b-hi-ft-e3",
+        version=1,
+        capability=Capability.TRANSCRIPTION,
+        provenance=(
+            "Fine-tune of Qwen/Qwen3-ASR-0.6B @ 5eb144179a02acc5e5ba31e748d22b0cf3e303b0 "
+            "(apache-2.0) on the frozen corpus qwen-hi-public-train@v3 (sha 6cfc585d…: "
+            "27.3 h cleaned Hindi + 5.92% FLEURS-en retention slice + bounded 0.5-2 s "
+            "short-speech slice + 0.5% no-speech negatives; sources CC-BY-4.0/CC0, "
+            "attribution recorded in the manifest provenance sidecar); checkpoint-1500, "
+            "audio tower frozen. Served as the template-rewrite GGUF Q8_0 export "
+            "(model sha256 e54586c4…, official mmproj 41a342b5… byte-shared) through "
+            "the pinned llama.cpp b10344 (7a20b417f) llama-server runtime. Weights are "
+            "distributed by SEEDING (hash-verified by the store at load) — the artifact "
+            "URL is deliberately non-resolvable; deployment seeds the model volume."
+        ),
+        license=LicenseVerdict(
+            license="Apache-2.0",
+            commercial_use=True,
+            verified_on=date(2026, 8, 18),
+            source="https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+        ),
+    ),
     ArtifactRecord(
         id="kokoro-82m",
         version=1,
@@ -131,6 +160,45 @@ _WHISPER_SERVING_PATH = LicenseVerdict(
     covers="weights and CTranslate2 conversion; end-to-end model, no language-specific component",
 )
 
+#: Serving-path verdict for the promoted Hindi route: base weights +
+#: fine-tune + conversion + runtime, each verified at its own source.
+#: End-to-end audio-LLM — no language-specific component rides along.
+#: Training-data licenses (CC-BY-4.0 IndicVoices/FLEURS, CC0 Kathbath)
+#: attach attribution to the DATA, recorded in the corpus provenance;
+#: the served weights remain apache-2.0 derivatives.
+_QWEN3_E3_HI_SERVING_PATH = LicenseVerdict(
+    license="Apache-2.0",
+    commercial_use=True,
+    verified_on=date(2026, 8, 18),
+    source="https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+    covers=(
+        "fine-tuned GGUF weights (apache-2.0 derivative; in-house training on "
+        "CC-BY-4.0/CC0 public corpora, attribution in the frozen manifest "
+        "provenance) + official mmproj + pinned llama.cpp b10344 runtime (MIT); "
+        "end-to-end model, no language-specific component"
+    ),
+)
+
+#: The promotion's evidence chain, immutable by reference. Numbers on
+#: the frozen primary through the real adapter: CER 0.11612 (replicate
+#: 0.11750) / WER 0.24064 / 0 hallucinated probes vs the INCUMBENT
+#: whisper-small same-day baseline CER 0.37617 / WER 0.66575 — a -69%
+#: relative CER improvement, ~15x the replicate noise band. English
+#: safety WER 0.0; short-speech, silence, long-audio (300/600 s), and
+#: failure-drill batteries in the M23/M24/M25 reports.
+_QWEN3_E3_HI_EVIDENCE = LanguageEvidence(
+    corpus="stt-hi-public-eval@v1",
+    corpus_ownership=CorpusOwnership.ADOPTED,
+    quality_baseline="2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23",
+    production_benchmark="2026-08-18-qwen3-e3-cpu-ladder",
+    approval=(
+        "F-M26 — founder promotion decision, 2026-08-19 "
+        "(docs/milestones/26-qwen-e3-production-promotion.md); readiness "
+        "evidence: docs/research/2026-08-18-qwen3-hi-e3-promotion-readiness.md"
+    ),
+    approved_on=date(2026, 8, 19),
+)
+
 _KOKORO_SERVING_PATH = LicenseVerdict(
     license="Apache-2.0",
     commercial_use=True,
@@ -150,17 +218,25 @@ _ROUTES = (
         license=_WHISPER_SERVING_PATH,
         evidence=_STT_EN_EVIDENCE,
     ),
-    # Hindi and Arabic enter where every language enters (F-M5-1). The
-    # incumbent already transcribes both; until M5 they did so unrouted,
-    # unmeasured, and unlabelled. `available` is the honest name for what
-    # was already happening — served, not promised.
+    # Hindi: the M26 promotion — the first language to move OFF the
+    # incumbent, onto the in-house fine-tuned specialist, on the full
+    # M23→M24→M25 evidence chain and the founder's explicit decision.
+    # Status stays `available`: the switch changes what honestly serves
+    # the existing promise level; `supported` remains a separate, later
+    # rung with its own decision. ROLLBACK is a deliberate route change
+    # back to whisper-small (registry/proposals.py restates the target
+    # verbatim; docs/ops/model-rollout.md) — never an automatic
+    # per-request fallback.
     ServingRoute(
         public_model_id="intelliai-stt",
         selector=RouteSelector(language="hi"),
         status=LanguageStatus.AVAILABLE,
-        artifact_id="whisper-small",
-        license=_WHISPER_SERVING_PATH,
+        artifact_id="qwen3-asr-0.6b-hi-ft-e3",
+        license=_QWEN3_E3_HI_SERVING_PATH,
+        evidence=_QWEN3_E3_HI_EVIDENCE,
     ),
+    # Arabic entered where every language enters (F-M5-1): `available`
+    # on the incumbent — served, not promised.
     ServingRoute(
         public_model_id="intelliai-stt",
         selector=RouteSelector(language="ar"),

@@ -666,11 +666,16 @@ class TestBehaviorFrozen:
         ):
             assert default_registry().resolve(model_id).deployment == service
 
-    def test_the_policy_language_routes_serve_the_same_artifacts(self) -> None:
-        # The routes describe what was already happening; they do not
-        # redirect any traffic that exists today.
+    def test_the_policy_language_routes_serve_the_approved_artifacts(self) -> None:
+        # Originally the routes described what was already happening
+        # (everything on the incumbent). Since the M26 founder decision,
+        # Hindi is the first language served by a PROMOTED specialist;
+        # English and Arabic stay on the incumbent unchanged.
         registry = default_registry()
-        for language in ("en", "hi", "ar"):
+        assert registry.resolve("intelliai-stt", language="hi").artifact.id == (
+            "qwen3-asr-0.6b-hi-ft-e3"
+        )
+        for language in ("en", "ar"):
             assert registry.resolve("intelliai-stt", language=language).artifact.id == (
                 "whisper-small"
             )

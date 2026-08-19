@@ -1,15 +1,15 @@
 # LOCAL PRODUCTION-SHAPED overlay — the M25 tunnel-testable E3 stack.
 #
 # The EXACT production architecture (base stack + the prod overlay's
-# Caddy HTTPS edge) with exactly one routing difference: the staging
-# registry profile serves hi -> qwen3-asr-0.6b-hi-ft-e3 (the PENDING
-# M24 promotion proposal, live for LOCAL verification only). This file
+# Caddy HTTPS edge), runnable locally without production credentials.
+# Since the M26 promotion the live catalog itself routes
+# hi -> qwen3-asr-0.6b-hi-ft-e3, so this overlay serves the SAME routes
+# production would; the staging registry profile stays declared as the
+# hook where the NEXT promotion candidate will compose first. This file
 # is NEVER applied implicitly: it activates only by hand
-# (`make local-prod-up`). Production separation is structural, not
-# procedural — the settings layer refuses the staging profile under
-# INTELLIAI_ENV=prod, so this overlay CANNOT run with the production
-# environment, and the prod overlay CANNOT serve E3. Guard tests pin
-# both directions, and no prod-* Make target references this file.
+# (`make local-prod-up`); the settings layer refuses the staging
+# profile under INTELLIAI_ENV=prod, and no prod-* Make target
+# references this file (guard-tested).
 #
 # Cloudflare Tunnel points at the Caddy edge (https://localhost) so
 # Web and Android exercise the same HTTPS path a future Hostinger

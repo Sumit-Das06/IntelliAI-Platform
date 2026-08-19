@@ -185,9 +185,10 @@ canary-sim-{0.10,0.25,0.50,0.75}, rollback-drill; screenshots land in
 ## 21. Remaining Hostinger-only inputs
 
 VPS access · domain + DNS · production secrets (generated on the box)
-· off-box backup destination · monitoring account. Plus the M24
-blockers for the ROUTE change itself: founder approval of the pending
-proposal; Linux runtime re-ladder on VPS hardware.
+· off-box backup destination · monitoring account. Plus the Linux
+runtime re-ladder on VPS hardware. *(The route decision itself was
+made after this report: the founder approved the E3 promotion on
+2026-08-19 and M26 activated it in the repository.)*
 
 ## 22. Limitations
 

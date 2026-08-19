@@ -86,8 +86,11 @@ class TestCommittedManifest:
     """The real registry state the evaluation plane reads."""
 
     def test_it_loads_and_resolves_the_policy_languages(self) -> None:
+        # M26: Hindi serves the promoted specialist; English and Arabic
+        # stay on the incumbent.
         registry = load_manifest(COMMITTED)
-        for language in ("en", "hi", "ar"):
+        assert registry.resolve("intelliai-stt", "hi").artifact == "qwen3-asr-0.6b-hi-ft-e3"
+        for language in ("en", "ar"):
             served = registry.resolve("intelliai-stt", language)
             assert served.artifact == "whisper-small"
             assert served.deployment == "stt-runtime"
