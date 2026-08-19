@@ -68,9 +68,16 @@ def test_the_status_enum_is_native_and_carries_the_locked_vocabulary() -> None:
 
 
 def test_the_client_source_enum_is_native_and_closed() -> None:
+    # Adding a surface is a REVIEWED diff to this set plus a migration
+    # (M27 added ios-keyboard with a3f8c2d94e61) — never drift.
     column = Base.metadata.tables["speech_samples"].c.client_source
     assert column.type.name == "client_source"  # type: ignore[attr-defined]
-    assert set(column.type.enums) == {"web", "keyboard", "api"}  # type: ignore[attr-defined]
+    assert set(column.type.enums) == {  # type: ignore[attr-defined]
+        "web",
+        "keyboard",
+        "api",
+        "ios-keyboard",
+    }
 
 
 def test_samples_cascade_with_their_tenant_and_events_with_their_sample() -> None:

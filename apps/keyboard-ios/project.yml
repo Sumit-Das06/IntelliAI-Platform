@@ -1,0 +1,100 @@
+# IntelliAI iOS Keyboard — XcodeGen project specification.
+#
+# The .xcodeproj is GENERATED, never committed: on a Mac,
+#   brew install xcodegen && cd apps/keyboard-ios && xcodegen generate
+# produces the project deterministically from this file. That keeps the
+# repository reviewable (no opaque pbxproj churn) and the build
+# reproducible.
+#
+# Two targets + shared sources, mirroring the Android app's shape:
+#   IntelliAI          — container app (onboarding, API key, settings,
+#                        microphone permission, correction editor)
+#   IntelliAIKeyboard  — the custom keyboard extension (dictation +
+#                        typing + transcript insertion)
+# Shared/ compiles into BOTH targets: the API client, audio pipeline,
+# settings/keychain stores, and the dictation state machine are one
+# implementation, unit-tested once.
+
+name: IntelliAIKeyboard
+options:
+  bundleIdPrefix: com.intelliai
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Development team is a LOCAL setting: pass via
+    #   xcodegen generate && xcodebuild ... DEVELOPMENT_TEAM=XXXX
+    # or set in Xcode's Signing pane. Never committed.
+
+targets:
+  IntelliAI:
+    type: application
+    platform: iOS
+    sources:
+      - path: IntelliAI
+      - path: Shared
+    info:
+      path: IntelliAI/Info.plist
+      properties:
+        CFBundleDisplayName: IntelliAI
+        UILaunchScreen: {}
+        # The CONTAINER app owns the microphone permission prompt: a
+        # keyboard extension cannot present it. Granted here, the
+        # extension records under the same authorization.
+        NSMicrophoneUsageDescription: >-
+          IntelliAI uses the microphone to transcribe your dictation
+          into text.
+    entitlements:
+      path: IntelliAI/IntelliAI.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.intelliai.keyboard
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)com.intelliai.keyboard.shared
+    dependencies:
+      - target: IntelliAIKeyboard
+        embed: true
+
+  IntelliAIKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: IntelliAIKeyboard
+      - path: Shared
+    info:
+      path: IntelliAIKeyboard/Info.plist
+      properties:
+        CFBundleDisplayName: IntelliAI Keyboard
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+          NSExtensionAttributes:
+            IsASCIICapable: false
+            PrefersRightToLeft: false
+            PrimaryLanguage: en-US
+            # Full Access is REQUIRED for network transcription and the
+            # shared App Group/Keychain. iOS shows its own warning when
+            # the user enables it; the README documents exactly what the
+            # keyboard does and does not access.
+            RequestsOpenAccess: true
+    entitlements:
+      path: IntelliAIKeyboard/IntelliAIKeyboard.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.intelliai.keyboard
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)com.intelliai.keyboard.shared
+
+  IntelliAIKeyboardTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+      - path: Shared
+    dependencies:
+      - target: IntelliAI

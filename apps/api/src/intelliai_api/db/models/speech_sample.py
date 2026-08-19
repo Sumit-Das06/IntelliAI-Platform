@@ -67,6 +67,10 @@ class ClientSource(StrEnum):
     WEB = "web"
     KEYBOARD = "keyboard"
     API = "api"
+    # M27: the iOS keyboard is its own capture surface — AVAudioEngine's
+    # acoustic profile differs from Android's AudioRecord, and the enum
+    # exists precisely to keep that product fact queryable.
+    IOS_KEYBOARD = "ios-keyboard"
 
 
 class CorrectionSource(StrEnum):

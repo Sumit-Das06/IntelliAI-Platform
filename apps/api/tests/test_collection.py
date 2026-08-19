@@ -203,6 +203,35 @@ async def test_the_client_header_labels_the_sample(
         assert event.detail["client_source"] == "web"
 
 
+async def test_the_ios_keyboard_identifies_as_its_own_surface(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # M27: the iOS keyboard sends `ios-keyboard/<version>` — a distinct
+    # capture surface (AVAudioEngine vs Android's AudioRecord), recorded
+    # exactly, through the same shared endpoint as every other client.
+    runtime = FakeRuntimeClient(envelope=make_envelope())
+    storage = FakeObjectStorage()
+    async with client_with_db(settings, db_engine, install(runtime, storage)) as (
+        client,
+        factory,
+    ):
+        tenant = await _tenant(factory, "client-ios@example.com", consent=True)
+        response = await client.post(
+            "/v1/audio/transcriptions",
+            headers={
+                **_bearer(tenant.generated.secret),
+                "X-IntelliAI-Client": "ios-keyboard/1.0",
+            },
+            **_post_kwargs(),
+        )
+
+        assert response.status_code == 200
+        (sample,), (event,) = await _rows(factory, tenant.organization.id)
+        assert sample.client_source is ClientSource.IOS_KEYBOARD
+        assert sample.client_version == "1.0"
+        assert event.detail["client_source"] == "ios-keyboard"
+
+
 async def test_a_bare_client_source_needs_no_version(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
