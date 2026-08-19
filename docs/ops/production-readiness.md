@@ -101,3 +101,21 @@ degrades the report without killing the service; a dead default slot
 No observability stack ships in this milestone — these are provider
 dashboard configurations, listed so day one is a checklist, not a
 design session.
+
+## Hindi punctuation stage (M30/M31 posture)
+
+- [x] Capability implemented in the STT runtime (word-copy decoder,
+      fail-open, hi-route gating) and staged 22/22 on the local
+      production-shaped stack (M30).
+- [x] Production overlay pins `INTELLIAI_STT_PUNCTUATION_ENABLED: "false"`
+      (guard-tested); the base compose defaults nothing on.
+- [x] Artifact `punct-cap-seg-47@v1` seeds via `make seed-models`
+      (conditional: skipped when not present locally); preflight §4c
+      refuses an ENABLED deployment without it; the smoke script asserts
+      the declared posture (§4b).
+- [x] Runtime `/health/ready` reports the stage (`"punctuation":
+      "ready"|"disabled"`); the gateway runtime check fails on any
+      non-`ready` runtime status.
+- [ ] PRODUCTION ENABLE — a separate promotion decision: deploy-box
+      re-ladder, founder call on the audio-flagged eval rows, reviewed
+      flag flip (rollback = flip back).

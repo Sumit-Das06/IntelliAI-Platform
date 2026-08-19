@@ -62,13 +62,58 @@ async def create_transcription(
     service: TranscriptionDep,
     collection: CollectionDep,
     file: Annotated[UploadFile, File()],
-    model: Annotated[str, Form()],
+    model: Annotated[str, Form(description="The public model id, e.g. `intelliai-stt`.")],
     idempotency_key: IdempotencyKey,
-    language: Annotated[str | None, Form()] = None,
-    response_format: Annotated[ResponseFormat, Form()] = "json",
-    client: Annotated[str | None, Header(alias=CLIENT_HEADER)] = None,
-    contribution: Annotated[str | None, Header(alias=CONTRIBUTION_HEADER)] = None,
+    language: Annotated[
+        str | None,
+        Form(
+            description=(
+                "Spoken language: `en`, `hi`, or `ar` (regional tags like "
+                "`hi-IN` normalize to the base language). Omit to "
+                "auto-detect."
+            )
+        ),
+    ] = None,
+    response_format: Annotated[
+        ResponseFormat,
+        Form(
+            description=(
+                '`json` -> `{"text": ...}`; `text` -> the plain transcript; '
+                "`verbose_json` -> adds `language`, `duration`, and timed "
+                "`segments` (each with `id`, `start`, `end`, `text`)."
+            )
+        ),
+    ] = "json",
+    client: Annotated[
+        str | None,
+        Header(
+            alias=CLIENT_HEADER,
+            description=(
+                "Optional client identity as `source/version` (e.g. "
+                "`web/1.0`, `keyboard/1.6`, `ios-keyboard/1.0`); unknown "
+                "sources are recorded as `api`."
+            ),
+        ),
+    ] = None,
+    contribution: Annotated[
+        str | None,
+        Header(
+            alias=CONTRIBUTION_HEADER,
+            description=(
+                "Per-request training-data opt-out: exactly `off` skips "
+                "sample collection for this request; anything else (or "
+                "omitting the header) leaves it on."
+            ),
+        ),
+    ] = None,
 ) -> Response:
+    """Transcribe one audio file (up to 25 MiB and 600 seconds).
+
+    Audio longer than 600 seconds is refused with a 400 — never cut
+    short. When a consented sample is stored, the response carries its
+    id in the `X-IntelliAI-Sample` header; submit human fixes to
+    `POST /v1/audio/transcriptions/{sample_id}/correction`.
+    """
     started = time.monotonic()
     client_source, client_version = _parse_client(client)
     contribute = _wants_contribution(contribution)

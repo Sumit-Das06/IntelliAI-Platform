@@ -75,7 +75,18 @@ async def ready(request: Request) -> JSONResponse:
             degraded = True
     if default_state != "ready":
         return JSONResponse({"status": "not_ready", "slots": slots}, status_code=503)
-    return JSONResponse({"status": "degraded" if degraded else "ready", "slots": slots})
+    # M31: the punctuation stage is part of readiness truth. "disabled"
+    # is the honest default everywhere; when the stage is enabled it
+    # loaded in the lifespan (or startup refused), so a live process
+    # reports "ready". Additive key — tolerant readers unaffected.
+    punctuation = "ready" if request.app.state.punctuator is not None else "disabled"
+    return JSONResponse(
+        {
+            "status": "degraded" if degraded else "ready",
+            "slots": slots,
+            "punctuation": punctuation,
+        }
+    )
 
 
 @router.get("/info")

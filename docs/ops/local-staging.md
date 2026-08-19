@@ -76,8 +76,7 @@ toggle Contribution in the keyboard settings and compare sample behavior.
 
 ## 5. What "unchanged production" means here
 
-- `make prod-up` composes base + `infra/compose/prod.yml` only — Hindi
-  resolves to **whisper-small** there, test-pinned.
+- `make prod-up` composes base + `infra/compose/prod.yml` only — since the M26 promotion Hindi resolves to **qwen3-asr-0.6b-hi-ft-e3** there too (the overlay pins both slots, test-pinned); the staging differences left are the registry profile and the punctuation flag.
 - The staging gateway logs `registry_profile_staging` loudly at boot.
 
 ## 6. Back to normal

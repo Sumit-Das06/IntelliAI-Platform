@@ -15,12 +15,15 @@ the prod overlay adds exactly one internet-facing thing (Caddy on
 80/443) and pins the production posture. ~30 minutes from blank machine
 to serving.
 
-**What the STT runtime image carries (since M18/M19):** the whisper
-engine AND the pinned llama.cpp Linux layer for the qwen3 candidate
-(checksummed at build, re-verified at every load). Carrying it
-activates nothing — production declares `whisper` only, and promoting
-the Hindi candidate is the one-commit reviewed diff in
-[model-rollout.md](model-rollout.md). Long-audio posture (M19, code
+**What the STT runtime image carries (M18/M19 + M26/M30):** the
+whisper engine, the pinned llama.cpp Linux layer for the promoted Hindi
+specialist (checksummed at build, re-verified at every load), and the
+punctuation extra (onnxruntime + sentencepiece). Since the M26
+promotion, production declares BOTH artifacts —
+`whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3` — and since M30 it pins the
+punctuation stage OFF (`INTELLIAI_STT_PUNCTUATION_ENABLED: "false"`);
+enabling punctuation is a separate reviewed promotion
+([model-rollout.md](model-rollout.md)). Long-audio posture (M19, code
 defaults — no env needed): ≤120 s direct, 120–600 s chunked inside the
 engine, >600 s clean 400; gateway deadline 450 s, admission lease 540 s
 (guard-tested to stay above the deadline).
@@ -62,6 +65,27 @@ chmod 600 .env               # with any required secret missing (:?)
 `.env` lives only on the VPS and in the password manager. The example
 files carry placeholders only — `test_ops_configuration.py` refuses
 minted-looking values in them.
+
+## 5b. Transfer and seed the model weights (REQUIRED before preflight)
+
+The promoted Hindi artifact and the punctuation artifact are
+deliberately NOT downloadable — they distribute by seeding, and
+`models/` is gitignored, so a fresh clone has no weights. Transfer them
+from the workstation (scp/rsync), then seed the model volume:
+
+```bash
+# on the workstation:
+rsync -av models/qwen3-asr-0.6b/ vps:/opt/intelliai/models/qwen3-asr-0.6b/
+rsync -av models/qwen3-asr-0.6b-hi-ft-e3/ vps:/opt/intelliai/models/qwen3-asr-0.6b-hi-ft-e3/
+rsync -av models/punct-cap-seg-47/ vps:/opt/intelliai/models/punct-cap-seg-47/   # optional until punctuation is promoted
+
+# on the VPS (also runs automatically as a prod-up prerequisite):
+make seed-models
+```
+
+`make prod-check` hard-fails without the E3 weights on disk; the store
+re-hashes every file at every runtime start, so a corrupted transfer
+can never serve.
 
 ## 6–7. Preflight, HTTPS, first start
 

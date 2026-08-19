@@ -32,7 +32,7 @@
 3. Verify: `curl -s https://$DOMAIN/health/ready` all-ok, then one real
    dictation per served language.
 4. Export the new truth for readers outside the gateway:
-   `make registry-manifest` (or the CLI equivalent) and archive it.
+   `make manifest` (or the CLI equivalent) and archive it.
 
 ## Roll back
 

@@ -35,6 +35,14 @@ services:
       api:
         condition: service_started
     networks: [intelliai]
+    healthcheck:
+      # The admin endpoint answers only when the config loaded and the
+      # server is actually serving — a cert-issuance crash-loop stops
+      # looking "up" (M31; the smoke script also checks this state).
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     restart: unless-stopped
 
   api:

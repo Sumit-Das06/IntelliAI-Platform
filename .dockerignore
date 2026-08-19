@@ -31,3 +31,7 @@ docs/
 *.log
 Makefile
 docker-compose.yml
+# Model weights and backups never enter a build context (13+ GB).
+models/
+*.gguf
+backups/

@@ -16,7 +16,7 @@ make grant-consent org=org_... ref="cohort-2026-08-consent-v1"
 ## What they get
 - `https://$DOMAIN/playground` — works in any phone browser. Paste key once → Record → Transcribe → fix the text → Save correction.
 - Ask them to speak **naturally** in whatever language they actually use (Hinglish very much included), and to fix transcripts when they have 10 seconds — corrections are the most valuable thing they can give.
-- Set expectations honestly: **Hindi and Arabic are beta** — imperfect output is expected and is exactly what their usage improves.
+- Set expectations honestly: **Hindi and Arabic carry the Beta label** — Hindi now runs a measured in-house model (much stronger than before), Arabic is still unmeasured; imperfect output is expected and is exactly what their usage improves.
 
 ## Rules that protect the data
 - Nothing sensitive: no real phone numbers, addresses, or other people's private details in recordings.

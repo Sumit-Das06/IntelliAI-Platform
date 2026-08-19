@@ -346,8 +346,11 @@ is literally `if (langSelect.value) form.append("language", …)`. The
 Android keyboard's "Auto" does exactly the same thing. That symmetry is
 pinned by a test, so the two clients cannot drift apart.
 
-"(Beta)" is honest labelling: Hindi and Arabic are served, and their
-quality has not yet been measured against native speech.
+"(Beta)" mirrors the registry's `available` rung: served honestly,
+not yet promised. Since M23/M26, Hindi quality IS measured — the
+in-house specialist scores CER 0.11612 on the frozen Hindi benchmark
+(-69% relative vs the previous engine); Arabic remains unmeasured on
+the incumbent. The label stays until the founder promotes the rung.
 
 ## 2.5 The contribution checkbox
 
@@ -527,7 +530,7 @@ This is how a pilot customer graduates from *clicking* to *integrating*.
 
 | Limitation | Status |
 | --- | --- |
-| Hindi and Arabic are labelled "(Beta)" | Honest: they are served, but quality is unmeasured against native speech. The pilot's own validation used English audio only |
+| Hindi and Arabic are labelled "(Beta)" | The registry's `available` rung: served, not promised. Hindi quality is now measured (CER 0.11612 on the frozen Hindi benchmark, M23/M26); Arabic remains unmeasured |
 | Recording format depends on the browser | Safari/Firefox may produce different containers. The runtime decodes all of them; the *stored* bytes differ by browser |
 | No live/streaming transcription | The request is one complete file, one response. Streaming is not built |
 | Correction is last-write-wins | Re-correcting simply overwrites `current_transcript`; the original is always preserved, so nothing is lost |
@@ -1325,7 +1328,7 @@ red.
 | Limitation | Status |
 | --- | --- |
 | Physical-device coverage is **partial** | One device (Galaxy M15), and it immediately found a real bug (§5.7). The full manual checklist in `apps/keyboard-android/RELEASE.md` is still outstanding — other manufacturers, rotation, app-switching, long dictation |
-| Hindi/Arabic **quality** unmeasured | Verified only that the correct language tag reaches the server; test audio was English throughout |
+| Hindi/Arabic keyboard-path quality | Hindi is measured server-side (CER 0.11612, M23/M26) and real founder Hindi sessions ran through Web/Android in M25; Arabic remains unmeasured. Device-matrix coverage is still partial |
 | No production server baked in | Release ships an empty default, so a user would have to type a URL — fine for enterprise, wrong for consumer |
 | No production signing key | Cannot be distributed or published; deliberate |
 | Every user needs an API key | Coherent for an enterprise pilot; not a consumer product shape (see [milestones/13.5](milestones/13.5-architecture-freeze-review.md)) |

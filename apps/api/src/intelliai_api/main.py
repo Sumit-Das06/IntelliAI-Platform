@@ -52,6 +52,37 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.info("app_stopped")
 
 
+def _document_bearer_auth(app: FastAPI) -> None:
+    """Make /docs honest about auth — documentation only, zero behavior.
+
+    The real credential check lives in ``deps.current_auth`` (a manual
+    header read, deliberately not a FastAPI security dependency). Without
+    this, Swagger renders no Authorize button and every "Try it out"
+    fails with an unexplained 401. This injects the bearer scheme into
+    the generated OpenAPI and marks every /v1 operation as requiring it;
+    enforcement is unchanged.
+    """
+    original_openapi = app.openapi
+
+    def openapi_with_auth() -> dict:  # type: ignore[type-arg]
+        schema = original_openapi()
+        components = schema.setdefault("components", {})
+        components.setdefault("securitySchemes", {})["ApiKeyBearer"] = {
+            "type": "http",
+            "scheme": "bearer",
+            "description": "An IntelliAI API key: `Authorization: Bearer ik_live_...`",
+        }
+        for path, operations in schema.get("paths", {}).items():
+            if not path.startswith("/v1/"):
+                continue
+            for operation in operations.values():
+                if isinstance(operation, dict):
+                    operation.setdefault("security", [{"ApiKeyBearer": []}])
+        return schema
+
+    app.openapi = openapi_with_auth  # type: ignore[method-assign]
+
+
 def create_app(settings: Settings | None = None) -> FastAPI:
     """Build a fully configured application instance.
 
@@ -67,7 +98,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title="IntelliAI Platform",
         version=__version__,
         lifespan=lifespan,
+        description=(
+            "Speech APIs for products that listen. Authenticate every "
+            "request with `Authorization: Bearer ik_live_...` (create keys "
+            "in the console). Speech-to-text accepts uploads up to 25 MiB "
+            "and 600 seconds of audio; longer files are refused loudly, "
+            "never truncated. Languages: `en`, `hi`, `ar` — omit `language` "
+            "to auto-detect. Human corrections and consented sample "
+            "collection are built in."
+        ),
     )
+    _document_bearer_auth(app)
     app.state.settings = settings
     engine = create_engine(settings)
     app.state.engine = engine

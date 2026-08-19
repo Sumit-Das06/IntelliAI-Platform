@@ -60,6 +60,15 @@ echo "$runtime_ready" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"' \
   || fail "stt-runtime /health/ready is not 'ready': $runtime_ready"
 note "stt-runtime ready (artifacts hash-verified at load — ready IS the artifact check)"
 
+# ── 4b. Punctuation stage posture matches the declared config (M31) ─────
+PUNCT_ENABLED="${INTELLIAI_STT_PUNCTUATION_ENABLED:-false}"
+if [ "$PUNCT_ENABLED" = "true" ]; then
+  echo "$runtime_ready" | grep -q '"punctuation"[[:space:]]*:[[:space:]]*"ready"'     || fail "punctuation is ENABLED but the runtime does not report it ready: $runtime_ready"
+  note "punctuation stage ready"
+else
+  echo "$runtime_ready" | grep -q '"punctuation"[[:space:]]*:[[:space:]]*"ready"'     && fail "punctuation reports ready but the deployment declares it OFF"     || note "punctuation stage disabled (as declared)"
+fi
+
 # ── 5. Migrations are at head ───────────────────────────────────────────
 current="$($COMPOSE run --rm --no-deps api alembic -c apps/api/alembic.ini current 2>/dev/null | grep -oE '^[0-9a-f]+' | head -1 || true)"
 head_rev="$($COMPOSE run --rm --no-deps api alembic -c apps/api/alembic.ini heads 2>/dev/null | grep -oE '^[0-9a-f]+' | head -1 || true)"

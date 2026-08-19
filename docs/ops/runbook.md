@@ -2,7 +2,7 @@
 
 ## Health
 - `https://$DOMAIN/health/live` — process up (Docker restarts on failure of this only).
-- `https://$DOMAIN/health/ready` — db/redis/storage checks; what the uptime monitor watches.
+- `https://$DOMAIN/health/ready` — db/redis/storage/stt-runtime checks (a degraded runtime slot fails the runtime check); what the uptime monitor watches.
 - Every response carries `X-Request-ID`; every log line for that request carries the same id. Debugging starts by grepping the id from the customer's error envelope.
 
 ## Look at things

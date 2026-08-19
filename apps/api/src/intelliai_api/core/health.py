@@ -161,6 +161,20 @@ class RuntimeHealthCheck:
         async with httpx.AsyncClient(transport=self._transport) as client:
             response = await client.get(self._ready_url)
             response.raise_for_status()
+            # M31: a multi-slot runtime answers 200 with status "degraded"
+            # when a NON-default slot (e.g. the Hindi specialist) is down —
+            # the deployment's main promise is broken while every container
+            # stays green. Treat anything but "ready" as this check
+            # failing, so the gateway aggregate reads DEGRADED and the
+            # keyword-matching uptime monitor alarms.
+            try:
+                status = response.json().get("status")
+            except ValueError as exc:
+                msg = f"{self.name} readiness returned a non-JSON body"
+                raise RuntimeError(msg) from exc
+            if status != "ready":
+                msg = f"{self.name} reports {status!r} (a slot is not serving)"
+                raise RuntimeError(msg)
 
 
 class HealthService:

@@ -121,15 +121,25 @@ def test_the_default_roster_probes_database_redis_storage_and_stt(
 
 
 def test_the_runtime_check_reads_the_runtimes_own_readiness() -> None:
-    # 200 passes, 503 fails — the runtime's self-report is the truth;
-    # the gateway never performs inference on a probe.
+    # "ready" passes; 503 fails; and — the M31 lesson — a 200 that says
+    # "degraded" ALSO fails: a multi-slot runtime with a dead specialist
+    # slot must never look healthy to the gateway or the uptime monitor.
     import httpx
     import pytest as _pytest
 
     from intelliai_api.core.health import RuntimeHealthCheck
 
     def ready(_request: httpx.Request) -> httpx.Response:
-        return httpx.Response(200)
+        return httpx.Response(200, json={"status": "ready", "slots": {"whisper-small": "ready"}})
+
+    def degraded(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "status": "degraded",
+                "slots": {"whisper-small": "ready", "qwen3-asr-0.6b-hi-ft-e3": "failed"},
+            },
+        )
 
     def loading(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(503)
@@ -138,6 +148,13 @@ def test_the_runtime_check_reads_the_runtimes_own_readiness() -> None:
         "stt-runtime", "http://runtime/health/ready", transport=httpx.MockTransport(ready)
     )
     asyncio.get_event_loop_policy().new_event_loop().run_until_complete(check_up.check())
+
+    check_degraded = RuntimeHealthCheck(
+        "stt-runtime", "http://runtime/health/ready", transport=httpx.MockTransport(degraded)
+    )
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    with _pytest.raises(RuntimeError, match="degraded"):
+        loop.run_until_complete(check_degraded.check())
 
     check_down = RuntimeHealthCheck(
         "stt-runtime", "http://runtime/health/ready", transport=httpx.MockTransport(loading)

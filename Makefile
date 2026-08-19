@@ -244,16 +244,18 @@ staging-up: ## Start the LOCAL staging stack (hi→Qwen, everything else→Whisp
 staging-down: ## Stop the local staging stack (data volumes preserved)
 	docker compose -f docker-compose.yml -f infra/compose/local-staging.yml down
 
-staging-seed-models: ## Copy locally-present Qwen GGUFs into the model volume (the E3 candidate is research-only and CANNOT be downloaded)
-	docker run --rm -v intelliai_modelcache:/models \
-	  -v "$(CURDIR)/models/qwen3-asr-0.6b:/src-base:ro" \
-	  -v "$(CURDIR)/models/qwen3-asr-0.6b-hi-ft-e3:/src-e3:ro" \
-	  -v "$(CURDIR)/models/punct-cap-seg-47:/src-punct:ro" \
-	  alpine sh -c "mkdir -p /models/qwen3-asr-0.6b /models/qwen3-asr-0.6b-hi-ft-e3 /models/punct-cap-seg-47 \
-	  && cp -r /src-base/v1 /models/qwen3-asr-0.6b/ \
-	  && cp -r /src-e3/v1 /models/qwen3-asr-0.6b-hi-ft-e3/ \
-	  && cp -r /src-punct/v1 /models/punct-cap-seg-47/ \
-	  && ls -la /models/qwen3-asr-0.6b/v1 /models/qwen3-asr-0.6b-hi-ft-e3/v1 /models/punct-cap-seg-47/v1"
+seed-models: ## Seed the model volume from models/ (E3 + base GGUFs required; punctuation copied when present)
+	docker run --rm -v $${COMPOSE_PROJECT_NAME:-intelliai}_modelcache:/models \
+	  -v "$(CURDIR)/models:/src:ro" \
+	  alpine:3.20 sh -c "mkdir -p /models/qwen3-asr-0.6b /models/qwen3-asr-0.6b-hi-ft-e3 \
+	  && cp -r /src/qwen3-asr-0.6b/v1 /models/qwen3-asr-0.6b/ \
+	  && cp -r /src/qwen3-asr-0.6b-hi-ft-e3/v1 /models/qwen3-asr-0.6b-hi-ft-e3/ \
+	  && if [ -d /src/punct-cap-seg-47/v1 ]; then mkdir -p /models/punct-cap-seg-47 \
+	  && cp -r /src/punct-cap-seg-47/v1 /models/punct-cap-seg-47/; \
+	  else echo 'punctuation artifact not present locally - skipped (stage is OFF unless seeded)'; fi \
+	  && ls -la /models"
+
+staging-seed-models: seed-models ## Back-compat alias (the seeding path now serves prod AND staging)
 
 # ── Local production-shaped stack (M25; see docs/ops/local-tunnel.md) ─
 # The EXACT production architecture (base + Caddy edge) with the ONE
@@ -300,7 +302,7 @@ prod-config-check: prod-check ## Alias for prod-check (configuration validation 
 prod-build: ## Build the production images without starting anything
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml build
 
-prod-up: ## Deploy/refresh the production stack (base + prod overlay, builds images)
+prod-up: seed-models ## Deploy/refresh the production stack (base + prod overlay, builds images)
 	docker compose -f docker-compose.yml -f infra/compose/prod.yml up -d --build
 
 # Migrations refuse to run without a fresh backup (<24 h): the runbook's

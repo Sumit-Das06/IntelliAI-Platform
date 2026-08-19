@@ -19,15 +19,24 @@
 
 	header {
 		# One year of HTTPS-only for browsers that have seen us once.
-		Strict-Transport-Security "max-age=31536000"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		# The console serves user-influenced text (transcripts); never
 		# let a browser second-guess declared content types.
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		# The console never frames and is never framed.
+		X-Frame-Options "DENY"
+		# The console studio needs the microphone (self); everything else
+		# a browser could ask for is denied at the edge.
+		Permissions-Policy "camera=(), geolocation=(), payment=()"
 		# No server fingerprint in responses.
 		-Server
 	}
 
-	# The gateway sets X-Request-ID itself; Caddy only forwards.
+	# The gateway sets X-Request-ID itself; Caddy only forwards. No
+	# response timeout is set ON PURPOSE: the gateway's own deadline is
+	# 450 s (INTELLIAI_RUNTIMES_TIMEOUT_SECONDS) for 600 s chunked audio,
+	# and Caddy's default (unlimited) must never undercut it — pinned by
+	# the ops guard tests.
 	reverse_proxy api:8000
 }

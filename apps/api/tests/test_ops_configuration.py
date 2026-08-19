@@ -318,3 +318,59 @@ def test_the_punctuation_stage_defaults_off_and_pins_the_hindi_whitelist() -> No
     assert defaults.punctuation_enabled is False
     assert defaults.punctuation_languages == "hi,hi-IN"
     assert defaults.punctuation_timeout_ms > 0
+
+
+def test_seeding_is_a_prod_prerequisite_and_pinned() -> None:
+    # M31: production declares the undownloadable E3 slot, so `prod-up`
+    # must seed first — the same law local-prod-up always had. The seed
+    # container is pinned (the repo's only formerly-unpinned image), and
+    # the punctuation copy is conditional so a punctuation-less box
+    # still seeds cleanly.
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert "\nprod-up: seed-models" in makefile
+    assert "\nlocal-prod-up: staging-seed-models" in makefile
+    seed = makefile[makefile.index("\nseed-models:") : makefile.index("\nstaging-seed-models:")]
+    assert "alpine:3.20" in seed
+    assert "if [ -d /src/punct-cap-seg-47/v1 ]" in seed
+    assert ":latest" not in makefile
+
+
+def test_the_edge_has_a_healthcheck_in_both_overlays() -> None:
+    # The admin-endpoint probe is unique to the caddy service, so its
+    # presence in the overlay text IS the caddy healthcheck.
+    local_prod = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    for overlay in (PROD_OVERLAY, local_prod):
+        assert "healthcheck" in overlay
+        assert "http://127.0.0.1:2019/config/" in overlay
+
+
+def test_weights_and_backups_never_enter_a_build_context() -> None:
+    dockerignore = (REPO / ".dockerignore").read_text(encoding="utf-8").splitlines()
+    for entry in ("models/", "*.gguf", "backups/"):
+        assert entry in dockerignore, f".dockerignore must exclude {entry}"
+
+
+def test_prod_env_template_documents_the_m30_and_backup_knobs() -> None:
+    assert "INTELLIAI_STT_PUNCTUATION_ENABLED=false" in ENV_PROD_EXAMPLE
+    assert "INTELLIAI_BACKUP_KEEP" in ENV_PROD_EXAMPLE
+    assert "INTELLIAI_SMOKE_API_KEY" in ENV_PROD_EXAMPLE
+    # The local production-shaped example is committed (a fresh clone
+    # must be able to run the staging battery without archaeology):
+    assert (REPO / ".env.local-prod.example").exists()
+
+
+def test_smoke_asserts_the_punctuation_posture() -> None:
+    smoke = (REPO / "infra/prod-smoke.sh").read_text(encoding="utf-8")
+    assert "INTELLIAI_STT_PUNCTUATION_ENABLED" in smoke
+    assert '"punctuation"' in smoke
+
+
+def test_the_edge_headers_carry_the_m31_hardening() -> None:
+    caddyfile = (REPO / "infra/Caddyfile").read_text(encoding="utf-8")
+    assert "max-age=31536000; includeSubDomains" in caddyfile
+    assert 'X-Frame-Options "DENY"' in caddyfile
+    assert "Permissions-Policy" in caddyfile
+    assert "-Server" in caddyfile
+    # No edge response timeout: the 450 s gateway deadline rules, and an
+    # edge timeout below it would kill healthy 600 s chunked requests.
+    assert "response_header_timeout" not in caddyfile

@@ -468,6 +468,11 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
 
     for text in pages:
         assert "whisper" not in text.lower()
+        # Post-M26 the Hindi route runs the in-house specialist; its
+        # vocabulary must be as invisible as the incumbent's.
+        assert "qwen" not in text.lower()
+        assert "llama" not in text.lower()
+        assert "gguf" not in text.lower()
         # Dashboard was renamed to Home in Commit 6; the old word must
         # never resurface on any console surface.
         assert "dashboard" not in text.lower()
@@ -499,3 +504,29 @@ def test_the_console_assets_ship_inside_the_package() -> None:
     ):
         asset = console / name
         assert asset.is_file()
+
+
+async def test_badge_semantics_are_documented_and_rendered_as_designed(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # M31: "Production" on a service card means LAUNCHED AS A PRODUCT
+    # (its opposite is "Coming Soon") — never "currently deployed on
+    # production infrastructure". The semantics live as a comment at the
+    # data source and as the ternary in both renderers; this pin keeps
+    # all three from drifting apart or being silently reinterpreted.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        js = (await client.get("/console/assets/console.js")).text
+        services = (await client.get("/console/services")).text
+    assert "BADGE SEMANTICS" in js
+    assert "NOT a claim about which infrastructure" in js
+    for surface in (js, services):
+        assert 'live ? "Production" : "Coming Soon"' in surface
+
+
+async def test_the_playground_documents_the_audio_ceiling(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        studio = (await client.get("/console/playground")).text
+    assert "Up to 10 minutes" in studio
+    assert "never cut short" in studio

@@ -41,7 +41,16 @@ window.IntelliAI = (function () {
    * customers never think about foundation models — categories, language
    * tiers, and descriptions here are product facts, deliberately NOT
    * derived from any internal registry. Launching a service = flipping
-   * one entry to production and giving it an href. */
+   * one entry to production and giving it an href.
+   *
+   * BADGE SEMANTICS (pinned by tests since M31):
+   *   service status "production"  = the service is LAUNCHED as a
+   *     product-grade offering (its opposite is "Coming Soon"). It is
+   *     NOT a claim about which infrastructure currently hosts it.
+   *   language tier "production"   = a promised language (registry rung
+   *     `supported`); tier "beta"  = served honestly, not yet promised
+   *     (registry rung `available`). Changing a tier here without the
+   *     matching registry rung decision is a lie — don't. */
   var SERVICES = [
     {
       id: "stt",

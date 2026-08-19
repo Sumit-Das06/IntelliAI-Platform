@@ -132,6 +132,9 @@ class TestOperationalSurface:
         assert client.get("/health/ready").json() == {
             "status": "ready",
             "slots": {"reference": "ready"},
+            # M31: readiness reports the punctuation stage; the default
+            # deployment ships it disabled.
+            "punctuation": "disabled",
         }
 
     def test_info_is_operational_identity_only(self, client: TestClient) -> None:

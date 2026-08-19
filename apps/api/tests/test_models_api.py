@@ -15,6 +15,9 @@ PEPPER = "test-pepper"
 # artifacts, engines, upstreams, licenses, precision, topology.
 FORBIDDEN_TERMS = (
     "whisper",
+    "qwen",
+    "llama",
+    "gguf",
     "kokoro",
     "hexgrad",
     "artifact",
