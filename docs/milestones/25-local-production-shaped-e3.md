@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | LOCAL PRODUCTION-SHAPED STACK READY — Web/Android interactive screenshot sessions are the founder's half of Phases 9–10; every API-level path is verified end to end, including through a real Cloudflare Tunnel |
+| **Status** | COMPLETE — the stack is production-shaped and REAL Web and Android sessions (founder-driven, both languages) verified the full path through a live Cloudflare Tunnel |
 | **Date** | 2026-08-19 |
 | **Objective** | The exact backend/container/configuration we intend to deploy to Hostinger later, already working locally, reachable by the real Web and Android clients over HTTPS |
 
@@ -209,12 +209,15 @@ promotion commit → 90/10 canary.
 
     LOCAL PRODUCTION-SHAPED STACK READY: YES
 
-    WEB THROUGH TUNNEL VERIFIED: YES (API contract end-to-end, incl. 300 s;
-        browser screenshot session = founder's half, steps documented)
+    WEB THROUGH TUNNEL VERIFIED: YES — founder-driven real browser session
+        2026-08-19: Hindi (webm, 30.4 s) served by qwen3-asr-0.6b-hi-ft-e3,
+        English (webm, 32.4 s) by whisper-small; plus the API-level battery
+        incl. 300 s (real-client-verification.json)
 
-    ANDROID THROUGH TUNNEL VERIFIED: PREPARED (contract verified through
-        the tunnel; phone session = founder's half, steps documented;
-        release config untouched)
+    ANDROID THROUGH TUNNEL VERIFIED: YES — founder-driven real device session
+        2026-08-19 (the existing demo APK, verified current; server address
+        set at runtime, release config untouched): Hindi (wav, 23.7 s) served
+        by qwen3-asr-0.6b-hi-ft-e3, English (wav, 22.1 s) by whisper-small
 
     HOSTINGER DEPLOYED: NO
 

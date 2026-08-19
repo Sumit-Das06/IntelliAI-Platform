@@ -1,0 +1,52 @@
+{
+  "evidence": "25-real-client-verification (Phases 9-10, founder session)",
+  "run_at": "2026-08-19T09:37:58.157703+00:00",
+  "path": "real client -> Cloudflare quick tunnel -> Caddy (TLS, headers) -> api (staging registry) -> multi-slot stt-runtime",
+  "requests": [
+    {
+      "client": "web-browser",
+      "media_format": "webm",
+      "language": "hi",
+      "served_by": "qwen3-asr-0.6b-hi-ft-e3",
+      "audio_seconds": 30.36,
+      "request_id": "req_8f5b2c9bbafc4c1d98b480915404f5e0",
+      "status": 200,
+      "latency_ms": 9338.57,
+      "at": "2026-08-19T08:55:11Z"
+    },
+    {
+      "client": "web-browser",
+      "media_format": "webm",
+      "language": "en",
+      "served_by": "whisper-small",
+      "audio_seconds": 32.4,
+      "request_id": "req_4e55ae37f1e84fc894fb2611e271694e",
+      "status": 200,
+      "latency_ms": 2960.8,
+      "at": "2026-08-19T09:00:53Z"
+    },
+    {
+      "client": "android-keyboard",
+      "media_format": "wav",
+      "language": "hi",
+      "served_by": "qwen3-asr-0.6b-hi-ft-e3",
+      "audio_seconds": 23.68,
+      "request_id": "req_a14543c4",
+      "status": 200,
+      "latency_ms": 9077.18,
+      "at": "2026-08-19T09:33:48Z"
+    },
+    {
+      "client": "android-keyboard",
+      "media_format": "wav",
+      "language": "en",
+      "served_by": "whisper-small",
+      "audio_seconds": 22.144,
+      "request_id": "req_e0bca53b",
+      "status": 200,
+      "latency_ms": 2057.26,
+      "at": "2026-08-19T09:36:44Z"
+    }
+  ],
+  "notes": "All four arms driven BY THE FOUNDER with real microphone audio; media_format fingerprints the client (browser MediaRecorder=webm, keyboard=wav). Artifacts read from the runtime's structured transcription_completed logs; request ids and statuses from the gateway logs. Tunnel hostname ephemeral, not recorded."
+}
