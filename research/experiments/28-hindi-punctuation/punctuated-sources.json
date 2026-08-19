@@ -1,0 +1,67 @@
+{
+  "experiment": "28-hindi-punctuation",
+  "phase": "punctuated-source-probe",
+  "instrument": "m28_punctuated_sources_probe.py (text-only fetch, no audio)",
+  "fleurs_hi_in_test": {
+    "source": "https://huggingface.co/datasets/google/fleurs/resolve/main/data/hi_in/test.tsv",
+    "license": "CC-BY-4.0 (same source family as the approved M23 English slice)",
+    "speech_style": "read speech (sentences read aloud), NOT spontaneous",
+    "raw_transcription": {
+      "rows": 418,
+      "rows_with_any_punctuation": 417,
+      "pct_rows_with_any_punctuation": 99.76,
+      "per_mark_total_count": {
+        "danda": 126,
+        "comma": 398,
+        "question_mark": 1,
+        "exclamation": 2,
+        "full_stop": 375,
+        "colon": 14,
+        "semicolon": 6
+      },
+      "per_mark_rows_containing": {
+        "danda": 113,
+        "comma": 239,
+        "question_mark": 1,
+        "exclamation": 2,
+        "full_stop": 305,
+        "colon": 12,
+        "semicolon": 6
+      },
+      "examples": [
+        "स्कीइंग मार्ग को एक हाईकिंग (लंबी पैदल यात्रा) मार्ग जैसा ही सोचें।",
+        "स्कीइंग मार्ग को एक हाईकिंग (लंबी पैदल यात्रा) मार्ग जैसा ही सोचें।",
+        "मनोविज्ञान सहित विज्ञान के सभी मामलों पर अरस्तू के विचारों को स्वीकार किया जाता है।"
+      ],
+      "style_note": "Mixed sentence-final style: both danda (।) and Latin full stop (.) appear as sentence enders — reference curation must pick one policy."
+    },
+    "transcription_normalized": {
+      "rows": 418,
+      "rows_with_any_punctuation": 93,
+      "pct_rows_with_any_punctuation": 22.25,
+      "per_mark_total_count": {
+        "danda": 22,
+        "comma": 12,
+        "question_mark": 0,
+        "exclamation": 2,
+        "full_stop": 11,
+        "colon": 6,
+        "semicolon": 1
+      },
+      "per_mark_rows_containing": {
+        "danda": 20,
+        "comma": 10,
+        "question_mark": 0,
+        "exclamation": 2,
+        "full_stop": 7,
+        "colon": 5,
+        "semicolon": 1
+      },
+      "note": "the normalized column already drops most punctuation — unusable as a punctuation reference"
+    }
+  },
+  "our_pipeline_preserves_punctuation": {
+    "claim": "The zero-punctuation Hindi training rows reflect the sources (IndicVoices, Kathbath), not our ingestion: the datasets pipeline keeps punctuation verbatim.",
+    "pinned_by": "ml/datasets/tests/test_validate.py::test_case_and_punctuation_survive"
+  }
+}

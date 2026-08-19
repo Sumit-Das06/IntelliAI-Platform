@@ -1,0 +1,473 @@
+{
+  "experiment": "28-hindi-punctuation",
+  "phase": "baseline-measurement",
+  "instrument": "m28_punctuation_baseline.py (read-only)",
+  "training_corpus_v3": {
+    "manifest": "ml\\datasets\\manifests\\qwen-hi-public-train-v3.jsonl",
+    "languages": {
+      "en": {
+        "rows": 900,
+        "rows_with_any_punctuation": 900,
+        "pct_rows_with_any_punctuation": 100.0,
+        "total_punctuation_chars": 2672,
+        "total_chars": 113780,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 545,
+          "question_mark": 3,
+          "exclamation": 5,
+          "colon": 21,
+          "semicolon": 19,
+          "full_stop": 888,
+          "quote_double": 64,
+          "quote_single": 118,
+          "hyphen": 120
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 960,
+          "question_mark": 5,
+          "exclamation": 5,
+          "colon": 22,
+          "semicolon": 19,
+          "full_stop": 1039,
+          "quote_double": 130,
+          "quote_single": 134,
+          "hyphen": 141
+        },
+        "examples": [
+          "On Monday, scientists from the Stanford University School of Medicine announced the invention of a new diagnostic tool that can sort cells by type: a tiny print…",
+          "The JAS 39C Gripen crashed onto a runway at around 9:30 am local time (0230 UTC) and exploded, closing the airport to commercial flights.",
+          "The pilot was identified as Squadron Leader Dilokrit Pattavee."
+        ]
+      },
+      "hi": {
+        "rows": 14224,
+        "rows_with_any_punctuation": 0,
+        "pct_rows_with_any_punctuation": 0.0,
+        "total_punctuation_chars": 0,
+        "total_chars": 1156753,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "examples": [
+          "मैं थ्री फोर फाइव सिक्स मैं पेल ड्राइव कोलकाता पश्चिम बंगाल पिन कोड सेवेन जीरो जीरो जीरो बैंक में बुकिंग संदर्भ संख्या सिक्स जीरो सिक्स नाइन ऐट नाइन वन जीरो फोर…",
+          "दर्शन",
+          "करने से आदमी को शक्ति प्रदान होती है"
+        ]
+      },
+      "zxx": {
+        "rows": 68,
+        "rows_with_any_punctuation": 0,
+        "pct_rows_with_any_punctuation": 0.0,
+        "total_punctuation_chars": 0,
+        "total_chars": 0,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "examples": []
+      }
+    }
+  },
+  "frozen_eval_references": {
+    "dataset": "stt-hi-public-eval@v1",
+    "clips": 153,
+    "stats": {
+      "rows": 151,
+      "rows_with_any_punctuation": 0,
+      "pct_rows_with_any_punctuation": 0.0,
+      "total_punctuation_chars": 0,
+      "total_chars": 14455,
+      "per_mark_rows_containing": {
+        "danda": 0,
+        "double_danda": 0,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "colon": 0,
+        "semicolon": 0,
+        "full_stop": 0,
+        "quote_double": 0,
+        "quote_single": 0,
+        "hyphen": 0
+      },
+      "per_mark_total_count": {
+        "danda": 0,
+        "double_danda": 0,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "colon": 0,
+        "semicolon": 0,
+        "full_stop": 0,
+        "quote_double": 0,
+        "quote_single": 0,
+        "hyphen": 0
+      }
+    },
+    "total_speech_seconds": 1186.7,
+    "total_reference_chars": 14455,
+    "chars_per_speech_second": 12.18,
+    "examples": [
+      "टीकाकरण के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जीरो दो पंजीकृत करने के लिए ओ टी पी तीन दो आठ चार सात दो का उपयोग करें",
+      "क्या क्या चीज लेना है हाँ",
+      "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तोरई हुआ है मटर किए हुए हैं क्या चीज़ लेना है आपको"
+    ]
+  },
+  "model_outputs_frozen_eval": {
+    "e3_m23": {
+      "result_file": "ml/evaluation/stt/results/2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23.json",
+      "stats": {
+        "rows": 153,
+        "rows_with_any_punctuation": 0,
+        "pct_rows_with_any_punctuation": 0.0,
+        "total_punctuation_chars": 0,
+        "total_chars": 14330,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        }
+      },
+      "examples_with_punct": [],
+      "examples": [
+        "टिकट करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जीरो दो पंजीकरण करने के लिए ओ टी पी तीन दो आठ चार सात दो का उपयोग करें",
+        "क्या क्या चीज़ें लेना है हाँ",
+        "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तूरी हुआ है मटर दिए हुए हैं क्या चीज़ लेना है आपको"
+      ]
+    },
+    "e3_m23_replicate": {
+      "result_file": "ml/evaluation/stt/results/2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23-replicate.json",
+      "stats": {
+        "rows": 153,
+        "rows_with_any_punctuation": 0,
+        "pct_rows_with_any_punctuation": 0.0,
+        "total_punctuation_chars": 0,
+        "total_chars": 14375,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        }
+      },
+      "examples_with_punct": [],
+      "examples": [
+        "टिकट करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जीरो दो पंजीकरण करने के लिए ओ टी पी तीन दो आठ चार सात दो का उपयोग करें",
+        "क्या क्या चीज़ें लेना है हाँ",
+        "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तूरी हुआ है मटर दिए हुए हैं क्या चीज़ लेना है आपको"
+      ]
+    },
+    "whisper_small_incumbent_m24": {
+      "result_file": "ml/evaluation/stt/results/2026-08-18-intelliai-stt-hi-whisper-small-int8-m24-incumbent.json",
+      "stats": {
+        "rows": 153,
+        "rows_with_any_punctuation": 86,
+        "pct_rows_with_any_punctuation": 56.21,
+        "total_punctuation_chars": 277,
+        "total_chars": 13191,
+        "per_mark_rows_containing": {
+          "danda": 21,
+          "double_danda": 0,
+          "comma": 74,
+          "question_mark": 8,
+          "exclamation": 2,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 34,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 1
+        },
+        "per_mark_total_count": {
+          "danda": 24,
+          "double_danda": 0,
+          "comma": 189,
+          "question_mark": 9,
+          "exclamation": 3,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 50,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 2
+        }
+      },
+      "examples_with_punct": [
+        "पीका करन के लिए मोबाई लंबर 8, 9, 7, 6, 2, 0, 2, 1, 2, 0, 2, पंजीकरत करने के लिए OTP 3, 2, 8, 4, 7, 2 का उप्यों करे",
+        "या, क्या चीजी लेना है?",
+        "अभी तो आलु हूँ है, यों होने वाला है, तोरी हूँ है, मक्तर के हूँ है, क्या चीजी लेना है आपको।"
+      ],
+      "examples": [
+        "पीका करन के लिए मोबाई लंबर 8, 9, 7, 6, 2, 0, 2, 1, 2, 0, 2, पंजीकरत करने के लिए OTP 3, 2, 8, 4, 7, 2 का उप्यों करे",
+        "या, क्या चीजी लेना है?",
+        "अभी तो आलु हूँ है, यों होने वाला है, तोरी हूँ है, मक्तर के हूँ है, क्या चीजी लेना है आपको।"
+      ]
+    },
+    "qwen_base_m17_linux": {
+      "result_file": "ml/evaluation/stt/results/2026-08-12-research-qwen3-asr-0.6b-hi-17-linux.json",
+      "stats": {
+        "rows": 153,
+        "rows_with_any_punctuation": 21,
+        "pct_rows_with_any_punctuation": 13.73,
+        "total_punctuation_chars": 45,
+        "total_chars": 13922,
+        "per_mark_rows_containing": {
+          "danda": 1,
+          "double_danda": 0,
+          "comma": 8,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 2,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 4
+        },
+        "per_mark_total_count": {
+          "danda": 1,
+          "double_danda": 0,
+          "comma": 24,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 2,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 4
+        }
+      },
+      "examples_with_punct": [
+        "टिक-करन के लिए मोबाइल नंबर आठ नौ सात छह दो जीरो दो एक दो जीरो दो पंजीकरण करने के लिए OTP तीन दो आठ चार सात दो का उपयोग करें",
+        "呀，假期来了，哈。",
+        "अरे अभी तो आलू हुआ है, गेहूं हुआ होने वाला है, तूरी हुआ है, मटर दिए हुए हैं, क्या चीज़ लेना है आपको"
+      ],
+      "examples": [
+        "टिक-करन के लिए मोबाइल नंबर आठ नौ सात छह दो जीरो दो एक दो जीरो दो पंजीकरण करने के लिए OTP तीन दो आठ चार सात दो का उपयोग करें",
+        "呀，假期来了，哈。",
+        "अरे अभी तो आलू हुआ है, गेहूं हुआ होने वाला है, तूरी हुआ है, मटर दिए हुए हैं, क्या चीज़ लेना है आपको"
+      ]
+    },
+    "e2_m22": {
+      "result_file": "ml/evaluation/stt/results/2026-08-18-research-qwen3-asr-0.6b-hi-ft-e2-hi-m22.json",
+      "stats": {
+        "rows": 153,
+        "rows_with_any_punctuation": 0,
+        "pct_rows_with_any_punctuation": 0.0,
+        "total_punctuation_chars": 0,
+        "total_chars": 14381,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        }
+      },
+      "examples_with_punct": [],
+      "examples": [
+        "टिकट करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जीरो दो पंजीकरण करने के लिए ओ टी पी तीन दो आठ चार सात दो का उपयोग करें",
+        "क्या क्या चीज़ें लेना है हाँ",
+        "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तूरी हुआ है मटर दिए हुए हैं क्या चीज़ लेना है आपको"
+      ]
+    },
+    "e1_m21": {
+      "result_file": "ml/evaluation/stt/results/2026-08-17-research-qwen3-asr-0.6b-hi-ft-e1-hi-m21.json",
+      "stats": {
+        "rows": 153,
+        "rows_with_any_punctuation": 0,
+        "pct_rows_with_any_punctuation": 0.0,
+        "total_punctuation_chars": 0,
+        "total_chars": 14298,
+        "per_mark_rows_containing": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        },
+        "per_mark_total_count": {
+          "danda": 0,
+          "double_danda": 0,
+          "comma": 0,
+          "question_mark": 0,
+          "exclamation": 0,
+          "colon": 0,
+          "semicolon": 0,
+          "full_stop": 0,
+          "quote_double": 0,
+          "quote_single": 0,
+          "hyphen": 0
+        }
+      },
+      "examples_with_punct": [],
+      "examples": [
+        "टिका करने के लिए मोबाइल नम्बर आठ नौ सात छः दो जीरो दो एक दो जीरो दो पंजीकृत करने के लिए ओटीपी तीन दो आठ चार सात दो का उपयोग करें",
+        "हाँ क्या चीज़ है ना हाँ",
+        "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तूरी हुआ है मटर भी हुए हैं क्या चीज़ लेना है आपको"
+      ]
+    }
+  },
+  "e3_english_probe_outputs": {
+    "source": "research/experiments/23-qwen3-hi-ft-e3/sweep-probes.json",
+    "note": "text_head fields are truncated probe outputs — punctuation presence is still observable",
+    "stats": {
+      "rows": 18,
+      "rows_with_any_punctuation": 18,
+      "pct_rows_with_any_punctuation": 100.0,
+      "total_punctuation_chars": 24,
+      "total_chars": 1260,
+      "per_mark_rows_containing": {
+        "danda": 0,
+        "double_danda": 0,
+        "comma": 12,
+        "question_mark": 0,
+        "exclamation": 0,
+        "colon": 0,
+        "semicolon": 0,
+        "full_stop": 0,
+        "quote_double": 0,
+        "quote_single": 0,
+        "hyphen": 1
+      },
+      "per_mark_total_count": {
+        "danda": 0,
+        "double_danda": 0,
+        "comma": 18,
+        "question_mark": 0,
+        "exclamation": 0,
+        "colon": 0,
+        "semicolon": 0,
+        "full_stop": 0,
+        "quote_double": 0,
+        "quote_single": 0,
+        "hyphen": 1
+      }
+    },
+    "examples": [
+      "And so my fellow Americans, ask not what your country can do for you, ",
+      "The LUNO had 120–160 m³ of fuel aboard it when it broke down and high ",
+      "Other topics covered reportedly include the future state of Jerusalem,"
+    ]
+  },
+  "real_client_sessions_m25": {
+    "source": "research/experiments/25-local-prod-e3/real-client-verification.json",
+    "note": "Evidence stores request metadata only (no transcript text, by design). The punctuation observation for real sessions comes from the founder's Speech Samples console screenshot (2026-08-19) and matches the frozen-eval measurement: Hindi outputs carry no punctuation."
+  }
+}

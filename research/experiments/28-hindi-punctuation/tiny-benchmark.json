@@ -1,0 +1,131 @@
+{
+  "experiment": "28-hindi-punctuation",
+  "phase": "tiny-benchmark (single candidate, research instrument only)",
+  "model": "1-800-BAD-CODE/xlm-roberta_punctuation_fullstop_truecase (pcs_47lang)",
+  "license": "Apache-2.0",
+  "runtime": "onnxruntime CPU via punctuators package, scratch venv",
+  "model_load_seconds": 36.26,
+  "chars_per_second_basis": 12.18,
+  "inputs_note": "All Hindi inputs are REAL E3 hypothesis_text from the M23 frozen-eval result; long tiers are concatenations of real outputs to the tier's char-equivalent length. The English control is E3's JFK probe text with punctuation removed.",
+  "tiers": {
+    "5s": {
+      "input_chars": 260,
+      "approx_speech_seconds": 21.3,
+      "latency_seconds": 0.125,
+      "word_preservation_invariant": "PASS",
+      "marks_added": {
+        "danda": 5,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      },
+      "sentences_segmented": 5,
+      "output_head": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना। आप इस बात को भी तो समझिए मांग ज़्यादा। एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है। वो केले की अभी केला भी। भाई बिल्कुल साफ़ सुथरा आपको द"
+    },
+    "30s": {
+      "input_chars": 412,
+      "approx_speech_seconds": 33.8,
+      "latency_seconds": 0.142,
+      "word_preservation_invariant": "PASS",
+      "marks_added": {
+        "danda": 8,
+        "comma": 2,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      },
+      "sentences_segmented": 8,
+      "output_head": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना। आप इस बात को भी तो समझिए। मांग ज़्यादा। एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है। वो केले की अभी केला भी भाई बिल्कुल साफ़ सुथरा। आपको "
+    },
+    "120s": {
+      "input_chars": 1467,
+      "approx_speech_seconds": 120.4,
+      "latency_seconds": 0.194,
+      "word_preservation_invariant": "PASS",
+      "marks_added": {
+        "danda": 25,
+        "comma": 13,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      },
+      "sentences_segmented": 24,
+      "output_head": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना। आप इस बात को भी तो समझिए। मांग ज़्यादा। एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है। वो केले की अभी केला भी भाई बिल्कुल साफ़ सुथरा। आपको "
+    },
+    "300s": {
+      "input_chars": 3782,
+      "approx_speech_seconds": 310.5,
+      "latency_seconds": 0.301,
+      "word_preservation_invariant": "PASS",
+      "marks_added": {
+        "danda": 56,
+        "comma": 35,
+        "question_mark": 1,
+        "exclamation": 0,
+        "full_stop": 0
+      },
+      "sentences_segmented": 54,
+      "output_head": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना। आप इस बात को भी तो समझिए। मांग ज़्यादा। एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है। वो केले की अभी केला भी भाई बिल्कुल साफ़ सुथरा। आपको "
+    },
+    "600s": {
+      "input_chars": 7340,
+      "approx_speech_seconds": 602.6,
+      "latency_seconds": 0.505,
+      "word_preservation_invariant": "PASS",
+      "marks_added": {
+        "danda": 113,
+        "comma": 76,
+        "question_mark": 3,
+        "exclamation": 0,
+        "full_stop": 0
+      },
+      "sentences_segmented": 109,
+      "output_head": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना। आप इस बात को भी तो समझिए। मांग ज़्यादा। एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है। वो केले की अभी केला भी भाई बिल्कुल साफ़ सुथरा। आपको "
+    },
+    "english_control": {
+      "input_chars": 104,
+      "approx_speech_seconds": 8.5,
+      "latency_seconds": 0.12,
+      "word_preservation_invariant": "PASS",
+      "marks_added": {
+        "danda": 0,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 2
+      },
+      "sentences_segmented": 1,
+      "output_head": "And so my fellow Americans ask not what your country can do for you. Ask what you can do for your country."
+    }
+  },
+  "gallery": [
+    {
+      "before": "एकदम क्वालिटी में कोई शिकायत नहीं क्वालिटी हमारे यहाँ की जनवन मिलेगी आपको उसमें आपको कोई शिकायत करने का मौका नहीं मिलेगा",
+      "after": "एकदम क्वालिटी में कोई शिकायत नहीं। क्वालिटी। हमारे यहाँ की जनवन मिलेगी, आपको उसमें आपको कोई शिकायत करने का मौका नहीं मिलेगा।",
+      "invariant": "PASS"
+    },
+    {
+      "before": "अगर हम खाना बनाते हैं मेरा खाना अच्छा नहीं हुआ तो हम उसको फिर से सुधारेंगे एक दिन मेरे पति ने मछली लेकर आया बोले बनाइए",
+      "after": "अगर हम खाना बनाते हैं, मेरा खाना अच्छा नहीं हुआ तो हम उसको फिर से सुधारेंगे। एक दिन मेरे पति ने मछली लेकर आया, बोले बनाइए।",
+      "invariant": "PASS"
+    },
+    {
+      "before": "मुझे तारीख़ दस नौ दो हज़ार तेईस को शक्ति नगर से वाराणसी जाना है मुझे मेरे कूल दस साथी हैं मुझे ग्यारह सीटर कैप चाहिए",
+      "after": "मुझे तारीख़ दस नौ दो हज़ार तेईस को शक्ति नगर से वाराणसी जाना है। मुझे मेरे कूल दस साथी हैं, मुझे ग्यारह सीटर कैप चाहिए।",
+      "invariant": "PASS"
+    },
+    {
+      "before": "मैं एक गाड़ी बुक करके और अपने स्थान पर पहुँचा तो वहाँ मैंने ड्राइवर से पूछा कि क्या मैं आपको नगत रुपये दे सकता हूँ",
+      "after": "मैं एक गाड़ी बुक करके और अपने स्थान पर पहुँचा। तो वहाँ मैंने ड्राइवर से पूछा कि क्या मैं आपको नगत रुपये दे सकता हूँ?",
+      "invariant": "PASS"
+    }
+  ],
+  "memory_measured": {
+    "rss_mib_python_baseline": 14.4,
+    "rss_mib_after_model_load": 469.1,
+    "rss_mib_after_600s_inference": 578.1,
+    "rss_mib_peak": 591.6,
+    "warm_load_seconds_prior_run": 2.2
+  }
+}
