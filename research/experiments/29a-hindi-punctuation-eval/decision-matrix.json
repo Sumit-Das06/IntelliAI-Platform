@@ -1,0 +1,47 @@
+{
+  "experiment": "29a-hindi-punctuation-eval",
+  "dataset": "hi-punct-eval@v1",
+  "dataset_sha256": "3fa83ddb98cb2aafc3814c2cf4a385d309f8f79c7cf90699f83baefe7434a154",
+  "rows": 265,
+  "systems": {
+    "no-op": {
+      "micro_f1": 0.0,
+      "micro_precision": 0.0,
+      "micro_recall": 0.0,
+      "danda_f1": 0.0,
+      "comma_f1": 0.0,
+      "question_f1": 0.0,
+      "exclamation_f1": 0.0,
+      "full_stop_f1": 0.0,
+      "boundary_f1": 0.0,
+      "invariant_pass_rate": 1.0,
+      "invariant_failures": 0
+    },
+    "rules": {
+      "micro_f1": 0.1706,
+      "micro_precision": 0.2755,
+      "micro_recall": 0.1235,
+      "danda_f1": 0.422,
+      "comma_f1": 0.0,
+      "question_f1": 0.0,
+      "exclamation_f1": 0.0,
+      "full_stop_f1": 0.0,
+      "boundary_f1": 0.8942,
+      "invariant_pass_rate": 1.0,
+      "invariant_failures": 0
+    },
+    "lead-onnx": {
+      "micro_f1": 0.2421,
+      "micro_precision": 0.2351,
+      "micro_recall": 0.2496,
+      "danda_f1": 0.2721,
+      "comma_f1": 0.3467,
+      "question_f1": 0.0,
+      "exclamation_f1": 0.0,
+      "full_stop_f1": 0.0,
+      "boundary_f1": 0.7497,
+      "invariant_pass_rate": 0.9623,
+      "invariant_failures": 10
+    }
+  }
+}

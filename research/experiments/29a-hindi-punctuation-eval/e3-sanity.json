@@ -1,0 +1,2136 @@
+{
+  "experiment": "29a-hindi-punctuation-eval",
+  "phase": "real-e3-sanity (NOT a benchmark: no human punctuation references)",
+  "model": "1-800-BAD-CODE/punct_cap_seg_47_language @ 1b9d51fc7989ebc61e844d407d9dadd08ff4ba28",
+  "source_transcripts": "ml\\evaluation\\stt\\results\\2026-08-18-research-qwen3-asr-0.6b-hi-ft-e3-hi-m23.json",
+  "rows": 151,
+  "invariant_failures": 0,
+  "rows_with_tiny_sentences_le2_words": 12,
+  "rows_over_25_words_with_no_sentence_ender": 0,
+  "sentence_length_words": {
+    "mean": 10.71,
+    "median": 10.0,
+    "p95": 20
+  },
+  "total_marks_added": {
+    "danda": 291,
+    "comma": 138,
+    "question_mark": 11
+  },
+  "results": [
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000034",
+      "invariant": "PASS",
+      "input_words": 33,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 6,
+        "question_mark": 0
+      },
+      "before": "टिकट करन के लिए मोबाइल नंबर आठ नौ सात छः दो जीरो दो एक दो जीरो दो पंजीकरण करने के लिए ओ टी पी तीन दो आठ चार सात दो का उपयोग करें",
+      "after": "टिकट करन के लिए मोबाइल नंबर आठ नौ सात, छः दो, जीरो, दो, एक दो जीरो दो। पंजीकरण करने के लिए ओ टी पी तीन दो, आठ चार, सात दो का उपयोग करें।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000461",
+      "invariant": "PASS",
+      "input_words": 6,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "क्या क्या चीज़ें लेना है हाँ",
+      "after": "क्या क्या चीज़ें लेना है हाँ।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000462",
+      "invariant": "PASS",
+      "input_words": 23,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 3,
+        "question_mark": 1
+      },
+      "before": "अरे अभी तो आलू हुआ है गेहूँ हुआ होने वाला है तूरी हुआ है मटर दिए हुए हैं क्या चीज़ लेना है आपको",
+      "after": "अरे अभी तो आलू हुआ है, गेहूँ हुआ होने वाला है, तूरी हुआ है, मटर दिए हुए हैं। क्या चीज़ लेना है आपको?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000463",
+      "invariant": "PASS",
+      "input_words": 38,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 2,
+        "question_mark": 1
+      },
+      "before": "अरे फसल तो बहुत अच्छा हुआ है इस बार रेट भी है अच्छा ख़ासा इस बार देखे हैं जो मटर का भी अच्छा ख़ासा रेट रहा है लेना क्या चीज़ है आलू का भी रेट अच्छा ख़ासा है",
+      "after": "अरे फसल तो बहुत अच्छा हुआ है, इस बार रेट भी है। अच्छा ख़ासा इस बार देखे हैं, जो मटर का भी अच्छा ख़ासा रेट रहा है। लेना क्या चीज़ है? आलू का भी रेट अच्छा ख़ासा है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000469",
+      "invariant": "PASS",
+      "input_words": 13,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हम्म कोबी भी आरबी लेना है और कैसा व्यवस्था मानता भी लेना है",
+      "after": "हम्म कोबी भी आरबी लेना है और कैसा व्यवस्था मानता भी लेना है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000470",
+      "invariant": "PASS",
+      "input_words": 31,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "अरे खूब बहुत अच्छा होता है हम लोग खित्यवाड़ी करते हैं तब तक इस्टाने हैं तो हम लोग उस आरे खिड़की करते हैं सब चीज़ जाते हैं सब चीज़ होता है",
+      "after": "अरे खूब बहुत अच्छा होता है। हम लोग खित्यवाड़ी करते हैं, तब तक इस्टाने हैं तो हम लोग उस आरे खिड़की करते हैं। सब चीज़ जाते हैं, सब चीज़ होता है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000472",
+      "invariant": "PASS",
+      "input_words": 15,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "हाँ तो ज़रूरत हो है तो आइए लीजिए देखिए अपना देख लीजिए चल हम से",
+      "after": "हाँ तो ज़रूरत हो है तो आइए लीजिए, देखिए अपना देख लीजिए चल हम से।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000478",
+      "invariant": "PASS",
+      "input_words": 4,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हाँ ठीक देख लीजिए",
+      "after": "हाँ ठीक देख लीजिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000479",
+      "invariant": "PASS",
+      "input_words": 16,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "अच्छा ठीक है आइए गाते हो देख लीजिए देख लीजिए उसके बाद जाकर जाकर सरस्वती है",
+      "after": "अच्छा ठीक है, आइए गाते हो देख लीजिए, देख लीजिए। उसके बाद जाकर जाकर सरस्वती है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000750",
+      "invariant": "PASS",
+      "input_words": 17,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "अप्रैल दो हज़ार बाईस तक एप उन सोलह आरब से अधिक बार सफलता पूर्वक डाउनलोड हुए हैं",
+      "after": "अप्रैल दो हज़ार बाईस तक एप उन सोलह आरब से अधिक बार सफलता पूर्वक डाउनलोड हुए हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000916",
+      "invariant": "PASS",
+      "input_words": 27,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "देखिए हिन्दी तो हमारी भाषा है मातृभाषा है और हम लोग हिन्दी बोलते हैं जैसे कोई हमारी भाषा को नहीं जानते कहीं दूसरे मतलब का आते हैं",
+      "after": "देखिए हिन्दी तो हमारी भाषा है, मातृभाषा है और हम लोग हिन्दी बोलते हैं। जैसे कोई हमारी भाषा को नहीं जानते। कहीं दूसरे मतलब का आते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000917",
+      "invariant": "PASS",
+      "input_words": 24,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "तो हमारी भाषा नहीं बोल पाते तो हम लोग थोड़ा बहुत इंग्लिश में बात कर रहे थे जो जितना मुझे आता है हम उतना",
+      "after": "तो हमारी भाषा नहीं बोल पाते तो हम लोग थोड़ा बहुत इंग्लिश में बात कर रहे थे। जो जितना मुझे आता है, हम उतना।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000918",
+      "invariant": "PASS",
+      "input_words": 37,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "इंग्लिश में बात कर लेते हैं और थोड़ा बहुत ईसारे में बात कर लेते हैं क्योंकि वो लोग समझ नहीं पाते जैसे कोई मतलब बिहार के हुए या तो कोई कहीं और के हुए तो जैसे हम",
+      "after": "इंग्लिश में बात कर लेते हैं और थोड़ा बहुत ईसारे में बात कर लेते हैं। क्योंकि वो लोग समझ नहीं पाते जैसे कोई मतलब बिहार के हुए या तो कोई कहीं और के हुए तो जैसे हम।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000919",
+      "invariant": "PASS",
+      "input_words": 28,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "हमारी भाषा वो नहीं समझ पाते हैं उनकी भाषा हम नहीं समझ पाते हैं इसलिए समझने में थोड़ी दिक्कत होती है हम लोगों की भाषा हिन्दी ही है",
+      "after": "हमारी भाषा वो नहीं समझ पाते हैं, उनकी भाषा हम नहीं समझ पाते हैं। इसलिए समझने में थोड़ी दिक्कत होती है। हम लोगों की भाषा हिन्दी ही है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000920",
+      "invariant": "PASS",
+      "input_words": 36,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "तो जैसे मतलब जैसे कोई खाना वाना बनाया या फिर कुछ भी तो जैसे हम लोग हाथ उठा कर बता देते हैं कि ऐसे है या अच्छा है मतलब समझ जाते हैं कि ऐसा है मतलब",
+      "after": "तो जैसे मतलब जैसे कोई खाना वाना बनाया या फिर कुछ भी। तो जैसे हम लोग हाथ उठा कर बता देते हैं कि ऐसे है या अच्छा है। मतलब समझ जाते हैं कि ऐसा है मतलब।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000922",
+      "invariant": "PASS",
+      "input_words": 34,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 5,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "कोई सेम सेम रहता है भाषा मतलब जो वो भी समझ सकते हैं और हम भी समझ सकते हैं बस यही है कि मतलब थोड़ा बहुत अंतर होता है उनकी भाषा समझने में मतलब",
+      "after": "कोई सेम सेम रहता है। भाषा। मतलब जो वो भी समझ सकते हैं और हम भी समझ सकते हैं। बस यही है कि मतलब थोड़ा बहुत अंतर होता है। उनकी भाषा समझने में मतलब।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000924",
+      "invariant": "PASS",
+      "input_words": 27,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "अंग्रेज़ी में बात व्यवहार कर लेते हैं थोड़ा बहुत और बाक़ी तो हिन्दी हम लोग बोलते ही हैं और हिन्दी हमें सबसे अच्छा लगता है इसलिए हम",
+      "after": "अंग्रेज़ी में बात व्यवहार कर लेते हैं। थोड़ा बहुत और बाक़ी तो हिन्दी हम लोग बोलते ही हैं और हिन्दी हमें सबसे अच्छा लगता है, इसलिए हम।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-000926",
+      "invariant": "PASS",
+      "input_words": 22,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "इसलिए हम मतलब जितना बात करते हैं थोड़ा बहुत बात कर लेते हैं और बाकी कोई दिक्कत नहीं है सब ठीक है",
+      "after": "इसलिए हम मतलब जितना बात करते हैं, थोड़ा बहुत बात कर लेते हैं और बाकी कोई दिक्कत नहीं है। सब ठीक है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001082",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "इमामी रिफाइन्ड सनफ्लावर आइल जिसका मूल्य पाँच सौ रुपये है जोड़ें",
+      "after": "इमामी रिफाइन्ड सनफ्लावर आइल। जिसका मूल्य पाँच सौ रुपये है। जोड़ें।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001270",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "जी सर चल रहा है आप सब बताइए आपका क्या खाओ रहेगा",
+      "after": "जी सर चल रहा है, आप सब बताइए आपका क्या खाओ रहेगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001272",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 1
+      },
+      "before": "हाँ तब ठीक है सर और स्टूडेंट लोग का क्या हाल चल रहा है",
+      "after": "हाँ, तब ठीक है। सर और स्टूडेंट लोग का क्या हाल चल रहा है?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001275",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "जी नहीं देखिए सब तो बोल तो रहा है कि ठीक ही गया एग्जाम",
+      "after": "जी नहीं देखिए, सब तो बोल तो रहा है कि ठीक ही गया एग्जाम।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001276",
+      "invariant": "PASS",
+      "input_words": 20,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी एक जाम तो अच्छा ही रहा लेकिन इस बार पेपर भी हार आ गया था बोर्ड के प्रारूप से",
+      "after": "जी एक जाम तो अच्छा ही रहा। लेकिन इस बार पेपर भी हार आ गया था। बोर्ड के प्रारूप से।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001283",
+      "invariant": "PASS",
+      "input_words": 17,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "और इधर भी तो अच्छा ही दिया है इन लोगों का एग्जाम कै तो रहे हैं सब",
+      "after": "और इधर भी तो अच्छा ही दिया है। इन लोगों का एग्जाम कै तो रहे हैं सब।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001284",
+      "invariant": "PASS",
+      "input_words": 7,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "अरे आगे देखिए कि क्या होता है",
+      "after": "अरे, आगे देखिए कि क्या होता है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001287",
+      "invariant": "PASS",
+      "input_words": 13,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी जी अब देखा जाए मैम मैम तो थोड़ा हार्ड होता है ना",
+      "after": "जी जी अब देखा जाए मैम मैम तो थोड़ा हार्ड होता है ना।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001294",
+      "invariant": "PASS",
+      "input_words": 4,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी ठीक है सर",
+      "after": "जी ठीक है सर।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001324",
+      "invariant": "PASS",
+      "input_words": 3,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "सबसे खुशबूदार भाई",
+      "after": "सबसे खुशबूदार भाई।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001325",
+      "invariant": "PASS",
+      "input_words": 6,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "क्या है कौन सी क्या है",
+      "after": "क्या है, कौन सी क्या है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001336",
+      "invariant": "PASS",
+      "input_words": 6,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "यह ज़्यादा का तो है वह",
+      "after": "यह ज़्यादा का तो है वह।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001337",
+      "invariant": "PASS",
+      "input_words": 39,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 4,
+        "question_mark": 0
+      },
+      "before": "सत्त्व है सत्त्व ही आइकॉडी है चाक चाका होता है बिंगानी का चाक चाका है सतोंगा सतोंगा है यानी इन धनुष इन धनुष से सूरजास्त और सूरजोंदे के समय ही होता है जबकि आकाश में बादल घिरे होते हैं",
+      "after": "सत्त्व है, सत्त्व ही आइकॉडी है। चाक चाका होता है, बिंगानी का चाक चाका है, सतोंगा सतोंगा है। यानी इन धनुष इन धनुष से सूरजास्त और सूरजोंदे के समय ही होता है, जबकि आकाश में बादल घिरे होते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001340",
+      "invariant": "PASS",
+      "input_words": 7,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "दिखाई देते हैं और इन दश में",
+      "after": "दिखाई देते हैं और इन दश में।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001342",
+      "invariant": "PASS",
+      "input_words": 23,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 4,
+        "question_mark": 0
+      },
+      "before": "सफ़ेद सोई गैल्को सोई सोई गैल्को किया ना उससे सात सफ़ेद रंग और सफ़ेद रंग सात रंगों का मिशन है ये सात रंग",
+      "after": "सफ़ेद सोई, गैल्को, सोई, सोई गैल्को किया ना। उससे सात सफ़ेद रंग और सफ़ेद रंग सात रंगों का मिशन है, ये सात रंग।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001346",
+      "invariant": "PASS",
+      "input_words": 21,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 4,
+        "question_mark": 0
+      },
+      "before": "बेनी एक बेनी या पिनाला कहते हैं बेनी या पिनाला उसमें सात वन्य समारी थे बेस बगीन होशहरा आसमानी नीला लाल",
+      "after": "बेनी एक बेनी या पिनाला कहते हैं, बेनी या पिनाला। उसमें सात वन्य समारी थे। बेस बगीन, होशहरा, आसमानी, नीला लाल।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001347",
+      "invariant": "PASS",
+      "input_words": 27,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "इत्यादि सब जो सात रंग हैं वे सब वे सभी समायित हैं उसी को सौतन लगाते हैं बेगिन दिसन बेनी हाफिनाला जिसमें सात रंग उसमें समायित हैं",
+      "after": "इत्यादि सब जो सात रंग हैं, वे सब वे सभी समायित हैं। उसी को सौतन लगाते हैं। बेगिन दिसन बेनी हाफिनाला। जिसमें सात रंग उसमें समायित हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001437",
+      "invariant": "PASS",
+      "input_words": 10,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "नमस्कार मैं सर रेस्टोरेंट से बात कर रहा हूँ आपको",
+      "after": "नमस्कार मैं सर रेस्टोरेंट से बात कर रहा हूँ आपको।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001440",
+      "invariant": "PASS",
+      "input_words": 33,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "आपको बता देगा तो आप शादी ले जाओगे तो तीन सौ रुपये मिलेगी आपको और अगर आपको उसके ट्राई करवाके अस्सी बनवाके लिया होगे तो आपको साढ़े चार सौ रुपये भरे हैं तो",
+      "after": "आपको बता देगा तो आप शादी ले जाओगे तो तीन सौ रुपये मिलेगी। आपको और अगर आपको उसके ट्राई करवाके, अस्सी बनवाके लिया होगे तो आपको साढ़े चार सौ रुपये भरे हैं तो।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001441",
+      "invariant": "PASS",
+      "input_words": 36,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हाँ वह राइट रोड है रे आप आके देख सकते हो जैसे आपको किसी चीज़ की ज़रूरत मतलब किसी अलग तरीक़े की ज़रूरत है तो हम उसे बाहर से बुलवा के भी आपको दे सकते हैं",
+      "after": "हाँ वह राइट रोड है। रे आप आके देख सकते हो। जैसे आपको किसी चीज़ की ज़रूरत मतलब किसी अलग तरीक़े की ज़रूरत है। तो हम उसे बाहर से बुलवा के भी आपको दे सकते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001442",
+      "invariant": "PASS",
+      "input_words": 20,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "तो आप सॉफ्टवेयर एक बार आ जाएँ तो हम आपको बता दें कि क्या से ये कैसा लग रहा है",
+      "after": "तो आप सॉफ्टवेयर एक बार आ जाएँ तो हम आपको बता दें कि क्या से ये कैसा लग रहा है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001444",
+      "invariant": "PASS",
+      "input_words": 18,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "हाँ मार्केट है आपके वेसे तो हमारे यहाँ सबसे ज़्यादा बनता हमारे सॉफ्टवेयर बोले तो सबसे पसंदीदा चीज़",
+      "after": "हाँ मार्केट है आपके वेसे तो हमारे यहाँ सबसे ज़्यादा बनता, हमारे सॉफ्टवेयर बोले तो सबसे पसंदीदा चीज़।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001450",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 0,
+        "comma": 2,
+        "question_mark": 1
+      },
+      "before": "ठीक है ना हम आपको बता देते हैं आपके इस आपसे आपको क्या लगेगा",
+      "after": "ठीक है ना, हम आपको बता देते हैं, आपके इस आपसे आपको क्या लगेगा?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001451",
+      "invariant": "PASS",
+      "input_words": 18,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "वैसे आप हमारी दुकान का एक बार हूँ जो फीस बनाते हैं हमारे वर्कर्स उसका टेस्ट करके देखिएगा",
+      "after": "वैसे आप हमारी दुकान का एक बार हूँ, जो फीस बनाते हैं, हमारे वर्कर्स उसका टेस्ट करके देखिएगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001455",
+      "invariant": "PASS",
+      "input_words": 10,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "ठीक है ना आइए यहाँ सॉफ्टवेयर भी दीजिए ठीक है",
+      "after": "ठीक है ना, आइए यहाँ सॉफ्टवेयर भी दीजिए, ठीक है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001465",
+      "invariant": "PASS",
+      "input_words": 8,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 0,
+        "comma": 0,
+        "question_mark": 1
+      },
+      "before": "नरिश ऑर्गेनिक्स हनी कंच मुसली कब उपलब्ध होंगे",
+      "after": "नरिश ऑर्गेनिक्स हनी कंच मुसली कब उपलब्ध होंगे?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001485",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 0,
+        "comma": 1,
+        "question_mark": 1
+      },
+      "before": "हाँ जी सर नमस्कार क्या आप सुईजी से बात कर रहे हैं",
+      "after": "हाँ जी सर नमस्कार, क्या आप सुईजी से बात कर रहे हैं?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001486",
+      "invariant": "PASS",
+      "input_words": 10,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "नहीं सर मुझे है ना जरा खान ऑर्डर करना था",
+      "after": "नहीं सर मुझे है ना जरा खान ऑर्डर करना था।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001487",
+      "invariant": "PASS",
+      "input_words": 5,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "आप लक्ष्य प्राप्त कर दीजिए",
+      "after": "आप लक्ष्य प्राप्त कर दीजिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001495",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "हाँ इसमें रसबोल आई रस मिलाई और रस बोलना लग जाएगा",
+      "after": "हाँ, इसमें रसबोल आई, रस मिलाई और रस बोलना लग जाएगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001496",
+      "invariant": "PASS",
+      "input_words": 9,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "तो इसमें भी आइसक्रीम भी ऐड करवानी है मुझे",
+      "after": "तो इसमें भी आइसक्रीम भी ऐड करवानी है मुझे।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001545",
+      "invariant": "PASS",
+      "input_words": 5,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 3,
+        "question_mark": 0
+      },
+      "before": "नारवे स्वीडन डेनमार्क जर्मनी पोलिंद",
+      "after": "नारवे स्वीडन, डेनमार्क, जर्मनी, पोलिंद।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001547",
+      "invariant": "PASS",
+      "input_words": 1,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 0,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "पाँच",
+      "after": "पाँच."
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001701",
+      "invariant": "PASS",
+      "input_words": 6,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 0,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "हाँ हाँ मैं टेबल एजेंट हूँ",
+      "after": "हाँ हाँ, मैं टेबल एजेंट हूँ."
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001712",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "पंद्रह लोगों का खर्चा पंद्रह लोगों का खर्चा ज़्यादा हो जाए",
+      "after": "पंद्रह लोगों का खर्चा, पंद्रह लोगों का खर्चा ज़्यादा हो जाए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001715",
+      "invariant": "PASS",
+      "input_words": 4,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "नहीं नहीं नहीं नहीं",
+      "after": "नहीं नहीं नहीं नहीं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001718",
+      "invariant": "PASS",
+      "input_words": 17,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "एम स्वाइप का उपयोग करके चुनिंदा संपर्कों को पचास हजार रुपये कल सुबह नौ बजे ट्रांसफर करें",
+      "after": "एम स्वाइप का उपयोग करके चुनिंदा संपर्कों को पचास हजार रुपये कल सुबह नौ बजे ट्रांसफर करें।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001907",
+      "invariant": "PASS",
+      "input_words": 22,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "हमारे हिन्दू धरम में पूजा पाठ किया जाता है अच्छे से माना कि पूजा पाठ करते हैं लोग अच्छा से रहते हैं",
+      "after": "हमारे हिन्दू धरम में पूजा पाठ किया जाता है। अच्छे से माना कि पूजा पाठ करते हैं, लोग अच्छा से रहते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001908",
+      "invariant": "PASS",
+      "input_words": 26,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "और कहीं भी मनोपेड़ पौधे भी कोई भी काम अच्छे से करते हैं पौधे भी देखते हैं तो उस पर भी पूजा पाठ करने लगते हैं",
+      "after": "और कहीं भी मनोपेड़ पौधे भी कोई भी काम अच्छे से करते हैं। पौधे भी देखते हैं तो उस पर भी पूजा पाठ करने लगते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001910",
+      "invariant": "PASS",
+      "input_words": 22,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 3,
+        "question_mark": 0
+      },
+      "before": "अथवा करते हैं तो वो लोग झूठ नहीं बोलते हैं अच्छा मना के बोलते हैं चालते हैं झूठ नहीं बोलते हैं लोग",
+      "after": "अथवा करते हैं तो वो लोग झूठ नहीं बोलते हैं, अच्छा मना के बोलते हैं, चालते हैं, झूठ नहीं बोलते हैं लोग।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001911",
+      "invariant": "PASS",
+      "input_words": 29,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हमारे भी माना कि उत्सव में अच्छे अच्छे से बात होती है और पूजा पाठ करने के लिए तो अच्छा ही ना हम पूजा पाठ कहते हैं माना कि",
+      "after": "हमारे भी माना कि उत्सव में अच्छे अच्छे से बात होती है। और पूजा पाठ करने के लिए तो अच्छा ही ना हम पूजा पाठ कहते हैं। माना कि।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001912",
+      "invariant": "PASS",
+      "input_words": 32,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "सब कुछ भगवान से बोल के माता पिता होते हैं उसका एक पूजा पाठ करना चाहिए भगवान बोलते हैं कि माता पिता कभी पूजा करिए अच्छे से और उसको अपना देवता मानिए",
+      "after": "सब कुछ भगवान से बोल के माता पिता होते हैं, उसका एक पूजा पाठ करना चाहिए। भगवान बोलते हैं कि माता पिता कभी पूजा करिए अच्छे से और उसको अपना देवता मानिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001913",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "अच्छा से देखभाल करिए सेवा साथ सकार करिए और माना कि",
+      "after": "अच्छा से देखभाल करिए, सेवा साथ सकार करिए। और माना कि।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001914",
+      "invariant": "PASS",
+      "input_words": 21,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "सब कुछ हिन्दू है तो करना पड़ेगा ना माता पिता का अच्छा सेवा संस्कार सब कुछ देना माता पिता देते हैं",
+      "after": "सब कुछ हिन्दू है तो करना पड़ेगा ना। माता पिता का अच्छा सेवा, संस्कार सब कुछ देना माता पिता देते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001915",
+      "invariant": "PASS",
+      "input_words": 24,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "तो बच्चे माना बड़ों करके माता पिता कभी सेवा सस्ता कर देते हैं करना चाहिए वही बात है और जो भी माना की जो",
+      "after": "तो बच्चे माना बड़ों करके माता पिता कभी सेवा सस्ता कर देते हैं। करना चाहिए। वही बात है और जो भी माना की जो।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001977",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "ठीक है डब्बों नोट कर लिया और बस उसका दो सौ बीस रुपये है",
+      "after": "ठीक है डब्बों नोट कर लिया और बस उसका दो सौ बीस रुपये है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001980",
+      "invariant": "PASS",
+      "input_words": 22,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "एकदम क्वालिटी में कोई शिकायत नहीं क्वालिटी हमारे यहाँ की जनवन मिलेगी आपको उसमें आपको कोई शिकायत करने का मौका नहीं मिलेगा",
+      "after": "एकदम क्वालिटी में कोई शिकायत नहीं। क्वालिटी। हमारे यहाँ की जनवन मिलेगी, आपको उसमें आपको कोई शिकायत करने का मौका नहीं मिलेगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001983",
+      "invariant": "PASS",
+      "input_words": 6,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "सब्जी सौ रुपये पड़ेगा बोरी का",
+      "after": "सब्जी सौ रुपये पड़ेगा बोरी का।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001985",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "नहीं नहीं क्वालिटी डालूँगा और सीधा प्रोडक्ट वापस कोई दिक्कत नहीं है",
+      "after": "नहीं नहीं क्वालिटी डालूँगा और सीधा प्रोडक्ट वापस कोई दिक्कत नहीं है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001989",
+      "invariant": "PASS",
+      "input_words": 25,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "कौन सा चाहिए आपको आम का चाहिए आप आम का चाहिए या वो प्याज़ वाला चाहिए या बिस चाहिए आपको कौन सा चाहिए चार में",
+      "after": "कौन सा चाहिए, आपको आम का चाहिए, आप आम का चाहिए या वो प्याज़ वाला चाहिए या बिस चाहिए। आपको कौन सा चाहिए चार में।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001991",
+      "invariant": "PASS",
+      "input_words": 22,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "नहीं नहीं टेस्ट किए हैं दोनों टेस्ट किया गाँव में मेरे घर में यहीं जो तो है ऐसी कोई दिक्कत नहीं है",
+      "after": "नहीं नहीं टेस्ट किए हैं दोनों टेस्ट, किया गाँव में। मेरे घर में यहीं जो तो है, ऐसी कोई दिक्कत नहीं है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-001999",
+      "invariant": "PASS",
+      "input_words": 32,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "परियाँ क्वालिटी है आप क्वालिटी की आप टेनिस ना लो अब बस समान नोट कर रहा है क्वालिटी में कोई दिक्कत है ये समान सी तो आप इस कोई दिक्कत नहीं है",
+      "after": "परियाँ क्वालिटी है आप क्वालिटी की आप टेनिस ना लो। अब बस समान नोट कर रहा है, क्वालिटी में कोई दिक्कत है। ये समान सी तो आप इस कोई दिक्कत नहीं है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002004",
+      "invariant": "PASS",
+      "input_words": 35,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 4,
+        "question_mark": 0
+      },
+      "before": "नहीं नहीं आप दुकान पर आइए बात समझ लीजिए कोशिश करिए टाइम हो चुका है फ़ोन करने का समय हो गया है बाद में बात करना आप दुकान पर आओ दुकान पर आके बात करेंगे",
+      "after": "नहीं नहीं, आप दुकान पर आइए बात समझ लीजिए, कोशिश करिए, टाइम हो चुका है, फ़ोन करने का समय हो गया है। बाद में बात करना आप दुकान पर आओ दुकान पर आके बात करेंगे।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002107",
+      "invariant": "PASS",
+      "input_words": 13,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "एक तीन दो सर वाइस को वाई फाई भुगतान के लिए रिमाइंडर लगाएं",
+      "after": "एक तीन दो सर वाइस को वाई फाई भुगतान के लिए रिमाइंडर लगाएं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002144",
+      "invariant": "PASS",
+      "input_words": 26,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "अगर हम खाना बनाते हैं मेरा खाना अच्छा नहीं हुआ तो हम उसको फिर से सुधारेंगे एक दिन मेरे पति ने मछली लेकर आया बोले बनाइए",
+      "after": "अगर हम खाना बनाते हैं, मेरा खाना अच्छा नहीं हुआ तो हम उसको फिर से सुधारेंगे। एक दिन मेरे पति ने मछली लेकर आया, बोले बनाइए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002145",
+      "invariant": "PASS",
+      "input_words": 20,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "तो मैंने बनाया उसमें बोले कि नमक बहुत टेज लग रहा है तो उसमें हम और कुछ स्वाद कम है",
+      "after": "तो मैंने बनाया उसमें बोले कि नमक बहुत टेज लग रहा है तो उसमें हम और कुछ स्वाद कम है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002146",
+      "invariant": "PASS",
+      "input_words": 21,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "उसमें हम जीरा वीरा से फिर छोका दे दें और नमक थोड़ा टेस्ट था तो उसमें हल्का से नहरू डाल दिए",
+      "after": "उसमें हम जीरा वीरा से फिर छोका दे दें। और नमक थोड़ा टेस्ट था तो उसमें हल्का से नहरू डाल दिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002147",
+      "invariant": "PASS",
+      "input_words": 17,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "फिर एक दिन खाना और बनाते समय हमारे बच्चे को दाल में नमक तेज लग रहा था",
+      "after": "फिर एक दिन खाना और बनाते समय हमारे बच्चे को दाल में नमक तेज लग रहा था।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002149",
+      "invariant": "PASS",
+      "input_words": 68,
+      "sentences": 6,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 7,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "ऐसे एक दिन और सब्जी बना रहे थे तो उसमें कुछ हल्का हल्का सा फीका फीका सा सब्जी लग रहा था तो हमारे दीवार बोले आज का सब्जी बहुत फीका लग रहा है कैसे बनाई है भाभी तो हमने बोला कि लाइये अच्छा फीक से मुझको फिर हल्का से मसाला और छोका देकर उसी को सब्जी को फिर उसमें डाल कर फिर से भूजूच कर दे दिए तो",
+      "after": "ऐसे एक दिन और सब्जी बना रहे थे तो उसमें कुछ हल्का हल्का सा फीका फीका। सा सब्जी लग रहा था। तो हमारे दीवार बोले आज का सब्जी बहुत फीका लग रहा है। कैसे बनाई है भाभी। तो हमने बोला कि लाइये अच्छा फीक से मुझको। फिर हल्का से मसाला और छोका देकर। उसी को सब्जी को फिर उसमें डाल कर फिर से भूजूच कर दे दिए तो।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002151",
+      "invariant": "PASS",
+      "input_words": 23,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "इसी तरह हम खाना बनाते हैं और बर्बाद अपना खाना नहीं करते हैं चावल भी बसता है तो उसको फ्राई कर देते हैं",
+      "after": "इसी तरह हम खाना बनाते हैं और बर्बाद अपना खाना नहीं करते हैं। चावल भी बसता है तो उसको फ्राई कर देते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002152",
+      "invariant": "PASS",
+      "input_words": 33,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "और दाल और बस्ती है तो उसको भी हम अपना बना कर अच्छे से कर लेते हैं बस्ती अथृत रखते हैं फिर सुबह गरम और फ्राई करके बच्चों लोग को दे देते हैं",
+      "after": "और दाल और बस्ती है तो उसको भी हम अपना बना कर अच्छे से कर लेते हैं। बस्ती अथृत रखते हैं। फिर सुबह गरम और फ्राई करके बच्चों लोग को दे देते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002153",
+      "invariant": "PASS",
+      "input_words": 37,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "रोटी भी बसता है तो रोटी को भी गरम कर गरम करके और बच्चे लोग को चाय के साथ दे देते हैं चाय के साथ सब लोग खा लेते हैं हम अपना खाना बर्बाद नहीं करते हैं",
+      "after": "रोटी भी बसता है तो रोटी को भी गरम कर गरम करके। और बच्चे लोग को चाय के साथ दे देते हैं। चाय के साथ सब लोग खा लेते हैं, हम अपना खाना बर्बाद नहीं करते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002314",
+      "invariant": "PASS",
+      "input_words": 27,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हम तो पूरा एजेंसी बना रखे हुए हैं बड़ा साइकिल छोटा साइकिल लंजर साइकिल बड़ा मोटा बोला साइकिल मोटा चक्का बोला सारा साइकिल हम क्लब है बैट्रिक",
+      "after": "हम तो पूरा एजेंसी बना रखे हुए हैं। बड़ा साइकिल छोटा साइकिल लंजर साइकिल बड़ा मोटा बोला साइकिल मोटा चक्का बोला सारा साइकिल हम क्लब है बैट्रिक।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002315",
+      "invariant": "PASS",
+      "input_words": 18,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "हाँ जिस भी जिस भी कम्पनी का खुद जो है आपको सब मिल जाएगा अभी तो हाँ बोलिए",
+      "after": "हाँ, जिस भी जिस भी कम्पनी का खुद जो है, आपको सब मिल जाएगा। अभी तो हाँ बोलिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002320",
+      "invariant": "PASS",
+      "input_words": 28,
+      "sentences": 5,
+      "tiny_sentences_le2_words": 2,
+      "marks": {
+        "danda": 5,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "उसका भी उतना ही पड़ेगा थोड़ा उसका कम रहता है इट लस्टेट उसका आपको अन्थावन सौ पड़ेगा थोड़ा एक दूसरे से कम थोड़ा उसका रहता है मान लीजिए",
+      "after": "उसका भी उतना ही पड़ेगा, थोड़ा उसका कम रहता है। इट लस्टेट। उसका आपको अन्थावन सौ पड़ेगा। थोड़ा एक दूसरे से कम थोड़ा उसका रहता है। मान लीजिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002321",
+      "invariant": "PASS",
+      "input_words": 31,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "बेहतर तो एक एटलस अपना बहुत पुराना कंपनी है उसका ज़्यादे आदमी अपना सब यूज़ किए हुए हैं उसका ज़्यादे इस्लाही रहता है एटलस का आपको सही रहेगा हाँ बाय हिंदी",
+      "after": "बेहतर तो एक एटलस अपना बहुत पुराना कंपनी है। उसका ज़्यादे आदमी अपना सब यूज़ किए हुए हैं, उसका ज़्यादे इस्लाही रहता है। एटलस का आपको सही रहेगा। हाँ बाय हिंदी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002323",
+      "invariant": "PASS",
+      "input_words": 47,
+      "sentences": 5,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 5,
+        "comma": 3,
+        "question_mark": 0
+      },
+      "before": "ऊ ऊपर से थोड़ा बहुत है ऊपर से जैसे कि सीट काबू हो गया बैडक्वाप लोग का आपको लगाना पड़ेगा अच्छा ताला हो गया घंटी हो गया यह सब आपको ऊपर से लगाना ही पड़ेगा उसमें आपको समझिए एक पौन उस आप सबके ख़र्च आए ऊपर से",
+      "after": "ऊ ऊपर से थोड़ा बहुत है, ऊपर से जैसे कि सीट काबू हो गया। बैडक्वाप लोग का आपको लगाना पड़ेगा। अच्छा ताला हो गया, घंटी हो गया। यह सब आपको ऊपर से लगाना ही पड़ेगा। उसमें आपको समझिए, एक पौन उस आप सबके ख़र्च आए ऊपर से।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002324",
+      "invariant": "PASS",
+      "input_words": 35,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "हाँ नहीं जी एस टी का जी एस टी भी हाँ हाँ जी एस टी भी है हाँ इतना बड़ा एजेंसी को ले भी आती है जी एस टी ना बड़ा नहीं रखेंगे आपको हाँ",
+      "after": "हाँ नहीं, जी एस टी का जी एस टी भी हाँ हाँ जी एस टी भी है। हाँ, इतना बड़ा एजेंसी को ले भी आती है। जी एस टी ना बड़ा नहीं रखेंगे आपको हाँ।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002327",
+      "invariant": "PASS",
+      "input_words": 48,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 6,
+        "question_mark": 0
+      },
+      "before": "हाँ उस आप जो भी बोलेगा ऐसे हम लगभग देंगे उसका तो कोस्ट बढ़ जाएगा और क्या आप जो जो भी चाहिएगा सारा व्यवस्था है यहाँ पे बहुत बार दुकान है आप एक बार खिल जाइएगा बार बार आइएगा आप आपको सर्विस अच्छा मिलेगा कोई दिक्कत नहीं होगा",
+      "after": "हाँ, उस आप जो भी बोलेगा ऐसे हम लगभग देंगे, उसका तो कोस्ट बढ़ जाएगा। और क्या आप जो जो भी चाहिएगा, सारा व्यवस्था है। यहाँ पे बहुत बार दुकान है। आप एक बार खिल जाइएगा, बार बार आइएगा, आप आपको सर्विस अच्छा मिलेगा, कोई दिक्कत नहीं होगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002330",
+      "invariant": "PASS",
+      "input_words": 4,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 0,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "ठीक ठीक ठीक ठीक",
+      "after": "ठीक ठीक, ठीक ठीक."
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002331",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 1
+      },
+      "before": "मुझे ज़िला कुटटक में नहीं शून्य कटीका कहाँ मिल सकता है",
+      "after": "मुझे ज़िला कुटटक में नहीं। शून्य कटीका कहाँ मिल सकता है?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002401",
+      "invariant": "PASS",
+      "input_words": 8,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "मुझे चिकन सिस्टी फाइब बनाने की विधि बताइए",
+      "after": "मुझे चिकन सिस्टी फाइब बनाने की विधि बताइए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-002747",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "आईआरसीटीसी को मेरे खाते से लिंक करने के लिए ओटीपी से फिर से भेजिए",
+      "after": "आईआरसीटीसी को मेरे खाते से लिंक करने के लिए ओटीपी से फिर से भेजिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003132",
+      "invariant": "PASS",
+      "input_words": 21,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 1
+      },
+      "before": "हम तो बहुत बड़ा लकड़ी का मतलब ये डीलर हैं आप जानते हैं मतलब मीरा हमको मतलब मनोबल दिखे रहा क्या",
+      "after": "हम तो बहुत बड़ा लकड़ी का मतलब ये डीलर हैं। आप जानते हैं मतलब मीरा, हमको मतलब मनोबल दिखे रहा क्या?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003133",
+      "invariant": "PASS",
+      "input_words": 13,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "हाँ तो कितना खर्च लगेगा कितना दिन लगेगा वो तो आपको पता होगा",
+      "after": "हाँ तो कितना खर्च लगेगा, कितना दिन लगेगा वो तो आपको पता होगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003136",
+      "invariant": "PASS",
+      "input_words": 41,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 4,
+        "question_mark": 0
+      },
+      "before": "जी जी है मेरे पास बहुत सारा लकड़ी है अलमिरा के सिवा और भी मतलब ज़रूरत मन होगा जैसे पुड़सी होगा टेबल होगा या और भी मतलब ड्रेसिंग होगा जिसका मतलब ज़रूरत होगा वो उतना कर सकते हैं बना सकते हैं",
+      "after": "जी जी है, मेरे पास बहुत सारा लकड़ी है। अलमिरा के सिवा और भी मतलब ज़रूरत मन होगा। जैसे पुड़सी होगा, टेबल होगा या और भी मतलब ड्रेसिंग होगा। जिसका मतलब ज़रूरत होगा, वो उतना कर सकते हैं, बना सकते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003145",
+      "invariant": "PASS",
+      "input_words": 9,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी जी जितना मतलब अच्छा क्वालिटी हो सके नी",
+      "after": "जी जी जितना मतलब अच्छा क्वालिटी हो सके नी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003148",
+      "invariant": "PASS",
+      "input_words": 3,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी जी जी",
+      "after": "जी जी। जी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003150",
+      "invariant": "PASS",
+      "input_words": 20,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "जब आप फुरसत में होइए जब कहिए तब हम भेजवा सकते हैं हमको तो ज़रूरत है जितना जल्दी हो सके",
+      "after": "जब आप फुरसत में होइए, जब कहिए तब हम भेजवा सकते हैं, हमको तो ज़रूरत है जितना जल्दी हो सके।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003154",
+      "invariant": "PASS",
+      "input_words": 25,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 4,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी जी जब आपके साथ लेबर सब मतलब तैयार हो जाएगा तो हमको एक कॉल कर दीजिएगा तो हम अपना व्यवस्था शुरू कर देंगे जी",
+      "after": "जी जी जब आपके साथ लेबर। सब मतलब तैयार हो जाएगा तो हमको एक कॉल कर दीजिएगा। तो हम अपना व्यवस्था शुरू कर देंगे। जी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003155",
+      "invariant": "PASS",
+      "input_words": 27,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "तो कुछ मतलब चिड़ाया हुआ है कुछ चिड़वाना होगा जब ज़रूरत होगा जो इतना लकड़ी में नहीं हो पाएगा तो हम और मतलब लकड़ी का ऑर्जेस्ट करेंगे",
+      "after": "तो कुछ मतलब चिड़ाया हुआ है। कुछ चिड़वाना होगा। जब ज़रूरत होगा, जो इतना लकड़ी में नहीं हो पाएगा तो हम और मतलब लकड़ी का ऑर्जेस्ट करेंगे।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003969",
+      "invariant": "PASS",
+      "input_words": 3,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "खर्च चलता है",
+      "after": "खर्च चलता है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003973",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "चारा देना चाहिए समस्या समस्या उनका गर्मी में में उन्हें पानी",
+      "after": "चारा देना चाहिए समस्या, समस्या। उनका गर्मी में में उन्हें पानी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003980",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "तक गैसेबा सत्कार अच्छे से जब करेंगे हम उन्हें तो वो",
+      "after": "तक गैसेबा सत्कार अच्छे से जब करेंगे, हम उन्हें तो वो।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003981",
+      "invariant": "PASS",
+      "input_words": 13,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 3,
+        "question_mark": 0
+      },
+      "before": "जैसे कि हमें उन्हें चारा देना समस्या समस्या ठंड मौसम है तो मैं",
+      "after": "जैसे कि हमें उन्हें चारा देना, समस्या, समस्या, ठंड मौसम है तो मैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003983",
+      "invariant": "PASS",
+      "input_words": 25,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "उनका हम देख रहे हैं कि अच्छा से करेंगे तो मुर्गी सुरक्षित से अच्छा रहेगी तो अंडा देंगे हम उसे बेचेंगे तो हमारा कर्ज चलेगा",
+      "after": "उनका हम देख रहे हैं कि अच्छा से करेंगे तो मुर्गी सुरक्षित से अच्छा रहेगी तो अंडा देंगे। हम उसे बेचेंगे तो हमारा कर्ज चलेगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003985",
+      "invariant": "PASS",
+      "input_words": 19,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "खारे हमेशा उसको चारा देना चाहिए हमेशा उसको खिलाना पिलाना चाहिए हमेशा उसको पानी देना चाहिए ताकि वो कभी",
+      "after": "खारे हमेशा उसको चारा देना चाहिए, हमेशा उसको खिलाना पिलाना चाहिए, हमेशा उसको पानी देना चाहिए ताकि वो कभी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003989",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "उनको समय से दाना देना समय से उसको देखना समय से उनको",
+      "after": "उनको समय से दाना देना, समय से उसको देखना समय से उनको।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-003990",
+      "invariant": "PASS",
+      "input_words": 35,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "उसको साफ सुथरा करना जहाँ पर रहती हैं वहाँ पर उन लोगों के लिए बहुत साफ सुथरा रहना चाहिए ताकि कोई दिक्कत ना हो हमेशा देख रेख करना चाहिए तभी उन लोग अच्छा से और",
+      "after": "उसको साफ सुथरा करना जहाँ पर रहती हैं। वहाँ पर उन लोगों के लिए बहुत साफ सुथरा रहना चाहिए। ताकि कोई दिक्कत ना हो। हमेशा देख रेख करना चाहिए, तभी उन लोग अच्छा से और।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004087",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 0,
+        "comma": 6,
+        "question_mark": 0
+      },
+      "before": "देवांग भगत पल्लवी भगत कोमल प्रसाद तेमरे मोहनलाल तेमरे शारदा बाई विष्णु",
+      "after": "देवांग भगत, पल्लवी भगत, कोमल प्रसाद, तेमरे, मोहनलाल तेमरे, शारदा बाई, विष्णु."
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004227",
+      "invariant": "PASS",
+      "input_words": 37,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 4,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "ग्रामीण क्षेत्रों में सांस्कृतिक प्रचार को बढ़ाया रखने के लिए अपने ग्रामीण क्षेत्र में होने वाले सभी पारंपरिक खेल एक अहम भूमिका निभाते हैं आज के समय में हम देख रहे हैं कि सभी नए युवा बच्चे",
+      "after": "ग्रामीण क्षेत्रों में सांस्कृतिक प्रचार को बढ़ाया रखने के लिए अपने ग्रामीण क्षेत्र में होने वाले सभी। पारंपरिक खेल। एक अहम भूमिका निभाते हैं। आज के समय में हम देख रहे हैं कि सभी नए युवा बच्चे।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004229",
+      "invariant": "PASS",
+      "input_words": 17,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "खेलना पसंद करते हैं जिससे कि अगर से हमारे ग्रामीण क्षेत्र में ऐसे पारंपरिक खेल होते रहें",
+      "after": "खेलना पसंद करते हैं, जिससे कि अगर से हमारे ग्रामीण क्षेत्र में ऐसे पारंपरिक खेल होते रहें।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004230",
+      "invariant": "PASS",
+      "input_words": 37,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "और उनकी प्रतियोगिताओं का आयोजन कराते रहें जिसके वजह से यहाँ के बच्चे उस खेल को अपना हमारे पारंपरिक खेलों को खेले और अपनी सांस्कृतिक की पहचान को भी बनाए रखे जब हमारे यहाँ के नए बच्चे",
+      "after": "और उनकी प्रतियोगिताओं का आयोजन कराते रहें। जिसके वजह से यहाँ के बच्चे उस खेल को अपना हमारे पारंपरिक खेलों को खेले और अपनी सांस्कृतिक की पहचान को भी बनाए रखे। जब हमारे यहाँ के नए बच्चे।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004231",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "इन पुराने खेलों को खेलेंगे इन्हें खेलना सीखेंगे इनका प्रचार प्रसार",
+      "after": "इन पुराने खेलों को खेलेंगे, इन्हें खेलना सीखेंगे इनका प्रचार प्रसार।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004232",
+      "invariant": "PASS",
+      "input_words": 16,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "अपने गाँव में एवं अन्य गाँवों में करेंगे तो इससे हमारी सांस्कृतिक पहचान भी काफी बनी",
+      "after": "अपने गाँव में एवं अन्य गाँवों में करेंगे तो इससे हमारी सांस्कृतिक पहचान भी काफी बनी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004233",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जाती है जब हमारे यहाँ के बच्चे ऐसे खेल जैसे गबड्डी खोखो",
+      "after": "जाती है जब हमारे यहाँ के बच्चे ऐसे खेल जैसे गबड्डी खोखो।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004234",
+      "invariant": "PASS",
+      "input_words": 13,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "कुश्ती के खेल खेलते हैं तो इनसे बच्चों की सारी रीक एवं मानसिक",
+      "after": "कुश्ती के खेल खेलते हैं तो इनसे बच्चों की सारी रीक एवं मानसिक।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004235",
+      "invariant": "PASS",
+      "input_words": 25,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "विकास तो होती ही है साथ ही इन खेलों को खेलने से हम अपनी धरती से एवं अपनी संस्कृति से सदैव ही जुड़े रहते हैं",
+      "after": "विकास तो होती ही है। साथ ही इन खेलों को खेलने से हम अपनी धरती से एवं अपनी संस्कृति से सदैव ही जुड़े रहते हैं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004379",
+      "invariant": "PASS",
+      "input_words": 19,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हमारे क्षेत्र में बदलती जलवायु कृषि को बहुत तरह से प्रभावित कर रही है समाज में फैलता हुआ कचरा",
+      "after": "हमारे क्षेत्र में बदलती जलवायु कृषि को बहुत तरह से प्रभावित कर रही है। समाज में फैलता हुआ कचरा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004380",
+      "invariant": "PASS",
+      "input_words": 17,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "कोड़ा करकट इससे भी कृषि को बहुत ही हानि पहुँच रही है अक्सर देखा जा रहा है",
+      "after": "कोड़ा करकट। इससे भी कृषि को बहुत ही हानि पहुँच रही है। अक्सर देखा जा रहा है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004381",
+      "invariant": "PASS",
+      "input_words": 53,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "कि खेतों की जो उरूवरा शक्ति है वह भी कम हो रही है और कई बार बाढ़ आ जाती है सूखा पड़ जाता है और कड़ी सर्दी भी होती है या ओला वृष्टि हो जाती है या अति वृष्टि होती है तो इससे भी बहुत ज़्यादा नुकसान होता है किसान को इस पता",
+      "after": "कि खेतों की जो उरूवरा शक्ति है, वह भी कम हो रही है और कई बार बाढ़ आ जाती है। सूखा पड़ जाता है और कड़ी सर्दी भी होती है। या ओला वृष्टि हो जाती है या अति वृष्टि होती है तो इससे भी बहुत ज़्यादा नुकसान होता है। किसान को इस पता।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004382",
+      "invariant": "PASS",
+      "input_words": 43,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "से निपटने के लिए कई चीज़ें करनी पड़ती हैं उसको या तो थोड़ा सा समय से पहले खेती को करना होता है या उस खेती में ऐसी कोई केमिकल डालना होता है ऐसी कोई दवाई डालनी होती है ताकि वो उस खेती को",
+      "after": "से निपटने के लिए कई चीज़ें करनी पड़ती हैं। उसको या तो थोड़ा सा समय से पहले खेती को करना होता है या उस खेती में ऐसी कोई केमिकल डालना होता है। ऐसी कोई दवाई डालनी होती है ताकि वो उस खेती को।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004384",
+      "invariant": "PASS",
+      "input_words": 45,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "उसको फसल को उगा दें और उससे संबंधी जो भी निर्माण होता है उस चीज़ का वह तुरंत प्रदान कर दें तो एक तो इस तरह से निपटने का मैं सलाह देता हूँ यह करना चाहिए किसानों को और दूसरा किसानों को समय पर ही",
+      "after": "उसको फसल को उगा दें और उससे संबंधी जो भी निर्माण होता है उस चीज़ का वह तुरंत प्रदान कर दें। तो एक तो इस तरह से निपटने का मैं सलाह देता हूँ। यह करना चाहिए किसानों को और दूसरा किसानों को समय पर ही।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004385",
+      "invariant": "PASS",
+      "input_words": 30,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "अपनी फसल को बोलना चाहिए और समय पर ही काटना चाहिए अगर कोई बाढ़ या कोई चक्रवात आ जाता है तो उसके लिए किसानों को एक अलग से तरीके से",
+      "after": "अपनी फसल को बोलना चाहिए और समय पर ही काटना चाहिए। अगर कोई बाढ़ या कोई चक्रवात आ जाता है तो उसके लिए किसानों को एक अलग से तरीके से।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004386",
+      "invariant": "PASS",
+      "input_words": 48,
+      "sentences": 4,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 4,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "बांध लगाना चाहिए इस तरह से ताकि वो हवा का दबा उर्के तोप पर न आए एक ऊँची दीवार निर्मित करनी चाहिए खेतों को ढकने के लिए उस दीसा के हिसाब से तभी उनकी जो खेती है वो किसी भी प्रकार की ओला वृक्ष से प्रभावित नहीं होगी",
+      "after": "बांध लगाना चाहिए इस तरह से, ताकि वो हवा का दबा उर्के तोप पर न आए। एक ऊँची दीवार निर्मित करनी चाहिए। खेतों को ढकने के लिए उस दीसा के हिसाब से। तभी उनकी जो खेती है वो किसी भी प्रकार की ओला वृक्ष से प्रभावित नहीं होगी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004439",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "नमस्कार जी आप जय मात्रा जी ट्रैवल जैसे बात कर रहे हैं मेरा नाम",
+      "after": "नमस्कार जी आप जय मात्रा जी ट्रैवल जैसे बात कर रहे हैं मेरा नाम।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004440",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "सुदामा है मैं छिलकाटान वस्ती शक्ति नगर से बात कर रहा हूँ",
+      "after": "सुदामा है, मैं छिलकाटान वस्ती शक्ति नगर से बात कर रहा हूँ।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004442",
+      "invariant": "PASS",
+      "input_words": 19,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "मैं एक कैब बुक करना चाहता हूँ मुझे अपने फ्रेंड लोग के साथ एक टूर पर जाना है जी",
+      "after": "मैं एक कैब बुक करना चाहता हूँ, मुझे अपने फ्रेंड लोग के साथ एक टूर पर जाना है जी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004443",
+      "invariant": "PASS",
+      "input_words": 25,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "मुझे तारीख़ दस नौ दो हज़ार तेईस को शक्ति नगर से वाराणसी जाना है मुझे मेरे कूल दस साथी हैं मुझे ग्यारह सीटर कैप चाहिए",
+      "after": "मुझे तारीख़ दस नौ दो हज़ार तेईस को शक्ति नगर से वाराणसी जाना है। मुझे मेरे कूल दस साथी हैं, मुझे ग्यारह सीटर कैप चाहिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004444",
+      "invariant": "PASS",
+      "input_words": 30,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 2
+      },
+      "before": "क्या आप बता सकते हैं कि आपका कितना पेमेंट लगेगा कितना पैसा लगेगा और क्या क्या आई डी प्रूफ लगेगा और मुझे कैमरे में क्या क्या फ़ेल्स फ़ैसिलिटी दी जाएगी",
+      "after": "क्या आप बता सकते हैं कि आपका कितना पेमेंट लगेगा, कितना पैसा लगेगा और क्या क्या आई? डी प्रूफ लगेगा। और मुझे कैमरे में क्या क्या फ़ेल्स फ़ैसिलिटी दी जाएगी?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004514",
+      "invariant": "PASS",
+      "input_words": 23,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "जी हाँ अगर हमें अपनी तस्वीरों के ज़रिये भारत में भारत को दिखाने का मौका मिले तो हम भाव हम तस्वीर ज़रूर बिचारी",
+      "after": "जी हाँ। अगर हमें अपनी तस्वीरों के ज़रिये भारत में भारत को दिखाने का मौका मिले तो हम भाव हम। तस्वीर ज़रूर बिचारी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004516",
+      "invariant": "PASS",
+      "input_words": 28,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "कि हम आगे बढ़ें और भारत के बच्चे बच्चे मुझे जाने मुझे मरने के बाद भी मुझे हाथ करें और मुझे बहुत अच्छा लगेगा कि मेरी तस्वीर भारत",
+      "after": "कि हम आगे बढ़ें और भारत के बच्चे बच्चे। मुझे जाने मुझे मरने के बाद भी मुझे हाथ करें और मुझे बहुत अच्छा लगेगा कि मेरी तस्वीर भारत।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004517",
+      "invariant": "PASS",
+      "input_words": 11,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "भारत के लोग देखेंगे जो मैं भारत में तस्वीर खिंचवाना चाहूँगा",
+      "after": "भारत के लोग देखेंगे जो मैं भारत में तस्वीर खिंचवाना चाहूँगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004638",
+      "invariant": "PASS",
+      "input_words": 24,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "अरे रास्ते में ना कुछ प्रॉब्लम हो गई थी इस वजह से थोड़ा लेट हो गई मैं अन्यथा हम जल्दी ही आने वाले थे",
+      "after": "अरे रास्ते में ना कुछ प्रॉब्लम हो गई थी। इस वजह से थोड़ा लेट हो गई। मैं अन्यथा हम जल्दी ही आने वाले थे।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004640",
+      "invariant": "PASS",
+      "input_words": 19,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "हाँ हाँ मैं रात में से डिनर ही करूँगी अभी तो फिर आ लो ना बस पानी पला दीजिए",
+      "after": "हाँ हाँ, मैं रात में से डिनर ही करूँगी, अभी तो फिर आ लो ना बस पानी पला दीजिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004644",
+      "invariant": "PASS",
+      "input_words": 19,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "अभी तो सिलाई में कुछ भी नहीं बस आप ये बता दीजिए कि रोम मेरा कौन सा नंबर है",
+      "after": "अभी तो सिलाई में कुछ भी नहीं। बस आप ये बता दीजिए कि रोम मेरा कौन सा नंबर है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004647",
+      "invariant": "PASS",
+      "input_words": 16,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 3,
+        "question_mark": 0
+      },
+      "before": "हाँ हाँ मेरे को मैं फ्री हूँ आप एक काम करिए आप चलिए या फिर आपके",
+      "after": "हाँ हाँ, मेरे को मैं फ्री हूँ, आप एक काम करिए, आप चलिए या फिर आपके।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004648",
+      "invariant": "PASS",
+      "input_words": 24,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "आपके पास कोई होगा खाली तो वीटर तो आप मेरे को उनको भेज के आप मतलब करवा सकते हैं आपको जानकारी जो लेना है",
+      "after": "आपके पास कोई होगा खाली तो वीटर तो आप मेरे को उनको भेज के आप मतलब करवा सकते हैं। आपको जानकारी जो लेना है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004652",
+      "invariant": "PASS",
+      "input_words": 24,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "अगर सर आप ज़्यादा कुछ तो नहीं है आप दाल चावल सब्जी रोटी बना दीजिए और साथ में सलाद दे दीजिएगा और कुछ नहीं",
+      "after": "अगर सर आप ज़्यादा कुछ तो नहीं है। आप दाल चावल सब्जी रोटी बना दीजिए और साथ में सलाद दे दीजिएगा और कुछ नहीं।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004658",
+      "invariant": "PASS",
+      "input_words": 30,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "नाश्ते में तो फिलाल में कुछ नहीं है आप एक काम करिएगा मतलब जो फिलावा चना रहता है ना वो और मतलब कुछ हरी सब्ज़े से मिला के दे दीजिएगा",
+      "after": "नाश्ते में तो फिलाल में कुछ नहीं है। आप एक काम करिएगा। मतलब जो फिलावा चना रहता है, ना वो और मतलब कुछ हरी सब्ज़े से मिला के दे दीजिएगा।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004667",
+      "invariant": "PASS",
+      "input_words": 8,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "बस रोटी सब्ज़ी मिल जाए तो बहुत है",
+      "after": "बस रोटी सब्ज़ी मिल जाए तो बहुत है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004835",
+      "invariant": "PASS",
+      "input_words": 24,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हाँ भैया अभी दस हीरी आम में दस हीरी रखे हैं और केले भी हैं हमारे पास अभी मतलब बताइए आपको कितने का चाहिए",
+      "after": "हाँ भैया अभी दस हीरी। आम में दस हीरी रखे हैं और केले भी हैं। हमारे पास अभी मतलब बताइए आपको कितने का चाहिए।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004836",
+      "invariant": "PASS",
+      "input_words": 12,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "हाँ भैया द अक केले चल रहा है पचास रुपये डरजन भाई",
+      "after": "हाँ भैया द अक केले चल रहा है पचास रुपये डरजन भाई।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004838",
+      "invariant": "PASS",
+      "input_words": 20,
+      "sentences": 3,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 3,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "अरे भैया बिल्कुल पूरे जो फल फ्रूट हैं बिल्कुल फ्रेश फल फ्रूट मिलेंगे आपको और एक तो एक आ जी",
+      "after": "अरे भैया बिल्कुल पूरे। जो फल फ्रूट हैं, बिल्कुल फ्रेश फल फ्रूट मिलेंगे। आपको और एक तो एक आ जी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004840",
+      "invariant": "PASS",
+      "input_words": 104,
+      "sentences": 8,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 8,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना आप इस बात को भी तो समझिए मांग ज़्यादा एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है वो केले की अभी केला भी भाई बिल्कुल साफ़ सुथरा आपको देगी कितने कितना साफ़ सुथरा केले रखी है और आम भी एक तो सीजन चल रहा है इस बार ऐसे थोड़ा सा रेट तेज़ आ रहा है हमारे को खुद जो बाईमॅन्डी है वहाँ से भी यही रेट मिल रहा है हमें हम तो खुद कम लागत पे मतलब",
+      "after": "और एक तो सीजन जी जी भाई एक तो सीजन भी चल रहा है ना। आप इस बात को भी तो समझिए। मांग ज़्यादा। एक तो सीजन भी बोल सीजन है तो इस बार ऐसे आम का रेट थोड़ा सा महँगा चल रहा है। वो केले की अभी केला भी भाई बिल्कुल साफ़ सुथरा। आपको देगी कितने कितना साफ़ सुथरा केले रखी है और आम भी एक तो सीजन चल रहा है। इस बार ऐसे थोड़ा सा रेट तेज़ आ रहा है, हमारे को खुद जो बाईमॅन्डी है, वहाँ से भी यही रेट मिल रहा है। हमें हम तो खुद कम लागत पे मतलब।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004841",
+      "invariant": "PASS",
+      "input_words": 38,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 2,
+        "question_mark": 0
+      },
+      "before": "अरे भैया बात समझे ना तो वही तो है पाँच किलो भी लेंगे तो हमें नहीं पड़ेगा ना उतने में हम हमारा भी तो हो मतलब हम बेच रहा तो हमें कुछ मिले तो आप समझे ना आप",
+      "after": "अरे भैया बात समझे ना तो वही तो है, पाँच किलो भी लेंगे तो हमें नहीं पड़ेगा ना। उतने में हम हमारा भी तो हो, मतलब हम बेच रहा तो हमें कुछ मिले तो आप समझे ना आप।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004842",
+      "invariant": "PASS",
+      "input_words": 32,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 2,
+        "comma": 1,
+        "question_mark": 0
+      },
+      "before": "तो भैया वही तो अगर वह दोनों की क्वालिटी में भी तो फराक हमारे पास जो आम है उनके पास थोड़ी ना मिलेगा वाला हम डायरेक्ट बगीचे से ला रहे हैं आप",
+      "after": "तो भैया वही तो अगर वह दोनों की क्वालिटी में भी तो फराक। हमारे पास जो आम है, उनके पास थोड़ी ना मिलेगा वाला हम डायरेक्ट बगीचे से ला रहे हैं आप।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004843",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "नहीं नहीं यार भैया यार नहीं पड़ पाएगा ना यार इतना आप बताएँ फिर",
+      "after": "नहीं नहीं यार भैया यार नहीं पड़ पाएगा ना यार इतना आप बताएँ फिर।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004846",
+      "invariant": "PASS",
+      "input_words": 74,
+      "sentences": 6,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 6,
+        "comma": 3,
+        "question_mark": 0
+      },
+      "before": "नहीं ना भैया यार इतना नहीं ना इससे ज़्यादा नहीं हो पाएगा मैंने बताया तो तब भी बहुत ज़्यादा कर दी नहीं तो मैं बाकी ग्राहकों को नब्बे रुपये करके दे रहा हूँ आपको दस ही करे बीस रुपये कम कर दिया आपको ओ केले तो मैं पिताली रुपये कर दे रहा हूँ आपको तब भी चालीस दिए तो क्या आप पुराने ग्राहक हैं मेरे आप इससे पहले भी आज हुए थे बताओ फिर",
+      "after": "नहीं ना भैया यार इतना नहीं ना इससे ज़्यादा नहीं हो पाएगा। मैंने बताया तो तब भी बहुत ज़्यादा कर दी। नहीं तो मैं बाकी ग्राहकों को नब्बे रुपये करके दे रहा हूँ। आपको दस ही करे, बीस रुपये कम कर दिया। आपको ओ केले तो मैं पिताली रुपये कर दे रहा हूँ। आपको तब भी चालीस दिए तो क्या आप पुराने ग्राहक हैं, मेरे आप इससे पहले भी आज हुए थे, बताओ फिर।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004855",
+      "invariant": "PASS",
+      "input_words": 2,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 1,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "प्रयागराज झांसी",
+      "after": "प्रयागराज झांसी।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004965",
+      "invariant": "PASS",
+      "input_words": 25,
+      "sentences": 2,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 1
+      },
+      "before": "मैं एक गाड़ी बुक करके और अपने स्थान पर पहुँचा तो वहाँ मैंने ड्राइवर से पूछा कि क्या मैं आपको नगत रुपये दे सकता हूँ",
+      "after": "मैं एक गाड़ी बुक करके और अपने स्थान पर पहुँचा। तो वहाँ मैंने ड्राइवर से पूछा कि क्या मैं आपको नगत रुपये दे सकता हूँ?"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004966",
+      "invariant": "PASS",
+      "input_words": 8,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "और या आपके पास कोई और उपाय है",
+      "after": "और या आपके पास कोई और उपाय है।"
+    },
+    {
+      "clip_id": "indicvoices-hindi-valid-0-004967",
+      "invariant": "PASS",
+      "input_words": 14,
+      "sentences": 1,
+      "tiny_sentences_le2_words": 0,
+      "marks": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0
+      },
+      "before": "मेरे पास ऑनलाइन रुपये नहीं हैं तो मैं आपको नगर भुगतान कर सकता हूँ",
+      "after": "मेरे पास ऑनलाइन रुपये नहीं हैं तो मैं आपको नगर भुगतान कर सकता हूँ।"
+    }
+  ]
+}

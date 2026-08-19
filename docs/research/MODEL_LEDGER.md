@@ -64,6 +64,8 @@ entries is ordered by the living priorities
 | Fish-Speech | speech_synthesis | — | NC (2026-07-31) | Rejected | 2026-08-04 |
 | Piper (fork) | speech_synthesis | — | GPL-3.0 fork (2026-07-31) | Rejected | 2026-08-04 |
 | espeak-ng in-process phonemization | serving-chain component | — | GPL-3.0 (2026-08-03) | Rejected | 2026-08-04 |
+| punct_cap_seg_47_language (1-800-BAD-CODE) | punctuation_restoration (text post-processing) | 47 langs incl. HI+EN; HI benchmarked on hi-punct-eval@v1 | **Apache-2.0 (source, 2026-08-19)** | Researching — first benchmark done, integration decoder required (M29A) | 2026-08-19 |
+| Cadence-Fast (AI4Bharat) | punctuation_restoration (text post-processing) | claims EN + 22 Indic incl. HI; unmeasured | **contradictory** — card `MIT` vs Gemma-3 base Terms of Use flow-down (2026-08-19) | Researching — benchmark BLOCKED pending license clarity | 2026-08-19 |
 
 ---
 
@@ -1155,6 +1157,52 @@ Full report:
 made. What remains is DEPLOYMENT: Hostinger VPS + domain + secrets,
 E3 seeding on the box, Linux re-ladder on VPS hardware, and the real
 production canary — a separate milestone with its own gates.
+
+---
+
+## Milestone 29A — Hindi punctuation evaluation v1 + baselines (appended 2026-08-19)
+
+Full report:
+[2026-08-19-hindi-punctuation-evaluation-v1.md](2026-08-19-hindi-punctuation-evaluation-v1.md).
+New capability lens: punctuation restoration as backend text
+post-processing (M28 architecture research → M29A frozen benchmark
+`hi-punct-eval@v1`, 265 rows, FLEURS hi_in test raw_transcription,
+`punct_slots@v1` ruler, word-preservation invariant as a HARD GATE).
+
+- **punct_cap_seg_47_language (1-800-BAD-CODE)** — **Researching**
+  *(Gate 0 intake + first benchmark)* — **[EVIDENCE]** Apache-2.0
+  (source, 2026-08-19), revision `1b9d51fc7989…`, ONNX+sentencepiece,
+  ~233 MB, CPU. IDENTITY CORRECTION: the `punctuators` alias
+  `pcs_47lang` resolves to THIS repo — the M28 document's attribution
+  to `xlm-roberta_punctuation_fullstop_truecase` was wrong; every M28
+  measured number was produced by this model. M29A measured, on
+  hi-punct-eval@v1: micro punctuation F1 0.2421, sentence-boundary F1
+  0.7497, comma F1 0.3467, invariant pass rate 96.23% (10/265 rows
+  destroy Latin acronyms as `<unk>` — the pipeline's detokenizer, not
+  the classifier heads). On the multi-sentence probe (3-sentence
+  paragraphs): boundary recall 0.9435 vs the rules baseline's 0.2687
+  — the model finds the mid-text boundaries the product actually
+  needs. On 151 real E3 outputs: invariant 151/151 PASS. Latency
+  0.08–0.31 s per 5–600 s tier, RSS peak 616 MiB (dev box).
+  Integration precondition defined by M29A: a word-copy decoder
+  (input words verbatim + predicted marks only) making the invariant
+  structural — evidence:
+  [29a evidence](../../research/experiments/29a-hindi-punctuation-eval/),
+  [license checks](../../research/experiments/29a-hindi-punctuation-eval/license-access-checks.json)
+- **Cadence-Fast (AI4Bharat)** — **Researching — benchmark BLOCKED**
+  *(license)* — **[FACT]** Model card claims MIT, but the base model
+  is Gemma-3-270M and Google's Gemma Terms of Use assert flow-down
+  conditions on derivatives; no relicensing statement or maintainer
+  clarification exists (community tab empty, checked 2026-08-19).
+  Per the M29A rule, NOT downloaded, NOT benchmarked. Unblocking
+  requires legal review or upstream clarification — evidence:
+  [license checks](../../research/experiments/29a-hindi-punctuation-eval/license-access-checks.json)
+
+**Consequence for priorities:** classification **B — evaluation
+promising, needs better data**. Before any runtime integration
+(M29B): benchmark v2 with multi-sentence and spontaneous punctuated
+references, and the word-copy decoder as the integration contract.
+Production remains untouched; Hindi still serves unpunctuated.
 
 ---
 

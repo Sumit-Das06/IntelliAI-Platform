@@ -1,0 +1,164 @@
+{
+  "experiment": "29a-hindi-punctuation-eval",
+  "phase": "hinglish-edge-probes (sanity only, no statistical claim)",
+  "model": "1-800-BAD-CODE/punct_cap_seg_47_language @ 1b9d51fc7989ebc61e844d407d9dadd08ff4ba28",
+  "model_load_seconds": 1.66,
+  "probes": [
+    {
+      "kind": "hindi-statement",
+      "text": "मैं घर जा रहा हूँ आप क्या कर रहे हैं",
+      "output": "मैं घर जा रहा हूँ। आप क्या कर रहे हैं।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "hindi-question",
+      "text": "क्या आप कल ऑफिस आओगे",
+      "output": "क्या आप कल ऑफिस आओगे?",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 0,
+        "comma": 0,
+        "question_mark": 1,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "hindi-two-sentences",
+      "text": "खाना तैयार है सब लोग खाने आ जाओ",
+      "output": "खाना तैयार है, सब लोग खाने आ जाओ।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "hinglish-mixed",
+      "text": "मैंने कल एक नया laptop खरीदा उसकी battery life बहुत अच्छी है",
+      "output": "मैंने कल एक नया laptop खरीदा। उसकी Battery Life बहुत अच्छी है।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "hinglish-code-switch",
+      "text": "meeting कल सुबह दस बजे है आप time पर आ जाना",
+      "output": "Meeting कल सुबह दस बजे है, आप Time पर आ जाना।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "english-control",
+      "text": "the meeting is at ten tomorrow please be on time",
+      "output": "The meeting is at ten tomorrow. Please be on time.",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 0,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 2
+      }
+    },
+    {
+      "kind": "numbers-hindi",
+      "text": "मेरा नंबर नौ आठ सात छह पांच चार तीन दो एक शून्य है",
+      "output": "मेरा नंबर नौ, आठ सात, छह पांच, चार, तीन, दो एक शून्य है।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 1,
+        "comma": 5,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "numbers-digits",
+      "text": "कुल रकम 2500 रुपये है और छूट 150 रुपये मिली",
+      "output": "कुल रकम 2500 रुपये है और छूट 150 रुपये मिली।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 1,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "abbreviation",
+      "text": "डॉ शर्मा ने कहा कि रिपोर्ट सोमवार तक आ जाएगी",
+      "output": "डॉ। शर्मा ने कहा कि रिपोर्ट सोमवार तक आ जाएगी।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "url",
+      "text": "आप हमारी वेबसाइट intelliai.example.com पर जाकर देख सकते हैं",
+      "output": "आप हमारी वेबसाइट Intelliai.Example.।COM पर जाकर देख सकते हैं।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "email",
+      "text": "मुझे अपना बायोडाटा support@example.com पर भेज दीजिए",
+      "output": "मुझे अपना बायोडाटा Support<UNK>Example.।COM पर भेज दीजिए।",
+      "invariant": "FAIL",
+      "marks_added": {
+        "danda": 2,
+        "comma": 0,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    },
+    {
+      "kind": "quoted-speech",
+      "text": "उन्होंने कहा मैं कल जरूर आऊंगा और फिर चले गए",
+      "output": "उन्होंने कहा, मैं कल जरूर आऊंगा और फिर चले गए।",
+      "invariant": "PASS",
+      "marks_added": {
+        "danda": 1,
+        "comma": 1,
+        "question_mark": 0,
+        "exclamation": 0,
+        "full_stop": 0
+      }
+    }
+  ]
+}

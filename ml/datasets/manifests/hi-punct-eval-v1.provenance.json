@@ -1,0 +1,51 @@
+{
+  "manifest": {
+    "path": "ml/evaluation/punctuation/datasets/hi-punct-eval-v1.json",
+    "sha256": "3fa83ddb98cb2aafc3814c2cf4a385d309f8f79c7cf90699f83baefe7434a154",
+    "samples": 265
+  },
+  "created": "2026-08-19",
+  "language": "hi",
+  "task": "punctuation-restoration",
+  "sources": [
+    {
+      "name": "fleurs",
+      "reference": "google/fleurs",
+      "language": "multi",
+      "license": "CC-BY-4.0",
+      "license_verified_on": "2026-08-19",
+      "license_source_url": "https://huggingface.co/datasets/google/fleurs",
+      "commercial": "yes",
+      "access": "open",
+      "access_detail": "",
+      "speaker_ids": false,
+      "official_splits": true,
+      "contamination_risk": "known_overlap",
+      "notes": "Read speech (FLoRes sentences). raw_transcription is the punctuation-bearing column; the normalized transcription column already drops most punctuation and is unusable here (verified M28). Sentence-ender style is MIXED (danda and Latin full stop) - preserved verbatim, policy documented in the manifest description."
+    }
+  ],
+  "source_revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "source_file": {
+    "path": "data/hi_in/test.tsv",
+    "sha256": "889e82e2875490f9533ff59ab67326fcfa01cf828fc4412758aaaa1f442a729f",
+    "bytes": 473366
+  },
+  "source_splits": [
+    "test"
+  ],
+  "reference_field": "raw_transcription",
+  "normalization": "punct_slots@v1",
+  "primary_ruler": "punctuation_f1_micro",
+  "curation": "deterministic: TSV order; NFC + whitespace collapse; dedup by reference text keeping the first occurrence's row id and every occurrence's audio identity",
+  "validation": {
+    "source": "fleurs",
+    "language": "hi",
+    "split": "test",
+    "candidates": 418,
+    "accepted": 265,
+    "duplicates_merged": 153,
+    "rows_with_supported_punctuation": 264
+  },
+  "audio": "not vendored (text-level benchmark); recoverable from the pinned revision",
+  "notes": ""
+}

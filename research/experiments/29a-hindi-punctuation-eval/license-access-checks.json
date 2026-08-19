@@ -1,0 +1,38 @@
+{
+  "experiment": "29a-hindi-punctuation-eval",
+  "phase": "license-and-access-checks",
+  "checked_at": "2026-08-19",
+  "lead_model": {
+    "repo": "1-800-BAD-CODE/punct_cap_seg_47_language",
+    "revision": "1b9d51fc7989ebc61e844d407d9dadd08ff4ba28",
+    "license": "Apache-2.0",
+    "license_source": "Hugging Face API model tags (license:apache-2.0) + model card, checked 2026-08-19",
+    "commercial_use": "permitted (Apache-2.0)",
+    "identity_note": "The punctuators alias pcs_47lang resolves to THIS repo. The M28 document attributed the tiny benchmark to 1-800-BAD-CODE/xlm-roberta_punctuation_fullstop_truecase - that attribution was WRONG; the model actually benchmarked in M28 and in M29A is punct_cap_seg_47_language. Corrected here and in the M29A research document.",
+    "files_verified_sha256": {
+      "punct_cap_seg_47lang.onnx": "640d91c06b7cc5b3e065c12a7097188378aad3bc11568ff1d72c4c0a2acb0df4",
+      "spe_unigram_64k_lowercase_47lang.model": "1bc15b6e5fd80dfac9999582ce3efcad2ac1f7cf4e0e9769b329f5de9ca5af47",
+      "config.yaml": "30eb8e05fcea3865828ab73f41fbba21dd7faf127a61950a706af9156f5b84f2"
+    },
+    "download_integrity": "local cache snapshot directory name equals the pinned revision; file sha256 values above computed locally and asserted by predict_lead_model.py before every run",
+    "verdict": "CLEAR to benchmark and, if quality gates pass, to adopt"
+  },
+  "challenger_cadence_fast": {
+    "repo": "ai4bharat/Cadence-Fast",
+    "card_license_claim": "MIT (Hugging Face model card, checked 2026-08-19)",
+    "base_model": "google/gemma-3-270m",
+    "conflict": "Gemma models are distributed under the Gemma Terms of Use, which assert flow-down conditions (use restrictions, notice requirements) on model derivatives. A Gemma-3 fine-tune relabeled MIT is contradictory on its face; no relicensing statement, LICENSE file discussion, or maintainer clarification exists (community tab checked 2026-08-19: zero discussions).",
+    "determination": "NOT legally clear enough to benchmark",
+    "verdict": "BLOCKED - not downloaded, not benchmarked, not adopted. Unblocking requires legal review or an upstream clarification from AI4Bharat.",
+    "rule_applied": "M29A Phase 14: if the license is not clear enough to benchmark, record BLOCKED and stop there"
+  },
+  "benchmark_data_source": {
+    "repo": "google/fleurs (dataset)",
+    "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+    "license": "CC-BY-4.0 (Hugging Face API dataset tags, checked 2026-08-19)",
+    "file_used": "data/hi_in/test.tsv",
+    "file_sha256": "889e82e2875490f9533ff59ab67326fcfa01cf828fc4412758aaaa1f442a729f",
+    "file_bytes": 473366,
+    "note": "text-only fetch; no audio downloaded in M29A (text-level benchmark). Same source family as the M23-approved English retention slice."
+  }
+}
