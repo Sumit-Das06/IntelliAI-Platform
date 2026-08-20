@@ -1,0 +1,364 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "roundtrip_judge.py",
+  "engine_label": "supertonic-hi",
+  "judge_note": "en judged by the whisper-small route, hi/mixed by the promoted E3 route, through the real gateway; frozen normalization profiles; WER/CER from intelliai_evaluation.accuracy (no parallel metric code)",
+  "aggregates": {
+    "en_round_trip_wer_mean": null,
+    "en_round_trip_cer_mean": null,
+    "hi_round_trip_wer_mean": 0.1524,
+    "hi_round_trip_cer_mean": 0.1211,
+    "mixed_round_trip_cer_mean": null,
+    "judged_rows": 29
+  },
+  "rows": [
+    {
+      "id": "hi-general-01",
+      "language": "hi",
+      "category": "general",
+      "reference": "नमस्ते, आप कैसे हैं? मुझे आज का मौसम बहुत अच्छा लगा।",
+      "judge_hi": {
+        "text": "नमस्ते आप कैसे हैं मुझे आज का मौसम बहुत अच्छा लगा",
+        "wall_s": 3.85
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "hi-general-02",
+      "language": "hi",
+      "category": "general",
+      "reference": "कल हम बाज़ार जाकर सब्ज़ियाँ और फल खरीदेंगे।",
+      "judge_hi": {
+        "text": "कल हम बाजार जाकर सब्जियाँ और फल खरीदेंगे",
+        "wall_s": 1.52
+      },
+      "wer_hi": 0.25,
+      "cer_hi": 0.0476
+    },
+    {
+      "id": "hi-conjuncts-01",
+      "language": "hi",
+      "category": "conjuncts",
+      "reference": "विद्यार्थी ने प्रश्न का उत्तर स्पष्ट शब्दों में लिखा।",
+      "judge_hi": {
+        "text": "विद्यार्थी ने प्रश्न का उत्तर स्पष्ट शब्दों में लिखा",
+        "wall_s": 1.87
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "hi-conjuncts-02",
+      "language": "hi",
+      "category": "conjuncts",
+      "reference": "ज्ञान और अभ्यास से ही उत्कृष्टता प्राप्त होती है।",
+      "judge_hi": {
+        "text": "ज्ञान और अभ्यास से ही उत्कृष्टता प्राप्त होती है",
+        "wall_s": 1.7
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "hi-matras-01",
+      "language": "hi",
+      "category": "matras",
+      "reference": "चिड़िया पेड़ की ऊँची डाल पर बैठी थी।",
+      "judge_hi": {
+        "text": "चिड्डिया पेड़ की ऊंची डाल पर बैठी थी",
+        "wall_s": 1.26
+      },
+      "wer_hi": 0.25,
+      "cer_hi": 0.0857
+    },
+    {
+      "id": "hi-matras-02",
+      "language": "hi",
+      "category": "matras",
+      "reference": "पूजा ने अपनी छोटी बहन को कहानी सुनाई।",
+      "judge_hi": {
+        "text": "पूजा ने अपनी छोटी बहन को कहानी सुनाई",
+        "wall_s": 1.26
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "hi-numbers-01",
+      "language": "hi",
+      "category": "numbers",
+      "reference": "इस किताब की कीमत 250 रुपये है और छूट के बाद 199 रुपये।",
+      "judge_hi": {
+        "text": "इस किताब की कीमत दो फर्स्ट रुपये है और छूट के बाद नन नानी नाइन रुपये",
+        "wall_s": 2.15
+      },
+      "wer_hi": 0.3846,
+      "cer_hi": 0.3962
+    },
+    {
+      "id": "hi-numbers-02",
+      "language": "hi",
+      "category": "numbers",
+      "reference": "ट्रेन संख्या 12951 सुबह 6 बजकर 30 मिनट पर छूटती है।",
+      "judge_hi": {
+        "text": "ट्रेन संख्या तातू वन फोर्ट ईवैन सुबह श्वक से बजकर थेस मिनट पर छूटती है",
+        "wall_s": 2.36
+      },
+      "wer_hi": 0.6364,
+      "cer_hi": 0.56
+    },
+    {
+      "id": "hi-propernames-01",
+      "language": "hi",
+      "category": "proper_names",
+      "reference": "सुमित और प्रिया कल दिल्ली से मुंबई जाएँगे।",
+      "judge_hi": {
+        "text": "सुमित और प्रिया कल दिल्ली से मुंबई जाएंगे",
+        "wall_s": 1.7
+      },
+      "wer_hi": 0.125,
+      "cer_hi": 0.0244
+    },
+    {
+      "id": "hi-propernames-02",
+      "language": "hi",
+      "category": "proper_names",
+      "reference": "रवीन्द्रनाथ टैगोर की कविताएँ विश्व प्रसिद्ध हैं।",
+      "judge_hi": {
+        "text": "रविंद्रनाथ टैगोर की कविताएँ विश्व प्रसिद्ध हैं",
+        "wall_s": 2.0
+      },
+      "wer_hi": 0.1429,
+      "cer_hi": 0.0638
+    },
+    {
+      "id": "mixed-codemix-01",
+      "language": "mixed",
+      "category": "code_mixed",
+      "reference": "मैंने कल नया laptop खरीदा और उस पर Python install किया।",
+      "judge_hi": {
+        "text": "मैंने कल नया लैपटॉप खरीदा और उस पर पाइथॉन इंस्टॉल किया",
+        "wall_s": 2.3
+      },
+      "wer_hi": 0.2727,
+      "cer_hi": 0.3519
+    },
+    {
+      "id": "mixed-codemix-02",
+      "language": "mixed",
+      "category": "code_mixed",
+      "reference": "Meeting के बाद मुझे report भेज देना, please।",
+      "judge_hi": {
+        "text": "मीटिंग के बाद मुझे रिपोर्ट भेज देना प्लीज़",
+        "wall_s": 1.77
+      },
+      "wer_hi": 0.375,
+      "cer_hi": 0.4762
+    },
+    {
+      "id": "mixed-api-01",
+      "language": "mixed",
+      "category": "api_terms",
+      "reference": "API key के बिना request unauthorized हो जाएगी।",
+      "judge_hi": {
+        "text": "एपीआई की के बिना रिक्वेस्ट अनोटाइजड हो जाएगी",
+        "wall_s": 1.99
+      },
+      "wer_hi": 0.5,
+      "cer_hi": 0.6222
+    },
+    {
+      "id": "mixed-programming-01",
+      "language": "mixed",
+      "category": "programming",
+      "reference": "Function call करने से पहले variable initialize करना ज़रूरी है।",
+      "judge_hi": {
+        "text": "फंक्शन कॉल करने से पहले वेरिएबल इनिजिटलाइज करना जरूरी है",
+        "wall_s": 2.41
+      },
+      "wer_hi": 0.5,
+      "cer_hi": 0.5082
+    },
+    {
+      "id": "m32-hi-question-01",
+      "language": "hi",
+      "category": "question",
+      "reference": "क्या आपका ऑर्डर समय पर पहुँच गया था?",
+      "judge_hi": {
+        "text": "क्या आपका ऑर्डर समय पर पहुंच गया था",
+        "wall_s": 1.6
+      },
+      "wer_hi": 0.125,
+      "cer_hi": 0.0286
+    },
+    {
+      "id": "m32-hi-question-02",
+      "language": "hi",
+      "category": "question",
+      "reference": "आपके खाते में कौन सा मोबाइल नंबर दर्ज है?",
+      "judge_hi": {
+        "text": "आपके खाते में कौन सा मोबाइल नंबर दर्ज है",
+        "wall_s": 1.63
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-hi-currency-01",
+      "language": "hi",
+      "category": "currency",
+      "reference": "आपका बिल ₹1,499 का है और भुगतान की अंतिम तारीख 25 अगस्त है।",
+      "judge_hi": {
+        "text": "आपका बिल एक सत्य ईसाई सत्य नागिनागिन का है और भुगतान की अंतिम तारीख ट्यूब आई फ्ल अगस्त है",
+        "wall_s": 3.27
+      },
+      "wer_hi": 0.5714,
+      "cer_hi": 0.6667
+    },
+    {
+      "id": "m32-hi-dates-01",
+      "language": "hi",
+      "category": "dates",
+      "reference": "आपकी किस्त 15 अगस्त 2026 को जमा होगी।",
+      "judge_hi": {
+        "text": "आपकी किस्त फ्तीन अगस्त दूसरा टीरिस को जमा होगी",
+        "wall_s": 2.03
+      },
+      "wer_hi": 0.375,
+      "cer_hi": 0.4444
+    },
+    {
+      "id": "m32-hi-names-01",
+      "language": "hi",
+      "category": "proper_names",
+      "reference": "श्रीमती अनुराधा कृष्णमूर्ति ने जयपुर शाखा में शिकायत दर्ज की।",
+      "judge_hi": {
+        "text": "श्रीमती अनुराधा कृष्णमूर्ति ने जयपुर शाखा में शिकायत दर्ज की",
+        "wall_s": 2.35
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-hi-loanword-01",
+      "language": "hi",
+      "category": "loanwords",
+      "reference": "आपका ऑर्डर नंबर बयालीस इक्यानवे है और डिलीवरी कल शाम तक होगी।",
+      "judge_hi": {
+        "text": "आपका ऑर्डर नंबर बयाली सिक्यॉनवे है और डिलीवरी कल शाम तक होगी",
+        "wall_s": 2.45
+      },
+      "wer_hi": 0.1667,
+      "cer_hi": 0.0667
+    },
+    {
+      "id": "m32-hi-paragraph-01",
+      "language": "hi",
+      "category": "paragraph",
+      "reference": "ग्राहक सेवा में कॉल करने के लिए धन्यवाद। आपकी शिकायत दर्ज कर ली गई है और संदर्भ संख्या आपके मोबाइल पर भेज दी गई है। हमारी टीम दो कार्य दिवसों के भीतर आपसे संपर्क करेगी। क्या मैं आपकी और किसी बात में मदद कर सकती हूँ?",
+      "judge_hi": {
+        "text": "ग्राहक सेवा में कॉल करने के लिए धन्यवाद आपकी शिकायत दर्ज कर ली गई है और संदर्भ संख्या आपके मोबाइल पर भेज दी गई है हमारी टीम दो कार्य दिवसों के भीतर आपसे संपर्क करेगी क्या मैं आपकी और किसी बात में मदद कर सकती हूँ",
+        "wall_s": 7.13
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-hi-long-01",
+      "language": "hi",
+      "category": "long",
+      "reference": "कॉल समाप्त करने से पहले मैं आज की पूरी बातचीत का सारांश दोहरा देती हूँ। आपके खाते का पता बदल दिया गया है और पुराना पता हटा दिया गया है। इस महीने का बकाया आपकी जमा राशि से समायोजित कर दिया जाएगा, इसलिए अभी कोई भुगतान नहीं करना है। आपकी इंटरनेट योजना अगले महीने की पहली तारीख से बदल जाएगी और नया राउटर गुरुवार को सुबह दस से दोपहर एक बजे के बीच लगाया जाएगा। पुष्टि का संदेश एक घंटे के भीतर आपके पंजीकृत मोबाइल नंबर पर आ जाएगा। यदि तकनीशियन उस समय तक नहीं पहुँचे, तो कृपया हमें दोबारा कॉल करें और सेवा अनुरोध संख्या बताएं, टीम उसे तुरंत आगे बढ़ाएगी।",
+      "judge_hi": {
+        "text": "कॉल समाप्त करने से पहले मैं आज की पूरी बातचीत का सारांश दोहरा देती हूँ आपके खाते का पता बदल दिया गया है और पुराना पता हाथ दिया गया है इस महीने का बकाया आपकी जमारी से समायोजित कर दिया जाएगा इसलिए अभी कोई भुगतान नहीं करना है आपकी इंटरनेट योजना अगले तारीख से बदल जाएगी और न्यारौटर गुरुवार को सुबह दस से दोपहर एक बजे के बीच लगाया जाएगा पुष्टि का संदेश एक घंटे के भीतर आपके पंजीत मोबाइल नंबर पर आ जाएगा यदि कनिष्यन उस समय तक नहीं पहुँचे तो कृपया हमें दोबारा कॉल करें और सेवा अनुरोध संख्या बताएँ टीम उसे तुरंत आगे बढ़ाएगी",
+        "wall_s": 16.03
+      },
+      "wer_hi": 0.0982,
+      "cer_hi": 0.0578
+    },
+    {
+      "id": "m32-mixed-cc-04",
+      "language": "mixed",
+      "category": "code_switch_devanagari",
+      "reference": "आपका policy number 12345 है, please confirm कर दीजिए।",
+      "judge_hi": {
+        "text": "आपका पॉलिसी नंबर टू व्हान थी रिफाइन फाइव है प्लीज कन्फर्म कर दीजिए",
+        "wall_s": 2.49
+      },
+      "wer_hi": 1.0,
+      "cer_hi": 0.902
+    },
+    {
+      "id": "m32-pros-hi-q",
+      "language": "hi",
+      "category": "prosody_pair",
+      "reference": "आप कैसे हैं?",
+      "judge_hi": {
+        "text": "आप कैसे हैं",
+        "wall_s": 0.94
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-pros-hi-q-bare",
+      "language": "hi",
+      "category": "prosody_pair",
+      "reference": "आप कैसे हैं",
+      "judge_hi": {
+        "text": "आप कैसे",
+        "wall_s": 0.87
+      },
+      "wer_hi": 0.3333,
+      "cer_hi": 0.3636
+    },
+    {
+      "id": "m32-pros-hi-danda",
+      "language": "hi",
+      "category": "prosody_pair",
+      "reference": "मुझे यह किताब बहुत पसंद आई।",
+      "judge_hi": {
+        "text": "मुझे यह किताब बहुत पसंद आई",
+        "wall_s": 1.1
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-pros-hi-danda-bare",
+      "language": "hi",
+      "category": "prosody_pair",
+      "reference": "मुझे यह किताब बहुत पसंद आई",
+      "judge_hi": {
+        "text": "मुझे यह किताब बहुत पसंद आई",
+        "wall_s": 1.32
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-pros-hi-comma",
+      "language": "hi",
+      "category": "prosody_pair",
+      "reference": "जी हाँ, मैं कल आ जाऊँगा, आप चिंता मत कीजिए।",
+      "judge_hi": {
+        "text": "जी हाँ मैं कल आ जाऊँगा आप चिंता मत कीजिए",
+        "wall_s": 1.75
+      },
+      "wer_hi": 0.0,
+      "cer_hi": 0.0
+    },
+    {
+      "id": "m32-pros-hi-comma-bare",
+      "language": "hi",
+      "category": "prosody_pair",
+      "reference": "जी हाँ मैं कल आ जाऊँगा आप चिंता मत कीजिए",
+      "judge_hi": {
+        "text": "जी हमें कल आ जाऊँगा आप चिंता मत कीजिए",
+        "wall_s": 1.65
+      },
+      "wer_hi": 0.2,
+      "cer_hi": 0.1
+    }
+  ]
+}

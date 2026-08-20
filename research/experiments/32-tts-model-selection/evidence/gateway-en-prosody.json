@@ -1,0 +1,29 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "prosody_analyze.py",
+  "method": "autocorrelation F0 (25ms/10ms, 60-400Hz, voicing by energy); tail slope over the final 40% of voiced frames; signal-level facts only — naturalness remains a human-listening question",
+  "audio_dir": "/mnt/c/Users/VIKASH~1/AppData/Local/Temp/claude/d--Sumit-Projects-IntelliAI-Platform/67762b73-e6aa-43b8-a730-264d0d432d4f/scratchpad/m32-audio/gateway-kokoro-en",
+  "pairs": [
+    {
+      "pair": "en-question-mark",
+      "with_mark": {
+        "duration_s": 2.45,
+        "voiced_duration_s": 1.96,
+        "f0_mean_hz": 216.4,
+        "f0_tail_slope_hz_per_frame": -0.622,
+        "voiced_frames": 97
+      },
+      "without_mark": {
+        "duration_s": 2.475,
+        "voiced_duration_s": 1.99,
+        "f0_mean_hz": 210.1,
+        "f0_tail_slope_hz_per_frame": -1.554,
+        "voiced_frames": 102
+      },
+      "delta_duration_s": -0.025,
+      "delta_voiced_duration_s": -0.03,
+      "delta_f0_mean_hz": 6.3,
+      "delta_f0_tail_slope_hz_per_frame": 0.932
+    }
+  ]
+}

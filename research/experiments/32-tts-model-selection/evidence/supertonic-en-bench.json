@@ -1,0 +1,257 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "wsl_synth_bench.py",
+  "engine": "supertonic-en",
+  "identity": {
+    "engine": "supertonic-3 (pypi)",
+    "package_version": "1.3.1",
+    "language": "en",
+    "voice": "M1",
+    "sample_rate_hz": 44100,
+    "license_note": "model weights OpenRAIL-M - REVIEW REQUIRED, not permissive"
+  },
+  "sample_rate_hz": 44100,
+  "probes_file": "probe-texts-v1.json",
+  "repetitions": 2,
+  "load_seconds": 1.38,
+  "rss_before_load_mib": 12.9,
+  "rss_after_load_mib": 475.6,
+  "rss_peak_mib": 656.0,
+  "probe_count": 23,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 0.4366,
+  "rtf_p95": 0.6447,
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "general",
+      "chars": 64,
+      "wall_ms": 1916.1,
+      "ttfa_ms": null,
+      "audio_seconds": 4.319,
+      "rtf": 0.4437
+    },
+    {
+      "id": "en-general-02",
+      "language": "en",
+      "category": "general",
+      "chars": 80,
+      "wall_ms": 2168.6,
+      "ttfa_ms": null,
+      "audio_seconds": 5.364,
+      "rtf": 0.4043
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "numbers",
+      "chars": 47,
+      "wall_ms": 2094.0,
+      "ttfa_ms": null,
+      "audio_seconds": 5.016,
+      "rtf": 0.4175
+    },
+    {
+      "id": "en-numbers-02",
+      "language": "en",
+      "category": "numbers",
+      "chars": 42,
+      "wall_ms": 2037.8,
+      "ttfa_ms": null,
+      "audio_seconds": 4.667,
+      "rtf": 0.4366
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "dates",
+      "chars": 62,
+      "wall_ms": 2109.8,
+      "ttfa_ms": null,
+      "audio_seconds": 5.294,
+      "rtf": 0.3985
+    },
+    {
+      "id": "en-dates-02",
+      "language": "en",
+      "category": "dates",
+      "chars": 38,
+      "wall_ms": 1698.7,
+      "ttfa_ms": null,
+      "audio_seconds": 4.18,
+      "rtf": 0.4064
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "currency",
+      "chars": 62,
+      "wall_ms": 2350.8,
+      "ttfa_ms": null,
+      "audio_seconds": 6.269,
+      "rtf": 0.375
+    },
+    {
+      "id": "en-urls-01",
+      "language": "en",
+      "category": "urls",
+      "chars": 45,
+      "wall_ms": 1583.7,
+      "ttfa_ms": null,
+      "audio_seconds": 3.274,
+      "rtf": 0.4837
+    },
+    {
+      "id": "en-emails-01",
+      "language": "en",
+      "category": "emails",
+      "chars": 50,
+      "wall_ms": 1806.3,
+      "ttfa_ms": null,
+      "audio_seconds": 3.971,
+      "rtf": 0.4549
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "technical",
+      "chars": 67,
+      "wall_ms": 2085.0,
+      "ttfa_ms": null,
+      "audio_seconds": 4.807,
+      "rtf": 0.4338
+    },
+    {
+      "id": "en-technical-02",
+      "language": "en",
+      "category": "technical",
+      "chars": 64,
+      "wall_ms": 1785.8,
+      "ttfa_ms": null,
+      "audio_seconds": 4.389,
+      "rtf": 0.4069
+    },
+    {
+      "id": "m32-en-question-01",
+      "language": "en",
+      "category": "question",
+      "chars": 45,
+      "wall_ms": 1523.5,
+      "ttfa_ms": null,
+      "audio_seconds": 2.926,
+      "rtf": 0.5207
+    },
+    {
+      "id": "m32-en-question-02",
+      "language": "en",
+      "category": "question",
+      "chars": 45,
+      "wall_ms": 1568.4,
+      "ttfa_ms": null,
+      "audio_seconds": 2.926,
+      "rtf": 0.5361
+    },
+    {
+      "id": "m32-en-names-01",
+      "language": "en",
+      "category": "proper_names",
+      "chars": 66,
+      "wall_ms": 1931.2,
+      "ttfa_ms": null,
+      "audio_seconds": 4.598,
+      "rtf": 0.42
+    },
+    {
+      "id": "m32-en-brand-01",
+      "language": "en",
+      "category": "oov_brand",
+      "chars": 47,
+      "wall_ms": 1696.0,
+      "ttfa_ms": null,
+      "audio_seconds": 3.692,
+      "rtf": 0.4594
+    },
+    {
+      "id": "m32-en-currency-02",
+      "language": "en",
+      "category": "currency",
+      "chars": 67,
+      "wall_ms": 2333.4,
+      "ttfa_ms": null,
+      "audio_seconds": 6.409,
+      "rtf": 0.3641
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "paragraph",
+      "chars": 246,
+      "wall_ms": 5027.9,
+      "ttfa_ms": null,
+      "audio_seconds": 17.136,
+      "rtf": 0.2934
+    },
+    {
+      "id": "m32-en-long-01",
+      "language": "en",
+      "category": "long",
+      "chars": 795,
+      "wall_ms": 15297.3,
+      "ttfa_ms": null,
+      "audio_seconds": 50.985,
+      "rtf": 0.3
+    },
+    {
+      "id": "m32-mixed-cc-01",
+      "language": "mixed-roman",
+      "category": "code_switch_roman",
+      "chars": 21,
+      "wall_ms": 1167.6,
+      "ttfa_ms": null,
+      "audio_seconds": 1.811,
+      "rtf": 0.6447
+    },
+    {
+      "id": "m32-mixed-cc-02",
+      "language": "en",
+      "category": "code_switch_english",
+      "chars": 24,
+      "wall_ms": 1267.4,
+      "ttfa_ms": null,
+      "audio_seconds": 1.95,
+      "rtf": 0.6498
+    },
+    {
+      "id": "m32-mixed-cc-03",
+      "language": "mixed-roman",
+      "category": "code_switch_roman",
+      "chars": 30,
+      "wall_ms": 1648.5,
+      "ttfa_ms": null,
+      "audio_seconds": 3.622,
+      "rtf": 0.4551
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "prosody_pair",
+      "chars": 38,
+      "wall_ms": 1400.7,
+      "ttfa_ms": null,
+      "audio_seconds": 2.508,
+      "rtf": 0.5585
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "prosody_pair",
+      "chars": 37,
+      "wall_ms": 1475.2,
+      "ttfa_ms": null,
+      "audio_seconds": 2.577,
+      "rtf": 0.5724
+    }
+  ]
+}

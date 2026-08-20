@@ -1,0 +1,154 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "espeak_parity_probe.py",
+  "question": "is subprocess espeak-ng (exec boundary, GPL-clean like ffmpeg) a faithful stand-in for the in-process GPL chain the upstream Hindi pipeline uses?",
+  "cli_version": "eSpeak NG text-to-speech: 1.51  Data at: /usr/lib/x86_64-linux-gnu/espeak-ng-data",
+  "library_espeak_data": "/home/vikashan_technologie/m32/venv-kokoro/lib/python3.12/site-packages/espeakng_loader/espeak-ng-data",
+  "texts": 29,
+  "exact_matches": 16,
+  "match_rate": 0.5517,
+  "rows": [
+    {
+      "id": "hi-general-01",
+      "match": false,
+      "cli": "nəmˈʌsteː ˌaːp kˈɛːseː hɛ̃ mˌʊɟʰeː ˈaːɟ kaː mˈɔːsəm bˈʌhʊt ˈʌcʰcʰaː lˈʌɡaː",
+      "library": "nəmˈʌsteː, ˌaːp kˈɛːseː hɛ̃? mˌʊɟʰeː ˈaːɟ kaː mˈɔːsəm bˈʌhʊt ˈʌcʰcʰaː lˈʌɡaː"
+    },
+    {
+      "id": "hi-general-02",
+      "match": true
+    },
+    {
+      "id": "hi-conjuncts-01",
+      "match": true
+    },
+    {
+      "id": "hi-conjuncts-02",
+      "match": true
+    },
+    {
+      "id": "hi-matras-01",
+      "match": true
+    },
+    {
+      "id": "hi-matras-02",
+      "match": true
+    },
+    {
+      "id": "hi-numbers-01",
+      "match": true
+    },
+    {
+      "id": "hi-numbers-02",
+      "match": true
+    },
+    {
+      "id": "hi-propernames-01",
+      "match": true
+    },
+    {
+      "id": "hi-propernames-02",
+      "match": true
+    },
+    {
+      "id": "mixed-codemix-01",
+      "match": false,
+      "cli": "mˈɛ̃neː kˈʌl nˈʌjaː (en)lˈaptɒp(hi) kʰəɾˈiːdaː ɔːɾ ˈʊs pˈʌɾ (en)pˈaɪθən ɪnstˈɔːl(hi) kˈɪjaː",
+      "library": "mˈɛ̃neː kˈʌl nˈʌjaː lˈaptɒp kʰəɾˈiːdaː ɔːɾ ˈʊs pˈʌɾ pˈIθən ɪnstˈɔːl kˈɪjaː"
+    },
+    {
+      "id": "mixed-codemix-02",
+      "match": false,
+      "cli": "(en)mˈiːtɪŋ(hi) keː bˈaːd mˌʊɟʰeː (en)ɹɪpˈɔːt(hi) bʰˈeːɟ dˈeːnaː (en)plˈiːz(hi)",
+      "library": "mˈiːtɪŋ keː bˈaːd mˌʊɟʰeː ɹɪpˈɔːt bʰˈeːɟ dˈeːnaː, plˈiːz"
+    },
+    {
+      "id": "mixed-api-01",
+      "match": false,
+      "cli": "(en)ˈeɪ pˈiː ˈaɪ kˈiː(hi) keː bˌɪnaː (en)ɹɪkwˈɛst ʌnˈɔːθəɹˌaɪzd(hi) hoː ɟaːˈeːɡi",
+      "library": "ˈA pˈiː ˈI kˈiː keː bˌɪnaː ɹɪkwˈɛst ʌnˈɔːθəɹˌIzd hoː ɟaːˈeːɡi"
+    },
+    {
+      "id": "mixed-programming-01",
+      "match": false,
+      "cli": "(en)fˈʌŋkʃən kˈɔːl(hi) kˈʌɾnˌeː seː pˈʌhəlˌeː (en)vˈeəɹɪəbəl ɪnˈɪʃəlˌaɪz(hi) kˈʌɾnˌaː zəɾˈuːɾi hɛː",
+      "library": "fˈʌŋkʃən kˈɔːl kˈʌɾnˌeː seː pˈʌhəlˌeː vˈeəɹɪəbəl ɪnˈɪʃəlˌIz kˈʌɾnˌaː zəɾˈuːɾi hɛː"
+    },
+    {
+      "id": "m32-hi-question-01",
+      "match": false,
+      "cli": "kːjaː ˌaːpkˌaː ˈɔɾɖəɾ sˈʌmˌɛj pˈʌɾ pəhˈũnc ɡˈʌjaː tʰaː",
+      "library": "kːjaː ˌaːpkˌaː ˈɔɾɖəɾ sˈʌmˌɛj pˈʌɾ pəhˈũnc ɡˈʌjaː tʰaː?"
+    },
+    {
+      "id": "m32-hi-question-02",
+      "match": false,
+      "cli": "ˌaːpkˌeː kʰˈaːteː mẽː kˈɔːn sˈaː moːbˈaːɪl nˈʌmbəɾ dˈʌɾɟ hɛː",
+      "library": "ˌaːpkˌeː kʰˈaːteː mẽː kˈɔːn sˈaː moːbˈaːɪl nˈʌmbəɾ dˈʌɾɟ hɛː?"
+    },
+    {
+      "id": "m32-hi-currency-01",
+      "match": false,
+      "cli": "ˌaːpkˌaː bˈɪl ˈeːk hˈʌɟaːɾ cˈaːrsˈɔː nɪɲjˈaːnəbˌeː kaː hɛː ɔːɾ bʰˌʊɡtˈaːn ki ˈʌntɪm taːɾˈiːkʰ pˈʌcːis ʌɡˈʌst hɛː",
+      "library": "ˌaːpkˌaː bˈɪl ˈeːk,cˈaːrsˈɔː nɪɲjˈaːnəbˌeː kaː hɛː ɔːɾ bʰˌʊɡtˈaːn ki ˈʌntɪm taːɾˈiːkʰ pˈʌcːis ʌɡˈʌst hɛː"
+    },
+    {
+      "id": "m32-hi-dates-01",
+      "match": true
+    },
+    {
+      "id": "m32-hi-names-01",
+      "match": true
+    },
+    {
+      "id": "m32-hi-loanword-01",
+      "match": true
+    },
+    {
+      "id": "m32-hi-paragraph-01",
+      "match": false,
+      "cli": "ɡɾˈaːhək sˈeːʋaː mẽː kˈɔl kˈʌɾnˌeː keː lˈɪeː dʰˌənjəʋˈaːd ˌaːpkˌi ʃɪkˈaːjət dˈʌɾɟ kˈʌɾ lˈi ɡˈʌi hɛː ɔːɾ səndˈʌɾbʰ sˈʌŋkʰjaː ˌaːpkˌeː moːbˈaːɪl pˈʌɾ bʰˈeːɟ dˈi ɡˈʌi hɛː həmˌaːɾi ʈˈiːm dˈoː kˈaːrjə dˈɪʋsˌõ keː bʰˈiːtəɾ ˈaːpsˌeː səmpˈʌɾk kəɾˈeːɡi kːjaː mɛ̃ ˌaːpkˌi ɔːɾ kˈɪsi bˈaːt mẽː mˈʌdəd kˈʌɾ sˈʌktˌi hũ",
+      "library": "ɡɾˈaːhək sˈeːʋaː mẽː kˈɔl kˈʌɾnˌeː keː lˈɪeː dʰˌənjəʋˈaːd ˌaːpkˌi ʃɪkˈaːjət dˈʌɾɟ kˈʌɾ lˈi ɡˈʌi hɛː ɔːɾ səndˈʌɾbʰ sˈʌŋkʰjaː ˌaːpkˌeː moːbˈaːɪl pˈʌɾ bʰˈeːɟ dˈi ɡˈʌi hɛː həmˌaːɾi ʈˈiːm dˈoː kˈaːrjə dˈɪʋsˌõ keː bʰˈiːtəɾ ˈaːpsˌeː səmpˈʌɾk kəɾˈeːɡi kːjaː mɛ̃ ˌaːpkˌi ɔːɾ kˈɪsi bˈaːt mẽː mˈʌdəd kˈʌɾ sˈʌktˌi hũ?"
+    },
+    {
+      "id": "m32-hi-long-01",
+      "match": false,
+      "cli": "kˈɔl səmˈaːpt kˈʌɾnˌeː seː pˈʌhəlˌeː mɛ̃ ˈaːɟ ki pˈuːɾi bˌaːtcˈiːt kaː saːɾˈãʃ dˈoːhəɾˌaː dˈeːti hũ ˌaːpkˌeː kʰˈaːteː kaː pˈʌtaː bˈʌdəl dˈɪjaː ɡˈʌjaː hɛː ɔːɾ pʊɾˈaːnaː pˈʌtaː hˈʌʈaː dˈɪjaː ɡˈʌjaː hɛː ˈɪs məhˈiːneː kaː bəkˈaːjaː ˌaːpkˌi ɟˈʌmaː ɾˈaːʃɪ seː sˌəmaːjˈoːɟɪt kˈʌɾ dˈɪjaː ɟaːˈeːɡaː ˈɪslˌɪeː ˈʌbʰi kˈoːi bʰˌʊɡtˈaːn nˈʌhĩ kˈʌɾnˌaː hɛː ˌaːpkˌi ˌĩʈəɾnˈeːʈ jˈoːɟnˌaː ˈʌɡlˌeː məhˈiːneː ki pˈʌhəlˌi taːɾˈiːkʰ seː bˈʌdəl ɟaːˈeːɡi ɔːɾ nˈʌjaː ɾˈaːʊʈˌəɾ ɡˌʊɾʊʋˈaːɾ koː sˈʊbəh dˈʌs seː dˈoːpəhˌəɾ ˈeːk bˈʌɟeː keː bˈiːc ləɡˈaːjaː ɟaːˈeːɡaː pˈʊʂʈɪ kaː səndˈeːʃ ˈeːk ɡʰˈʌɳʈeː keː bʰˈiːtəɾ ˌaːpkˌeː pəɲɟˈiːkɾɪt moːbˈaːɪl nˈʌmbəɾ pˈʌɾ ˈaː ɟaːˈeːɡaː jˌədɪ tˌəknˈiːʃɪjˌən ˈʊs sˈʌmˌɛj tˌək nˈʌhĩ pəhˈũnceː tˈoː kɾˈɪpjˌaː hˈʌmẽː doːbˈaːɾaː kˈɔl kˈʌɾẽː ɔːɾ sˈeːʋaː ˌʌnʊɾˈoːdʰ sˈʌŋkʰjaː bətˈaːẽː ʈˈiːm ˈʊseː tʊɾˈʌnt ˈaːɡeː bˌər.haːˈeːɡi",
+      "library": "kˈɔl səmˈaːpt kˈʌɾnˌeː seː pˈʌhəlˌeː mɛ̃ ˈaːɟ ki pˈuːɾi bˌaːtcˈiːt kaː saːɾˈãʃ dˈoːhəɾˌaː dˈeːti hũ ˌaːpkˌeː kʰˈaːteː kaː pˈʌtaː bˈʌdəl dˈɪjaː ɡˈʌjaː hɛː ɔːɾ pʊɾˈaːnaː pˈʌtaː hˈʌʈaː dˈɪjaː ɡˈʌjaː hɛː ˈɪs məhˈiːneː kaː bəkˈaːjaː ˌaːpkˌi ɟˈʌmaː ɾˈaːʃɪ seː sˌəmaːjˈoːɟɪt kˈʌɾ dˈɪjaː ɟaːˈeːɡaː, ˈɪslˌɪeː ˈʌbʰi kˈoːi bʰˌʊɡtˈaːn nˈʌhĩ kˈʌɾnˌaː hɛː ˌaːpkˌi ˌĩʈəɾnˈeːʈ jˈoːɟnˌaː ˈʌɡlˌeː məhˈiːneː ki pˈʌhəlˌi taːɾˈiːkʰ seː bˈʌdəl ɟaːˈeːɡi ɔːɾ nˈʌjaː ɾˈaːʊʈˌəɾ ɡˌʊɾʊʋˈaːɾ koː sˈʊbəh dˈʌs seː dˈoːpəhˌəɾ ˈeːk bˈʌɟeː keː bˈiːc ləɡˈaːjaː ɟaːˈeːɡaː pˈʊʂʈɪ kaː səndˈeːʃ ˈeːk ɡʰˈʌɳʈeː keː bʰˈiːtəɾ ˌaːpkˌeː pəɲɟˈiːkɾɪt moːbˈaːɪl nˈʌmbəɾ pˈʌɾ ˈaː ɟaːˈeːɡaː jˌədɪ tˌəknˈiːʃɪjˌən ˈʊs sˈʌmˌɛj tˌək nˈʌhĩ pəhˈũnceː, tˈoː kɾˈɪpjˌaː hˈʌmẽː doːbˈaːɾaː kˈɔl kˈʌɾẽː ɔːɾ sˈeːʋaː ˌʌnʊɾˈoːdʰ sˈʌŋkʰjaː bətˈaːẽː, ʈˈiːm ˈʊseː tʊɾˈʌnt ˈaːɡeː bˌər.haːˈeːɡi"
+    },
+    {
+      "id": "m32-mixed-cc-04",
+      "match": false,
+      "cli": "ˌaːpkˌaː (en)pˈɒlɪsi nˈʌmbə(hi) bˈaːɾəh hˈʌɟaːɾ tˈiːnsˈɔː paɪntˈaːlis hɛː (en)plˈiːz kənfˈɜːm(hi) kˈʌɾ dˈiːɟɪˌeː",
+      "library": "ˌaːpkˌaː pˈɒlɪsi nˈʌmbə bˈaːɾəh hˈʌɟaːɾ tˈiːnsˈɔː pIntˈaːlis hɛː, plˈiːz kənfˈɜːm kˈʌɾ dˈiːɟɪˌeː"
+    },
+    {
+      "id": "m32-pros-hi-q",
+      "match": false,
+      "cli": "ˌaːp kˈɛːseː hɛ̃",
+      "library": "ˌaːp kˈɛːseː hɛ̃?"
+    },
+    {
+      "id": "m32-pros-hi-q-bare",
+      "match": true
+    },
+    {
+      "id": "m32-pros-hi-danda",
+      "match": true
+    },
+    {
+      "id": "m32-pros-hi-danda-bare",
+      "match": true
+    },
+    {
+      "id": "m32-pros-hi-comma",
+      "match": false,
+      "cli": "ɟˈi hˈã mɛ̃ kˈʌl ˈaː ɟaːˈunɡaː ˌaːp cˈĩtaː mˈʌt kˈiːɟɪˌeː",
+      "library": "ɟˈi hˈã, mɛ̃ kˈʌl ˈaː ɟaːˈunɡaː, ˌaːp cˈĩtaː mˈʌt kˈiːɟɪˌeː"
+    },
+    {
+      "id": "m32-pros-hi-comma-bare",
+      "match": true
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "wsl_synth_bench.py",
+  "engine": "kokoro-hi",
+  "identity": {
+    "engine": "kokoro-82m (upstream KPipeline)",
+    "lang_code": "h",
+    "voice": "hm_omega",
+    "kokoro_version": "0.9.4",
+    "hub_repo": "hexgrad/Kokoro-82M",
+    "hub_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "gpl_espeak_chain_in_process": true
+  },
+  "sample_rate_hz": 24000,
+  "probes_file": "probe-texts-v1.json",
+  "repetitions": 1,
+  "load_seconds": 18.13,
+  "rss_before_load_mib": 12.0,
+  "rss_after_load_mib": 1010.7,
+  "rss_peak_mib": 2287.9,
+  "probe_count": 24,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 2.2997,
+  "rtf_p95": 4.5136,
+  "rows": [
+    {
+      "id": "hi-general-01",
+      "language": "hi",
+      "category": "general",
+      "chars": 52,
+      "wall_ms": 13967.5,
+      "ttfa_ms": 13967.1,
+      "audio_seconds": 5.375,
+      "rtf": 2.5986
+    },
+    {
+      "id": "hi-general-02",
+      "language": "hi",
+      "category": "general",
+      "chars": 43,
+      "wall_ms": 13121.6,
+      "ttfa_ms": 13121.2,
+      "audio_seconds": 4.7,
+      "rtf": 2.7918
+    },
+    {
+      "id": "hi-conjuncts-01",
+      "language": "hi",
+      "category": "conjuncts",
+      "chars": 53,
+      "wall_ms": 7680.0,
+      "ttfa_ms": 7679.6,
+      "audio_seconds": 4.4,
+      "rtf": 1.7455
+    },
+    {
+      "id": "hi-conjuncts-02",
+      "language": "hi",
+      "category": "conjuncts",
+      "chars": 49,
+      "wall_ms": 6672.1,
+      "ttfa_ms": 6671.8,
+      "audio_seconds": 4.625,
+      "rtf": 1.4426
+    },
+    {
+      "id": "hi-matras-01",
+      "language": "hi",
+      "category": "matras",
+      "chars": 36,
+      "wall_ms": 4672.5,
+      "ttfa_ms": 4672.2,
+      "audio_seconds": 3.6,
+      "rtf": 1.2979
+    },
+    {
+      "id": "hi-matras-02",
+      "language": "hi",
+      "category": "matras",
+      "chars": 37,
+      "wall_ms": 10529.4,
+      "ttfa_ms": 10529.0,
+      "audio_seconds": 4.3,
+      "rtf": 2.4487
+    },
+    {
+      "id": "hi-numbers-01",
+      "language": "hi",
+      "category": "numbers",
+      "chars": 54,
+      "wall_ms": 14956.2,
+      "ttfa_ms": 14951.7,
+      "audio_seconds": 7.125,
+      "rtf": 2.0991
+    },
+    {
+      "id": "hi-numbers-02",
+      "language": "hi",
+      "category": "numbers",
+      "chars": 51,
+      "wall_ms": 12577.5,
+      "ttfa_ms": 12576.9,
+      "audio_seconds": 7.125,
+      "rtf": 1.7653
+    },
+    {
+      "id": "hi-propernames-01",
+      "language": "hi",
+      "category": "proper_names",
+      "chars": 42,
+      "wall_ms": 10571.9,
+      "ttfa_ms": 10571.5,
+      "audio_seconds": 4.05,
+      "rtf": 2.6103
+    },
+    {
+      "id": "hi-propernames-02",
+      "language": "hi",
+      "category": "proper_names",
+      "chars": 48,
+      "wall_ms": 15111.7,
+      "ttfa_ms": 15111.2,
+      "audio_seconds": 4.575,
+      "rtf": 3.3031
+    },
+    {
+      "id": "m32-hi-question-01",
+      "language": "hi",
+      "category": "question",
+      "chars": 36,
+      "wall_ms": 17264.7,
+      "ttfa_ms": 17264.5,
+      "audio_seconds": 3.825,
+      "rtf": 4.5136
+    },
+    {
+      "id": "m32-hi-question-02",
+      "language": "hi",
+      "category": "question",
+      "chars": 41,
+      "wall_ms": 8352.6,
+      "ttfa_ms": 8352.2,
+      "audio_seconds": 4.275,
+      "rtf": 1.9538
+    },
+    {
+      "id": "m32-hi-currency-01",
+      "language": "hi",
+      "category": "currency",
+      "chars": 59,
+      "wall_ms": 10875.0,
+      "ttfa_ms": 10874.6,
+      "audio_seconds": 7.325,
+      "rtf": 1.4846
+    },
+    {
+      "id": "m32-hi-dates-01",
+      "language": "hi",
+      "category": "dates",
+      "chars": 37,
+      "wall_ms": 12042.3,
+      "ttfa_ms": 12041.9,
+      "audio_seconds": 5.125,
+      "rtf": 2.3497
+    },
+    {
+      "id": "m32-hi-names-01",
+      "language": "hi",
+      "category": "proper_names",
+      "chars": 61,
+      "wall_ms": 16669.3,
+      "ttfa_ms": 16656.8,
+      "audio_seconds": 6.05,
+      "rtf": 2.7553
+    },
+    {
+      "id": "m32-hi-loanword-01",
+      "language": "hi",
+      "category": "loanwords",
+      "chars": 61,
+      "wall_ms": 18164.0,
+      "ttfa_ms": 18163.6,
+      "audio_seconds": 6.175,
+      "rtf": 2.9415
+    },
+    {
+      "id": "m32-hi-paragraph-01",
+      "language": "hi",
+      "category": "paragraph",
+      "chars": 215,
+      "wall_ms": 26214.8,
+      "ttfa_ms": 26213.7,
+      "audio_seconds": 18.2,
+      "rtf": 1.4404
+    },
+    {
+      "id": "m32-hi-long-01",
+      "language": "hi",
+      "category": "long",
+      "chars": 545,
+      "wall_ms": 33177.2,
+      "ttfa_ms": 33176.1,
+      "audio_seconds": 23.875,
+      "rtf": 1.3896
+    },
+    {
+      "id": "m32-pros-hi-q",
+      "language": "hi",
+      "category": "prosody_pair",
+      "chars": 12,
+      "wall_ms": 10211.6,
+      "ttfa_ms": 10207.3,
+      "audio_seconds": 1.925,
+      "rtf": 5.3047
+    },
+    {
+      "id": "m32-pros-hi-q-bare",
+      "language": "hi",
+      "category": "prosody_pair",
+      "chars": 11,
+      "wall_ms": 4426.8,
+      "ttfa_ms": 4426.7,
+      "audio_seconds": 1.925,
+      "rtf": 2.2997
+    },
+    {
+      "id": "m32-pros-hi-danda",
+      "language": "hi",
+      "category": "prosody_pair",
+      "chars": 27,
+      "wall_ms": 8262.2,
+      "ttfa_ms": 8261.9,
+      "audio_seconds": 3.375,
+      "rtf": 2.4481
+    },
+    {
+      "id": "m32-pros-hi-danda-bare",
+      "language": "hi",
+      "category": "prosody_pair",
+      "chars": 26,
+      "wall_ms": 7288.4,
+      "ttfa_ms": 7288.1,
+      "audio_seconds": 3.375,
+      "rtf": 2.1595
+    },
+    {
+      "id": "m32-pros-hi-comma",
+      "language": "hi",
+      "category": "prosody_pair",
+      "chars": 43,
+      "wall_ms": 8645.2,
+      "ttfa_ms": 8645.0,
+      "audio_seconds": 4.3,
+      "rtf": 2.0105
+    },
+    {
+      "id": "m32-pros-hi-comma-bare",
+      "language": "hi",
+      "category": "prosody_pair",
+      "chars": 40,
+      "wall_ms": 5178.8,
+      "ttfa_ms": 5178.6,
+      "audio_seconds": 4.2,
+      "rtf": 1.2331
+    }
+  ]
+}

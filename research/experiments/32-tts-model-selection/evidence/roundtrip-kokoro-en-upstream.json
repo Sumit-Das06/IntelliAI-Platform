@@ -1,0 +1,268 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "roundtrip_judge.py",
+  "engine_label": "kokoro-en-upstream",
+  "judge_note": "en judged by the whisper-small route, hi/mixed by the promoted E3 route, through the real gateway; frozen normalization profiles; WER/CER from intelliai_evaluation.accuracy (no parallel metric code)",
+  "aggregates": {
+    "en_round_trip_wer_mean": 0.0344,
+    "en_round_trip_cer_mean": 0.0189,
+    "hi_round_trip_wer_mean": null,
+    "hi_round_trip_cer_mean": null,
+    "mixed_round_trip_cer_mean": null,
+    "judged_rows": 21
+  },
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "general",
+      "reference": "The quick brown fox jumps over the lazy dog near the river bank.",
+      "judge_en": {
+        "text": "The quick brown fox jumps over the lazy dog near the riverbank.",
+        "wall_s": 3.26
+      },
+      "wer_en": 0.1538,
+      "cer_en": 0.0159
+    },
+    {
+      "id": "en-general-02",
+      "language": "en",
+      "category": "general",
+      "reference": "Please review the attached document and share your feedback by tomorrow evening.",
+      "judge_en": {
+        "text": "Please review the attached document and share your feedback by tomorrow evening.",
+        "wall_s": 1.34
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "numbers",
+      "reference": "The invoice total is 1247 dollars for 38 units.",
+      "judge_en": {
+        "text": "The invoice total is $1247 for 38 units.",
+        "wall_s": 1.26
+      },
+      "wer_en": 0.1111,
+      "cer_en": 0.1739
+    },
+    {
+      "id": "en-numbers-02",
+      "language": "en",
+      "category": "numbers",
+      "reference": "Flight 204 departs at 9:45 in the morning.",
+      "judge_en": {
+        "text": "Flight 204 departs at 9, 45 in the morning.",
+        "wall_s": 1.3
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "dates",
+      "reference": "The meeting is scheduled for August 3, 2026, at half past ten.",
+      "judge_en": {
+        "text": "The meeting is scheduled for August 3, 2026, at half past 10.",
+        "wall_s": 1.28
+      },
+      "wer_en": 0.0833,
+      "cer_en": 0.0508
+    },
+    {
+      "id": "en-dates-02",
+      "language": "en",
+      "category": "dates",
+      "reference": "Her passport expires on 15 March 2031.",
+      "judge_en": {
+        "text": "Her passport expires on 15 March, 2031.",
+        "wall_s": 1.22
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "currency",
+      "reference": "The subscription costs $4.99 per month or 399 rupees per year.",
+      "judge_en": {
+        "text": "The subscription costs $4.99 per month or 399 rupees per year.",
+        "wall_s": 1.48
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "en-urls-01",
+      "language": "en",
+      "category": "urls",
+      "reference": "Check www.example.com for the latest updates.",
+      "judge_en": {
+        "text": "Check www.example.com for the latest updates.",
+        "wall_s": 1.4
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "en-emails-01",
+      "language": "en",
+      "category": "emails",
+      "reference": "Send your resume to careers@example.com by Monday.",
+      "judge_en": {
+        "text": "Send your resume to careers at example.com by Monday",
+        "wall_s": 1.5
+      },
+      "wer_en": 0.1111,
+      "cer_en": 0.0612
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "technical",
+      "reference": "The API gateway routes requests to the inference runtime over HTTP.",
+      "judge_en": {
+        "text": "The API Gateway routes requests to the inference Runtime over HTTP.",
+        "wall_s": 1.42
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "en-technical-02",
+      "language": "en",
+      "category": "technical",
+      "reference": "Latency dropped after we enabled caching and connection pooling.",
+      "judge_en": {
+        "text": "Latency dropped after we enabled caching and connection pooling.",
+        "wall_s": 1.42
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-en-question-01",
+      "language": "en",
+      "category": "question",
+      "reference": "Could you confirm your account number for me?",
+      "judge_en": {
+        "text": "Could you confirm your account number for me?",
+        "wall_s": 1.53
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-en-question-02",
+      "language": "en",
+      "category": "question",
+      "reference": "Have you received the replacement device yet?",
+      "judge_en": {
+        "text": "Have you received the replacement device yet?",
+        "wall_s": 1.35
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-en-names-01",
+      "language": "en",
+      "category": "proper_names",
+      "reference": "Priya Sharma spoke with Rajesh Iyer about the Coimbatore shipment.",
+      "judge_en": {
+        "text": "Priya Sharma spoke with Rajesh Ayer about the Coimbatore shipment.",
+        "wall_s": 1.52
+      },
+      "wer_en": 0.1,
+      "cer_en": 0.0154
+    },
+    {
+      "id": "m32-en-brand-01",
+      "language": "en",
+      "category": "oov_brand",
+      "reference": "Welcome to IntelliAI support, my name is Kavya.",
+      "judge_en": {
+        "text": "Welcome to IntelliAI Support. My name is Kavya.",
+        "wall_s": 1.41
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-en-currency-02",
+      "language": "en",
+      "category": "currency",
+      "reference": "Your refund of 1,249 rupees and 50 paise was processed on the 14th.",
+      "judge_en": {
+        "text": "Your refund of 1,249 rupees and 50 paisa was processed on the 14th.",
+        "wall_s": 1.56
+      },
+      "wer_en": 0.0714,
+      "cer_en": 0.0152
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "paragraph",
+      "reference": "Thank you for calling customer care. Your complaint about the delayed delivery has been registered, and the reference number is 88231. Our courier partner will contact you within two working days. Is there anything else I can help you with today?",
+      "judge_en": {
+        "text": "Thank you for calling Customer Care. Your complaint about the delay delivery has been registered, and the reference number is 88231. Our courier partner will contact you within two working days. Is there anything else I can help you with today?",
+        "wall_s": 1.93
+      },
+      "wer_en": 0.0244,
+      "cer_en": 0.0083
+    },
+    {
+      "id": "m32-en-long-01",
+      "language": "en",
+      "category": "long",
+      "reference": "Before we close this call, let me quickly summarize everything we covered today. Your billing address has been updated to the new flat in Andheri West, and the old address has been removed from the account. The pending invoice of two thousand three hundred rupees will be adjusted against your security deposit, so no payment is due this month. Your internet plan has been upgraded to the two hundred megabit option, effective from the first of next month, and the router replacement is scheduled for Thursday between ten and one. You will receive a confirmation message on your registered mobile number within the next hour. If the technician does not arrive in that window, please call us back and quote the service request number I gave you earlier, and the team will escalate it immediately.",
+      "judge_en": {
+        "text": "Before we close this call, let me quickly summarize everything we covered today. Your billing address has been updated to the new flat in Anteri West, and the old address has been removed from the account. The pending invoice of 2,300 rupees will be adjusted against your security deposit, so no payment is due this month. Your internet plan has been upgraded to the 200 megabit option, effective from the first of next month, and the router replacement is scheduled for Thursday between 10 and 1. You will receive a confirmation message on your registered mobile number within the next hour. If the technician does not arrive in that window, please call us back and quote the service request number I gave you earlier, and the team will escalate it immediately.",
+        "wall_s": 4.81
+      },
+      "wer_en": 0.0667,
+      "cer_en": 0.0563
+    },
+    {
+      "id": "m32-mixed-cc-02",
+      "language": "en",
+      "category": "code_switch_english",
+      "reference": "Please call me tomorrow.",
+      "judge_en": {
+        "text": "Please call me tomorrow.",
+        "wall_s": 1.16
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "prosody_pair",
+      "reference": "You are coming to the office tomorrow?",
+      "judge_en": {
+        "text": "You are coming to the office tomorrow.",
+        "wall_s": 1.27
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "prosody_pair",
+      "reference": "You are coming to the office tomorrow",
+      "judge_en": {
+        "text": "You are coming to the office tomorrow.",
+        "wall_s": 1.27
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    }
+  ]
+}

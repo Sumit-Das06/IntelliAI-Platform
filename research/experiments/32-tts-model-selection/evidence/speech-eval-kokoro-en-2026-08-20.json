@@ -1,0 +1,440 @@
+{
+  "corpus_name": "tts-eval-seed",
+  "corpus_version": 1,
+  "methodology_version": 1,
+  "evaluated": {
+    "artifact": "kokoro-82m",
+    "version": 1,
+    "lineage": "kokoro"
+  },
+  "judge": {
+    "capability": "transcription",
+    "artifact": "whisper-small",
+    "version": 1,
+    "runtime_version": "0.1.0"
+  },
+  "runtime": {
+    "service": "tts-runtime",
+    "service_version": "0.1.0"
+  },
+  "hardware": "Intel Core i7-14650HX (Windows 11, Docker Desktop/WSL2)",
+  "run_at": "2026-08-20T04:49:02.841777Z",
+  "synthesis_params": {
+    "voice": "reference-alto"
+  },
+  "normalization": null,
+  "determinations": [],
+  "cases": [
+    {
+      "case_id": "en-general-01",
+      "transcript": "The quick brown fox jumps over the lazy dog near the riverbank.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3783783783783784,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 3617.269500042312,
+        "rtf": 0.8174620339078671,
+        "round_trip_wer": 0.15384615384615385
+      },
+      "failure": null,
+      "reference_words": 13,
+      "word_errors": 2
+    },
+    {
+      "case_id": "en-general-02",
+      "transcript": "Please review the attached document and share your feedback by tomorrow evening.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3619631901840491,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1744.8915999848396,
+        "rtf": 0.35792648204817223,
+        "round_trip_wer": 0.0
+      },
+      "failure": null,
+      "reference_words": 12,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-numbers-01",
+      "transcript": "The invoice total is $1247 for 38 units.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.34146341463414637,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1715.4863000614569,
+        "rtf": 0.3500992449105014,
+        "round_trip_wer": 0.1111111111111111,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 1
+    },
+    {
+      "case_id": "en-numbers-02",
+      "transcript": "Flight 204 departs at 9.45 in the morning.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.34814814814814815,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1514.75610001944,
+        "rtf": 0.37401385185665187,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-dates-01",
+      "transcript": "The meeting is scheduled for August 3, 2026, at half past 10.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.35502958579881655,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1875.0597999896854,
+        "rtf": 0.3712989702949872,
+        "round_trip_wer": 0.08333333333333333,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 12,
+      "word_errors": 1
+    },
+    {
+      "case_id": "en-dates-02",
+      "transcript": "Her passport expires on 15 March, 2031.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3643410852713178,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1750.0824999297038,
+        "rtf": 0.45456688309862436,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 7,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-currency-01",
+      "transcript": "The subscription costs $4.99 per month or 399 rupees per year.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.30416666666666664,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 2453.7927000783384,
+        "rtf": 0.340804541677547,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 12,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-urls-01",
+      "transcript": "Check ExampleCom for the latest updates.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.38461538461538464,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1263.7117999838665,
+        "rtf": 0.4076489677367311,
+        "round_trip_wer": 0.375,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 3
+    },
+    {
+      "case_id": "en-emails-01",
+      "transcript": "Send your resume to careers at example.com by Monday",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3308270676691729,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1476.8553000176325,
+        "rtf": 0.37153592453273776,
+        "round_trip_wer": 0.1111111111111111,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 1
+    },
+    {
+      "case_id": "en-technical-01",
+      "transcript": "The API Gateway routes requests to the inference Runtime over HTTP.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3313953488372093,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1828.172400011681,
+        "rtf": 0.3549849320411031,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 0
+    },
+    {
+      "case_id": "en-technical-02",
+      "transcript": "Latency dropped after we enabled caching and connection pooling.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3401360544217687,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1635.190499946475,
+        "rtf": 0.37163420453328977,
+        "round_trip_wer": 0.0,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 0
+    },
+    {
+      "case_id": "hi-general-01",
+      "transcript": "स्देर, स्देर",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5306122448979592,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1251.111299963668,
+        "rtf": 0.8628353792852883,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 11
+    },
+    {
+      "case_id": "hi-general-02",
+      "transcript": "से लेवाई",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5483870967741935,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 619.2731000483036,
+        "rtf": 0.6694844324846525,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-conjuncts-01",
+      "transcript": "स्टिस आई यहे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5277777777777778,
+        "duration_plausibility": 0.0,
+        "synthesis_latency_ms": 827.7414999902248,
+        "rtf": 0.7699920930141627,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 9
+    },
+    {
+      "case_id": "hi-conjuncts-02",
+      "transcript": "स्देसा है ये",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5277777777777778,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 674.855999997817,
+        "rtf": 0.6277730232537833,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 9,
+      "word_errors": 9
+    },
+    {
+      "case_id": "hi-matras-01",
+      "transcript": "से लेवे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5483870967741935,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 655.8474999619648,
+        "rtf": 0.7090243242832052,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-matras-02",
+      "transcript": "से लेवे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5483870967741935,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 660.8462000731379,
+        "rtf": 0.7144283244033923,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-numbers-01",
+      "transcript": "250. 199.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3358208955223881,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1583.8382000802085,
+        "rtf": 0.3959595500200521,
+        "round_trip_wer": 0.8461538461538461,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 13,
+      "word_errors": 11
+    },
+    {
+      "case_id": "hi-numbers-02",
+      "transcript": "12,951, 630",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.39285714285714285,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1703.4308000002056,
+        "rtf": 0.40800737724555824,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 11
+    },
+    {
+      "case_id": "hi-propernames-01",
+      "transcript": "स्वेवे",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.5161290322580645,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 653.0894000316039,
+        "rtf": 0.706042594628761,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 8
+    },
+    {
+      "case_id": "hi-propernames-02",
+      "transcript": "दीडे आँँँँँँ",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.46153846153846156,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 2788.814299972728,
+        "rtf": 2.4250559130197638,
+        "round_trip_wer": 1.0,
+        "pronunciation_accuracy": 0.0
+      },
+      "failure": null,
+      "reference_words": 7,
+      "word_errors": 7
+    },
+    {
+      "case_id": "mixed-codemix-01",
+      "transcript": "A laptop Python install.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.47368421052631576,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1079.2135999072343,
+        "rtf": 0.38202251324149883,
+        "round_trip_wer": 0.7272727272727273,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 11,
+      "word_errors": 8
+    },
+    {
+      "case_id": "mixed-codemix-02",
+      "transcript": "Meeting a report, please.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.43902439024390244,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1152.7738999575377,
+        "rtf": 0.4705199591663419,
+        "round_trip_wer": 0.625,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 5
+    },
+    {
+      "case_id": "mixed-api-01",
+      "transcript": "API key, request unauthorized.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.4017857142857143,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1380.4453000193462,
+        "rtf": 0.41207322388637196,
+        "round_trip_wer": 0.5,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 8,
+      "word_errors": 4
+    },
+    {
+      "case_id": "mixed-programming-01",
+      "transcript": "Function call, variable initialize.",
+      "metrics": {
+        "clipping_ratio": 0.0,
+        "silence_ratio": 0.3564356435643564,
+        "duration_plausibility": 1.0,
+        "synthesis_latency_ms": 1477.2363000083715,
+        "rtf": 0.48834257851516416,
+        "round_trip_wer": 0.6,
+        "pronunciation_accuracy": 1.0
+      },
+      "failure": null,
+      "reference_words": 10,
+      "word_errors": 6
+    }
+  ],
+  "aggregate_metrics": {
+    "clipping_ratio": 0.0,
+    "silence_ratio": 0.41796275624789997,
+    "duration_plausibility": 0.96,
+    "synthesis_latency_ms": 1495.3514360031113,
+    "rtf": 0.5845414929234484,
+    "pronunciation_accuracy": 0.5217391304347826,
+    "round_trip_wer": 0.5041666666666667
+  },
+  "human": null,
+  "comparison": null,
+  "baseline_name": null,
+  "notes": ""
+}

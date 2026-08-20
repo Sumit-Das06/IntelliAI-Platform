@@ -1,0 +1,256 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "wsl_synth_bench.py",
+  "engine": "kitten",
+  "identity": {
+    "engine": "kitten-tts-nano",
+    "voice": "expr-voice-2-f",
+    "hub_repo": "KittenML/kitten-tts-nano-0.2",
+    "hub_revision": "9c81564aa56c6fb79f83780e87099357b88d6617",
+    "resolved_files": [
+      "kitten_tts_nano_v0_2.onnx",
+      "voices.npz"
+    ],
+    "license_note": "Apache-2.0 weights; English G2P runs the GPL espeak chain in-process",
+    "gpl_espeak_chain_in_process": true
+  },
+  "sample_rate_hz": 24000,
+  "probes_file": "probe-texts-v1.json",
+  "repetitions": 2,
+  "load_seconds": 19.71,
+  "rss_before_load_mib": 12.6,
+  "rss_after_load_mib": 187.2,
+  "rss_peak_mib": 573.3,
+  "probe_count": 22,
+  "failure_count": 1,
+  "failures": [
+    {
+      "id": "m32-en-long-01",
+      "error": "InvalidArgument: [ONNXRuntimeError] : 2 : INVALID_ARGUMENT : Non-zero status code returned while running Expand node. Name:'/bert/Expand' Status Message: invalid expand shape"
+    }
+  ],
+  "rtf_median": 0.3375,
+  "rtf_p95": 0.3455,
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "general",
+      "chars": 64,
+      "wall_ms": 2428.3,
+      "ttfa_ms": null,
+      "audio_seconds": 7.125,
+      "rtf": 0.3408
+    },
+    {
+      "id": "en-general-02",
+      "language": "en",
+      "category": "general",
+      "chars": 80,
+      "wall_ms": 2513.5,
+      "ttfa_ms": null,
+      "audio_seconds": 7.75,
+      "rtf": 0.3243
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "numbers",
+      "chars": 47,
+      "wall_ms": 2514.8,
+      "ttfa_ms": null,
+      "audio_seconds": 7.325,
+      "rtf": 0.3433
+    },
+    {
+      "id": "en-numbers-02",
+      "language": "en",
+      "category": "numbers",
+      "chars": 42,
+      "wall_ms": 2331.8,
+      "ttfa_ms": null,
+      "audio_seconds": 7.25,
+      "rtf": 0.3216
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "dates",
+      "chars": 62,
+      "wall_ms": 2877.1,
+      "ttfa_ms": null,
+      "audio_seconds": 8.525,
+      "rtf": 0.3375
+    },
+    {
+      "id": "en-dates-02",
+      "language": "en",
+      "category": "dates",
+      "chars": 38,
+      "wall_ms": 2146.5,
+      "ttfa_ms": null,
+      "audio_seconds": 6.45,
+      "rtf": 0.3328
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "currency",
+      "chars": 62,
+      "wall_ms": 1351.9,
+      "ttfa_ms": null,
+      "audio_seconds": 3.95,
+      "rtf": 0.3422
+    },
+    {
+      "id": "en-urls-01",
+      "language": "en",
+      "category": "urls",
+      "chars": 45,
+      "wall_ms": 2422.2,
+      "ttfa_ms": null,
+      "audio_seconds": 7.175,
+      "rtf": 0.3376
+    },
+    {
+      "id": "en-emails-01",
+      "language": "en",
+      "category": "emails",
+      "chars": 50,
+      "wall_ms": 2150.9,
+      "ttfa_ms": null,
+      "audio_seconds": 6.225,
+      "rtf": 0.3455
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "technical",
+      "chars": 67,
+      "wall_ms": 2922.3,
+      "ttfa_ms": null,
+      "audio_seconds": 8.45,
+      "rtf": 0.3458
+    },
+    {
+      "id": "en-technical-02",
+      "language": "en",
+      "category": "technical",
+      "chars": 64,
+      "wall_ms": 2315.5,
+      "ttfa_ms": null,
+      "audio_seconds": 6.8,
+      "rtf": 0.3405
+    },
+    {
+      "id": "m32-en-question-01",
+      "language": "en",
+      "category": "question",
+      "chars": 45,
+      "wall_ms": 1525.3,
+      "ttfa_ms": null,
+      "audio_seconds": 4.5,
+      "rtf": 0.339
+    },
+    {
+      "id": "m32-en-question-02",
+      "language": "en",
+      "category": "question",
+      "chars": 45,
+      "wall_ms": 1561.2,
+      "ttfa_ms": null,
+      "audio_seconds": 4.625,
+      "rtf": 0.3376
+    },
+    {
+      "id": "m32-en-names-01",
+      "language": "en",
+      "category": "proper_names",
+      "chars": 66,
+      "wall_ms": 2309.3,
+      "ttfa_ms": null,
+      "audio_seconds": 6.85,
+      "rtf": 0.3371
+    },
+    {
+      "id": "m32-en-brand-01",
+      "language": "en",
+      "category": "oov_brand",
+      "chars": 47,
+      "wall_ms": 1916.2,
+      "ttfa_ms": null,
+      "audio_seconds": 5.975,
+      "rtf": 0.3207
+    },
+    {
+      "id": "m32-en-currency-02",
+      "language": "en",
+      "category": "currency",
+      "chars": 67,
+      "wall_ms": 3124.4,
+      "ttfa_ms": null,
+      "audio_seconds": 9.3,
+      "rtf": 0.336
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "paragraph",
+      "chars": 246,
+      "wall_ms": 7733.2,
+      "ttfa_ms": null,
+      "audio_seconds": 23.45,
+      "rtf": 0.3298
+    },
+    {
+      "id": "m32-mixed-cc-01",
+      "language": "mixed-roman",
+      "category": "code_switch_roman",
+      "chars": 21,
+      "wall_ms": 1024.7,
+      "ttfa_ms": null,
+      "audio_seconds": 3.0,
+      "rtf": 0.3416
+    },
+    {
+      "id": "m32-mixed-cc-02",
+      "language": "en",
+      "category": "code_switch_english",
+      "chars": 24,
+      "wall_ms": 1023.7,
+      "ttfa_ms": null,
+      "audio_seconds": 3.075,
+      "rtf": 0.3329
+    },
+    {
+      "id": "m32-mixed-cc-03",
+      "language": "mixed-roman",
+      "category": "code_switch_roman",
+      "chars": 30,
+      "wall_ms": 2015.7,
+      "ttfa_ms": null,
+      "audio_seconds": 6.1,
+      "rtf": 0.3304
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "prosody_pair",
+      "chars": 38,
+      "wall_ms": 1334.0,
+      "ttfa_ms": null,
+      "audio_seconds": 4.025,
+      "rtf": 0.3314
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "prosody_pair",
+      "chars": 37,
+      "wall_ms": 1223.4,
+      "ttfa_ms": null,
+      "audio_seconds": 3.7,
+      "rtf": 0.3306
+    }
+  ]
+}

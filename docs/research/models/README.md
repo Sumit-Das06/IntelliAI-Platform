@@ -19,9 +19,15 @@ investigating.
 
 Current stage of this directory: **Gate 2 complete, speech-to-text only**
 (2026-08-05). Gate 1 was 12 PASS · 4 BLOCKED · 0 REJECTED; all 12 PASS
-lineages now carry full §11 dossiers. No candidate has been scored,
-ranked, compared for a winner, or benchmarked — and none has been
-promoted beyond `Researching`.
+lineages now carry full §11 dossiers. Within that STT program no
+candidate has been scored, ranked, compared for a winner, or benchmarked
+— and none has been promoted beyond `Researching`.
+
+Later additions outside the STT Gate-2 program:
+[punct-cap-seg-dossier.md](punct-cap-seg-dossier.md) (M28–M30,
+punctuation restoration — Approved for Adoption) and
+[kokoro-82m-dossier.md](kokoro-82m-dossier.md) (M32 retro-fill for the
+speech-synthesis incumbent adopted at M3, plus its M32 re-examination).
 
 Gate 2 synthesis (language observations, architectural fit, training-programme
 fit, open questions, and one benchmark hypothesis per candidate):

@@ -1,0 +1,238 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "wsl_synth_bench.py",
+  "engine": "kokoro-en",
+  "identity": {
+    "engine": "kokoro-82m (upstream KPipeline)",
+    "lang_code": "a",
+    "voice": "af_heart",
+    "kokoro_version": "0.9.4",
+    "hub_repo": "hexgrad/Kokoro-82M",
+    "hub_revision": "unresolved (ConnectError)",
+    "gpl_espeak_chain_in_process": true
+  },
+  "sample_rate_hz": 24000,
+  "probes_file": "probe-texts-v1.json",
+  "repetitions": 2,
+  "load_seconds": 31.62,
+  "rss_before_load_mib": 12.9,
+  "rss_after_load_mib": 1068.9,
+  "rss_peak_mib": 2522.9,
+  "probe_count": 21,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 0.285,
+  "rtf_p95": 0.3588,
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "general",
+      "chars": 64,
+      "wall_ms": 1399.7,
+      "ttfa_ms": 1399.5,
+      "audio_seconds": 4.425,
+      "rtf": 0.3163
+    },
+    {
+      "id": "en-general-02",
+      "language": "en",
+      "category": "general",
+      "chars": 80,
+      "wall_ms": 1311.3,
+      "ttfa_ms": 1311.0,
+      "audio_seconds": 4.875,
+      "rtf": 0.269
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "numbers",
+      "chars": 47,
+      "wall_ms": 1299.8,
+      "ttfa_ms": 1299.5,
+      "audio_seconds": 4.9,
+      "rtf": 0.2653
+    },
+    {
+      "id": "en-numbers-02",
+      "language": "en",
+      "category": "numbers",
+      "chars": 42,
+      "wall_ms": 1118.8,
+      "ttfa_ms": 1118.5,
+      "audio_seconds": 4.425,
+      "rtf": 0.2528
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "dates",
+      "chars": 62,
+      "wall_ms": 1247.0,
+      "ttfa_ms": 1246.8,
+      "audio_seconds": 5.05,
+      "rtf": 0.2469
+    },
+    {
+      "id": "en-dates-02",
+      "language": "en",
+      "category": "dates",
+      "chars": 38,
+      "wall_ms": 1070.6,
+      "ttfa_ms": 1070.2,
+      "audio_seconds": 3.85,
+      "rtf": 0.2781
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "currency",
+      "chars": 62,
+      "wall_ms": 2028.2,
+      "ttfa_ms": 2027.9,
+      "audio_seconds": 7.2,
+      "rtf": 0.2817
+    },
+    {
+      "id": "en-urls-01",
+      "language": "en",
+      "category": "urls",
+      "chars": 45,
+      "wall_ms": 1160.8,
+      "ttfa_ms": 1160.6,
+      "audio_seconds": 4.775,
+      "rtf": 0.2431
+    },
+    {
+      "id": "en-emails-01",
+      "language": "en",
+      "category": "emails",
+      "chars": 50,
+      "wall_ms": 1010.5,
+      "ttfa_ms": 1010.3,
+      "audio_seconds": 3.975,
+      "rtf": 0.2542
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "technical",
+      "chars": 67,
+      "wall_ms": 1395.4,
+      "ttfa_ms": 1395.2,
+      "audio_seconds": 5.15,
+      "rtf": 0.271
+    },
+    {
+      "id": "en-technical-02",
+      "language": "en",
+      "category": "technical",
+      "chars": 64,
+      "wall_ms": 1247.8,
+      "ttfa_ms": 1247.6,
+      "audio_seconds": 4.4,
+      "rtf": 0.2836
+    },
+    {
+      "id": "m32-en-question-01",
+      "language": "en",
+      "category": "question",
+      "chars": 45,
+      "wall_ms": 941.8,
+      "ttfa_ms": 941.6,
+      "audio_seconds": 2.625,
+      "rtf": 0.3588
+    },
+    {
+      "id": "m32-en-question-02",
+      "language": "en",
+      "category": "question",
+      "chars": 45,
+      "wall_ms": 917.2,
+      "ttfa_ms": 917.0,
+      "audio_seconds": 2.8,
+      "rtf": 0.3276
+    },
+    {
+      "id": "m32-en-names-01",
+      "language": "en",
+      "category": "proper_names",
+      "chars": 66,
+      "wall_ms": 1280.3,
+      "ttfa_ms": 1280.1,
+      "audio_seconds": 4.375,
+      "rtf": 0.2926
+    },
+    {
+      "id": "m32-en-brand-01",
+      "language": "en",
+      "category": "oov_brand",
+      "chars": 47,
+      "wall_ms": 1097.1,
+      "ttfa_ms": 1096.9,
+      "audio_seconds": 3.85,
+      "rtf": 0.285
+    },
+    {
+      "id": "m32-en-currency-02",
+      "language": "en",
+      "category": "currency",
+      "chars": 67,
+      "wall_ms": 2152.9,
+      "ttfa_ms": 2152.5,
+      "audio_seconds": 7.1,
+      "rtf": 0.3032
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "paragraph",
+      "chars": 246,
+      "wall_ms": 5913.5,
+      "ttfa_ms": 5912.9,
+      "audio_seconds": 16.425,
+      "rtf": 0.36
+    },
+    {
+      "id": "m32-en-long-01",
+      "language": "en",
+      "category": "long",
+      "chars": 795,
+      "wall_ms": 16110.2,
+      "ttfa_ms": 7117.3,
+      "audio_seconds": 45.625,
+      "rtf": 0.3531
+    },
+    {
+      "id": "m32-mixed-cc-02",
+      "language": "en",
+      "category": "code_switch_english",
+      "chars": 24,
+      "wall_ms": 563.6,
+      "ttfa_ms": 563.4,
+      "audio_seconds": 1.825,
+      "rtf": 0.3088
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "prosody_pair",
+      "chars": 38,
+      "wall_ms": 744.2,
+      "ttfa_ms": 744.1,
+      "audio_seconds": 2.45,
+      "rtf": 0.3038
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "prosody_pair",
+      "chars": 37,
+      "wall_ms": 802.1,
+      "ttfa_ms": 802.0,
+      "audio_seconds": 2.475,
+      "rtf": 0.3241
+    }
+  ]
+}
