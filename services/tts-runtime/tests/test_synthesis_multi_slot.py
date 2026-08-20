@@ -63,10 +63,20 @@ class TestCoexistence:
     def test_info_reports_voices_per_artifact_and_as_a_union(self, client: TestClient) -> None:
         info = client.get("/info").json()
         for model in info["models"]:
-            assert model["voices"] == ["reference-alto", "reference-bass"]
+            assert model["voices"] == [
+                "english-female",
+                "english-male",
+                "reference-alto",
+                "reference-bass",
+            ]
         # The union is what this deployment can render at all — de-duplicated
         # across slots, so a shared voice is not reported twice.
-        assert info["voices"] == ["reference-alto", "reference-bass"]
+        assert info["voices"] == [
+            "english-female",
+            "english-male",
+            "reference-alto",
+            "reference-bass",
+        ]
 
 
 class TestSlotSelection:

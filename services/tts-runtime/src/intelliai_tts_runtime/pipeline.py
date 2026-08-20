@@ -18,6 +18,7 @@ from dataclasses import dataclass
 
 from intelliai_runtime_contract import RuntimeErrorType
 from intelliai_runtime_core import RuntimeServiceError
+from intelliai_tts_runtime.normalization import normalize_for_speech
 
 
 @dataclass(frozen=True)
@@ -29,8 +30,9 @@ class TextOutput:
 
 
 class TextPipeline:
-    def __init__(self, max_text_chars: int) -> None:
+    def __init__(self, max_text_chars: int, *, normalize: bool = True) -> None:
         self._max_text_chars = max_text_chars
+        self._normalize = normalize
 
     def process(self, text: str) -> TextOutput:
         timings: dict[str, float] = {}
@@ -44,8 +46,11 @@ class TextPipeline:
             )
         timings["validate"] = (time.perf_counter() - started) * 1000.0
 
+        # The seam, occupied (M35): a speech-only rewriting. The ORIGINAL
+        # text remains the request/billing fact upstream — only the engine
+        # ever sees this form. Off means pass-through, exactly v1.
         started = time.perf_counter()
-        normalized = text  # the reserved seam: v1 is pass-through by design
+        normalized = normalize_for_speech(text).text if self._normalize else text
         timings["normalize"] = (time.perf_counter() - started) * 1000.0
 
         return TextOutput(text=normalized, timings_ms=timings)

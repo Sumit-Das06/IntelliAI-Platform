@@ -34,6 +34,28 @@ class Settings(BaseSettings):
     # `invalid_input` before any engine runs.
     max_text_chars: int = Field(default=2000, gt=0)
 
+    # ── Text normalization (M35, pipeline seam) ─────────────────────────
+    # v1 deterministic rules: currency, percent, slash-dates, phone digit
+    # groups. Speech-only — billing and provenance always use the
+    # original request text. The switch exists for rollback, not doubt.
+    normalize_text: bool = True
+
+    # ── OOV pronunciation fallback (M35, policy: M3 §8 exec boundary) ───
+    # "espeak" runs the pinned espeak-ng BINARY as a subprocess for words
+    # the dictionary G2P cannot phonemize (measured: halves trap-set WER).
+    # The GPL python chain stays banned in-process regardless — this is
+    # the ffmpeg posture, an executable behind argv, never a library.
+    # Default OFF: a deployment declares the binary it ships (the M30
+    # punctuation pattern — capabilities arrive explicitly, never by
+    # surprise).
+    oov_fallback: Literal["off", "espeak"] = "off"
+    espeak_binary: Path = Path("/usr/bin/espeak-ng")
+    #: The engine refuses to start if the binary reports a different
+    #: version family — a wrong phonemizer is a wrong pronunciation
+    #: model, caught at boot rather than in production audio.
+    espeak_version_pin: str = "1.5"
+    espeak_timeout_seconds: float = Field(default=2.0, gt=0)
+
     # ── Model serving ───────────────────────────────────────────────────
     # Which artifacts this deployment hosts, in declaration order: a
     # comma-separated list of engine names, each optionally followed by

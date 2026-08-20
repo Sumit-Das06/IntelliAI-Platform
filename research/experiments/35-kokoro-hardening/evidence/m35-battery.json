@@ -1,0 +1,177 @@
+{
+  "experiment": "35-kokoro-hardening",
+  "instrument": "m35_battery.py",
+  "gateway": "http://localhost:8000",
+  "cases": 23,
+  "failures": 0,
+  "rows": [
+    {
+      "id": "hello",
+      "status": 200,
+      "wall_ms": 2414.0,
+      "audio_seconds": 1.575,
+      "verdict": "PASS"
+    },
+    {
+      "id": "sentence",
+      "status": 200,
+      "wall_ms": 535.2,
+      "audio_seconds": 3.25,
+      "verdict": "PASS"
+    },
+    {
+      "id": "paragraph",
+      "status": 200,
+      "wall_ms": 2735.6,
+      "audio_seconds": 13.9,
+      "verdict": "PASS"
+    },
+    {
+      "id": "question",
+      "status": 200,
+      "wall_ms": 447.1,
+      "audio_seconds": 2.45,
+      "verdict": "PASS"
+    },
+    {
+      "id": "currency",
+      "status": 200,
+      "wall_ms": 722.7,
+      "audio_seconds": 4.45,
+      "verdict": "PASS"
+    },
+    {
+      "id": "percent",
+      "status": 200,
+      "wall_ms": 693.3,
+      "audio_seconds": 4.0,
+      "verdict": "PASS"
+    },
+    {
+      "id": "date",
+      "status": 200,
+      "wall_ms": 661.8,
+      "audio_seconds": 3.875,
+      "verdict": "PASS"
+    },
+    {
+      "id": "phone",
+      "status": 200,
+      "wall_ms": 976.7,
+      "audio_seconds": 6.1,
+      "verdict": "PASS"
+    },
+    {
+      "id": "name-sumit",
+      "status": 200,
+      "wall_ms": 344.2,
+      "audio_seconds": 1.675,
+      "verdict": "PASS",
+      "judge_heard": "hello, sumit.",
+      "oov_missing": []
+    },
+    {
+      "id": "name-priya",
+      "status": 200,
+      "wall_ms": 515.5,
+      "audio_seconds": 2.95,
+      "verdict": "PASS",
+      "judge_heard": "priya sharma spoke with rajesh eyer.",
+      "oov_missing": []
+    },
+    {
+      "id": "brand-intelliai",
+      "status": 200,
+      "wall_ms": 659.9,
+      "audio_seconds": 3.825,
+      "verdict": "PASS",
+      "judge_heard": "welcome to intelliai support. my name is kavya.",
+      "oov_missing": []
+    },
+    {
+      "id": "brand-qwikcart",
+      "status": 200,
+      "wall_ms": 1126.3,
+      "audio_seconds": 6.95,
+      "verdict": "PASS",
+      "judge_heard": "intelli ai studio can transcribe your qwic cart order qx49-21 in seconds.",
+      "oov_missing": []
+    },
+    {
+      "id": "technical",
+      "status": 200,
+      "wall_ms": 833.5,
+      "audio_seconds": 5.15,
+      "verdict": "PASS"
+    },
+    {
+      "id": "punctuation",
+      "status": 200,
+      "wall_ms": 758.7,
+      "audio_seconds": 4.625,
+      "verdict": "PASS"
+    },
+    {
+      "id": "speed-slow",
+      "status": 200,
+      "wall_ms": 432.7,
+      "audio_seconds": 2.575,
+      "verdict": "PASS"
+    },
+    {
+      "id": "speed-normal",
+      "status": 200,
+      "wall_ms": 368.8,
+      "audio_seconds": 1.925,
+      "verdict": "PASS"
+    },
+    {
+      "id": "speed-fast",
+      "status": 200,
+      "wall_ms": 312.5,
+      "audio_seconds": 1.575,
+      "verdict": "PASS"
+    },
+    {
+      "id": "voice-male",
+      "status": 200,
+      "wall_ms": 391.7,
+      "audio_seconds": 2.225,
+      "verdict": "PASS"
+    },
+    {
+      "id": "voice-legacy-alias",
+      "status": 200,
+      "wall_ms": 456.3,
+      "audio_seconds": 2.475,
+      "verdict": "PASS"
+    },
+    {
+      "id": "empty",
+      "status": 400,
+      "wall_ms": 9.3,
+      "error_message": "String should have at least 1 character",
+      "verdict": "PASS"
+    },
+    {
+      "id": "over-limit",
+      "status": 400,
+      "wall_ms": 12.2,
+      "error_message": "text exceeds the 2000-character limit",
+      "verdict": "PASS"
+    },
+    {
+      "id": "invalid-voice",
+      "status": 400,
+      "wall_ms": 7.6,
+      "error_message": "The voice 'no-such-voice' does not exist for this model. List available voices at GET /v1/audio/voices.",
+      "verdict": "PASS"
+    },
+    {
+      "id": "unauthorized",
+      "status": 401,
+      "wall_ms": 3.2,
+      "verdict": "PASS"
+    }
+  ]
+}

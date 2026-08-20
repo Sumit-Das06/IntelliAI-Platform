@@ -91,6 +91,24 @@
       ],
       "voices": [
         {
+          "voice": "english-female",
+          "languages": [
+            "en"
+          ],
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
+          "voice": "english-male",
+          "languages": [
+            "en"
+          ],
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
           "voice": "reference-alto",
           "languages": [
             "en"

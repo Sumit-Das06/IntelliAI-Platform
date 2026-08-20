@@ -75,7 +75,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # runtime's record of which engine renders which voices.
     voice_catalog = VoiceCatalog()
     manager = build_manager(settings, voice_catalog)
-    pipeline = TextPipeline(max_text_chars=settings.max_text_chars)
+    pipeline = TextPipeline(
+        max_text_chars=settings.max_text_chars, normalize=settings.normalize_text
+    )
     pool = WorkerPool(max_concurrency=settings.max_concurrency, max_queue=settings.max_queue)
 
     @asynccontextmanager

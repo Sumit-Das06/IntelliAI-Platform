@@ -1,6 +1,6 @@
 [project]
 name = "intelliai-tts-runtime"
-version = "0.1.0"
+version = "0.2.0"
 description = "IntelliAI speech synthesis runtime - capability-named, engine-swappable"
 requires-python = ">=3.12"
 # NO foundation-model library, phonemizer, or voice asset may appear here.

@@ -100,6 +100,18 @@ The same subprocess component that un-gates Hindi can close this.
   danda not in the runtime's sentence splitter (one-line fix when Hindi
   ships).
 
+## 13b. M35 addendum (2026-08-20)
+
+The §6-7 weaknesses are now largely CLOSED in the shipped runtime
+(v0.2.0, local/staging): OOV drops fixed via the espeak exec-boundary
+fallback (trap WER 0.0659 through the production path), normalization
+v1 occupies the pipeline seam, chunk-merging halves short-text latency
+(median wall 748 ms), voices renamed (`english-female`/`english-male`,
+aliases kept), billing characters-only, stale-image smoke in place.
+Community ONNX was measured and DECLINED (RTF 1.078 / WER 0.0956 via
+the wrapper; RAM win real — a first-party export stays a PROPOSED
+lever). Determinism documented: stochastic sampling, stable durations.
+
 ## 14. Open questions
 
 1. Founder listening verdict on the 4 Hindi voices (naturalness ≠

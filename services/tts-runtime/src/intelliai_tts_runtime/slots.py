@@ -27,6 +27,7 @@ from typing import Final
 from intelliai_runtime_core import DEFAULT_SLOT, ArtifactSpec, SlotSpec
 from intelliai_tts_runtime.config import Settings
 from intelliai_tts_runtime.engines import SynthesisEngine, kokoro, reference
+from intelliai_tts_runtime.engines.espeak_fallback import EspeakSubprocessFallback
 from intelliai_tts_runtime.voices import KOKORO_VOICES, REFERENCE_VOICES, VoiceCatalog, VoiceMap
 
 #: Separator between hosted-artifact declarations, and between an engine
@@ -98,6 +99,32 @@ def _binding_loader(
     return load
 
 
+def _kokoro_binding_for(settings: Settings) -> EngineBinding:
+    """The kokoro binding, configured from the deployment's settings.
+
+    The OOV fallback is constructed HERE — at composition time — so a
+    deployment that declares ``oov_fallback=espeak`` with a missing or
+    wrong-version binary refuses to START (the twice-learned lesson:
+    absent configuration must fail loudly, never pass). The constructed
+    fallback validates the pinned binary and its version in its own
+    constructor; the engine only consumes the result.
+    """
+    base = CATALOG["kokoro"]
+    if settings.oov_fallback != "espeak":
+        return base
+    fallback = EspeakSubprocessFallback(
+        settings.espeak_binary,
+        version_prefix=settings.espeak_version_pin,
+        timeout_seconds=settings.espeak_timeout_seconds,
+    )
+    return EngineBinding(
+        artifact=base.artifact,
+        voices=base.voices,
+        loader=lambda local_dir: kokoro.load_kokoro(local_dir, oov_fallback=fallback),
+        files=base.files,
+    )
+
+
 def build_slot_specs(
     settings: Settings, catalog: VoiceCatalog
 ) -> tuple[SlotSpec[SynthesisEngine], ...]:
@@ -111,7 +138,7 @@ def build_slot_specs(
     specs: list[SlotSpec[SynthesisEngine]] = []
     hosted: set[str] = set()
     for index, (engine, override) in enumerate(_declarations(settings.slots)):
-        binding = CATALOG.get(engine)
+        binding = _kokoro_binding_for(settings) if engine == "kokoro" else CATALOG.get(engine)
         if binding is None:
             msg = f"unknown engine {engine!r}; this service can host {sorted(CATALOG)}"
             raise ValueError(msg)

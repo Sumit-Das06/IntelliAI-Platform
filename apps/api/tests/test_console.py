@@ -418,6 +418,7 @@ async def test_the_navigation_carries_the_whole_platform(
         "Home",
         "API Keys",
         "Playground",
+        "Speech Studio",
         "AI Services",
         "Speech Samples",
         "Datasets",
@@ -442,6 +443,7 @@ async def test_the_navigation_carries_the_whole_platform(
         '{ id: "home", label: "Home", href: "/console/home", status: "live" }',
         '{ id: "keys", label: "API Keys", href: "/console/keys", status: "live" }',
         '{ id: "playground", label: "Playground", href: "/console/playground", status: "live" }',
+        '{ id: "speech", label: "Speech Studio", href: "/console/speech", status: "live" }',
         '{ id: "services", label: "AI Services", href: "/console/services", status: "live" }',
         '{ id: "samples", label: "Speech Samples", href: "/console/samples", status: "live" }',
         '{ id: "datasets", label: "Datasets", href: "/console/datasets", status: "live" }',
@@ -462,6 +464,7 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
             (await client.get("/console/datasets")).text,
             (await client.get("/console/usage")).text,
             (await client.get("/console/playground")).text,
+            (await client.get("/console/speech")).text,
             (await client.get("/console/assets/console.js")).text,
             (await client.get("/console/assets/console.css")).text,
         ]
@@ -473,6 +476,12 @@ async def test_the_public_product_rule_holds(settings: Settings, db_engine: Asyn
         assert "qwen" not in text.lower()
         assert "llama" not in text.lower()
         assert "gguf" not in text.lower()
+        # M35: the synthesis engine and its phonemizer are equally
+        # internal - no console surface may ever name them.
+        assert "kokoro" not in text.lower()
+        assert "espeak" not in text.lower()
+        assert "af_heart" not in text.lower()
+        assert "am_michael" not in text.lower()
         # Dashboard was renamed to Home in Commit 6; the old word must
         # never resurface on any console surface.
         assert "dashboard" not in text.lower()
@@ -496,6 +505,7 @@ def test_the_console_assets_ship_inside_the_package() -> None:
         "keys.html",
         "services.html",
         "studio.html",
+        "speech.html",
         "samples.html",
         "datasets.html",
         "usage.html",
@@ -530,3 +540,45 @@ async def test_the_playground_documents_the_audio_ceiling(
         studio = (await client.get("/console/playground")).text
     assert "Up to 10 minutes" in studio
     assert "never cut short" in studio
+
+
+async def test_the_speech_studio_is_a_real_tts_client(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # M35: the first actual Web TTS experience. The page must carry the
+    # product vocabulary (public voices, the documented ceiling, every
+    # UX state's plumbing) and none of the engine vocabulary — the
+    # public-product sweep above already proves the negative half.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        response = await client.get("/console/speech")
+    assert response.status_code == 200
+    page = response.text
+    assert "Speech Studio" in page
+    assert 'value="english-female"' in page and 'value="english-male"' in page
+    assert "English Female" in page and "English Male" in page
+    assert "Up to 2000 characters" in page and "never cut short" in page
+    assert '"/v1/audio/speech"' in page  # the EXISTING public contract, no new endpoint
+    assert "intelliai-tts" in page
+    assert "<audio" in page and "Download WAV" in page
+    # Every failure state has friendly words - never a spinner forever.
+    for phrase in (
+        "Connect your API key",
+        "temporarily unavailable",
+        "too quickly",
+        "2000-character limit",
+    ):
+        assert phrase in page
+
+
+async def test_the_services_card_links_the_speech_studio_without_claiming_launch(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # The badge is a LAUNCH claim and TTS has not launched: the card
+    # stays "Coming Soon" while linking the working preview. A link is
+    # page availability; a badge is product state - documented at the
+    # data source and pinned here.
+    async with client_with_db(settings, db_engine) as (client, _factory):
+        js = (await client.get("/console/assets/console.js")).text
+    assert '"/console/speech"' in js
+    assert "Open Speech Studio" in js
+    assert "no promise yet" in js  # the documented soon+href semantics

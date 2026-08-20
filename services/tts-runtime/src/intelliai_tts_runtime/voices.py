@@ -21,7 +21,12 @@ from typing import Final
 from intelliai_runtime_contract import RuntimeErrorType
 from intelliai_runtime_core import RuntimeServiceError
 
-DEFAULT_VOICE: Final = "reference-alto"
+#: M35 voice naming: the launch ids are product-friendly and neutral —
+#: descriptive, never engine tokens, never claiming a proprietary voice
+#: identity. The M3-era placeholder ids remain served as legacy aliases
+#: (voice ids are permanent API surface; renaming is addition, never
+#: removal). Same binding behind both names.
+DEFAULT_VOICE: Final = "english-female"
 
 
 @dataclass(frozen=True)
@@ -50,14 +55,26 @@ class VoiceMap:
 
 REFERENCE_VOICES: Final = VoiceMap(
     default_voice=DEFAULT_VOICE,
-    bindings={"reference-alto": "tone:440", "reference-bass": "tone:220"},
+    bindings={
+        "english-female": "tone:440",
+        "english-male": "tone:220",
+        # Legacy aliases (M3 placeholders) — served forever, same sound.
+        "reference-alto": "tone:440",
+        "reference-bass": "tone:220",
+    },
 )
 
 # The same PUBLIC identities, served by Kokoro voice packs (the engine
 # references name hash-pinned artifact files, never anything customers see).
 KOKORO_VOICES: Final = VoiceMap(
     default_voice=DEFAULT_VOICE,
-    bindings={"reference-alto": "af_heart", "reference-bass": "am_michael"},
+    bindings={
+        "english-female": "af_heart",
+        "english-male": "am_michael",
+        # Legacy aliases (M3 placeholders) — served forever, same sound.
+        "reference-alto": "af_heart",
+        "reference-bass": "am_michael",
+    },
 )
 
 _BY_ENGINE: Final[dict[str, VoiceMap]] = {

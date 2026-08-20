@@ -19,23 +19,40 @@ with a license error instead of silently linking. We deliberately bypass
 downloads from the Hugging Face hub at runtime — this engine loads ONLY
 hash-verified files from the ArtifactStore.
 
-Chunking: the model accepts ~510 phonemes per pass; text is split on
-sentence boundaries (word-wrapped when a sentence is huge) and the PCM is
-concatenated. A smarter chunking strategy is production-validation
-business (M3 step 7), registered debt — not silently absent.
+Chunking (M35 closes the M3 debt): sentences are MERGED into chunks up
+to ``_CHUNK_CHARS`` instead of paying one ~500 ms model pass per
+sentence — the measured reason two short sentences used to cost more
+than one long one. Oversized sentences still word-wrap. The engine
+records time-to-first-chunk as telemetry for the streaming decision.
+
+OOV fallback (M35, policy M3 §8): when configured, words the dictionary
+G2P cannot phonemize (``None`` or ``❓``-marked) are phonemized by the
+pinned espeak-ng BINARY behind an exec boundary and spliced back in
+token order — the GPL chain stays banned in-process, and the firewall
+below keeps proving it.
 """
 
 from __future__ import annotations
 
 import re
 import sys
+import time
 import types
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, Final
 
+import structlog
+
 from intelliai_runtime_core import ArtifactFile, ArtifactSpec
 from intelliai_tts_runtime.engines.base import SynthesizedAudio
+from intelliai_tts_runtime.engines.espeak_fallback import EspeakSubprocessFallback
+
+logger = structlog.get_logger(__name__)
+
+#: misaki marks a partially-unknown word by embedding this character in
+#: its phoneme string; a fully-unknown word gets phonemes=None.
+_UNKNOWN_MARK: Final = "❓"
 
 ARTIFACT_ID: Final = "kokoro-82m"
 SAMPLE_RATE_HZ: Final = 24_000
@@ -99,24 +116,44 @@ def _install_license_firewall() -> None:
     sys.modules["misaki.espeak"] = stub
 
 
+def _wrap_long_sentence(sentence: str) -> Iterator[str]:
+    piece: list[str] = []
+    length = 0
+    for word in sentence.split():
+        if length + len(word) + 1 > _CHUNK_CHARS and piece:
+            yield " ".join(piece)
+            piece, length = [], 0
+        piece.append(word)
+        length += len(word) + 1
+    if piece:
+        yield " ".join(piece)
+
+
 def _chunks(text: str) -> Iterator[str]:
+    """Sentences MERGED up to the chunk budget (M35 chunk-merging).
+
+    One model pass carries a fixed ~500 ms cost, so short sentences ride
+    together; a sentence beyond the budget flushes the buffer and
+    word-wraps alone. Deterministic: same text, same chunks, always."""
+    buffer: list[str] = []
+    length = 0
     for sentence in _SENTENCE_SPLIT.split(text):
         stripped = sentence.strip()
         if not stripped:
             continue
-        if len(stripped) <= _CHUNK_CHARS:
-            yield stripped
+        if len(stripped) > _CHUNK_CHARS:
+            if buffer:
+                yield " ".join(buffer)
+                buffer, length = [], 0
+            yield from _wrap_long_sentence(stripped)
             continue
-        piece: list[str] = []
-        length = 0
-        for word in stripped.split():
-            if length + len(word) + 1 > _CHUNK_CHARS and piece:
-                yield " ".join(piece)
-                piece, length = [], 0
-            piece.append(word)
-            length += len(word) + 1
-        if piece:
-            yield " ".join(piece)
+        if length + len(stripped) + 1 > _CHUNK_CHARS and buffer:
+            yield " ".join(buffer)
+            buffer, length = [], 0
+        buffer.append(stripped)
+        length += len(stripped) + 1
+    if buffer:
+        yield " ".join(buffer)
 
 
 def _bounded_phonemes(phonemes: str) -> list[str]:
@@ -131,42 +168,89 @@ def _bounded_phonemes(phonemes: str) -> list[str]:
 
 
 class KokoroEngine:
-    """Thin adapter: one loaded model + G2P + verified voice packs,
-    stateless beyond them."""
+    """Thin adapter: one loaded model + G2P + verified voice packs (+ the
+    optional subprocess OOV fallback), stateless beyond them."""
 
-    def __init__(self, model: Any, g2p: Any, voice_packs: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        model: Any,
+        g2p: Any,
+        voice_packs: dict[str, Any],
+        oov_fallback: EspeakSubprocessFallback | None = None,
+    ) -> None:
         self._model = model
         self._g2p = g2p
         self._voice_packs = voice_packs
+        self._oov_fallback = oov_fallback
+
+    def _needs_fallback(self, phonemes: str | None) -> bool:
+        return phonemes is None or _UNKNOWN_MARK in phonemes
+
+    def _phonemize(self, chunk: str) -> str:
+        """Dictionary G2P first; unknown tokens rescued through the exec
+        boundary and spliced back IN TOKEN ORDER. Any fallback trouble
+        degrades to dictionary-only for this chunk — never an error."""
+        raw_phonemes, tokens = self._g2p(chunk)
+        base: str = str(raw_phonemes).strip()
+        if self._oov_fallback is None:
+            return base
+        unknown = sorted(
+            {str(token.text) for token in tokens if self._needs_fallback(token.phonemes)}
+        )
+        if not unknown:
+            return base
+        rescued = self._oov_fallback.phonemize_words(unknown)
+        if not rescued:
+            return base
+        pieces: list[str] = []
+        rescued_count = 0
+        for token in tokens:
+            token_phonemes = token.phonemes
+            if self._needs_fallback(token_phonemes) and token.text in rescued:
+                token_phonemes = rescued[token.text]
+                rescued_count += 1
+            pieces.append((token_phonemes or "") + (token.whitespace or ""))
+        # Counts only — never the words themselves (customer-owned text).
+        logger.info("oov_rescued", tokens=rescued_count, unknown=len(unknown))
+        return "".join(pieces).strip()
 
     def synthesize(self, text: str, voice: str, speed: float | None) -> SynthesizedAudio:
         import torch
 
         pack = self._voice_packs[voice]
         pcm = bytearray()
+        first_chunk_ms: float | None = None
+        started = time.perf_counter()
         with torch.inference_mode():
             for chunk in _chunks(text):
-                phonemes, _ = self._g2p(chunk)
-                phonemes = phonemes.strip()
+                phonemes = self._phonemize(chunk)
                 if not phonemes:
                     continue
                 for piece in _bounded_phonemes(phonemes):
                     ref_s = pack[len(piece) - 1]
                     audio = self._model(piece, ref_s, speed if speed is not None else 1.0)
                     pcm += (audio.clamp(-1.0, 1.0) * 32767.0).to(torch.int16).numpy().tobytes()
-        return SynthesizedAudio(pcm=bytes(pcm), sample_rate_hz=SAMPLE_RATE_HZ)
+                    if first_chunk_ms is None and pcm:
+                        first_chunk_ms = (time.perf_counter() - started) * 1000.0
+        return SynthesizedAudio(
+            pcm=bytes(pcm), sample_rate_hz=SAMPLE_RATE_HZ, first_chunk_ms=first_chunk_ms
+        )
 
     def close(self) -> None:
         self._voice_packs.clear()
 
 
-def load_kokoro(local_dir: Path | None) -> KokoroEngine:
+def load_kokoro(
+    local_dir: Path | None, oov_fallback: EspeakSubprocessFallback | None = None
+) -> KokoroEngine:
     """Slot loader: verified artifact directory -> a loaded engine.
 
     Everything model-specific happens here — library imports (lazy, so the
     base service never needs them), weight loading from OUR verified store
     (never the Hugging Face hub), voice-pack loading, and the espeak-free
-    G2P configuration (misaki-native English, fallback disabled)."""
+    G2P configuration (misaki-native English, in-process fallback stays
+    disabled). ``oov_fallback`` — the M35 subprocess boundary — is wired
+    by slots.py from settings; the engine only ever consumes it."""
     if local_dir is None:
         msg = "the kokoro engine requires a verified artifact directory"
         raise ValueError(msg)
@@ -183,4 +267,9 @@ def load_kokoro(local_dir: Path | None) -> KokoroEngine:
         ref: torch.load(local_dir / filename, weights_only=True)
         for ref, filename in _VOICE_FILES.items()
     }
-    return KokoroEngine(model=model, g2p=g2p, voice_packs=voice_packs)
+    logger.info(
+        "kokoro_loaded",
+        oov_fallback="espeak-subprocess" if oov_fallback is not None else "off",
+        espeak_version=oov_fallback.version if oov_fallback is not None else None,
+    )
+    return KokoroEngine(model=model, g2p=g2p, voice_packs=voice_packs, oov_fallback=oov_fallback)

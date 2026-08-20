@@ -90,6 +90,17 @@ async def console_playground() -> HTMLResponse:
     return HTMLResponse(_static_text("console", "studio.html"), headers=_NO_CACHE)
 
 
+@router.get("/console/speech", include_in_schema=False)
+async def console_speech() -> HTMLResponse:
+    """The Speech Studio — IntelliAI TTS's product experience (M35).
+
+    Served everywhere the console is served; where the TTS runtime is
+    absent (production today), generation answers the honest 503 and the
+    page says so — availability is deployment state, never page state.
+    """
+    return HTMLResponse(_static_text("console", "speech.html"), headers=_NO_CACHE)
+
+
 @router.get("/console/assets/{asset}", include_in_schema=False)
 async def console_asset(asset: str) -> Response:
     media_type = _ASSET_TYPES.get(asset)

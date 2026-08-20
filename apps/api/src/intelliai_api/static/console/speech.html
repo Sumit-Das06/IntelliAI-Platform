@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Speech Studio · IntelliAI Platform</title>
+<link rel="stylesheet" href="/console/assets/console.css">
+<script src="/console/assets/console.js" defer></script>
+</head>
+<body data-page="speech">
+<div class="shell">
+  <aside class="sidebar" id="iai-sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="iai-topbar"></header>
+    <main class="content">
+
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>Speech Studio</h1>
+          <p class="sub">Type text, choose a voice, and hear IntelliAI speak it.</p>
+        </div>
+        <span class="badge badge-soon" style="align-self: center;">IntelliAI TTS · Preview</span>
+      </div>
+
+      <div id="connect-note" class="notice hidden" style="margin-top: 12px;">
+        This console isn't connected yet — <a href="/console/home">connect your API key on Home</a> to use the Speech Studio.
+      </div>
+
+      <div class="grid-2 section" style="margin-top: 18px;">
+        <!-- ── Input ── -->
+        <div class="card">
+          <h3>Text</h3>
+          <div style="margin-top: 12px;">
+            <label class="label" for="speech-text">What should IntelliAI say?</label>
+            <textarea class="input" id="speech-text" rows="7" maxlength="2000"
+              placeholder="Welcome to IntelliAI support, my name is Kavya. Your order QX4921 ships on Thursday."></textarea>
+            <div class="hint" style="display: flex; justify-content: space-between;">
+              <span>Up to 2000 characters per request. Longer text is refused, never cut short.</span>
+              <span id="char-count">0 / 2000</span>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top: 12px; gap: 12px;">
+            <div>
+              <label class="label" for="speech-voice">Voice</label>
+              <select class="input" id="speech-voice">
+                <option value="english-female">English Female</option>
+                <option value="english-male">English Male</option>
+              </select>
+            </div>
+            <div>
+              <label class="label" for="speech-speed">Speed</label>
+              <select class="input" id="speech-speed">
+                <option value="0.75">Slower (0.75×)</option>
+                <option value="1" selected>Normal (1×)</option>
+                <option value="1.25">Faster (1.25×)</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top: 14px; display: flex; gap: 10px; align-items: center;">
+            <button class="btn btn-primary" id="generate-btn">Generate Speech</button>
+            <span id="speech-status" class="hint" role="status"></span>
+          </div>
+        </div>
+
+        <!-- ── Output ── -->
+        <div class="card">
+          <h3>Audio</h3>
+          <div id="player-empty" class="hint" style="margin-top: 12px;">
+            Generated speech appears here — play it, or download the WAV.
+          </div>
+          <div id="player-wrap" class="hidden" style="margin-top: 12px;">
+            <audio id="speech-player" controls style="width: 100%;"></audio>
+            <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
+              <button class="btn" id="stop-btn">Stop</button>
+              <a class="btn" id="download-link" download="intelliai-speech.wav">Download WAV</a>
+            </div>
+            <div id="speech-summary" class="chips hidden" style="margin-top: 12px;"></div>
+          </div>
+          <div style="margin-top: 16px;">
+            <h4 class="label">Developer view</h4>
+            <div class="kv"><span>Request</span><code id="dev-request">—</code></div>
+            <div class="kv"><span>Status</span><code id="dev-status">—</code></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var textEl = document.getElementById("speech-text");
+  var voiceEl = document.getElementById("speech-voice");
+  var speedEl = document.getElementById("speech-speed");
+  var generateBtn = document.getElementById("generate-btn");
+  var stopBtn = document.getElementById("stop-btn");
+  var statusEl = document.getElementById("speech-status");
+  var player = document.getElementById("speech-player");
+  var playerWrap = document.getElementById("player-wrap");
+  var playerEmpty = document.getElementById("player-empty");
+  var downloadLink = document.getElementById("download-link");
+  var summaryEl = document.getElementById("speech-summary");
+  var charCount = document.getElementById("char-count");
+  var currentUrl = null;
+
+  if (!IntelliAI.getKey()) {
+    document.getElementById("connect-note").classList.remove("hidden");
+  }
+
+  function setStatus(message, kind) {
+    statusEl.textContent = message || "";
+    statusEl.className = "hint" + (kind === "err" ? " text-err" : kind === "ok" ? " text-ok" : "");
+  }
+
+  function summaryChip(label, value) {
+    var chip = document.createElement("span");
+    chip.className = "chip";
+    chip.textContent = label + ": " + value;
+    return chip;
+  }
+
+  textEl.addEventListener("input", function () {
+    charCount.textContent = textEl.value.length + " / 2000";
+  });
+
+  stopBtn.addEventListener("click", function () {
+    player.pause();
+    player.currentTime = 0;
+  });
+
+  /* Friendly words for every failure the API can answer with — the UI
+     never shows raw taxonomy codes, and never spins forever. */
+  function friendlyError(status, body) {
+    var code = null, message = null;
+    try { code = body.error.code; message = body.error.message; } catch (e) { /* not json */ }
+    if (status === 401) return "Your API key was rejected — reconnect it on Home.";
+    if (status === 429) return "You're sending requests too quickly. Wait a moment and try again.";
+    if (code === "runtime_unavailable") return "Speech synthesis is temporarily unavailable. Try again shortly.";
+    if (status === 400 || status === 422) return message || "That text can't be spoken — check it and try again.";
+    if (status === 413) return "That text is too long for one request.";
+    return message || "Something went wrong. Try again.";
+  }
+
+  generateBtn.addEventListener("click", function () {
+    var key = IntelliAI.getKey();
+    if (!key) { setStatus("Connect your API key on Home first.", "err"); return; }
+    var text = textEl.value.trim();
+    if (!text) { setStatus("Type some text first.", "err"); return; }
+    if (text.length > 2000) { setStatus("Text is over the 2000-character limit.", "err"); return; }
+
+    generateBtn.disabled = true;
+    setStatus("Generating speech…");
+    var started = performance.now();
+    fetch("/v1/audio/speech", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + key,
+        "Content-Type": "application/json",
+        "X-IntelliAI-Client": "web"
+      },
+      body: JSON.stringify({
+        model: "intelliai-tts",
+        input: text,
+        voice: voiceEl.value,
+        speed: parseFloat(speedEl.value)
+      })
+    }).then(function (response) {
+      var elapsedMs = Math.round(performance.now() - started);
+      document.getElementById("dev-request").textContent =
+        response.headers.get("X-Request-ID") || "—";
+      document.getElementById("dev-status").textContent = String(response.status);
+      var type = response.headers.get("content-type") || "";
+      if (!response.ok || type.indexOf("audio/") !== 0) {
+        return response.json().catch(function () { return {}; }).then(function (body) {
+          throw new Error(friendlyError(response.status, body));
+        });
+      }
+      return response.blob().then(function (blob) {
+        if (currentUrl) URL.revokeObjectURL(currentUrl);
+        currentUrl = URL.createObjectURL(blob);
+        player.src = currentUrl;
+        downloadLink.href = currentUrl;
+        playerWrap.classList.remove("hidden");
+        playerEmpty.classList.add("hidden");
+        summaryEl.replaceChildren();
+        summaryEl.appendChild(summaryChip("Service", "IntelliAI TTS"));
+        summaryEl.appendChild(summaryChip("Voice", voiceEl.options[voiceEl.selectedIndex].text));
+        summaryEl.appendChild(summaryChip("Characters", String(text.length)));
+        summaryEl.appendChild(summaryChip("Time", (elapsedMs / 1000).toFixed(1) + " s"));
+        summaryEl.classList.remove("hidden");
+        setStatus("Done — press play.", "ok");
+        return player.play().catch(function () { /* autoplay policies: user presses play */ });
+      });
+    }).catch(function (error) {
+      setStatus(error.message || "Something went wrong. Try again.", "err");
+    }).finally(function () {
+      generateBtn.disabled = false;
+    });
+  });
+});
+</script>
+</body>
+</html>

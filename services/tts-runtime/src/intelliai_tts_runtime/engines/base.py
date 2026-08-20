@@ -12,6 +12,11 @@ class SynthesizedAudio:
 
     pcm: bytes
     sample_rate_hz: int
+    #: Milliseconds from synthesize() start until the FIRST audio chunk
+    #: existed (M35). Operational telemetry for the streaming decision:
+    #: it measures what a chunked transport COULD deliver while the HTTP
+    #: response stays whole-body. None when an engine renders in one shot.
+    first_chunk_ms: float | None = None
 
     @property
     def duration_seconds(self) -> float:

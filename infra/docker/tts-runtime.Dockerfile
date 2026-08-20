@@ -46,6 +46,16 @@ sys.exit(1 if present else 0)"
 # ── Stage 2: runtime ────────────────────────────────────────────────────
 FROM python:3.12-slim AS runtime
 
+# espeak-ng: the M35 OOV-fallback BINARY (GPL-3.0), used ONLY behind an
+# exec boundary (M3 §8 — the ffmpeg posture). The python GPL chain stays
+# banned above; nothing in this image links espeak as a library. The
+# runtime pins the reported version (INTELLIAI_TTS_ESPEAK_VERSION_PIN)
+# and refuses startup on a mismatch when the fallback is enabled.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends espeak-ng espeak-ng-data && \
+    rm -rf /var/lib/apt/lists/* && \
+    espeak-ng --version
+
 RUN groupadd --system app && \
     useradd --system --gid app --no-create-home --shell /usr/sbin/nologin app && \
     mkdir /models && chown app:app /models

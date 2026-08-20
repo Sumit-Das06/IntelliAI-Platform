@@ -61,6 +61,16 @@ services:
       INTELLIAI_STT_PUNCTUATION_ENABLED: "true"
       INTELLIAI_STT_PUNCTUATION_LANGUAGES: hi,hi-IN
 
+  tts-runtime:
+    # M35: served in the production-shaped LOCAL stack (the Makefile's
+    # `--profile tts` lifts the base gate for THIS stack only — prod.yml
+    # still ships no TTS service). Hardened posture pinned explicitly:
+    # normalization on, espeak OOV fallback on through the exec boundary.
+    environment:
+      INTELLIAI_TTS_SLOTS: kokoro
+      INTELLIAI_TTS_NORMALIZE_TEXT: "true"
+      INTELLIAI_TTS_OOV_FALLBACK: espeak
+
 volumes:
   caddydata:
   caddyconfig:

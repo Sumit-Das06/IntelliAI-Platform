@@ -209,11 +209,11 @@ async def test_a_served_request_becomes_a_permanent_commercial_fact(
         assert event.billable is True
         # The customer's receipt number, returned to them in X-Request-ID.
         assert event.request_id == response.headers["X-Request-ID"]
-        # Meter everything measured: characters bill, seconds inform margin.
-        assert {q.unit: q.amount for q in event.quantities} == {
-            "characters": Decimal(21),
-            "audio_seconds": Decimal("3.2"),
-        }
+        # M35 billing law: characters is the ONLY rated quantity —
+        # audio_seconds has a book price (STT's unit), so it lives as
+        # telemetry beside the lineage, never in the rated set.
+        assert {q.unit: q.amount for q in event.quantities} == {"characters": Decimal(21)}
+        assert event.lineage["measured_audio_seconds"] == 3.2
         # The engine lives in lineage — internal, never a customer's concern.
         assert event.lineage["artifact"] == "kokoro-82m"
 

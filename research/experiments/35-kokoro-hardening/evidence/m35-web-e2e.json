@@ -1,0 +1,33 @@
+{
+  "experiment": "35-kokoro-hardening",
+  "phase": "web-e2e (production-shaped local stack, HTTPS edge)",
+  "date": "2026-08-20",
+  "flow": [
+    {
+      "step": "make local-prod-up (--profile tts now in the recipe; seed + build + up)",
+      "verdict": "PASS"
+    },
+    {
+      "step": "GET https://localhost/console/speech via Caddy",
+      "verdict": "PASS",
+      "note": "Speech Studio served; engine-vocabulary leak sweep on the served page: clean"
+    },
+    {
+      "step": "POST /v1/audio/speech via Caddy (the page's exact fetch shape: Bearer + X-IntelliAI-Client: web)",
+      "verdict": "PASS",
+      "note": "200 audio/wav, 733244 bytes, 15.28 s @ 24 kHz mono, 6.49 s wall, sha256 41240a4ab22fdc9c..."
+    },
+    {
+      "step": "semantic playback proof - the same platform's STT judges the audio",
+      "verdict": "PASS",
+      "note": "judge heard: 'Hello, Sumit. Welcome to IntelliAI. Your invoice of $4.99 is due on 12 August, 2026. Call plus 91-98765-43210 with questions.' - OOV names spoken, date normalized audibly, phone spoken digit-wise"
+    },
+    {
+      "step": "human browser click-through",
+      "verdict": "FOUNDER STEP",
+      "note": "open https://localhost/console/speech (accept the local CA), connect the key on Home, Generate, press play"
+    }
+  ],
+  "input_text": "Hello Sumit, welcome to IntelliAI. Your invoice of $4.99 is due on 12/08/2026. Call +91 98765 43210 with questions.",
+  "notes": "prod.yml untouched; TTS remains absent from production deployments"
+}

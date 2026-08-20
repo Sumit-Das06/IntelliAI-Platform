@@ -307,7 +307,12 @@ async def test_voices_is_a_product_catalog(settings: Settings, db_engine: AsyncE
         payload = response.json()
         assert payload["object"] == "list"
         voices = {voice["id"]: voice for voice in payload["data"]}
-        assert set(voices) == {"reference-alto", "reference-bass"}
+        assert set(voices) == {
+            "english-female",
+            "english-male",
+            "reference-alto",
+            "reference-bass",
+        }
         for voice in voices.values():
             assert voice["object"] == "voice"
             assert voice["model"] == "intelliai-tts"

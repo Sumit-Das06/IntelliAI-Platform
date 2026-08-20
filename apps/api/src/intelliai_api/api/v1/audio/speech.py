@@ -27,10 +27,22 @@ class SpeechRequest(BaseModel):
 
     model_config = ConfigDict(extra="ignore")
 
-    model: str
-    input: str = Field(min_length=1)
-    voice: str | None = None  # public voice id; None = the model's default
-    speed: float | None = Field(default=None, gt=0)
+    model: str = Field(description="Public model id, e.g. `intelliai-tts`.")
+    input: str = Field(
+        min_length=1,
+        description=(
+            "Text to speak — up to 2000 characters per request; longer "
+            "text is refused with a validation error, never cut short."
+        ),
+    )
+    voice: str | None = Field(
+        default=None,
+        description=(
+            "Public voice id from GET /v1/audio/voices (e.g. "
+            "`english-female`, `english-male`). Omit for the default voice."
+        ),
+    )
+    speed: float | None = Field(default=None, gt=0, description="Speaking rate; 1.0 is normal.")
     response_format: Literal["wav"] = "wav"
 
 
@@ -41,6 +53,13 @@ async def create_speech(
     request: SpeechRequest,
     idempotency_key: IdempotencyKey,
 ) -> Response:
+    """Turn text into speech.
+
+    Returns raw `audio/wav` (mono, 16-bit, 24 kHz) — playable bytes,
+    no JSON wrapper. Billing counts input characters; audio duration is
+    measured telemetry only. Text beyond 2000 characters is refused with
+    a clean validation error (never truncated).
+    """
     outcome = await service.synthesize(
         auth=auth,
         public_model_id=request.model,

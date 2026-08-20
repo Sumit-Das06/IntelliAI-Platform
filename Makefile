@@ -235,6 +235,9 @@ erase-org: ## Erase a tenant's data (ledger kept, org row anonymized): make eras
 up-tts: ## Also start the TTS runtime (V1 is STT-only by default)
 	docker compose --profile tts up -d
 
+tts-smoke: ## Stale-image + posture + real-synthesis smoke (key=... runs the gateway check)
+	bash infra/tts-smoke.sh $(key)
+
 # ── Local staging: the Hindi→Qwen canary shape, on THIS machine only ──
 # (docs/ops/local-staging.md). Explicit overlay, never applied by any
 # other target; production posture is unaffected by construction.
@@ -265,7 +268,10 @@ staging-seed-models: seed-models ## Back-compat alias (the seeding path now serv
 # layer refuses the staging profile under INTELLIAI_ENV=prod.
 
 LOCAL_PROD_OVERLAY := infra/compose/local-prod.yml
-LOCAL_PROD := docker compose -f docker-compose.yml -f $(LOCAL_PROD_OVERLAY)
+# --profile tts: M35 — the production-shaped LOCAL stack serves TTS so
+# the Web Speech Studio verifies end to end through the HTTPS edge.
+# prod.yml still ships no TTS service; this flag changes nothing there.
+LOCAL_PROD := docker compose --profile tts -f docker-compose.yml -f $(LOCAL_PROD_OVERLAY)
 
 local-prod-check: ## Preflight the local production-shaped stack (same battery as prod-check)
 	INTELLIAI_COMPOSE_OVERLAY=$(LOCAL_PROD_OVERLAY) bash infra/prod-preflight.sh

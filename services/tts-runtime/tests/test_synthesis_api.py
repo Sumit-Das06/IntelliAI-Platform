@@ -108,7 +108,7 @@ class TestVoicePlumbing:
     def test_default_voice_resolution_is_visible_in_the_envelope(self, client: TestClient) -> None:
         response = client.post(ROUTE_SYNTHESIZE, json={"text": "hi"})
         envelope = parse_envelope(response.headers[HEADER_RUNTIME_ENVELOPE])
-        assert envelope.output.voice == "reference-alto"  # served voice, always named
+        assert envelope.output.voice == "english-female"  # served voice, always named
 
     def test_selected_voice_changes_audio_and_is_reported(self, client: TestClient) -> None:
         alto = client.post(ROUTE_SYNTHESIZE, json={"text": "hi"})
@@ -162,7 +162,12 @@ class TestOperationalSurface:
         info = client.get("/info").json()
         assert info["service"] == "tts-runtime"
         assert info["capability"] == "speech_synthesis"
-        assert info["voices"] == ["reference-alto", "reference-bass"]
+        assert info["voices"] == [
+            "english-female",
+            "english-male",
+            "reference-alto",
+            "reference-bass",
+        ]
         assert info["pool"] == {"admitted": 0, "max_concurrency": 2, "max_queue": 2}
         model = info["models"][0]
         assert model["artifact"] == "reference"

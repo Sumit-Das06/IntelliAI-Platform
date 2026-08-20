@@ -1520,7 +1520,7 @@ dev = [{ name = "pytest", specifier = ">=8" }]
 
 [[package]]
 name = "intelliai-tts-runtime"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "services/tts-runtime" }
 dependencies = [
     { name = "fastapi" },

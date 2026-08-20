@@ -554,7 +554,11 @@ async def test_quota_is_unmoved_by_a_pricing_change(
     )
 
     assert standard.quota == repriced.quota
-    # Both measured quantities are there — "meter everything measured",
-    # and a price change moves neither.
+    # M35 billing law: synthesis quantities carry CHARACTERS and nothing
+    # else — the measured duration is telemetry beside the lineage, never
+    # a rated/quota quantity (audio_seconds has a book price for STT, so
+    # its presence here would double-charge synthesis).
     assert standard.quota["characters"] == Decimal(CHARACTERS)
-    assert standard.quota["audio_seconds"] == Decimal("3.2")
+    assert "audio_seconds" not in standard.quota
+    assert standard.event.lineage is not None
+    assert standard.event.lineage["measured_audio_seconds"] == 3.2

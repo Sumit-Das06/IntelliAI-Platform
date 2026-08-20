@@ -201,7 +201,12 @@ class TestDefaultCatalog:
         assert resolution.service == "tts-runtime"
         assert resolution.artifact.id == "kokoro-82m"
         voice_ids = [v.id for v in default_registry().list_voices("intelliai-tts")]
-        assert voice_ids == ["reference-alto", "reference-bass"]
+        assert voice_ids == [
+            "english-female",
+            "english-male",
+            "reference-alto",
+            "reference-bass",
+        ]
 
     def test_public_ids_never_leak_engine_names(self) -> None:
         # The product boundary: customers see intelliai-*, never engines.

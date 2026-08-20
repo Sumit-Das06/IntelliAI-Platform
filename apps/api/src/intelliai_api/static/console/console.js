@@ -21,6 +21,7 @@ window.IntelliAI = (function () {
     { title: "Build", items: [
       { id: "keys", label: "API Keys", href: "/console/keys", status: "live" },
       { id: "playground", label: "Playground", href: "/console/playground", status: "live" },
+      { id: "speech", label: "Speech Studio", href: "/console/speech", status: "live" },
       { id: "services", label: "AI Services", href: "/console/services", status: "live" }
     ] },
     { title: "Data", items: [
@@ -67,7 +68,19 @@ window.IntelliAI = (function () {
       href: "/console/playground",
       cta: "Open Playground"
     },
-    { id: "tts", name: "IntelliAI TTS", category: "Speech Synthesis", icon: "wave", desc: "Natural speech from text.", status: "soon" },
+    {
+      id: "tts",
+      name: "IntelliAI TTS",
+      category: "Speech Synthesis",
+      icon: "wave",
+      desc: "Natural speech from text. English voices, male and female.",
+      // Launch state stays "soon" (the badge is a PRODUCT-launch claim,
+      // and TTS has not launched) - but the Speech Studio preview is
+      // real and linked. soon+href = "try the preview, no promise yet".
+      status: "soon",
+      href: "/console/speech",
+      cta: "Open Speech Studio"
+    },
     { id: "ocr", name: "IntelliAI OCR", category: "Document Intelligence", icon: "doc", desc: "Text from images and documents.", status: "soon" },
     { id: "translate", name: "IntelliAI Translate", category: "Translation", icon: "globe", desc: "Translation across Indian and global languages.", status: "soon" },
     { id: "vision", name: "IntelliAI Vision", category: "Vision", icon: "eye", desc: "Understanding for images and video.", status: "soon" },
@@ -269,7 +282,9 @@ window.IntelliAI = (function () {
         ]),
         el("p", {}, [service.desc])
       ]);
-      if (live && service.href) {
+      // A link is about PAGE availability; the badge is about launch
+      // state. A "Coming Soon" card may still link to a working preview.
+      if (service.href) {
         card.appendChild(el("a", { class: "goto", href: service.href }, [service.cta + " →"]));
       }
       container.appendChild(card);

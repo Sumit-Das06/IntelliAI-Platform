@@ -174,25 +174,29 @@ class SpeechService:
         served_language = _voice_language(self._registry, public_model_id, envelope.output.voice)
         # The permanent commercial fact (ADR-0021), written before the
         # response is serialized, inside this request's own transaction.
+        #
+        # M35 billing law: synthesis bills CHARACTERS and nothing else.
+        # `quantities` is the rated set — rating prices every unit a
+        # billable event carries, and `audio_seconds` has a book price
+        # (it is STT's billable unit), so putting the measured duration
+        # here would double-charge synthesis. The duration is still
+        # metered — as telemetry beside the lineage, never as a rated
+        # quantity. Meter everything measured; bill exactly one unit.
         if self._usage is not None:
             await self._usage.record_success(
                 auth=auth,
                 capability=Capability.SPEECH_SYNTHESIS.value,
                 public_model_id=public_model_id,
-                quantities={
-                    UsageUnit.CHARACTERS.value: Decimal(str(characters)),
-                    # Measured, not billed today — the input to
-                    # cost-to-serve margin. Meter everything measured.
-                    UsageUnit.AUDIO_SECONDS.value: Decimal(
-                        str(round(envelope.output.duration_seconds, 6))
-                    ),
-                },
+                quantities={UsageUnit.CHARACTERS.value: Decimal(str(characters))},
                 language=served_language,
-                lineage=runtime_lineage(
-                    resolution,
-                    served_artifact=envelope.model,
-                    service_version=envelope.runtime.service_version,
-                ),
+                lineage={
+                    **runtime_lineage(
+                        resolution,
+                        served_artifact=envelope.model,
+                        service_version=envelope.runtime.service_version,
+                    ),
+                    "measured_audio_seconds": round(envelope.output.duration_seconds, 6),
+                },
                 idempotency_key=idempotency_key,
             )
         # The request-event side of the daily reconciliation invariant:

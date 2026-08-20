@@ -267,22 +267,39 @@ _ROUTES = (
     ),
 )
 
-# Public voice identities (placeholders pending the launch-naming
-# decision; the ids are already permanent API surface for testers, so
-# they follow every public-identity law from day one).
+# Public voice identities. M35 naming: `english-female` / `english-male`
+# are the launch names — product-friendly, neutral, never engine tokens,
+# claiming no proprietary voice identity. The M3 placeholders remain
+# served as legacy aliases: voice ids are permanent API surface, so
+# renaming is ADDITION, never removal (the append-only voice-metadata
+# law). Both names resolve to the same rendering.
 _VOICES = (
+    PublicVoiceRecord(
+        id="english-female",
+        model="intelliai-tts",
+        languages=("en",),
+        description="Female English voice",
+        released=date(2026, 8, 20),
+    ),
+    PublicVoiceRecord(
+        id="english-male",
+        model="intelliai-tts",
+        languages=("en",),
+        description="Male English voice",
+        released=date(2026, 8, 20),
+    ),
     PublicVoiceRecord(
         id="reference-alto",
         model="intelliai-tts",
         languages=("en",),
-        description="Female English voice",
+        description="Female English voice (legacy alias of english-female)",
         released=date(2026, 8, 3),
     ),
     PublicVoiceRecord(
         id="reference-bass",
         model="intelliai-tts",
         languages=("en",),
-        description="Male English voice",
+        description="Male English voice (legacy alias of english-male)",
         released=date(2026, 8, 3),
     ),
 )

@@ -87,6 +87,10 @@ services:
       # engine-independence seam) or adds a second hosted artifact.
       INTELLIAI_TTS_SLOTS: ${INTELLIAI_TTS_SLOTS:-kokoro}
       INTELLIAI_TTS_LOG_LEVEL: ${INTELLIAI_TTS_LOG_LEVEL:-INFO}
+      # M35 OOV fallback: the pinned espeak-ng BINARY the image ships,
+      # behind an exec boundary (M3 §8) — never a linked library. Dev
+      # default ON; a deployment turns it off by exporting "off".
+      INTELLIAI_TTS_OOV_FALLBACK: ${INTELLIAI_TTS_OOV_FALLBACK:-espeak}
     ports:
       - "127.0.0.1:8002:8002"
     volumes:

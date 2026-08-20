@@ -95,6 +95,12 @@ async def info(request: Request) -> dict[str, Any]:
         "service_version": __version__,
         "contract_version": CONTRACT_VERSION,
         "capability": str(Capability.SPEECH_SYNTHESIS),
+        # M35 posture facts, for the stale-image smoke (internal port
+        # only): a pre-M35 image lacks these keys and reports 0.1.x, so
+        # a deployment running old code is CAUGHT, not trusted.
+        "normalization": "on" if settings.normalize_text else "off",
+        "oov_fallback": settings.oov_fallback,
+        "max_text_chars": settings.max_text_chars,
         "voices": served,
         "models": models,
     }
@@ -116,6 +122,10 @@ def _pipeline_and_synthesize(
     started = time.perf_counter()
     audio = engine.synthesize(output.text, engine_voice, speed)
     timings["synthesis"] = (time.perf_counter() - started) * 1000.0
+    if audio.first_chunk_ms is not None:
+        # Telemetry for the streaming decision: what a chunked transport
+        # COULD have delivered while this response stays whole-body.
+        timings["first_chunk"] = audio.first_chunk_ms
 
     started = time.perf_counter()
     body = encode_wav(audio)

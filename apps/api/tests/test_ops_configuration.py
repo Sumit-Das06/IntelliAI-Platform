@@ -378,3 +378,50 @@ def test_the_edge_headers_carry_the_m31_hardening() -> None:
     # No edge response timeout: the 450 s gateway deadline rules, and an
     # edge timeout below it would kill healthy 600 s chunked requests.
     assert "response_header_timeout" not in caddyfile
+
+
+# ── M35: Kokoro English TTS hardening — deployment wiring guards ──────
+
+
+def test_tts_dockerfile_ships_the_espeak_binary_but_bans_the_gpl_python_chain() -> None:
+    dockerfile = (REPO / "infra/docker/tts-runtime.Dockerfile").read_text(encoding="utf-8")
+    # The M35 exec-boundary posture: the BINARY ships via apt...
+    assert "espeak-ng espeak-ng-data" in dockerfile
+    # ...while the in-process GPL chain stays banned, build-fatally.
+    assert "phonemizer-fork espeakng-loader" in dockerfile
+    assert "banned = ['phonemizer', 'espeakng_loader']" in dockerfile
+
+
+def test_dev_compose_declares_the_m35_tts_posture() -> None:
+    compose = (REPO / "docker-compose.yml").read_text(encoding="utf-8")
+    assert "INTELLIAI_TTS_OOV_FALLBACK: ${INTELLIAI_TTS_OOV_FALLBACK:-espeak}" in compose
+
+
+def test_local_prod_serves_tts_with_the_hardened_posture() -> None:
+    # The production-shaped LOCAL stack serves TTS for the Web E2E; the
+    # posture is pinned explicitly, and prod.yml still ships no TTS.
+    overlay = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    assert "tts-runtime:" in overlay
+    assert 'INTELLIAI_TTS_NORMALIZE_TEXT: "true"' in overlay
+    assert "INTELLIAI_TTS_OOV_FALLBACK: espeak" in overlay
+    prod = (REPO / "infra/compose/prod.yml").read_text(encoding="utf-8")
+    assert "tts-runtime" not in prod
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert "docker compose --profile tts -f docker-compose.yml" in makefile
+
+
+def test_tts_smoke_is_the_stale_image_guard() -> None:
+    # The M32 trap ("healthy, and wrong") must be mechanically catchable:
+    # version floor, artifact identity, posture keys, and a real
+    # gateway synthesis — all asserted by one script with a Make wrapper.
+    smoke = (REPO / "infra/tts-smoke.sh").read_text(encoding="utf-8")
+    assert 'VERSION_FLOOR="0.2.0"' in smoke
+    assert "stale image" in smoke
+    assert "kokoro-82m" in smoke
+    assert "oov_fallback" in smoke
+    assert "english-female" in smoke
+    assert "RIFF" in smoke
+    assert "x-runtime-envelope" in smoke
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert "tts-smoke:" in makefile
+    assert "bash infra/tts-smoke.sh" in makefile
