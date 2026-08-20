@@ -7,7 +7,7 @@
 # manager, no lockfiles, no compilers. One process, non-root, logs to stdout.
 
 # ── Stage 1: builder ────────────────────────────────────────────────────
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 # Same network-resilience posture as the runtime image (M25 lesson,
 # re-confirmed by the M31 clean rehearsal: one transient wheel-download
@@ -40,7 +40,7 @@ COPY packages/runtime-contract/src packages/runtime-contract/src
 RUN uv sync --frozen --no-dev --package intelliai-api
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 # Least privilege: a system user with no shell, no home directory writes,
 # and no ability to install anything.
