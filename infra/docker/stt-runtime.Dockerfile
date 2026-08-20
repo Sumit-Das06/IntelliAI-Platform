@@ -11,7 +11,7 @@
 # never require an image rebuild.
 
 # ── Stage 1: builder ────────────────────────────────────────────────────
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /usr/local/bin/uv
 
@@ -46,7 +46,7 @@ RUN uv sync --frozen --no-dev --package intelliai-stt-runtime --extra whisper --
 # so a tampered layer cannot serve. Carrying the layer activates
 # NOTHING: engines load only for artifacts a deployment declares, and
 # every committed deployment declares whisper only (guard-tested).
-FROM python:3.12-slim AS llama
+FROM python:3.14-slim AS llama
 ADD --checksum=sha256:01b90b0764821d0e53b985730eea3837e29a976ee00e783e18837937b93fc3f1 \
     https://github.com/ggml-org/llama.cpp/releases/download/b10344/llama-b10344-bin-ubuntu-x64.tar.gz \
     /tmp/llama.tar.gz
@@ -65,7 +65,7 @@ RUN mkdir -p /opt/llama-cpp && \
     echo "e486598626ec06c8cb23a4661ad0401f146a7744b0a136f092e6042597a21e4c  libggml-base.so" | sha256sum -c -
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 # ffmpeg is the pipeline's decoder; startup verification refuses to serve
 # without it, so it is part of the image contract. libgomp1 is the ONE

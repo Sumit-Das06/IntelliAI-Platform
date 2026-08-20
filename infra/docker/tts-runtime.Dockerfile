@@ -12,7 +12,7 @@
 # to build if either package is still importable.
 
 # ── Stage 1: builder ────────────────────────────────────────────────────
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /usr/local/bin/uv
 
@@ -44,7 +44,7 @@ present = [name for name in banned if importlib.util.find_spec(name) is not None
 sys.exit(1 if present else 0)"
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 # espeak-ng: the M35 OOV-fallback BINARY (GPL-3.0), used ONLY behind an
 # exec boundary (M3 §8 — the ffmpeg posture). The python GPL chain stays
