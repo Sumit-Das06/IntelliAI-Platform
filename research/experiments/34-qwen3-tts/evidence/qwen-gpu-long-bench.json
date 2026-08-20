@@ -1,0 +1,91 @@
+{
+  "experiment": "34-qwen3-tts",
+  "instrument": "m34_qwen_bench.py",
+  "engine": "Qwen3-TTS-12Hz-0.6B-CustomVoice",
+  "identity": {
+    "hub_repo": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+    "hub_revision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+    "speaker": "Ryan",
+    "language_param": "English",
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "streaming_api_found": null,
+    "seeded": "torch.manual_seed(0) (AR sampling may remain stochastic)"
+  },
+  "sample_rate_hz": 24000,
+  "repetitions": 1,
+  "load_seconds": 7.47,
+  "rss_before_load_mib": 516.8,
+  "rss_after_load_mib": 1175.7,
+  "rss_peak_mib": 2707.6,
+  "vram_after_load_mib": 2056.9,
+  "vram_peak_alloc_mib": 2839.2,
+  "vram_peak_reserved_mib": 3774.0,
+  "probe_count": 6,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 1.6179,
+  "rtf_p95": 1.6545,
+  "rows": [
+    {
+      "id": "m34-len-064",
+      "language": "en",
+      "category": "len_1_sentence",
+      "chars": 64,
+      "wall_ms": 8892.4,
+      "ttfa_ms": null,
+      "audio_seconds": 6.08,
+      "rtf": 1.4626
+    },
+    {
+      "id": "m34-len-120",
+      "language": "en",
+      "category": "len_120",
+      "chars": 120,
+      "wall_ms": 16502.3,
+      "ttfa_ms": null,
+      "audio_seconds": 10.96,
+      "rtf": 1.5057
+    },
+    {
+      "id": "m34-len-500",
+      "language": "en",
+      "category": "len_500",
+      "chars": 501,
+      "wall_ms": 48201.9,
+      "ttfa_ms": null,
+      "audio_seconds": 31.28,
+      "rtf": 1.541
+    },
+    {
+      "id": "m34-len-795",
+      "language": "en",
+      "category": "len_795",
+      "chars": 795,
+      "wall_ms": 82611.4,
+      "ttfa_ms": null,
+      "audio_seconds": 50.88,
+      "rtf": 1.6237
+    },
+    {
+      "id": "m34-len-1000",
+      "language": "en",
+      "category": "len_1000",
+      "chars": 1027,
+      "wall_ms": 111313.3,
+      "ttfa_ms": null,
+      "audio_seconds": 68.8,
+      "rtf": 1.6179
+    },
+    {
+      "id": "m34-len-1990",
+      "language": "en",
+      "category": "len_2000",
+      "chars": 2039,
+      "wall_ms": 205692.3,
+      "ttfa_ms": null,
+      "audio_seconds": 124.32,
+      "rtf": 1.6545
+    }
+  ]
+}

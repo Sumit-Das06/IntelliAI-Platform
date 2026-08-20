@@ -22,6 +22,8 @@ revisions) if the local copies are gone.
 | B | Magpie-TTS Multilingual 357M via NeMo-Speech.cpp (CPU GGUF) | John (and one female, Sofia) | GGUF v2602 f16 via the runtime's verified pull |
 | C | Chatterbox-nano 110M | — | **ABSENT from this pack**: no released library can load nano (M33 packaging finding); slot reserved for when upstream ships the loader |
 | D | Supertonic 3 (99M ONNX) | M1 | supertonic-3 via PyPI 1.3.1 |
+| E | Qwen3-TTS-12Hz-0.6B-CustomVoice (0.9B, GPU bf16) — added by M34 | Ryan | rev `85e237c12c02…` via pinned snapshot; official `qwen-tts` 0.1.1 |
+| F | Kokoro + espeak-fallback research twin (the §22 hardening candidate) — added by M34 | af_heart | same kokoro-82m weights; upstream pipeline with espeak OOV fallback |
 
 Identical texts across all candidates (ids from
 `research/experiments/33-english-tts-selection/probe-texts-en-v1.json`):

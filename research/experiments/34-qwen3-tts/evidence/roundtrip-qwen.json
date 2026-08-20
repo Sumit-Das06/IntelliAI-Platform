@@ -1,0 +1,316 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "roundtrip_judge.py",
+  "engine_label": "qwen3-tts-gpu",
+  "judge_note": "en judged by the whisper-small route, hi/mixed by the promoted E3 route, through the real gateway; frozen normalization profiles; WER/CER from intelliai_evaluation.accuracy (no parallel metric code)",
+  "aggregates": {
+    "en_round_trip_wer_mean": 0.2449,
+    "en_round_trip_cer_mean": 0.1524,
+    "hi_round_trip_wer_mean": null,
+    "hi_round_trip_cer_mean": null,
+    "mixed_round_trip_cer_mean": null,
+    "judged_rows": 25
+  },
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "A_normal",
+      "reference": "The quick brown fox jumps over the lazy dog near the river bank.",
+      "judge_en": {
+        "text": "The quick brown fox jumps over the lazy dog near the riverbank.",
+        "wall_s": 5.72
+      },
+      "wer_en": 0.1538,
+      "cer_en": 0.0159
+    },
+    {
+      "id": "m33-en-short-01",
+      "language": "en",
+      "category": "B_short",
+      "reference": "Thank you for calling.",
+      "judge_en": {
+        "text": "Thank you for calling.",
+        "wall_s": 1.71
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m33-en-longsent-01",
+      "language": "en",
+      "category": "C_long_sentence",
+      "reference": "Because the courier attempted delivery twice while nobody was home, the package was returned to the regional warehouse and a fresh delivery attempt has been scheduled for Thursday afternoon between two and five.",
+      "judge_en": {
+        "text": "Because the courier attempted delivery twice while nobody was home, the package was returned to the regional warehouse, and a fresh delivery attempt has been scheduled for Thursday afternoon between 2 and 5.",
+        "wall_s": 2.17
+      },
+      "wer_en": 0.0606,
+      "cer_en": 0.0335
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "D_paragraph",
+      "reference": "Thank you for calling customer care. Your complaint about the delayed delivery has been registered, and the reference number is 88231. Our courier partner will contact you within two working days. Is there anything else I can help you with today?",
+      "judge_en": {
+        "text": "Thank you for calling Customer Care. Your complaint about the delayed delivery has been registered, and the reference number is 88231. Our courier partner will contact you within two working days. Is there anything else I can help you with today?",
+        "wall_s": 2.73
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "E_question",
+      "reference": "You are coming to the office tomorrow?",
+      "judge_en": {
+        "text": "You are coming to the office tomorrow?",
+        "wall_s": 1.79
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "E_question",
+      "reference": "You are coming to the office tomorrow",
+      "judge_en": {
+        "text": "You are, uh, um, coming to the office tomorrow.",
+        "wall_s": 1.89
+      },
+      "wer_en": 0.2857,
+      "cer_en": 0.1622
+    },
+    {
+      "id": "m33-en-exclaim-01",
+      "language": "en",
+      "category": "F_exclamation",
+      "reference": "That is wonderful news, congratulations!",
+      "judge_en": {
+        "text": "That is wonderful news. Congratulations!",
+        "wall_s": 1.74
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m33-en-exclaim-01-bare",
+      "language": "en",
+      "category": "F_exclamation",
+      "reference": "That is wonderful news, congratulations.",
+      "judge_en": {
+        "text": "Ah, ah, ah, ah, that is wonderful news, congratulations.",
+        "wall_s": 1.94
+      },
+      "wer_en": 0.8,
+      "cer_en": 0.3158
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "G_numbers",
+      "reference": "The invoice total is 1247 dollars for 38 units.",
+      "judge_en": {
+        "text": "The invoice total is $127 for 38 units.",
+        "wall_s": 1.91
+      },
+      "wer_en": 0.2222,
+      "cer_en": 0.1957
+    },
+    {
+      "id": "m33-en-phone-01",
+      "language": "en",
+      "category": "G_numbers",
+      "reference": "You can reach our support desk at 1800 425 9090 between 9 and 6.",
+      "judge_en": {
+        "text": "You can reach our support desk at 1800 42599 Jew between 9 and 6",
+        "wall_s": 2.07
+      },
+      "wer_en": 0.1429,
+      "cer_en": 0.0794
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "H_dates",
+      "reference": "The meeting is scheduled for August 3, 2026, at half past ten.",
+      "judge_en": {
+        "text": "The meeting is scheduled for August 3, 2026 at half past 10.",
+        "wall_s": 2.07
+      },
+      "wer_en": 0.0833,
+      "cer_en": 0.0508
+    },
+    {
+      "id": "m33-en-dateslash-01",
+      "language": "en",
+      "category": "H_dates",
+      "reference": "Your warranty expires on 12/08/2026.",
+      "judge_en": {
+        "text": "Your warranty expires on 12 divided-bass Juo8 divided-bass 2026.",
+        "wall_s": 2.0
+      },
+      "wer_en": 0.7143,
+      "cer_en": 0.8286
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "I_currency",
+      "reference": "The subscription costs $4.99 per month or 399 rupees per year.",
+      "judge_en": {
+        "text": "This subscription costs $4.99 per month or 399 rupees per year.",
+        "wall_s": 2.01
+      },
+      "wer_en": 0.0833,
+      "cer_en": 0.0333
+    },
+    {
+      "id": "m33-en-percent-01",
+      "language": "en",
+      "category": "I_currency",
+      "reference": "A late fee of 2.5% applies after the due date, and 25% is waived for annual plans.",
+      "judge_en": {
+        "text": "A late fee of 2.5% applies after the due date and 25% is waived for annual plans.",
+        "wall_s": 2.22
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-en-names-01",
+      "language": "en",
+      "category": "J_proper_names",
+      "reference": "Priya Sharma spoke with Rajesh Iyer about the Coimbatore shipment.",
+      "judge_en": {
+        "text": "Priya Sharma spoke with Rajesh Ayer about the Coimbatore Sipment.",
+        "wall_s": 2.1
+      },
+      "wer_en": 0.2,
+      "cer_en": 0.0308
+    },
+    {
+      "id": "m33-en-acronym-01",
+      "language": "en",
+      "category": "K_acronyms",
+      "reference": "Our STT and TTS APIs share one SLA, and GPU capacity is managed by the CTO.",
+      "judge_en": {
+        "text": "Haha, our STT and TTS APIs share one SLA and GPU capacity is managed by the CTO.",
+        "wall_s": 2.26
+      },
+      "wer_en": 0.0625,
+      "cer_en": 0.0685
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "L_technical",
+      "reference": "The API gateway routes requests to the inference runtime over HTTP.",
+      "judge_en": {
+        "text": "The API Gateway routes request to the inference runtime over HTTP.",
+        "wall_s": 1.84
+      },
+      "wer_en": 0.0909,
+      "cer_en": 0.0152
+    },
+    {
+      "id": "m32-en-brand-01",
+      "language": "en",
+      "category": "M_product_names",
+      "reference": "Welcome to IntelliAI support, my name is Kavya.",
+      "judge_en": {
+        "text": "Welcome to Intelli AI Support. My name is Kavya.",
+        "wall_s": 2.03
+      },
+      "wer_en": 0.25,
+      "cer_en": 0.0222
+    },
+    {
+      "id": "m33-en-product-02",
+      "language": "en",
+      "category": "M_product_names",
+      "reference": "IntelliAI Studio can transcribe your QwikCart order QX4921 in seconds.",
+      "judge_en": {
+        "text": "IntelliAI Studio can transcribe your Qwikart order QX49 to 1 in seconds.",
+        "wall_s": 2.16
+      },
+      "wer_en": 0.4,
+      "cer_en": 0.0725
+    },
+    {
+      "id": "m33-en-mixedpunct-01",
+      "language": "en",
+      "category": "N_mixed_punctuation",
+      "reference": "Wait — before you go: did the reset work, or not? If not, try again; it usually helps!",
+      "judge_en": {
+        "text": "Wait, before you go, did the reset work or not? If not, try again. It usually helps.",
+        "wall_s": 2.24
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m32-en-long-01",
+      "language": "en",
+      "category": "O_long_form",
+      "reference": "Before we close this call, let me quickly summarize everything we covered today. Your billing address has been updated to the new flat in Andheri West, and the old address has been removed from the account. The pending invoice of two thousand three hundred rupees will be adjusted against your security deposit, so no payment is due this month. Your internet plan has been upgraded to the two hundred megabit option, effective from the first of next month, and the router replacement is scheduled for Thursday between ten and one. You will receive a confirmation message on your registered mobile number within the next hour. If the technician does not arrive in that window, please call us back and quote the service request number I gave you earlier, and the team will escalate it immediately.",
+      "judge_en": {
+        "text": "Before we close this call, let me quickly summarize everything we covered today. Your billing address has been updated to the new flat in Anteri West, and the old address has been removed from the account. The pending invoice of ₹2300 will be adjusted against your security deposit, so no payment is due this month. Your internet plan has been upgraded to the 200-megabit option effective from the first of next month and the router replacement is scheduled for Thursday between 10 and 1. You will receive a confirmation message on your registered mobile number within the next hour. If the technician does not arrive in that window, please call us back and quote the service request number I gave you earlier, and the team will escalate it immediately.",
+        "wall_s": 9.44
+      },
+      "wer_en": 0.0741,
+      "cer_en": 0.0665
+    },
+    {
+      "id": "m33-pros-comma",
+      "language": "en",
+      "category": "P_prosody_comma",
+      "reference": "Hello, Sumit.",
+      "judge_en": {
+        "text": "Heh heh heh heh heh. Hello, Sumit!",
+        "wall_s": 2.02
+      },
+      "wer_en": 2.5,
+      "cer_en": 1.8182
+    },
+    {
+      "id": "m33-pros-comma-bare",
+      "language": "en",
+      "category": "P_prosody_comma",
+      "reference": "Hello Sumit.",
+      "judge_en": {
+        "text": "Hello, Sumit.",
+        "wall_s": 1.77
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m33-pros-howq",
+      "language": "en",
+      "category": "P_prosody_question",
+      "reference": "How are you?",
+      "judge_en": {
+        "text": "How are you?",
+        "wall_s": 1.71
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m33-pros-howq-bare",
+      "language": "en",
+      "category": "P_prosody_question",
+      "reference": "How are you.",
+      "judge_en": {
+        "text": "How are you?",
+        "wall_s": 1.76
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    }
+  ]
+}

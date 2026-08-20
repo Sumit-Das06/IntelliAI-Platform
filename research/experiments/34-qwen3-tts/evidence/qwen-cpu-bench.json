@@ -1,0 +1,91 @@
+{
+  "experiment": "34-qwen3-tts",
+  "instrument": "m34_qwen_bench.py",
+  "engine": "Qwen3-TTS-12Hz-0.6B-CustomVoice",
+  "identity": {
+    "hub_repo": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+    "hub_revision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+    "speaker": "Ryan",
+    "language_param": "English",
+    "device": "cpu",
+    "dtype": "float32",
+    "streaming_api_found": null,
+    "seeded": "torch.manual_seed(0) (AR sampling may remain stochastic)"
+  },
+  "sample_rate_hz": 24000,
+  "repetitions": 1,
+  "load_seconds": 7.84,
+  "rss_before_load_mib": 514.5,
+  "rss_after_load_mib": 4489.5,
+  "rss_peak_mib": 6017.2,
+  "vram_after_load_mib": null,
+  "vram_peak_alloc_mib": null,
+  "vram_peak_reserved_mib": null,
+  "probe_count": 6,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 3.0538,
+  "rtf_p95": 3.3356,
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "A_normal",
+      "chars": 64,
+      "wall_ms": 19213.0,
+      "ttfa_ms": null,
+      "audio_seconds": 5.76,
+      "rtf": 3.3356
+    },
+    {
+      "id": "m33-en-short-01",
+      "language": "en",
+      "category": "B_short",
+      "chars": 22,
+      "wall_ms": 8984.6,
+      "ttfa_ms": null,
+      "audio_seconds": 2.8,
+      "rtf": 3.2088
+    },
+    {
+      "id": "m33-en-longsent-01",
+      "language": "en",
+      "category": "C_long_sentence",
+      "chars": 211,
+      "wall_ms": 46417.7,
+      "ttfa_ms": null,
+      "audio_seconds": 15.2,
+      "rtf": 3.0538
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "D_paragraph",
+      "chars": 246,
+      "wall_ms": 43902.3,
+      "ttfa_ms": null,
+      "audio_seconds": 15.68,
+      "rtf": 2.7999
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "E_question",
+      "chars": 38,
+      "wall_ms": 11324.6,
+      "ttfa_ms": null,
+      "audio_seconds": 4.08,
+      "rtf": 2.7756
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "E_question",
+      "chars": 37,
+      "wall_ms": 9022.9,
+      "ttfa_ms": null,
+      "audio_seconds": 3.44,
+      "rtf": 2.6229
+    }
+  ]
+}

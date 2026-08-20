@@ -1,7 +1,7 @@
 {
-  "pack": "m33-english-tts-audition",
-  "generated": "2026-08-20",
-  "note": "WAVs live outside git; verify by sha256. Labels: A=kokoro (production path), B=magpie-357m GGUF/CPU (John/Sofia), C=chatterbox-nano (synthetic reference voice), D=supertonic-3 (M1).",
+  "pack": "m33-m34-english-tts-audition",
+  "generated": "2026-08-20 (extended by M34)",
+  "note": "WAVs live outside git; verify by sha256. Labels: A=kokoro production path, B=magpie-357m GGUF/CPU (John/Sofia), C=RESERVED (nano unloadable), D=supertonic-3 (M1), E=qwen3-tts-0.6B CustomVoice (Ryan, GPU), F=kokoro + espeak-fallback research twin.",
   "samples": [
     {
       "file": "A-kokoro_en-general-01.wav",
@@ -140,6 +140,138 @@
       "sha256": "a1b15e3b23d09fd5cdcf1d08fe2969836c3bc0f046f10a09a067a2eaff18e514",
       "seconds": 1.39,
       "sample_rate_hz": 44100
+    },
+    {
+      "file": "E-qwen3tts-ryan_en-currency-01.wav",
+      "sha256": "9628c0083c8757c96baa67b9f716e11fae3ae9fc87ec632f4ec0337a2456e477",
+      "seconds": 8.0,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_en-dates-01.wav",
+      "sha256": "11ea4c530bdb99f712fceee1559aa4e5f546239878e9be3a74ee2a1e0635709e",
+      "seconds": 6.32,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_en-general-01.wav",
+      "sha256": "4efa75f195727c682e05275f08f8e852d35a654e322a12a64f3292fccca01ed6",
+      "seconds": 5.04,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_en-numbers-01.wav",
+      "sha256": "12090da626fe2a03632485aa3ad5a421913ff2c1a586e9319203056d6308c0c7",
+      "seconds": 6.4,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_en-technical-01.wav",
+      "sha256": "c3637ce529f9087f6c77f22dc9e36f064ee16d66cbce902dd0600106e6a01365",
+      "seconds": 5.84,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_m32-en-brand-01.wav",
+      "sha256": "5dfd1502c57ceffb3fd04159086064954a1b349df15d561e53df305f1a963e05",
+      "seconds": 4.88,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_m32-en-names-01.wav",
+      "sha256": "c79c4c3c50df51d7b91eba4dedcf56a550f195ca868c860adf72c239d3e8c48b",
+      "seconds": 5.92,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_m32-en-paragraph-01.wav",
+      "sha256": "ad3787b44bb309d41a2a6d4626a4c3edf5d4526699e730a61ec377c278a47c05",
+      "seconds": 15.92,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_m33-en-mixedpunct-01.wav",
+      "sha256": "d7ec849c18b35272deec7d3f47bbde939dccb861f84be22080580aff0d829393",
+      "seconds": 9.52,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_m33-pros-howq-bare.wav",
+      "sha256": "6a049dd23a6923dd7629ad35e96028d98b3f8b32294efa7ae43e4a3990788c11",
+      "seconds": 4.08,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "E-qwen3tts-ryan_m33-pros-howq.wav",
+      "sha256": "6264a16307c97841a3b021485c059b5814232de4f6be444c57657e2135c665af",
+      "seconds": 2.4,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_en-currency-01.wav",
+      "sha256": "8b27f8abbfa25fbecc0dc2cc7b4eb7df4de65b1b5de7f937648f78616710abde",
+      "seconds": 7.2,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_en-dates-01.wav",
+      "sha256": "d16811879dfb20b66e432a89f85c50f3dfc439fdd9895ac7f1bb35ebe3bfe335",
+      "seconds": 5.05,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_en-general-01.wav",
+      "sha256": "c6f8ac179defe01cb700115959456cd919b1f700705d3f0e8e876ab1566d7ee2",
+      "seconds": 4.42,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_en-numbers-01.wav",
+      "sha256": "3e31846351a822aec8cd4e881a2dcf5aac1f47ac1964201657cb66915a50fd91",
+      "seconds": 4.9,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_en-technical-01.wav",
+      "sha256": "a84b93567c5f880ecb8f5cce5093ecd61a91455ce91c3d992b914b8cb18dbe16",
+      "seconds": 5.15,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_m32-en-brand-01.wav",
+      "sha256": "da16a6a8b5a0ae328f16f0d862479745081fd6a213332a86926a0f13f0a0a093",
+      "seconds": 3.85,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_m32-en-names-01.wav",
+      "sha256": "d800363a34f5355895aa341b577846349abbb93931b3c1d0d2a13d95014e54d6",
+      "seconds": 4.38,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_m32-en-paragraph-01.wav",
+      "sha256": "e36047b599d719944e955d48cb6b80f869de7f025c0011528ee7df27b221681e",
+      "seconds": 16.43,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_m33-en-mixedpunct-01.wav",
+      "sha256": "176b9af0d646208c061badecf6dd0f969cd5cad340e4d93024513e6904e63a29",
+      "seconds": 5.6,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_m33-pros-howq-bare.wav",
+      "sha256": "9770e867997301a7bc938a75e0c86e1fef35c9da657307024fa01cc650ab2f90",
+      "seconds": 1.52,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "F-kokoro-espeak_m33-pros-howq.wav",
+      "sha256": "b3505c368acf42a0d02f25160ad97b019bc3ed8b0dbc1304bde21fb46c788c6c",
+      "seconds": 1.5,
+      "sample_rate_hz": 24000
     }
   ]
 }
