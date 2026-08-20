@@ -1,0 +1,47 @@
+{
+  "experiment": "33-english-tts-selection",
+  "instrument": "m33_consistency_probe.py",
+  "endpoint": "http://localhost:8000",
+  "text": "Thank you for calling IntelliAI customer care. How may I help you today?",
+  "runs": [
+    {
+      "run": 1,
+      "wall_ms": 2652.7,
+      "audio_seconds": 4.675,
+      "bytes": 224444,
+      "sha256": "441ade5151fc0615"
+    },
+    {
+      "run": 2,
+      "wall_ms": 2502.9,
+      "audio_seconds": 4.675,
+      "bytes": 224444,
+      "sha256": "ec3e0fbb6f1bac2d"
+    },
+    {
+      "run": 3,
+      "wall_ms": 2497.2,
+      "audio_seconds": 4.675,
+      "bytes": 224444,
+      "sha256": "610ff0b43d8e8a2d"
+    },
+    {
+      "run": 4,
+      "wall_ms": 2458.7,
+      "audio_seconds": 4.675,
+      "bytes": 224444,
+      "sha256": "05be13ad2cdbc7cb"
+    },
+    {
+      "run": 5,
+      "wall_ms": 2584.8,
+      "audio_seconds": 4.675,
+      "bytes": 224444,
+      "sha256": "eb5dd796c62c8326"
+    }
+  ],
+  "distinct_audio_hashes": 5,
+  "byte_deterministic": false,
+  "duration_stdev_s": 0.0,
+  "wall_ms_stdev": 70.0
+}

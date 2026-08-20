@@ -1,0 +1,92 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "prosody_analyze.py",
+  "method": "autocorrelation F0 (25ms/10ms, 60-400Hz, voicing by energy); tail slope over the final 40% of voiced frames; signal-level facts only — naturalness remains a human-listening question",
+  "audio_dir": "/mnt/c/Users/VIKASH~1/AppData/Local/Temp/claude/d--Sumit-Projects-IntelliAI-Platform/67762b73-e6aa-43b8-a730-264d0d432d4f/scratchpad/m33-audio/gateway-kokoro",
+  "pairs": [
+    {
+      "pair": "en-comma-name",
+      "with_mark": {
+        "duration_s": 1.4,
+        "voiced_duration_s": 0.87,
+        "f0_mean_hz": 221.4,
+        "f0_tail_slope_hz_per_frame": 1.183,
+        "voiced_frames": 41
+      },
+      "without_mark": {
+        "duration_s": 1.45,
+        "voiced_duration_s": 0.89,
+        "f0_mean_hz": 219.1,
+        "f0_tail_slope_hz_per_frame": 0.206,
+        "voiced_frames": 43
+      },
+      "delta_duration_s": -0.05,
+      "delta_voiced_duration_s": -0.02,
+      "delta_f0_mean_hz": 2.3,
+      "delta_f0_tail_slope_hz_per_frame": 0.977
+    },
+    {
+      "pair": "en-exclaim",
+      "with_mark": {
+        "duration_s": 3.1,
+        "voiced_duration_s": 2.61,
+        "f0_mean_hz": 207.9,
+        "f0_tail_slope_hz_per_frame": 0.861,
+        "voiced_frames": 136
+      },
+      "without_mark": {
+        "duration_s": 3.1,
+        "voiced_duration_s": 2.63,
+        "f0_mean_hz": 207.8,
+        "f0_tail_slope_hz_per_frame": 1.022,
+        "voiced_frames": 133
+      },
+      "delta_duration_s": 0.0,
+      "delta_voiced_duration_s": -0.02,
+      "delta_f0_mean_hz": 0.1,
+      "delta_f0_tail_slope_hz_per_frame": -0.161
+    },
+    {
+      "pair": "en-how-are-you",
+      "with_mark": {
+        "duration_s": 1.5,
+        "voiced_duration_s": 0.98,
+        "f0_mean_hz": 206.0,
+        "f0_tail_slope_hz_per_frame": -1.108,
+        "voiced_frames": 51
+      },
+      "without_mark": {
+        "duration_s": 1.525,
+        "voiced_duration_s": 0.99,
+        "f0_mean_hz": 213.7,
+        "f0_tail_slope_hz_per_frame": -1.614,
+        "voiced_frames": 47
+      },
+      "delta_duration_s": -0.025,
+      "delta_voiced_duration_s": -0.01,
+      "delta_f0_mean_hz": -7.7,
+      "delta_f0_tail_slope_hz_per_frame": 0.506
+    },
+    {
+      "pair": "en-question-mark",
+      "with_mark": {
+        "duration_s": 2.45,
+        "voiced_duration_s": 1.96,
+        "f0_mean_hz": 213.8,
+        "f0_tail_slope_hz_per_frame": -1.044,
+        "voiced_frames": 96
+      },
+      "without_mark": {
+        "duration_s": 2.475,
+        "voiced_duration_s": 1.99,
+        "f0_mean_hz": 206.4,
+        "f0_tail_slope_hz_per_frame": -1.43,
+        "voiced_frames": 104
+      },
+      "delta_duration_s": -0.025,
+      "delta_voiced_duration_s": -0.03,
+      "delta_f0_mean_hz": 7.4,
+      "delta_f0_tail_slope_hz_per_frame": 0.386
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "name": "m33-english-tts-probes",
+  "version": 1,
+  "description": "M33 fixed English TTS evaluation set (spec categories A-O). Texts shared with tts-eval-seed@v1 / the M32 probe set are verbatim (ids kept) so results stay comparable across milestones; new categories are M33-authored, product-practical (call-center + IntelliAI product surface). Research instrument only — never an evaluation-plane corpus.",
+  "provenance": {
+    "author": "IntelliAI (in-house)",
+    "created": "2026-08-20",
+    "source": "tts-eval-seed@v1 (verbatim where reused) + M32 probes (verbatim where reused) + M33 original authorship",
+    "license": null
+  },
+  "cases": [
+    {
+      "id": "en-general-01",
+      "source": "tts-eval-seed@v1",
+      "category": "A_normal",
+      "text": "The quick brown fox jumps over the lazy dog near the river bank.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-short-01",
+      "source": "m33",
+      "category": "B_short",
+      "text": "Thank you for calling.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-longsent-01",
+      "source": "m33",
+      "category": "C_long_sentence",
+      "text": "Because the courier attempted delivery twice while nobody was home, the package was returned to the regional warehouse and a fresh delivery attempt has been scheduled for Thursday afternoon between two and five.",
+      "language": "en"
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "source": "m32",
+      "category": "D_paragraph",
+      "text": "Thank you for calling customer care. Your complaint about the delayed delivery has been registered, and the reference number is 88231. Our courier partner will contact you within two working days. Is there anything else I can help you with today?",
+      "language": "en"
+    },
+    {
+      "id": "m32-pros-en-q",
+      "source": "m32",
+      "category": "E_question",
+      "pair": "en-question-mark",
+      "variant": "with_mark",
+      "text": "You are coming to the office tomorrow?",
+      "language": "en"
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "source": "m32",
+      "category": "E_question",
+      "pair": "en-question-mark",
+      "variant": "without_mark",
+      "text": "You are coming to the office tomorrow",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-exclaim-01",
+      "source": "m33",
+      "category": "F_exclamation",
+      "pair": "en-exclaim",
+      "variant": "with_mark",
+      "text": "That is wonderful news, congratulations!",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-exclaim-01-bare",
+      "source": "m33",
+      "category": "F_exclamation",
+      "pair": "en-exclaim",
+      "variant": "without_mark",
+      "text": "That is wonderful news, congratulations.",
+      "language": "en"
+    },
+    {
+      "id": "en-numbers-01",
+      "source": "tts-eval-seed@v1",
+      "category": "G_numbers",
+      "text": "The invoice total is 1247 dollars for 38 units.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-phone-01",
+      "source": "m33",
+      "category": "G_numbers",
+      "text": "You can reach our support desk at 1800 425 9090 between 9 and 6.",
+      "language": "en"
+    },
+    {
+      "id": "en-dates-01",
+      "source": "tts-eval-seed@v1",
+      "category": "H_dates",
+      "text": "The meeting is scheduled for August 3, 2026, at half past ten.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-dateslash-01",
+      "source": "m33",
+      "category": "H_dates",
+      "text": "Your warranty expires on 12/08/2026.",
+      "language": "en"
+    },
+    {
+      "id": "en-currency-01",
+      "source": "tts-eval-seed@v1",
+      "category": "I_currency",
+      "text": "The subscription costs $4.99 per month or 399 rupees per year.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-percent-01",
+      "source": "m33",
+      "category": "I_currency",
+      "text": "A late fee of 2.5% applies after the due date, and 25% is waived for annual plans.",
+      "language": "en"
+    },
+    {
+      "id": "m32-en-names-01",
+      "source": "m32",
+      "category": "J_proper_names",
+      "text": "Priya Sharma spoke with Rajesh Iyer about the Coimbatore shipment.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-acronym-01",
+      "source": "m33",
+      "category": "K_acronyms",
+      "text": "Our STT and TTS APIs share one SLA, and GPU capacity is managed by the CTO.",
+      "language": "en"
+    },
+    {
+      "id": "en-technical-01",
+      "source": "tts-eval-seed@v1",
+      "category": "L_technical",
+      "text": "The API gateway routes requests to the inference runtime over HTTP.",
+      "language": "en"
+    },
+    {
+      "id": "m32-en-brand-01",
+      "source": "m32",
+      "category": "M_product_names",
+      "text": "Welcome to IntelliAI support, my name is Kavya.",
+      "notes": "The measured OOV trap: the espeak-free dictionary path drops IntelliAI and Kavya.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-product-02",
+      "source": "m33",
+      "category": "M_product_names",
+      "text": "IntelliAI Studio can transcribe your QwikCart order QX4921 in seconds.",
+      "language": "en"
+    },
+    {
+      "id": "m33-en-mixedpunct-01",
+      "source": "m33",
+      "category": "N_mixed_punctuation",
+      "text": "Wait — before you go: did the reset work, or not? If not, try again; it usually helps!",
+      "language": "en"
+    },
+    {
+      "id": "m32-en-long-01",
+      "source": "m32",
+      "category": "O_long_form",
+      "text": "Before we close this call, let me quickly summarize everything we covered today. Your billing address has been updated to the new flat in Andheri West, and the old address has been removed from the account. The pending invoice of two thousand three hundred rupees will be adjusted against your security deposit, so no payment is due this month. Your internet plan has been upgraded to the two hundred megabit option, effective from the first of next month, and the router replacement is scheduled for Thursday between ten and one. You will receive a confirmation message on your registered mobile number within the next hour. If the technician does not arrive in that window, please call us back and quote the service request number I gave you earlier, and the team will escalate it immediately.",
+      "language": "en"
+    },
+    {
+      "id": "m33-pros-comma",
+      "source": "m33-spec",
+      "category": "P_prosody_comma",
+      "pair": "en-comma-name",
+      "variant": "with_mark",
+      "text": "Hello, Sumit.",
+      "language": "en"
+    },
+    {
+      "id": "m33-pros-comma-bare",
+      "source": "m33-spec",
+      "category": "P_prosody_comma",
+      "pair": "en-comma-name",
+      "variant": "without_mark",
+      "text": "Hello Sumit.",
+      "language": "en"
+    },
+    {
+      "id": "m33-pros-howq",
+      "source": "m33-spec",
+      "category": "P_prosody_question",
+      "pair": "en-how-are-you",
+      "variant": "with_mark",
+      "text": "How are you?",
+      "language": "en"
+    },
+    {
+      "id": "m33-pros-howq-bare",
+      "source": "m33-spec",
+      "category": "P_prosody_question",
+      "pair": "en-how-are-you",
+      "variant": "without_mark",
+      "text": "How are you.",
+      "language": "en"
+    }
+  ]
+}

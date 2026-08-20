@@ -1,0 +1,145 @@
+{
+  "pack": "m33-english-tts-audition",
+  "generated": "2026-08-20",
+  "note": "WAVs live outside git; verify by sha256. Labels: A=kokoro (production path), B=magpie-357m GGUF/CPU (John/Sofia), C=chatterbox-nano (synthetic reference voice), D=supertonic-3 (M1).",
+  "samples": [
+    {
+      "file": "A-kokoro_en-general-01.wav",
+      "sha256": "8fd4349a8f6ddc274316c8ab10ff878257c59b3eba9d861ee813ed1480f29a1d",
+      "seconds": 4.42,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "A-kokoro_m32-en-brand-01.wav",
+      "sha256": "c37f12b08e9d387142bd9ca50dbf5a3772b2ff445d4f7caa768542a231fd8af1",
+      "seconds": 2.8,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "A-kokoro_m32-en-paragraph-01.wav",
+      "sha256": "61487015ef2130330fea3619d4728b2616530aefe121f22a08387a6ec4ac44f1",
+      "seconds": 17.57,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "A-kokoro_m33-en-mixedpunct-01.wav",
+      "sha256": "a63d760ee68fe118f0109c388b65ab3a4950b0984a0e8c5b7d8ed47ebb3af9a2",
+      "seconds": 7.62,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "A-kokoro_m33-pros-howq-bare.wav",
+      "sha256": "09ddc7df5de26c1a3f4232a1c3172fa4cbd6e1dada11917d269df848d2b181e0",
+      "seconds": 1.52,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "A-kokoro_m33-pros-howq.wav",
+      "sha256": "893d0bd25b003dad9f818580f4873c387713214210cfb597996a4de7a5d825e4",
+      "seconds": 1.5,
+      "sample_rate_hz": 24000
+    },
+    {
+      "file": "B-magpie-john_en-general-01.wav",
+      "sha256": "fed4dc0007b04b7f1b31c4af86fb1d6c7515560281187ee72df053d1abe2b77d",
+      "seconds": 4.27,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-john_m32-en-brand-01.wav",
+      "sha256": "a0474258e8973e42bf8095f3781b2c5dc274df0c38627cf067f1d43591cb63a9",
+      "seconds": 4.5,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-john_m32-en-paragraph-01.wav",
+      "sha256": "8d58178b84b868c871120f3064f11f9a0fdaa304d2b99db77d054cf85ca37a83",
+      "seconds": 14.91,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-john_m33-en-mixedpunct-01.wav",
+      "sha256": "895a0e3cc425d8c77d1ef621194c6293be3abb318e359ad2a98d154196060191",
+      "seconds": 8.08,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-john_m33-pros-howq-bare.wav",
+      "sha256": "dcba3ff9f8689ffaf4bd9d1000c9f1f5d5253d2d3a4b8512891f1ff8ac997d57",
+      "seconds": 1.07,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-john_m33-pros-howq.wav",
+      "sha256": "f8d2bf0d63d09ea300869e7c2ece1213aeea8feb27fc7186d2db816129091345",
+      "seconds": 1.07,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-sofia_en-general-01.wav",
+      "sha256": "ab2f766d0bec5aa3173e820f394b739a900e0ca4cfd27c0225409fae8053d325",
+      "seconds": 3.53,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-sofia_m32-en-brand-01.wav",
+      "sha256": "54ddbf17d5644ecee0bf5f42b23df2d15b11be7c22d8294eb9aa2b18cf14686b",
+      "seconds": 3.07,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-sofia_m32-en-paragraph-01.wav",
+      "sha256": "b94fb056521fe13bac9e9b6f81fe05749d04f122bbb60f844f430aee19ced38c",
+      "seconds": 13.05,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-sofia_m33-en-mixedpunct-01.wav",
+      "sha256": "1248eead5650f4fbbea5f67522a97d35bf9220e6aa161c550cbb3deed7cfece4",
+      "seconds": 6.5,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "B-magpie-sofia_m33-pros-howq.wav",
+      "sha256": "8a9f8e57fe96c14a64a3531462f69b8c439a2161764daf52c46f81b4a70c49c4",
+      "seconds": 0.84,
+      "sample_rate_hz": 22050
+    },
+    {
+      "file": "D-supertonic_en-general-01.wav",
+      "sha256": "ff6a1b3004cfd1cc5d76c86c4849d756cf943155bf42a2499dfc78085e5b2a4c",
+      "seconds": 4.32,
+      "sample_rate_hz": 44100
+    },
+    {
+      "file": "D-supertonic_m32-en-brand-01.wav",
+      "sha256": "98ee552fda96fa7159212fb5da20a077f51b35201ea083bf5d125e15233eca49",
+      "seconds": 3.69,
+      "sample_rate_hz": 44100
+    },
+    {
+      "file": "D-supertonic_m32-en-paragraph-01.wav",
+      "sha256": "38459732ee2e5afd83f9940e9a952748c321b2afbdf67f5bebf892b93e8c07a8",
+      "seconds": 17.14,
+      "sample_rate_hz": 44100
+    },
+    {
+      "file": "D-supertonic_m33-en-mixedpunct-01.wav",
+      "sha256": "d6fd50ea5f9aea15455041b35e6d62f56091e7e402a3310af05208bdd82846f1",
+      "seconds": 6.34,
+      "sample_rate_hz": 44100
+    },
+    {
+      "file": "D-supertonic_m33-pros-howq-bare.wav",
+      "sha256": "87cf9b17fd43df64adfabf239fb2a2dc82966ddfd3dd081cd0351486a78eb6ee",
+      "seconds": 1.39,
+      "sample_rate_hz": 44100
+    },
+    {
+      "file": "D-supertonic_m33-pros-howq.wav",
+      "sha256": "a1b15e3b23d09fd5cdcf1d08fe2969836c3bc0f046f10a09a067a2eaff18e514",
+      "seconds": 1.39,
+      "sample_rate_hz": 44100
+    }
+  ]
+}

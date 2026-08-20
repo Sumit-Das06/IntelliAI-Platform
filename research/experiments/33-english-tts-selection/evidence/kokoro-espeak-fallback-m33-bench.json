@@ -1,0 +1,278 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "wsl_synth_bench.py",
+  "engine": "kokoro-en",
+  "identity": {
+    "engine": "kokoro-82m (upstream KPipeline)",
+    "lang_code": "a",
+    "voice": "af_heart",
+    "kokoro_version": "0.9.4",
+    "hub_repo": "hexgrad/Kokoro-82M",
+    "hub_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "gpl_espeak_chain_in_process": true
+  },
+  "sample_rate_hz": 24000,
+  "probes_file": "probe-texts-en-v1.json",
+  "repetitions": 2,
+  "load_seconds": 9.37,
+  "rss_before_load_mib": 12.8,
+  "rss_after_load_mib": 1064.3,
+  "rss_peak_mib": 2294.6,
+  "probe_count": 25,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 0.1644,
+  "rtf_p95": 0.1915,
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "A_normal",
+      "chars": 64,
+      "wall_ms": 781.5,
+      "ttfa_ms": 781.4,
+      "audio_seconds": 4.425,
+      "rtf": 0.1766
+    },
+    {
+      "id": "m33-en-short-01",
+      "language": "en",
+      "category": "B_short",
+      "chars": 22,
+      "wall_ms": 293.1,
+      "ttfa_ms": 293.0,
+      "audio_seconds": 1.75,
+      "rtf": 0.1675
+    },
+    {
+      "id": "m33-en-longsent-01",
+      "language": "en",
+      "category": "C_long_sentence",
+      "chars": 211,
+      "wall_ms": 2066.6,
+      "ttfa_ms": 2066.3,
+      "audio_seconds": 12.95,
+      "rtf": 0.1596
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "language": "en",
+      "category": "D_paragraph",
+      "chars": 246,
+      "wall_ms": 3069.6,
+      "ttfa_ms": 3069.0,
+      "audio_seconds": 16.425,
+      "rtf": 0.1869
+    },
+    {
+      "id": "m32-pros-en-q",
+      "language": "en",
+      "category": "E_question",
+      "chars": 38,
+      "wall_ms": 413.1,
+      "ttfa_ms": 413.0,
+      "audio_seconds": 2.45,
+      "rtf": 0.1686
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "language": "en",
+      "category": "E_question",
+      "chars": 37,
+      "wall_ms": 407.1,
+      "ttfa_ms": 407.0,
+      "audio_seconds": 2.475,
+      "rtf": 0.1645
+    },
+    {
+      "id": "m33-en-exclaim-01",
+      "language": "en",
+      "category": "F_exclamation",
+      "chars": 40,
+      "wall_ms": 484.6,
+      "ttfa_ms": 484.5,
+      "audio_seconds": 3.1,
+      "rtf": 0.1563
+    },
+    {
+      "id": "m33-en-exclaim-01-bare",
+      "language": "en",
+      "category": "F_exclamation",
+      "chars": 40,
+      "wall_ms": 486.4,
+      "ttfa_ms": 486.3,
+      "audio_seconds": 3.1,
+      "rtf": 0.1569
+    },
+    {
+      "id": "en-numbers-01",
+      "language": "en",
+      "category": "G_numbers",
+      "chars": 47,
+      "wall_ms": 766.7,
+      "ttfa_ms": 766.5,
+      "audio_seconds": 4.9,
+      "rtf": 0.1565
+    },
+    {
+      "id": "m33-en-phone-01",
+      "language": "en",
+      "category": "G_numbers",
+      "chars": 64,
+      "wall_ms": 1078.2,
+      "ttfa_ms": 1077.9,
+      "audio_seconds": 6.575,
+      "rtf": 0.164
+    },
+    {
+      "id": "en-dates-01",
+      "language": "en",
+      "category": "H_dates",
+      "chars": 62,
+      "wall_ms": 784.4,
+      "ttfa_ms": 784.3,
+      "audio_seconds": 5.05,
+      "rtf": 0.1553
+    },
+    {
+      "id": "m33-en-dateslash-01",
+      "language": "en",
+      "category": "H_dates",
+      "chars": 36,
+      "wall_ms": 654.3,
+      "ttfa_ms": 654.2,
+      "audio_seconds": 4.075,
+      "rtf": 0.1606
+    },
+    {
+      "id": "en-currency-01",
+      "language": "en",
+      "category": "I_currency",
+      "chars": 62,
+      "wall_ms": 1172.1,
+      "ttfa_ms": 1171.8,
+      "audio_seconds": 7.2,
+      "rtf": 0.1628
+    },
+    {
+      "id": "m33-en-percent-01",
+      "language": "en",
+      "category": "I_currency",
+      "chars": 82,
+      "wall_ms": 1198.0,
+      "ttfa_ms": 1197.7,
+      "audio_seconds": 7.375,
+      "rtf": 0.1624
+    },
+    {
+      "id": "m32-en-names-01",
+      "language": "en",
+      "category": "J_proper_names",
+      "chars": 66,
+      "wall_ms": 670.1,
+      "ttfa_ms": 669.9,
+      "audio_seconds": 4.375,
+      "rtf": 0.1532
+    },
+    {
+      "id": "m33-en-acronym-01",
+      "language": "en",
+      "category": "K_acronyms",
+      "chars": 75,
+      "wall_ms": 1210.8,
+      "ttfa_ms": 1210.6,
+      "audio_seconds": 7.65,
+      "rtf": 0.1583
+    },
+    {
+      "id": "en-technical-01",
+      "language": "en",
+      "category": "L_technical",
+      "chars": 67,
+      "wall_ms": 831.4,
+      "ttfa_ms": 831.2,
+      "audio_seconds": 5.15,
+      "rtf": 0.1614
+    },
+    {
+      "id": "m32-en-brand-01",
+      "language": "en",
+      "category": "M_product_names",
+      "chars": 47,
+      "wall_ms": 635.6,
+      "ttfa_ms": 635.4,
+      "audio_seconds": 3.85,
+      "rtf": 0.1651
+    },
+    {
+      "id": "m33-en-product-02",
+      "language": "en",
+      "category": "M_product_names",
+      "chars": 70,
+      "wall_ms": 1131.5,
+      "ttfa_ms": 1131.2,
+      "audio_seconds": 6.85,
+      "rtf": 0.1652
+    },
+    {
+      "id": "m33-en-mixedpunct-01",
+      "language": "en",
+      "category": "N_mixed_punctuation",
+      "chars": 86,
+      "wall_ms": 920.4,
+      "ttfa_ms": 920.2,
+      "audio_seconds": 5.6,
+      "rtf": 0.1644
+    },
+    {
+      "id": "m32-en-long-01",
+      "language": "en",
+      "category": "O_long_form",
+      "chars": 795,
+      "wall_ms": 8738.1,
+      "ttfa_ms": 3915.7,
+      "audio_seconds": 45.625,
+      "rtf": 0.1915
+    },
+    {
+      "id": "m33-pros-comma",
+      "language": "en",
+      "category": "P_prosody_comma",
+      "chars": 13,
+      "wall_ms": 310.8,
+      "ttfa_ms": 310.7,
+      "audio_seconds": 1.675,
+      "rtf": 0.1855
+    },
+    {
+      "id": "m33-pros-comma-bare",
+      "language": "en",
+      "category": "P_prosody_comma",
+      "chars": 12,
+      "wall_ms": 291.4,
+      "ttfa_ms": 291.3,
+      "audio_seconds": 1.6,
+      "rtf": 0.1821
+    },
+    {
+      "id": "m33-pros-howq",
+      "language": "en",
+      "category": "P_prosody_question",
+      "chars": 12,
+      "wall_ms": 277.0,
+      "ttfa_ms": 276.9,
+      "audio_seconds": 1.5,
+      "rtf": 0.1847
+    },
+    {
+      "id": "m33-pros-howq-bare",
+      "language": "en",
+      "category": "P_prosody_question",
+      "chars": 12,
+      "wall_ms": 294.2,
+      "ttfa_ms": 294.1,
+      "audio_seconds": 1.525,
+      "rtf": 0.1929
+    }
+  ]
+}
