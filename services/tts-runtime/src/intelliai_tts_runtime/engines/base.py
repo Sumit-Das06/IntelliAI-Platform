@@ -1,7 +1,13 @@
 """The engine seam: what every synthesis adapter must look like."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Final, Protocol
+
+#: The runtime's canonical output rate. Every hosted engine renders at
+#: this rate (reference and kokoro both pin it); the streaming binding
+#: needs it BEFORE the first chunk exists, so it is a seam-level fact.
+CANONICAL_SAMPLE_RATE_HZ: Final = 24_000
 
 
 @dataclass(frozen=True)
@@ -32,10 +38,28 @@ class SynthesisEngine(Protocol):
     state, and it is read-only after load). ``voice`` is an ENGINE voice
     reference, already resolved from the public id — engines never see
     public identities.
+
+    ``synthesize_stream`` (M36) is the progressive form: it calls
+    ``emit(pcm_chunk)`` as each internally-synthesized piece completes,
+    in speech order, gapless when concatenated. ``emit`` may raise (the
+    caller's cancellation signal); the engine must let that propagate —
+    a cancelled stream stops within one piece, never orphans work.
     """
 
     def synthesize(self, text: str, voice: str, speed: float | None) -> SynthesizedAudio:
         """Turn canonical text into canonical PCM. Pure computation."""
+        ...
+
+    def synthesize_stream(
+        self,
+        text: str,
+        voice: str,
+        speed: float | None,
+        emit: "Callable[[bytes], None]",
+    ) -> None:
+        """Emit canonical PCM chunk by chunk, first chunk as early as
+        possible. Concatenated chunks must equal one continuous
+        utterance of the whole text."""
         ...
 
     def close(self) -> None:

@@ -7,6 +7,8 @@ short fixed sentence through the default voice — of the engine's OWN
 bindings, which is what makes the probe correct in a multi-slot runtime.
 """
 
+from collections.abc import Callable
+
 from intelliai_tts_runtime.engines import SynthesizedAudio
 from intelliai_tts_runtime.main import make_synthesis_warm_up
 from intelliai_tts_runtime.voices import KOKORO_VOICES, REFERENCE_VOICES, VoiceCatalog
@@ -19,6 +21,11 @@ class RecordingEngine:
     def synthesize(self, text: str, voice: str, speed: float | None) -> SynthesizedAudio:
         self.calls.append((text, voice, speed))
         return SynthesizedAudio(pcm=b"\x00\x00", sample_rate_hz=24_000)
+
+    def synthesize_stream(
+        self, text: str, voice: str, speed: float | None, emit: Callable[[bytes], None]
+    ) -> None:
+        emit(self.synthesize(text, voice, speed).pcm)
 
     def close(self) -> None:
         return None

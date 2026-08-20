@@ -110,17 +110,22 @@ def _kokoro_binding_for(settings: Settings) -> EngineBinding:
     constructor; the engine only consumes the result.
     """
     base = CATALOG["kokoro"]
-    if settings.oov_fallback != "espeak":
-        return base
-    fallback = EspeakSubprocessFallback(
-        settings.espeak_binary,
-        version_prefix=settings.espeak_version_pin,
-        timeout_seconds=settings.espeak_timeout_seconds,
+    fallback = (
+        EspeakSubprocessFallback(
+            settings.espeak_binary,
+            version_prefix=settings.espeak_version_pin,
+            timeout_seconds=settings.espeak_timeout_seconds,
+        )
+        if settings.oov_fallback == "espeak"
+        else None
     )
+    first_chunk = settings.stream_first_chunk_chars
     return EngineBinding(
         artifact=base.artifact,
         voices=base.voices,
-        loader=lambda local_dir: kokoro.load_kokoro(local_dir, oov_fallback=fallback),
+        loader=lambda local_dir: kokoro.load_kokoro(
+            local_dir, oov_fallback=fallback, stream_first_chunk_chars=first_chunk
+        ),
         files=base.files,
     )
 

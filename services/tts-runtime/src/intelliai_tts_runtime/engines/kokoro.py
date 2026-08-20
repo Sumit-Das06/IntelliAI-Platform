@@ -38,7 +38,7 @@ import re
 import sys
 import time
 import types
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any, Final
 
@@ -156,6 +156,49 @@ def _chunks(text: str) -> Iterator[str]:
         yield " ".join(buffer)
 
 
+def _stream_chunks(text: str, first_budget: int) -> Iterator[str]:
+    """The M36 streaming plan: a deliberately SMALL first chunk (lowest
+    time-to-first-audio), then the regular merge budget for the rest.
+
+    The first chunk is whole sentences up to ``first_budget`` chars — at
+    least one sentence, word-wrapped if that one sentence alone exceeds
+    the budget (its first wrap piece streams first, the rest rejoin the
+    regular plan). Deterministic, order-preserving, no text lost."""
+    sentences = [s.strip() for s in _SENTENCE_SPLIT.split(text) if s.strip()]
+    if not sentences:
+        return
+    first: list[str] = []
+    length = 0
+    while sentences and (not first or length + len(sentences[0]) + 1 <= first_budget):
+        sentence = sentences.pop(0)
+        if not first and len(sentence) > first_budget:
+            pieces = list(_wrap_long_sentence_to(sentence, first_budget))
+            yield pieces[0]
+            remainder = " ".join(pieces[1:])
+            if remainder:
+                sentences.insert(0, remainder)
+            break
+        first.append(sentence)
+        length += len(sentence) + 1
+    if first:
+        yield " ".join(first)
+    if sentences:
+        yield from _chunks(" ".join(sentences))
+
+
+def _wrap_long_sentence_to(sentence: str, budget: int) -> Iterator[str]:
+    piece: list[str] = []
+    length = 0
+    for word in sentence.split():
+        if length + len(word) + 1 > budget and piece:
+            yield " ".join(piece)
+            piece, length = [], 0
+        piece.append(word)
+        length += len(word) + 1
+    if piece:
+        yield " ".join(piece)
+
+
 def _bounded_phonemes(phonemes: str) -> list[str]:
     """Defensive guard: no phoneme string ever exceeds the model limit."""
     if len(phonemes) <= _MAX_PHONEMES:
@@ -177,11 +220,13 @@ class KokoroEngine:
         g2p: Any,
         voice_packs: dict[str, Any],
         oov_fallback: EspeakSubprocessFallback | None = None,
+        stream_first_chunk_chars: int = 90,
     ) -> None:
         self._model = model
         self._g2p = g2p
         self._voice_packs = voice_packs
         self._oov_fallback = oov_fallback
+        self._stream_first_chunk_chars = stream_first_chunk_chars
 
     def _needs_fallback(self, phonemes: str | None) -> bool:
         return phonemes is None or _UNKNOWN_MARK in phonemes
@@ -214,34 +259,61 @@ class KokoroEngine:
         logger.info("oov_rescued", tokens=rescued_count, unknown=len(unknown))
         return "".join(pieces).strip()
 
-    def synthesize(self, text: str, voice: str, speed: float | None) -> SynthesizedAudio:
+    def _render(
+        self,
+        chunks: Iterator[str],
+        voice: str,
+        speed: float | None,
+        emit: Callable[[bytes], None],
+    ) -> None:
+        """One model pass per bounded phoneme piece, emitted in order.
+        ``emit`` may raise (the pool's cancellation signal) — it
+        propagates, so a cancelled stream stops between pieces."""
         import torch
 
         pack = self._voice_packs[voice]
-        pcm = bytearray()
-        first_chunk_ms: float | None = None
-        started = time.perf_counter()
         with torch.inference_mode():
-            for chunk in _chunks(text):
+            for chunk in chunks:
                 phonemes = self._phonemize(chunk)
                 if not phonemes:
                     continue
                 for piece in _bounded_phonemes(phonemes):
                     ref_s = pack[len(piece) - 1]
                     audio = self._model(piece, ref_s, speed if speed is not None else 1.0)
-                    pcm += (audio.clamp(-1.0, 1.0) * 32767.0).to(torch.int16).numpy().tobytes()
-                    if first_chunk_ms is None and pcm:
-                        first_chunk_ms = (time.perf_counter() - started) * 1000.0
+                    emit((audio.clamp(-1.0, 1.0) * 32767.0).to(torch.int16).numpy().tobytes())
+
+    def synthesize(self, text: str, voice: str, speed: float | None) -> SynthesizedAudio:
+        # The M35 whole-body plan, unchanged: merged chunks, one buffer.
+        pcm = bytearray()
+        first_chunk_ms: float | None = None
+        started = time.perf_counter()
+
+        def collect(piece_pcm: bytes) -> None:
+            nonlocal first_chunk_ms
+            pcm.extend(piece_pcm)
+            if first_chunk_ms is None and pcm:
+                first_chunk_ms = (time.perf_counter() - started) * 1000.0
+
+        self._render(_chunks(text), voice, speed, collect)
         return SynthesizedAudio(
             pcm=bytes(pcm), sample_rate_hz=SAMPLE_RATE_HZ, first_chunk_ms=first_chunk_ms
         )
+
+    def synthesize_stream(
+        self, text: str, voice: str, speed: float | None, emit: Callable[[bytes], None]
+    ) -> None:
+        # The M36 streaming plan: small first chunk for TTFA, regular
+        # merge budget after — same phonemization, same model passes.
+        self._render(_stream_chunks(text, self._stream_first_chunk_chars), voice, speed, emit)
 
     def close(self) -> None:
         self._voice_packs.clear()
 
 
 def load_kokoro(
-    local_dir: Path | None, oov_fallback: EspeakSubprocessFallback | None = None
+    local_dir: Path | None,
+    oov_fallback: EspeakSubprocessFallback | None = None,
+    stream_first_chunk_chars: int = 90,
 ) -> KokoroEngine:
     """Slot loader: verified artifact directory -> a loaded engine.
 
@@ -272,4 +344,10 @@ def load_kokoro(
         oov_fallback="espeak-subprocess" if oov_fallback is not None else "off",
         espeak_version=oov_fallback.version if oov_fallback is not None else None,
     )
-    return KokoroEngine(model=model, g2p=g2p, voice_packs=voice_packs, oov_fallback=oov_fallback)
+    return KokoroEngine(
+        model=model,
+        g2p=g2p,
+        voice_packs=voice_packs,
+        oov_fallback=oov_fallback,
+        stream_first_chunk_chars=stream_first_chunk_chars,
+    )

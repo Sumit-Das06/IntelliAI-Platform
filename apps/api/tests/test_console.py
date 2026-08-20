@@ -568,6 +568,14 @@ async def test_the_speech_studio_is_a_real_tts_client(
         "2000-character limit",
     ):
         assert phrase in page
+    # M36: progressive playback is the page's default path - stream mode
+    # requested, gapless AudioContext scheduling, live states, and a
+    # whole-body fallback for browsers without the APIs.
+    assert "stream: stream" in page
+    assert "AudioContext" in page
+    for state in ("Playing…", "Completed.", "Stopped.", "first audio"):
+        assert state in page
+    assert "generateWholeBody" in page
 
 
 async def test_the_services_card_links_the_speech_studio_without_claiming_launch(

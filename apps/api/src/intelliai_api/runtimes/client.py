@@ -8,6 +8,7 @@ without the Protocol changing. M8 streaming arrives as an ADDITIVE method
 `transcribe` — the same append-only discipline as the contract itself.
 """
 
+from collections.abc import AsyncIterator
 from typing import Protocol
 
 from intelliai_runtime_contract import (
@@ -60,6 +61,16 @@ class RuntimeClient(Protocol):
         operational metadata (ADR-0020) — this seam returns both without
         knowing how they traveled. Added ADDITIVELY (the module's own
         evolution rule); same failure vocabulary as `transcribe`."""
+        ...
+
+    async def synthesize_stream(
+        self, request: SpeechSynthesisRequest
+    ) -> tuple[AsyncIterator[bytes], RuntimeResponse[SpeechSynthesisResult]]:
+        """The progressive form (M36, additive): the envelope up front
+        (pre-flight identity; duration 0.0 by contract), then audio bytes
+        as the runtime produces them. Pre-stream failures raise exactly
+        like `synthesize`; a mid-stream failure ends the iterator early.
+        The caller MUST exhaust or close the iterator."""
         ...
 
     async def close(self) -> None:

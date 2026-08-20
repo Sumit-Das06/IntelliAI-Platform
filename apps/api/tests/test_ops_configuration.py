@@ -415,7 +415,7 @@ def test_tts_smoke_is_the_stale_image_guard() -> None:
     # version floor, artifact identity, posture keys, and a real
     # gateway synthesis — all asserted by one script with a Make wrapper.
     smoke = (REPO / "infra/tts-smoke.sh").read_text(encoding="utf-8")
-    assert 'VERSION_FLOOR="0.2.0"' in smoke
+    assert 'VERSION_FLOOR="0.3.0"' in smoke
     assert "stale image" in smoke
     assert "kokoro-82m" in smoke
     assert "oov_fallback" in smoke

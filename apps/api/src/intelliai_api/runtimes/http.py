@@ -7,6 +7,7 @@ cross-pin test imports both sides and fails CI on any drift — one source
 of truth per side, machine-checked equality between them.
 """
 
+from collections.abc import AsyncIterator
 from typing import Final
 
 import httpx
@@ -116,6 +117,65 @@ class HTTPRuntimeClient:
             logger.info("runtime_error_malformed", status=response.status_code)
             raise RuntimeUnavailableError("malformed runtime error") from exc
         raise RuntimeCallError(error)
+
+    async def synthesize_stream(
+        self, request: SpeechSynthesisRequest
+    ) -> tuple[AsyncIterator[bytes], RuntimeResponse[SpeechSynthesisResult]]:
+        """The progressive form (M36): headers first, audio as it lands.
+
+        The envelope arrives on the SAME header as whole-body — in
+        streaming mode it carries pre-flight identity (voice, characters;
+        duration 0.0 by contract, measured downstream from delivered
+        bytes). Errors before the stream begins parse exactly like the
+        whole-body path; a failure mid-stream surfaces as the byte
+        iterator ending early (the caller decides what that means).
+        """
+        headers = {}
+        request_id = structlog.contextvars.get_contextvars().get("request_id")
+        if isinstance(request_id, str):
+            headers[HEADER_REQUEST_ID] = request_id  # correlation crosses planes
+        stream_request = self._client.build_request(
+            "POST",
+            ROUTE_SYNTHESIZE,
+            json=request.model_dump(mode="json"),
+            headers=headers,
+        )
+        try:
+            response = await self._client.send(stream_request, stream=True)
+        except httpx.HTTPError as exc:
+            logger.info("runtime_unreachable", detail=type(exc).__name__)
+            raise RuntimeUnavailableError(str(exc)) from exc
+
+        if response.status_code != 200:
+            body = await response.aread()
+            await response.aclose()
+            try:
+                error = RuntimeErrorResponse.model_validate_json(body)
+            except pydantic.ValidationError as exc:
+                logger.info("runtime_error_malformed", status=response.status_code)
+                raise RuntimeUnavailableError("malformed runtime error") from exc
+            raise RuntimeCallError(error)
+
+        envelope_header = response.headers.get(HEADER_RUNTIME_ENVELOPE)
+        if envelope_header is None:
+            await response.aclose()
+            logger.info("runtime_envelope_missing")
+            raise RuntimeUnavailableError("missing runtime envelope")
+        try:
+            envelope = RuntimeResponse[SpeechSynthesisResult].model_validate_json(envelope_header)
+        except pydantic.ValidationError as exc:
+            await response.aclose()
+            logger.info("runtime_envelope_malformed")
+            raise RuntimeUnavailableError("malformed runtime envelope") from exc
+
+        async def body_iter() -> AsyncIterator[bytes]:
+            try:
+                async for chunk in response.aiter_bytes():
+                    yield chunk
+            finally:
+                await response.aclose()
+
+        return body_iter(), envelope
 
     async def close(self) -> None:
         await self._client.aclose()

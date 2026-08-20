@@ -7,12 +7,13 @@ JSON (api/errors.py).
 """
 
 import time
+from collections.abc import AsyncIterator, Callable
 from functools import partial
 from typing import Any
 
 import structlog
 from fastapi import APIRouter, Request, Response
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from intelliai_runtime_contract import (
     CONTRACT_VERSION,
@@ -32,8 +33,9 @@ from intelliai_tts_runtime.api.binding import (
     MEDIA_TYPE_WAV,
     ROUTE_SYNTHESIZE,
 )
-from intelliai_tts_runtime.api.wav import encode_wav
+from intelliai_tts_runtime.api.wav import encode_wav, streaming_wav_header
 from intelliai_tts_runtime.engines import SynthesisEngine, SynthesizedAudio
+from intelliai_tts_runtime.engines.base import CANONICAL_SAMPLE_RATE_HZ
 from intelliai_tts_runtime.identity import SERVICE_NAME, runtime_metadata
 from intelliai_tts_runtime.pipeline import TextPipeline
 from intelliai_tts_runtime.voices import VoiceCatalog
@@ -133,6 +135,41 @@ def _pipeline_and_synthesize(
     return timings, audio, body
 
 
+async def _stream_body(
+    first_pcm: bytes,
+    rest: AsyncIterator[bytes],
+    first_chunk_ms: float,
+    started: float,
+) -> AsyncIterator[bytes]:
+    """The streaming body: WAV preamble, the ALREADY-SYNTHESIZED first
+    piece, then PCM as each further piece lands.
+
+    The first piece was primed BEFORE headers (so refusals and
+    first-piece failures stay ordinary JSON errors, and TTFB honestly
+    equals first-audio-ready). The pool slot is held for the stream's
+    whole life; a disconnected client closes this generator, which
+    closes ``rest``, which cancels the producer between pieces —
+    bounded stop, no orphan.
+    """
+    bytes_sent = 0
+    try:
+        yield streaming_wav_header(CANONICAL_SAMPLE_RATE_HZ)
+        yield first_pcm
+        bytes_sent = len(first_pcm)
+        async for pcm in rest:
+            bytes_sent += len(pcm)
+            yield pcm
+    finally:
+        await rest.aclose()  # type: ignore[attr-defined]
+        # Counts only — never the text (customer-owned content).
+        logger.info(
+            "synthesis_stream_finished",
+            first_chunk_ms=round(first_chunk_ms, 1),
+            audio_seconds=round(bytes_sent / 2 / CANONICAL_SAMPLE_RATE_HZ, 3),
+            total_ms=round((time.perf_counter() - started) * 1000.0, 1),
+        )
+
+
 @router.post(ROUTE_SYNTHESIZE)
 async def synthesize(request: Request, synthesis_request: SpeechSynthesisRequest) -> Response:
     started = time.perf_counter()
@@ -150,6 +187,59 @@ async def synthesize(request: Request, synthesis_request: SpeechSynthesisRequest
     resolution_started = time.perf_counter()
     public_voice, engine_voice = catalog.voices_for(loaded.engine).resolve(synthesis_request.voice)
     resolution_ms = (time.perf_counter() - resolution_started) * 1000.0
+
+    if synthesis_request.stream:
+        # Validation + normalization run INLINE (cheap, synchronous)
+        # BEFORE any byte of response: invalid input stays an ordinary
+        # JSON error — a stream only ever begins for an accepted request.
+        output = pipeline.process(synthesis_request.text)
+        characters = len(synthesis_request.text)
+        settings = request.app.state.settings
+        produce: Callable[[Callable[[bytes], None]], None] = partial(
+            loaded.engine.synthesize_stream,
+            output.text,
+            engine_voice,
+            synthesis_request.speed,
+        )
+        rest = pool.run_stream(produce, buffer_items=settings.stream_buffer_chunks)
+        # PRIME: admission and the FIRST synthesized piece happen before
+        # any response byte — overload, engine failure on piece one, and
+        # every refusal stay ordinary JSON errors, and time-to-first-byte
+        # honestly equals first-audio-ready.
+        try:
+            first_pcm = await anext(rest)
+            first_chunk_ms = (time.perf_counter() - started) * 1000.0
+        except StopAsyncIteration:
+            first_pcm, first_chunk_ms = b"", (time.perf_counter() - started) * 1000.0
+        # The streaming envelope is the PRE-flight identity: usage
+        # (characters — known up front, the only billable unit) and the
+        # served voice are exact; duration_seconds is 0.0 BY CONTRACT
+        # here (unknowable before synthesis — the gateway measures the
+        # delivered bytes). Nothing generated ever rides a header.
+        envelope = RuntimeResponse[SpeechSynthesisResult](
+            output=SpeechSynthesisResult(
+                duration_seconds=0.0,
+                sample_rate_hz=CANONICAL_SAMPLE_RATE_HZ,
+                voice=public_voice,
+                characters=characters,
+            ),
+            model=loaded.artifact,
+            usage=(Usage(unit=UsageUnit.CHARACTERS, amount=characters),),
+            timing=RuntimeTiming(
+                total_ms=(time.perf_counter() - started) * 1000.0,
+                stages={
+                    "voice_resolution": resolution_ms,
+                    **output.timings_ms,
+                    "first_chunk": first_chunk_ms,
+                },
+            ),
+            runtime=runtime_metadata(),
+        )
+        return StreamingResponse(
+            _stream_body(first_pcm, rest, first_chunk_ms, started),
+            media_type=MEDIA_TYPE_WAV,
+            headers={**_CONTRACT_HEADERS, HEADER_RUNTIME_ENVELOPE: envelope.model_dump_json()},
+        )
 
     # Admission happens BEFORE any expensive work: validation, synthesis,
     # and containerization share one bounded slot.

@@ -15,6 +15,7 @@ all measurable facts, not mocks.
 """
 
 import math
+from collections.abc import Callable
 from typing import Final
 
 from intelliai_tts_runtime.engines.base import SynthesizedAudio
@@ -29,19 +30,32 @@ _AMPLITUDE: Final = 0.3  # comfortable, nowhere near clipping
 class ReferenceSynthesisEngine:
     """Deterministic synthesis: a tone sequence derived from the text."""
 
+    def _char_pcm(self, char: str, base_hz: float, samples_per_char: int) -> bytes:
+        # One chromatic step per character code: text changes the audio.
+        frequency = base_hz * 2 ** ((ord(char) % 12) / 12)
+        pcm = bytearray()
+        for i in range(samples_per_char):
+            value = _AMPLITUDE * math.sin(2 * math.pi * frequency * i / SAMPLE_RATE_HZ)
+            pcm += int(value * 32767).to_bytes(2, "little", signed=True)
+        return bytes(pcm)
+
     def synthesize(self, text: str, voice: str, speed: float | None) -> SynthesizedAudio:
+        pcm = bytearray()
+        self.synthesize_stream(text, voice, speed, pcm.extend)
+        return SynthesizedAudio(pcm=bytes(pcm), sample_rate_hz=SAMPLE_RATE_HZ)
+
+    def synthesize_stream(
+        self, text: str, voice: str, speed: float | None, emit: Callable[[bytes], None]
+    ) -> None:
+        """One chunk per character — deterministic multi-chunk streaming,
+        so chunk order, continuity, and stream==whole equality are all
+        provable facts in CI (concatenation is byte-identical to
+        ``synthesize`` by construction)."""
         base_hz = float(voice.removeprefix("tone:"))
         seconds_per_char = _SECONDS_PER_CHAR / (speed if speed is not None else 1.0)
         samples_per_char = max(1, int(SAMPLE_RATE_HZ * seconds_per_char))
-
-        pcm = bytearray()
         for char in text:
-            # One chromatic step per character code: text changes the audio.
-            frequency = base_hz * 2 ** ((ord(char) % 12) / 12)
-            for i in range(samples_per_char):
-                value = _AMPLITUDE * math.sin(2 * math.pi * frequency * i / SAMPLE_RATE_HZ)
-                pcm += int(value * 32767).to_bytes(2, "little", signed=True)
-        return SynthesizedAudio(pcm=bytes(pcm), sample_rate_hz=SAMPLE_RATE_HZ)
+            emit(self._char_pcm(char, base_hz, samples_per_char))
 
     def close(self) -> None:  # nothing to release; the protocol is the point
         return

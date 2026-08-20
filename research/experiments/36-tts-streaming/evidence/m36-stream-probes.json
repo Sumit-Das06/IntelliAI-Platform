@@ -1,0 +1,156 @@
+{
+  "experiment": "36-tts-streaming",
+  "instrument": "m36_stream_probes.py",
+  "rows": [
+    {
+      "id": "en-general-01",
+      "ttfa_ms": 3189.4,
+      "total_ms": 3195.8,
+      "audio_seconds": 4.425
+    },
+    {
+      "id": "m33-en-short-01",
+      "ttfa_ms": 607.6,
+      "total_ms": 614.3,
+      "audio_seconds": 1.75
+    },
+    {
+      "id": "m33-en-longsent-01",
+      "ttfa_ms": 1371.9,
+      "total_ms": 3150.7,
+      "audio_seconds": 13.375
+    },
+    {
+      "id": "m32-en-paragraph-01",
+      "ttfa_ms": 768.7,
+      "total_ms": 4158.6,
+      "audio_seconds": 16.75
+    },
+    {
+      "id": "m32-pros-en-q",
+      "ttfa_ms": 753.6,
+      "total_ms": 760.4,
+      "audio_seconds": 2.45
+    },
+    {
+      "id": "m32-pros-en-q-bare",
+      "ttfa_ms": 738.3,
+      "total_ms": 744.9,
+      "audio_seconds": 2.475
+    },
+    {
+      "id": "m33-en-exclaim-01",
+      "ttfa_ms": 876.9,
+      "total_ms": 881.8,
+      "audio_seconds": 3.1
+    },
+    {
+      "id": "m33-en-exclaim-01-bare",
+      "ttfa_ms": 833.3,
+      "total_ms": 839.6,
+      "audio_seconds": 3.1
+    },
+    {
+      "id": "en-numbers-01",
+      "ttfa_ms": 1278.5,
+      "total_ms": 1285.9,
+      "audio_seconds": 4.9
+    },
+    {
+      "id": "m33-en-phone-01",
+      "ttfa_ms": 1400.7,
+      "total_ms": 2041.0,
+      "audio_seconds": 7.775
+    },
+    {
+      "id": "en-dates-01",
+      "ttfa_ms": 1283.6,
+      "total_ms": 1289.9,
+      "audio_seconds": 5.05
+    },
+    {
+      "id": "m33-en-dateslash-01",
+      "ttfa_ms": 1075.5,
+      "total_ms": 1083.0,
+      "audio_seconds": 3.875
+    },
+    {
+      "id": "en-currency-01",
+      "ttfa_ms": 1725.7,
+      "total_ms": 1733.2,
+      "audio_seconds": 7.2
+    },
+    {
+      "id": "m33-en-percent-01",
+      "ttfa_ms": 1576.2,
+      "total_ms": 2133.9,
+      "audio_seconds": 8.3
+    },
+    {
+      "id": "m32-en-names-01",
+      "ttfa_ms": 1228.3,
+      "total_ms": 1235.9,
+      "audio_seconds": 4.55
+    },
+    {
+      "id": "m33-en-acronym-01",
+      "ttfa_ms": 1752.4,
+      "total_ms": 1757.9,
+      "audio_seconds": 7.65
+    },
+    {
+      "id": "en-technical-01",
+      "ttfa_ms": 1296.0,
+      "total_ms": 1303.1,
+      "audio_seconds": 5.15
+    },
+    {
+      "id": "m32-en-brand-01",
+      "ttfa_ms": 1035.2,
+      "total_ms": 1040.3,
+      "audio_seconds": 3.825
+    },
+    {
+      "id": "m33-en-product-02",
+      "ttfa_ms": 1675.5,
+      "total_ms": 1687.0,
+      "audio_seconds": 6.95
+    },
+    {
+      "id": "m33-en-mixedpunct-01",
+      "ttfa_ms": 1376.7,
+      "total_ms": 1383.1,
+      "audio_seconds": 5.6
+    },
+    {
+      "id": "m32-en-long-01",
+      "ttfa_ms": 1213.7,
+      "total_ms": 11530.2,
+      "audio_seconds": 47.6
+    },
+    {
+      "id": "m33-pros-comma",
+      "ttfa_ms": 631.3,
+      "total_ms": 638.4,
+      "audio_seconds": 1.675
+    },
+    {
+      "id": "m33-pros-comma-bare",
+      "ttfa_ms": 639.8,
+      "total_ms": 647.4,
+      "audio_seconds": 1.6
+    },
+    {
+      "id": "m33-pros-howq",
+      "ttfa_ms": 567.1,
+      "total_ms": 573.4,
+      "audio_seconds": 1.5
+    },
+    {
+      "id": "m33-pros-howq-bare",
+      "ttfa_ms": 578.9,
+      "total_ms": 586.6,
+      "audio_seconds": 1.525
+    }
+  ]
+}

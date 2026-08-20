@@ -23,7 +23,7 @@ from intelliai_runtime_core.manager import (
     SlotSpec,
     SupportsClose,
 )
-from intelliai_runtime_core.pool import WorkerPool
+from intelliai_runtime_core.pool import StreamCancelled, WorkerPool
 from intelliai_runtime_core.store import ArtifactFile, ArtifactSpec, ArtifactStore, sha256_file
 
 __all__ = [
@@ -36,6 +36,7 @@ __all__ = [
     "ModelManager",
     "RuntimeServiceError",
     "SlotSpec",
+    "StreamCancelled",
     "SupportsClose",
     "WorkerPool",
     "configure_logging",

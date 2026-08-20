@@ -125,10 +125,40 @@ document.addEventListener("DOMContentLoaded", function () {
     charCount.textContent = textEl.value.length + " / 2000";
   });
 
+  /* ── Streaming playback state (M36) ──
+     Audio is delivered progressively and scheduled gaplessly on an
+     AudioContext created inside the click gesture (autoplay-safe).
+     The context/sources/abort belong to the CURRENT generation only. */
+  var live = { ctx: null, abort: null, sources: [], stopped: false };
+
+  function stopLivePlayback(reason) {
+    live.stopped = true;
+    if (live.abort) { try { live.abort.abort(); } catch (e) {} }
+    live.sources.forEach(function (source) { try { source.stop(); } catch (e) {} });
+    live.sources = [];
+    if (live.ctx) { try { live.ctx.close(); } catch (e) {} live.ctx = null; }
+    if (reason) setStatus(reason);
+  }
+
   stopBtn.addEventListener("click", function () {
+    stopLivePlayback("Stopped.");
     player.pause();
     player.currentTime = 0;
   });
+
+  function wavBlobFromPcm(pcmChunks, sampleRate) {
+    var total = 0;
+    pcmChunks.forEach(function (chunk) { total += chunk.byteLength; });
+    var header = new ArrayBuffer(44);
+    var view = new DataView(header);
+    function str(offset, s) { for (var i = 0; i < s.length; i++) view.setUint8(offset + i, s.charCodeAt(i)); }
+    str(0, "RIFF"); view.setUint32(4, 36 + total, true); str(8, "WAVE");
+    str(12, "fmt "); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true); view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true); str(36, "data"); view.setUint32(40, total, true);
+    return new Blob([header].concat(pcmChunks), { type: "audio/wav" });
+  }
 
   /* Friendly words for every failure the API can answer with — the UI
      never shows raw taxonomy codes, and never spins forever. */
@@ -143,6 +173,161 @@ document.addEventListener("DOMContentLoaded", function () {
     return message || "Something went wrong. Try again.";
   }
 
+  function finishSummary(voiceLabel, chars, marks, seconds) {
+    summaryEl.replaceChildren();
+    summaryEl.appendChild(summaryChip("Service", "IntelliAI TTS"));
+    summaryEl.appendChild(summaryChip("Voice", voiceLabel));
+    summaryEl.appendChild(summaryChip("Characters", String(chars)));
+    if (marks.firstAudio) summaryEl.appendChild(summaryChip("First audio", (marks.firstAudio / 1000).toFixed(2) + " s"));
+    summaryEl.appendChild(summaryChip("Total", (marks.total / 1000).toFixed(1) + " s"));
+    if (seconds) summaryEl.appendChild(summaryChip("Audio", seconds.toFixed(1) + " s"));
+    summaryEl.classList.remove("hidden");
+  }
+
+  function requestBody(text, stream) {
+    return JSON.stringify({
+      model: "intelliai-tts",
+      input: text,
+      voice: voiceEl.value,
+      speed: parseFloat(speedEl.value),
+      stream: stream
+    });
+  }
+
+  function apiHeaders(key) {
+    return {
+      "Authorization": "Bearer " + key,
+      "Content-Type": "application/json",
+      "X-IntelliAI-Client": "web"
+    };
+  }
+
+  /* Whole-body fallback: browsers without AudioContext/ReadableStream
+     keep the exact M35 experience. */
+  function generateWholeBody(key, text, started) {
+    return fetch("/v1/audio/speech", { method: "POST", headers: apiHeaders(key), body: requestBody(text, false) })
+      .then(function (response) {
+        document.getElementById("dev-request").textContent = response.headers.get("X-Request-ID") || "—";
+        document.getElementById("dev-status").textContent = String(response.status);
+        if (!response.ok || (response.headers.get("content-type") || "").indexOf("audio/") !== 0) {
+          return response.json().catch(function () { return {}; }).then(function (body) {
+            throw new Error(friendlyError(response.status, body));
+          });
+        }
+        return response.blob().then(function (blob) {
+          if (currentUrl) URL.revokeObjectURL(currentUrl);
+          currentUrl = URL.createObjectURL(blob);
+          player.src = currentUrl;
+          downloadLink.href = currentUrl;
+          playerWrap.classList.remove("hidden");
+          playerEmpty.classList.add("hidden");
+          finishSummary(voiceEl.options[voiceEl.selectedIndex].text, text.length,
+            { total: performance.now() - started }, null);
+          setStatus("Done — press play.", "ok");
+          return player.play().catch(function () {});
+        });
+      });
+  }
+
+  /* Streaming path (M36): schedule PCM gaplessly as it arrives; speech
+     starts on the first chunk, not after the last one. */
+  function generateStreaming(key, text, started) {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    live = { ctx: new Ctx({ sampleRate: 24000 }), abort: new AbortController(), sources: [], stopped: false };
+    var ctx = live.ctx;
+    var nextTime = 0;
+    var pcmChunks = [];
+    var carry = new Uint8Array(0);
+    var headerSkipped = 0;
+    var marks = { ttfb: null, firstAudio: null, total: null };
+
+    function schedule(bytes) {
+      var samples = new Int16Array(bytes.buffer, bytes.byteOffset, bytes.byteLength / 2);
+      var floats = new Float32Array(samples.length);
+      for (var i = 0; i < samples.length; i++) floats[i] = samples[i] / 32768;
+      var buffer = ctx.createBuffer(1, floats.length, 24000);
+      buffer.getChannelData(0).set(floats);
+      var source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      if (nextTime < ctx.currentTime + 0.06) nextTime = ctx.currentTime + 0.06;
+      source.start(nextTime);
+      nextTime += buffer.duration;
+      live.sources.push(source);
+      if (live.sources.length > 64) live.sources.splice(0, 32); // finished ones
+    }
+
+    return ctx.resume().then(function () {
+      return fetch("/v1/audio/speech", {
+        method: "POST", headers: apiHeaders(key), body: requestBody(text, true), signal: live.abort.signal
+      });
+    }).then(function (response) {
+      marks.ttfb = performance.now() - started;
+      document.getElementById("dev-request").textContent = response.headers.get("X-Request-ID") || "—";
+      document.getElementById("dev-status").textContent = String(response.status);
+      if (!response.ok || (response.headers.get("content-type") || "").indexOf("audio/") !== 0) {
+        return response.json().catch(function () { return {}; }).then(function (body) {
+          throw new Error(friendlyError(response.status, body));
+        });
+      }
+      var reader = response.body.getReader();
+      function pump() {
+        return reader.read().then(function (step) {
+          if (live.stopped) return "stopped";
+          if (step.done) return "done";
+          var merged = new Uint8Array(carry.length + step.value.length);
+          merged.set(carry); merged.set(step.value, carry.length);
+          if (headerSkipped < 44) {
+            var skip = Math.min(44 - headerSkipped, merged.length);
+            merged = merged.subarray(skip);
+            headerSkipped += skip;
+          }
+          var usable = merged.length - (merged.length % 2);
+          carry = merged.subarray(usable);
+          if (usable > 0) {
+            var pcm = merged.slice(0, usable);
+            pcmChunks.push(pcm);
+            schedule(pcm);
+            if (marks.firstAudio === null) {
+              marks.firstAudio = performance.now() - started;
+              setStatus("Playing…", "ok");
+              document.getElementById("dev-status").textContent =
+                "200 · first audio " + Math.round(marks.firstAudio) + " ms";
+            }
+          }
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (end) {
+      marks.total = performance.now() - started;
+      if (end === "stopped") return;
+      var seconds = 0;
+      pcmChunks.forEach(function (chunk) { seconds += chunk.byteLength; });
+      seconds = seconds / 2 / 24000;
+      var blob = wavBlobFromPcm(pcmChunks, 24000);
+      if (currentUrl) URL.revokeObjectURL(currentUrl);
+      currentUrl = URL.createObjectURL(blob);
+      player.src = currentUrl;         // replay affordance
+      downloadLink.href = currentUrl;  // download exactly what streamed
+      playerWrap.classList.remove("hidden");
+      playerEmpty.classList.add("hidden");
+      finishSummary(voiceEl.options[voiceEl.selectedIndex].text, text.length, marks, seconds);
+      var remaining = Math.max(0, (nextTime - ctx.currentTime) * 1000);
+      setTimeout(function () {
+        if (!live.stopped) setStatus("Completed.", "ok");
+        if (live.ctx === ctx) { try { ctx.close(); } catch (e) {} live.ctx = null; }
+      }, remaining + 150);
+    }).catch(function (error) {
+      if (live.stopped || (error && error.name === "AbortError")) { setStatus("Stopped."); return; }
+      if (marks.firstAudio !== null) {
+        setStatus("Playback was interrupted — try again.", "err");
+      } else {
+        setStatus((error && error.message) || "Something went wrong. Try again.", "err");
+      }
+    });
+  }
+
   generateBtn.addEventListener("click", function () {
     var key = IntelliAI.getKey();
     if (!key) { setStatus("Connect your API key on Home first.", "err"); return; }
@@ -150,51 +335,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!text) { setStatus("Type some text first.", "err"); return; }
     if (text.length > 2000) { setStatus("Text is over the 2000-character limit.", "err"); return; }
 
+    stopLivePlayback(null);           // one generation at a time
     generateBtn.disabled = true;
     setStatus("Generating speech…");
     var started = performance.now();
-    fetch("/v1/audio/speech", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + key,
-        "Content-Type": "application/json",
-        "X-IntelliAI-Client": "web"
-      },
-      body: JSON.stringify({
-        model: "intelliai-tts",
-        input: text,
-        voice: voiceEl.value,
-        speed: parseFloat(speedEl.value)
-      })
-    }).then(function (response) {
-      var elapsedMs = Math.round(performance.now() - started);
-      document.getElementById("dev-request").textContent =
-        response.headers.get("X-Request-ID") || "—";
-      document.getElementById("dev-status").textContent = String(response.status);
-      var type = response.headers.get("content-type") || "";
-      if (!response.ok || type.indexOf("audio/") !== 0) {
-        return response.json().catch(function () { return {}; }).then(function (body) {
-          throw new Error(friendlyError(response.status, body));
-        });
-      }
-      return response.blob().then(function (blob) {
-        if (currentUrl) URL.revokeObjectURL(currentUrl);
-        currentUrl = URL.createObjectURL(blob);
-        player.src = currentUrl;
-        downloadLink.href = currentUrl;
-        playerWrap.classList.remove("hidden");
-        playerEmpty.classList.add("hidden");
-        summaryEl.replaceChildren();
-        summaryEl.appendChild(summaryChip("Service", "IntelliAI TTS"));
-        summaryEl.appendChild(summaryChip("Voice", voiceEl.options[voiceEl.selectedIndex].text));
-        summaryEl.appendChild(summaryChip("Characters", String(text.length)));
-        summaryEl.appendChild(summaryChip("Time", (elapsedMs / 1000).toFixed(1) + " s"));
-        summaryEl.classList.remove("hidden");
-        setStatus("Done — press play.", "ok");
-        return player.play().catch(function () { /* autoplay policies: user presses play */ });
-      });
-    }).catch(function (error) {
-      setStatus(error.message || "Something went wrong. Try again.", "err");
+    var canStream = !!(window.AudioContext || window.webkitAudioContext) &&
+      !!(window.ReadableStream) && !!(window.AbortController);
+    var run = canStream ? generateStreaming(key, text, started) : generateWholeBody(key, text, started);
+    run.catch(function (error) {
+      setStatus((error && error.message) || "Something went wrong. Try again.", "err");
     }).finally(function () {
       generateBtn.disabled = false;
     });

@@ -49,6 +49,16 @@ class Settings(BaseSettings):
     # punctuation pattern — capabilities arrive explicitly, never by
     # surprise).
     oov_fallback: Literal["off", "espeak"] = "off"
+
+    # ── Streaming (M36) ─────────────────────────────────────────────────
+    # First-chunk text budget for `stream=true` requests: whole sentences
+    # up to this many chars synthesize FIRST so audio starts early; the
+    # rest rides the regular merge budget. Chosen by the M36 chunk-size
+    # experiment, not by guess.
+    stream_first_chunk_chars: int = Field(default=90, gt=0)
+    # Bounded producer->consumer buffer (chunks) for one streaming
+    # request: a slow client blocks synthesis instead of growing memory.
+    stream_buffer_chunks: int = Field(default=4, ge=1)
     espeak_binary: Path = Path("/usr/bin/espeak-ng")
     #: The engine refuses to start if the binary reports a different
     #: version family — a wrong phonemizer is a wrong pronunciation

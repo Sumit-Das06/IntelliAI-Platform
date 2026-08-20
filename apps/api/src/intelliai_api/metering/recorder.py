@@ -92,6 +92,50 @@ class UsageRecorder:
             idempotency_key=idempotency_key,
         )
 
+    async def record_streamed_success(
+        self,
+        *,
+        auth: AuthContext,
+        capability: str,
+        public_model_id: str,
+        quantities: Mapping[str, Decimal],
+        language: str | None = None,
+        lineage: Mapping[str, Any] | None = None,
+        idempotency_key: str | None = None,
+    ) -> None:
+        """Record delivered STREAMED work — out of band, after delivery.
+
+        A streamed response cannot share the request transaction the way
+        guarantee #2 demands (the response is being serialized while the
+        request is still alive), so streaming uses the failure path's
+        machinery instead: its own short-lived session, committed after
+        the last byte (or the client's departure — F1: generation, not
+        socket completion, defines billability). At-most-once still
+        holds: the request id's uniqueness absorbs any replay.
+        """
+        if self._session_factory is None:
+            logger.warning(
+                "usage.stream_not_recorded",
+                reason="no out-of-band session",
+                capability=capability,
+            )
+            return
+        async with self._session_factory() as session:
+            recorder = UsageRecorder(session, fallback=self._fallback)
+            await recorder._write(
+                auth=auth,
+                capability=capability,
+                public_model_id=public_model_id,
+                outcome=UsageOutcome.SUCCEEDED,
+                billable=True,
+                quantities=quantities,
+                language=language,
+                lineage=lineage,
+                idempotency_key=idempotency_key,
+                savepoint=False,
+            )
+            await session.commit()
+
     async def record_runtime_failure(
         self,
         *,

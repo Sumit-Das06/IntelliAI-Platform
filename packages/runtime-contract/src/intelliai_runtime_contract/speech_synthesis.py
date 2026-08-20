@@ -30,6 +30,10 @@ class SpeechSynthesisRequest(ContractModel):
     # pinned semantics; runtimes that cannot honor a value answer
     # `invalid_input` rather than silently ignoring it.
     speed: float | None = Field(default=None, gt=0)
+    #: M36 (additive): ask the runtime to deliver audio progressively —
+    #: the response body starts with the first synthesized chunk instead
+    #: of the merged whole. False preserves the exact v1 behavior.
+    stream: bool = False
     # The artifact identifier the gateway's registry resolved (never a
     # public model name, never an engine name). None = the default slot —
     # the same slot pattern as transcription.

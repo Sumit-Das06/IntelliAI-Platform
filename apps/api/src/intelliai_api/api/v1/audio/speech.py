@@ -12,7 +12,7 @@ gets an honest validation error instead of mislabeled bytes.
 from typing import Literal
 
 from fastapi import APIRouter
-from fastapi.responses import Response
+from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from intelliai_api.api.deps import CurrentAuth, IdempotencyKey, SpeechDep
@@ -44,6 +44,19 @@ class SpeechRequest(BaseModel):
     )
     speed: float | None = Field(default=None, gt=0, description="Speaking rate; 1.0 is normal.")
     response_format: Literal["wav"] = "wav"
+    stream: bool = Field(
+        default=False,
+        description=(
+            "When true, audio is delivered progressively (chunked "
+            "transfer): a standard WAV header whose size fields are the "
+            "streaming placeholder, then PCM as it is synthesized — "
+            "playback can begin on the first chunk. Default false keeps "
+            "the exact whole-body behavior. Errors before audio begins "
+            "are ordinary JSON errors; once audio has begun, a failure "
+            "ends the stream early instead. Billing is identical in both "
+            "modes: the request's characters, once audio delivery starts."
+        ),
+    )
 
 
 @router.post("/speech")
@@ -56,10 +69,22 @@ async def create_speech(
     """Turn text into speech.
 
     Returns raw `audio/wav` (mono, 16-bit, 24 kHz) — playable bytes,
-    no JSON wrapper. Billing counts input characters; audio duration is
-    measured telemetry only. Text beyond 2000 characters is refused with
-    a clean validation error (never truncated).
+    no JSON wrapper. With `stream: true` the same bytes arrive
+    progressively, first audio first. Billing counts input characters
+    in both modes; audio duration is measured telemetry only. Text
+    beyond 2000 characters is refused with a clean validation error
+    (never truncated).
     """
+    if request.stream:
+        streamed = await service.synthesize_stream(
+            auth=auth,
+            public_model_id=request.model,
+            text=request.input,
+            voice=request.voice,
+            speed=request.speed,
+            idempotency_key=idempotency_key,
+        )
+        return StreamingResponse(streamed.stream, media_type=streamed.media_type)
     outcome = await service.synthesize(
         auth=auth,
         public_model_id=request.model,
