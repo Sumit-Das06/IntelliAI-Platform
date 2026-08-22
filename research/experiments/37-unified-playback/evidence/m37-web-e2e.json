@@ -1,0 +1,39 @@
+{
+  "experiment": "37-unified-playback",
+  "phase": "web-e2e (production-shaped local stack, HTTPS edge)",
+  "date": "2026-08-22",
+  "one_player_observable": "window.__iaiPlayback = {sessionId, state, audibleSources} - updated on every transition; the invariant is audibleSources <= 1 at all times (DevTools-checkable; structure pinned in test_console)",
+  "flow_results": [
+    {
+      "step": "M37 page served via Caddy HTTPS edge",
+      "verdict": "PASS",
+      "note": "state machine, session guards, __iaiPlayback observable all present in the served page (13 marker hits)"
+    },
+    {
+      "step": "streaming TTFA regression (same M36 harness)",
+      "verdict": "PASS",
+      "note": "stream TTFA 478/805/860/820 ms at 300/700/1200/1990 chars vs whole 3538/7514/13172/22023 ms - M36 band preserved"
+    },
+    {
+      "step": "quality regression (25-probe streamed + judge)",
+      "verdict": "PASS",
+      "note": "RT-WER 0.0650 / CER 0.0248 - byte-for-byte the M36 result (backend untouched)"
+    },
+    {
+      "step": "structural one-player guarantees",
+      "verdict": "PASS",
+      "note": "replay <audio> src attaches ONLY in COMPLETED and ONLY AFTER teardown(session) closed the live context (order pinned by test); replay element hidden during GENERATING/STREAMING/PAUSED; every async callback checks isStale(session)"
+    },
+    {
+      "step": "race-condition handling (code-level)",
+      "verdict": "PASS",
+      "note": "Generate->Generate supersedes (newSession tears down old, revokes blob, bumps activeSessionId); Stop clears timers+sources+ctx+abort; stale pump/completion callbacks no-op; belt-and-braces: replay play event during a live session stops the live session"
+    },
+    {
+      "step": "founder browser click-through",
+      "verdict": "FOUNDER STEP",
+      "note": "https://localhost/console/speech - Generate; while Playing... try Pause/Resume/Stop; after Completed press play on the player (replay, no re-fetch); DevTools: window.__iaiPlayback.audibleSources must never exceed 1"
+    }
+  ],
+  "notes": "backend streaming contract untouched (M36); prod.yml still ships no TTS"
+}

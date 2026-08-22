@@ -1,0 +1,182 @@
+{
+  "experiment": "36-tts-streaming",
+  "instrument": "m36_ttfa_bench.py",
+  "definitions": {
+    "ttfb_ms": "first response byte",
+    "ttfa_ms": "first byte past the 44-byte WAV preamble (first playable audio)",
+    "total_ms": "last byte"
+  },
+  "gateway": "http://localhost:8000",
+  "repetitions": "best-of-2 by ttfa",
+  "rows": [
+    {
+      "id": "short",
+      "chars": 22,
+      "mode": "whole",
+      "ttfb_ms": 325.9,
+      "ttfa_ms": 325.9,
+      "total_ms": 326.2,
+      "audio_seconds": 1.75,
+      "rtf": 0.1864,
+      "interior_silence_windows": 22,
+      "bytes": 84044
+    },
+    {
+      "id": "short",
+      "chars": 22,
+      "mode": "stream",
+      "ttfb_ms": 291.0,
+      "ttfa_ms": 291.7,
+      "total_ms": 301.2,
+      "audio_seconds": 1.75,
+      "rtf": 0.1721,
+      "interior_silence_windows": 22,
+      "bytes": 84044
+    },
+    {
+      "id": "question",
+      "chars": 12,
+      "mode": "whole",
+      "ttfb_ms": 259.6,
+      "ttfa_ms": 259.6,
+      "total_ms": 259.7,
+      "audio_seconds": 1.5,
+      "rtf": 0.1731,
+      "interior_silence_windows": 24,
+      "bytes": 72044
+    },
+    {
+      "id": "question",
+      "chars": 12,
+      "mode": "stream",
+      "ttfb_ms": 267.9,
+      "ttfa_ms": 268.2,
+      "total_ms": 275.2,
+      "audio_seconds": 1.5,
+      "rtf": 0.1834,
+      "interior_silence_windows": 24,
+      "bytes": 72044
+    },
+    {
+      "id": "chars-120",
+      "chars": 120,
+      "mode": "whole",
+      "ttfb_ms": 1435.5,
+      "ttfa_ms": 1435.5,
+      "total_ms": 1437.5,
+      "audio_seconds": 8.95,
+      "rtf": 0.1606,
+      "interior_silence_windows": 95,
+      "bytes": 429644
+    },
+    {
+      "id": "chars-120",
+      "chars": 120,
+      "mode": "stream",
+      "ttfb_ms": 549.9,
+      "ttfa_ms": 550.1,
+      "total_ms": 1420.2,
+      "audio_seconds": 8.85,
+      "rtf": 0.1605,
+      "interior_silence_windows": 114,
+      "bytes": 424844
+    },
+    {
+      "id": "chars-300",
+      "chars": 293,
+      "mode": "whole",
+      "ttfb_ms": 3538.3,
+      "ttfa_ms": 3538.3,
+      "total_ms": 3544.4,
+      "audio_seconds": 18.75,
+      "rtf": 0.189,
+      "interior_silence_windows": 185,
+      "bytes": 900044
+    },
+    {
+      "id": "chars-300",
+      "chars": 293,
+      "mode": "stream",
+      "ttfb_ms": 478.1,
+      "ttfa_ms": 478.4,
+      "total_ms": 3638.3,
+      "audio_seconds": 19.225,
+      "rtf": 0.1892,
+      "interior_silence_windows": 213,
+      "bytes": 922844
+    },
+    {
+      "id": "chars-700",
+      "chars": 700,
+      "mode": "whole",
+      "ttfb_ms": 7513.6,
+      "ttfa_ms": 7513.6,
+      "total_ms": 7524.4,
+      "audio_seconds": 42.3,
+      "rtf": 0.1779,
+      "interior_silence_windows": 493,
+      "bytes": 2030444
+    },
+    {
+      "id": "chars-700",
+      "chars": 700,
+      "mode": "stream",
+      "ttfb_ms": 804.5,
+      "ttfa_ms": 804.7,
+      "total_ms": 7942.7,
+      "audio_seconds": 42.175,
+      "rtf": 0.1883,
+      "interior_silence_windows": 498,
+      "bytes": 2024444
+    },
+    {
+      "id": "chars-1200",
+      "chars": 1197,
+      "mode": "whole",
+      "ttfb_ms": 13171.5,
+      "ttfa_ms": 13171.5,
+      "total_ms": 13222.0,
+      "audio_seconds": 71.475,
+      "rtf": 0.185,
+      "interior_silence_windows": 783,
+      "bytes": 3430844
+    },
+    {
+      "id": "chars-1200",
+      "chars": 1197,
+      "mode": "stream",
+      "ttfb_ms": 860.2,
+      "ttfa_ms": 860.3,
+      "total_ms": 13453.7,
+      "audio_seconds": 71.5,
+      "rtf": 0.1882,
+      "interior_silence_windows": 783,
+      "bytes": 3432044
+    },
+    {
+      "id": "chars-1990",
+      "chars": 1985,
+      "mode": "whole",
+      "ttfb_ms": 22022.8,
+      "ttfa_ms": 22022.8,
+      "total_ms": 22063.1,
+      "audio_seconds": 119.025,
+      "rtf": 0.1854,
+      "interior_silence_windows": 1296,
+      "bytes": 5713244
+    },
+    {
+      "id": "chars-1990",
+      "chars": 1985,
+      "mode": "stream",
+      "ttfb_ms": 820.0,
+      "ttfa_ms": 820.1,
+      "total_ms": 24385.2,
+      "audio_seconds": 119.05,
+      "rtf": 0.2048,
+      "interior_silence_windows": 1307,
+      "bytes": 5714444
+    }
+  ],
+  "stream_concurrency_ladder": null
+}

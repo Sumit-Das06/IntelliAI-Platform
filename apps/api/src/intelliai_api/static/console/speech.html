@@ -59,28 +59,42 @@
           </div>
           <div style="margin-top: 14px; display: flex; gap: 10px; align-items: center;">
             <button class="btn btn-primary" id="generate-btn">Generate Speech</button>
-            <span id="speech-status" class="hint" role="status"></span>
+            <span id="speech-status" class="hint" role="status" aria-live="polite"></span>
           </div>
         </div>
 
-        <!-- ── Output ── -->
+        <!-- ── Output: ONE playback session, ONE audible source ── -->
         <div class="card">
           <h3>Audio</h3>
           <div id="player-empty" class="hint" style="margin-top: 12px;">
-            Generated speech appears here — play it, or download the WAV.
+            Generated speech appears here — it starts playing while the rest is still being created.
           </div>
+
+          <!-- Live session controls: the ONLY controls while streaming.
+               The replay <audio> element stays hidden until COMPLETED, so
+               a second playback path never exists during a live session. -->
+          <div id="live-controls" class="hidden" style="margin-top: 12px; display: flex; gap: 10px; align-items: center;">
+            <button class="btn" id="pause-btn" aria-label="Pause playback">Pause</button>
+            <button class="btn" id="stop-btn" aria-label="Stop playback">Stop</button>
+            <span class="hint" id="live-progress"></span>
+          </div>
+
+          <!-- Replay panel: COMPLETED sessions only. The same generated
+               audio, now seekable; never fetches, never re-streams. -->
           <div id="player-wrap" class="hidden" style="margin-top: 12px;">
             <audio id="speech-player" controls style="width: 100%;"></audio>
             <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
-              <button class="btn" id="stop-btn">Stop</button>
               <a class="btn" id="download-link" download="intelliai-speech.wav">Download WAV</a>
             </div>
-            <div id="speech-summary" class="chips hidden" style="margin-top: 12px;"></div>
           </div>
+
+          <div id="speech-summary" class="chips hidden" style="margin-top: 12px;"></div>
+
           <div style="margin-top: 16px;">
             <h4 class="label">Developer view</h4>
             <div class="kv"><span>Request</span><code id="dev-request">—</code></div>
             <div class="kv"><span>Status</span><code id="dev-status">—</code></div>
+            <div class="kv"><span>Session</span><code id="dev-session">—</code></div>
           </div>
         </div>
       </div>
@@ -95,15 +109,17 @@ document.addEventListener("DOMContentLoaded", function () {
   var voiceEl = document.getElementById("speech-voice");
   var speedEl = document.getElementById("speech-speed");
   var generateBtn = document.getElementById("generate-btn");
+  var pauseBtn = document.getElementById("pause-btn");
   var stopBtn = document.getElementById("stop-btn");
   var statusEl = document.getElementById("speech-status");
+  var liveControls = document.getElementById("live-controls");
+  var liveProgress = document.getElementById("live-progress");
   var player = document.getElementById("speech-player");
   var playerWrap = document.getElementById("player-wrap");
   var playerEmpty = document.getElementById("player-empty");
   var downloadLink = document.getElementById("download-link");
   var summaryEl = document.getElementById("speech-summary");
   var charCount = document.getElementById("char-count");
-  var currentUrl = null;
 
   if (!IntelliAI.getKey()) {
     document.getElementById("connect-note").classList.remove("hidden");
@@ -125,26 +141,99 @@ document.addEventListener("DOMContentLoaded", function () {
     charCount.textContent = textEl.value.length + " / 2000";
   });
 
-  /* ── Streaming playback state (M36) ──
-     Audio is delivered progressively and scheduled gaplessly on an
-     AudioContext created inside the click gesture (autoplay-safe).
-     The context/sources/abort belong to the CURRENT generation only. */
-  var live = { ctx: null, abort: null, sources: [], stopped: false };
+  /* ════════════════════════════════════════════════════════════════
+     THE PLAYBACK SESSION (M37) — the one-player law made executable.
 
-  function stopLivePlayback(reason) {
-    live.stopped = true;
-    if (live.abort) { try { live.abort.abort(); } catch (e) {} }
-    live.sources.forEach(function (source) { try { source.stop(); } catch (e) {} });
-    live.sources = [];
-    if (live.ctx) { try { live.ctx.close(); } catch (e) {} live.ctx = null; }
-    if (reason) setStatus(reason);
+     ONE generation = ONE PlaybackSession = ONE audible source.
+     States: IDLE → GENERATING → STREAMING → (PAUSED ⇄ STREAMING)
+             → COMPLETED | STOPPED | ERROR
+     - While a session is live, the ONLY audible mechanism is its
+       AudioContext, and the ONLY controls are Pause/Stop.
+     - The replay <audio> element receives a src ONLY on COMPLETED,
+       after the live tail has finished and the context is CLOSED —
+       there is no instant at which both mechanisms can sound.
+     - Every async callback checks `session.id === activeSessionId`;
+       a superseded session's chunks, timers, and completions are
+       ignored (stale events can never revive audio).
+     ════════════════════════════════════════════════════════════════ */
+  var sessionCounter = 0;
+  var activeSessionId = 0;
+  var activeSession = null;
+
+  function isStale(session) { return session.id !== activeSessionId; }
+
+  function debugExpose() {
+    // Observable one-player proof for tests/DevTools: at most one
+    // audible source may ever be reported here.
+    var audible = 0;
+    if (activeSession && activeSession.ctx && activeSession.ctx.state === "running" &&
+        (activeSession.state === "STREAMING")) audible += 1;
+    if (!player.paused && !player.ended && player.src) audible += 1;
+    window.__iaiPlayback = {
+      sessionId: activeSessionId,
+      state: activeSession ? activeSession.state : "IDLE",
+      audibleSources: audible
+    };
+    document.getElementById("dev-session").textContent =
+      (activeSession ? "#" + activeSession.id + " · " + activeSession.state : "—") +
+      " · audible " + audible;
   }
 
-  stopBtn.addEventListener("click", function () {
-    stopLivePlayback("Stopped.");
+  function transition(session, state) {
+    if (isStale(session)) return;
+    session.state = state;
+    var words = {
+      GENERATING: ["Generating speech…", null],
+      STREAMING: ["Playing…", "ok"],
+      PAUSED: ["Paused.", null],
+      COMPLETED: ["Completed.", "ok"],
+      STOPPED: ["Stopped.", null],
+      ERROR: [session.errorMessage || "Something went wrong. Try again.", "err"]
+    }[state];
+    if (words) setStatus(words[0], words[1]);
+    var live = state === "GENERATING" || state === "STREAMING" || state === "PAUSED";
+    liveControls.classList.toggle("hidden", !live);
+    pauseBtn.disabled = state === "GENERATING";
+    pauseBtn.textContent = state === "PAUSED" ? "Resume" : "Pause";
+    playerWrap.classList.toggle("hidden", state !== "COMPLETED");
+    playerEmpty.classList.toggle("hidden", live || state === "COMPLETED");
+    generateBtn.disabled = state === "GENERATING";
+    debugExpose();
+  }
+
+  function teardown(session) {
+    // Full cleanup: abort the fetch, silence every scheduled source,
+    // close the context, drop the queue. Idempotent.
+    if (session.abort) { try { session.abort.abort(); } catch (e) {} }
+    session.sources.forEach(function (source) { try { source.stop(); } catch (e) {} });
+    session.sources = [];
+    if (session.ctx) { try { session.ctx.close(); } catch (e) {} session.ctx = null; }
+    if (session.completionTimer) { clearTimeout(session.completionTimer); session.completionTimer = null; }
+  }
+
+  function newSession() {
+    // Starting a new session SUPERSEDES and tears down the old one —
+    // Generate→Generate keeps exactly the newest audio.
+    if (activeSession) teardown(activeSession);
     player.pause();
-    player.currentTime = 0;
-  });
+    player.removeAttribute("src");
+    if (player.dataset.blobUrl) { URL.revokeObjectURL(player.dataset.blobUrl); delete player.dataset.blobUrl; }
+    sessionCounter += 1;
+    activeSessionId = sessionCounter;
+    activeSession = {
+      id: sessionCounter,
+      state: "IDLE",
+      ctx: null,
+      abort: null,
+      sources: [],
+      pcmChunks: [],
+      nextTime: 0,
+      completionTimer: null,
+      errorMessage: null,
+      marks: { started: performance.now(), ttfb: null, firstAudio: null }
+    };
+    return activeSession;
+  }
 
   function wavBlobFromPcm(pcmChunks, sampleRate) {
     var total = 0;
@@ -160,8 +249,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return new Blob([header].concat(pcmChunks), { type: "audio/wav" });
   }
 
-  /* Friendly words for every failure the API can answer with — the UI
-     never shows raw taxonomy codes, and never spins forever. */
   function friendlyError(status, body) {
     var code = null, message = null;
     try { code = body.error.code; message = body.error.message; } catch (e) { /* not json */ }
@@ -173,96 +260,77 @@ document.addEventListener("DOMContentLoaded", function () {
     return message || "Something went wrong. Try again.";
   }
 
-  function finishSummary(voiceLabel, chars, marks, seconds) {
+  function schedule(session, bytes) {
+    if (isStale(session) || !session.ctx) return;
+    var samples = new Int16Array(bytes.buffer, bytes.byteOffset, bytes.byteLength / 2);
+    var floats = new Float32Array(samples.length);
+    for (var i = 0; i < samples.length; i++) floats[i] = samples[i] / 32768;
+    var buffer = session.ctx.createBuffer(1, floats.length, 24000);
+    buffer.getChannelData(0).set(floats);
+    var source = session.ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(session.ctx.destination);
+    if (session.nextTime < session.ctx.currentTime + 0.06) {
+      session.nextTime = session.ctx.currentTime + 0.06;
+    }
+    source.start(session.nextTime);
+    session.nextTime += buffer.duration;
+    session.sources.push(source);
+    if (session.sources.length > 64) session.sources.splice(0, 32); // finished ones
+  }
+
+  function completeSession(session, seconds) {
+    // COMPLETED fires only after the live tail has actually finished:
+    // the context closes FIRST, the replay element appears SECOND —
+    // the two audible mechanisms never overlap.
+    if (isStale(session)) return;
+    teardown(session);
+    var blob = wavBlobFromPcm(session.pcmChunks, 24000);
+    var url = URL.createObjectURL(blob);
+    player.src = url;
+    player.dataset.blobUrl = url;
+    downloadLink.href = url;
+    transition(session, "COMPLETED");
     summaryEl.replaceChildren();
     summaryEl.appendChild(summaryChip("Service", "IntelliAI TTS"));
-    summaryEl.appendChild(summaryChip("Voice", voiceLabel));
-    summaryEl.appendChild(summaryChip("Characters", String(chars)));
-    if (marks.firstAudio) summaryEl.appendChild(summaryChip("First audio", (marks.firstAudio / 1000).toFixed(2) + " s"));
-    summaryEl.appendChild(summaryChip("Total", (marks.total / 1000).toFixed(1) + " s"));
-    if (seconds) summaryEl.appendChild(summaryChip("Audio", seconds.toFixed(1) + " s"));
+    summaryEl.appendChild(summaryChip("Voice", voiceEl.options[voiceEl.selectedIndex].text));
+    summaryEl.appendChild(summaryChip("Characters", String(session.characters)));
+    if (session.marks.firstAudio) {
+      summaryEl.appendChild(summaryChip("First audio", (session.marks.firstAudio / 1000).toFixed(2) + " s"));
+    }
+    summaryEl.appendChild(summaryChip("Total", ((performance.now() - session.marks.started) / 1000).toFixed(1) + " s"));
+    summaryEl.appendChild(summaryChip("Audio", seconds.toFixed(1) + " s"));
     summaryEl.classList.remove("hidden");
   }
 
-  function requestBody(text, stream) {
-    return JSON.stringify({
-      model: "intelliai-tts",
-      input: text,
-      voice: voiceEl.value,
-      speed: parseFloat(speedEl.value),
-      stream: stream
-    });
-  }
-
-  function apiHeaders(key) {
-    return {
-      "Authorization": "Bearer " + key,
-      "Content-Type": "application/json",
-      "X-IntelliAI-Client": "web"
-    };
-  }
-
-  /* Whole-body fallback: browsers without AudioContext/ReadableStream
-     keep the exact M35 experience. */
-  function generateWholeBody(key, text, started) {
-    return fetch("/v1/audio/speech", { method: "POST", headers: apiHeaders(key), body: requestBody(text, false) })
-      .then(function (response) {
-        document.getElementById("dev-request").textContent = response.headers.get("X-Request-ID") || "—";
-        document.getElementById("dev-status").textContent = String(response.status);
-        if (!response.ok || (response.headers.get("content-type") || "").indexOf("audio/") !== 0) {
-          return response.json().catch(function () { return {}; }).then(function (body) {
-            throw new Error(friendlyError(response.status, body));
-          });
-        }
-        return response.blob().then(function (blob) {
-          if (currentUrl) URL.revokeObjectURL(currentUrl);
-          currentUrl = URL.createObjectURL(blob);
-          player.src = currentUrl;
-          downloadLink.href = currentUrl;
-          playerWrap.classList.remove("hidden");
-          playerEmpty.classList.add("hidden");
-          finishSummary(voiceEl.options[voiceEl.selectedIndex].text, text.length,
-            { total: performance.now() - started }, null);
-          setStatus("Done — press play.", "ok");
-          return player.play().catch(function () {});
-        });
-      });
-  }
-
-  /* Streaming path (M36): schedule PCM gaplessly as it arrives; speech
-     starts on the first chunk, not after the last one. */
-  function generateStreaming(key, text, started) {
+  function generateStreaming(session, key, text) {
     var Ctx = window.AudioContext || window.webkitAudioContext;
-    live = { ctx: new Ctx({ sampleRate: 24000 }), abort: new AbortController(), sources: [], stopped: false };
-    var ctx = live.ctx;
-    var nextTime = 0;
-    var pcmChunks = [];
+    session.ctx = new Ctx({ sampleRate: 24000 });
+    session.abort = new AbortController();
+    session.characters = text.length;
     var carry = new Uint8Array(0);
     var headerSkipped = 0;
-    var marks = { ttfb: null, firstAudio: null, total: null };
 
-    function schedule(bytes) {
-      var samples = new Int16Array(bytes.buffer, bytes.byteOffset, bytes.byteLength / 2);
-      var floats = new Float32Array(samples.length);
-      for (var i = 0; i < samples.length; i++) floats[i] = samples[i] / 32768;
-      var buffer = ctx.createBuffer(1, floats.length, 24000);
-      buffer.getChannelData(0).set(floats);
-      var source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(ctx.destination);
-      if (nextTime < ctx.currentTime + 0.06) nextTime = ctx.currentTime + 0.06;
-      source.start(nextTime);
-      nextTime += buffer.duration;
-      live.sources.push(source);
-      if (live.sources.length > 64) live.sources.splice(0, 32); // finished ones
-    }
-
-    return ctx.resume().then(function () {
+    return session.ctx.resume().then(function () {
       return fetch("/v1/audio/speech", {
-        method: "POST", headers: apiHeaders(key), body: requestBody(text, true), signal: live.abort.signal
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + key,
+          "Content-Type": "application/json",
+          "X-IntelliAI-Client": "web"
+        },
+        body: JSON.stringify({
+          model: "intelliai-tts",
+          input: text,
+          voice: voiceEl.value,
+          speed: parseFloat(speedEl.value),
+          stream: true
+        }),
+        signal: session.abort.signal
       });
     }).then(function (response) {
-      marks.ttfb = performance.now() - started;
+      if (isStale(session)) return "stale";
+      session.marks.ttfb = performance.now() - session.marks.started;
       document.getElementById("dev-request").textContent = response.headers.get("X-Request-ID") || "—";
       document.getElementById("dev-status").textContent = String(response.status);
       if (!response.ok || (response.headers.get("content-type") || "").indexOf("audio/") !== 0) {
@@ -273,7 +341,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var reader = response.body.getReader();
       function pump() {
         return reader.read().then(function (step) {
-          if (live.stopped) return "stopped";
+          if (isStale(session) || session.state === "STOPPED") return "stale";
           if (step.done) return "done";
           var merged = new Uint8Array(carry.length + step.value.length);
           merged.set(carry); merged.set(step.value, carry.length);
@@ -286,45 +354,85 @@ document.addEventListener("DOMContentLoaded", function () {
           carry = merged.subarray(usable);
           if (usable > 0) {
             var pcm = merged.slice(0, usable);
-            pcmChunks.push(pcm);
-            schedule(pcm);
-            if (marks.firstAudio === null) {
-              marks.firstAudio = performance.now() - started;
-              setStatus("Playing…", "ok");
+            session.pcmChunks.push(pcm);
+            schedule(session, pcm);
+            if (session.marks.firstAudio === null) {
+              session.marks.firstAudio = performance.now() - session.marks.started;
+              transition(session, "STREAMING");
               document.getElementById("dev-status").textContent =
-                "200 · first audio " + Math.round(marks.firstAudio) + " ms";
+                "200 · first audio " + Math.round(session.marks.firstAudio) + " ms";
             }
+            liveProgress.textContent =
+              (session.pcmChunks.reduce(function (n, c) { return n + c.byteLength; }, 0) / 48000).toFixed(1) + " s buffered";
           }
           return pump();
         });
       }
       return pump();
     }).then(function (end) {
-      marks.total = performance.now() - started;
-      if (end === "stopped") return;
-      var seconds = 0;
-      pcmChunks.forEach(function (chunk) { seconds += chunk.byteLength; });
-      seconds = seconds / 2 / 24000;
-      var blob = wavBlobFromPcm(pcmChunks, 24000);
-      if (currentUrl) URL.revokeObjectURL(currentUrl);
-      currentUrl = URL.createObjectURL(blob);
-      player.src = currentUrl;         // replay affordance
-      downloadLink.href = currentUrl;  // download exactly what streamed
-      playerWrap.classList.remove("hidden");
-      playerEmpty.classList.add("hidden");
-      finishSummary(voiceEl.options[voiceEl.selectedIndex].text, text.length, marks, seconds);
-      var remaining = Math.max(0, (nextTime - ctx.currentTime) * 1000);
-      setTimeout(function () {
-        if (!live.stopped) setStatus("Completed.", "ok");
-        if (live.ctx === ctx) { try { ctx.close(); } catch (e) {} live.ctx = null; }
-      }, remaining + 150);
+      if (end === "stale" || isStale(session) || session.state === "STOPPED") return;
+      var seconds = session.pcmChunks.reduce(function (n, c) { return n + c.byteLength; }, 0) / 48000;
+      // Wait for the scheduled tail to finish INSIDE the same session,
+      // then flip to COMPLETED (context closed before replay appears).
+      var remaining = Math.max(0, (session.nextTime - session.ctx.currentTime) * 1000);
+      session.completionTimer = setTimeout(function () {
+        completeSession(session, seconds);
+      }, remaining + 120);
     }).catch(function (error) {
-      if (live.stopped || (error && error.name === "AbortError")) { setStatus("Stopped."); return; }
-      if (marks.firstAudio !== null) {
-        setStatus("Playback was interrupted — try again.", "err");
+      if (isStale(session)) return;
+      if (session.state === "STOPPED" || (error && error.name === "AbortError")) return;
+      if (session.marks.firstAudio !== null) {
+        session.errorMessage = "Playback was interrupted — try again.";
       } else {
-        setStatus((error && error.message) || "Something went wrong. Try again.", "err");
+        session.errorMessage = (error && error.message) || "Something went wrong. Try again.";
       }
+      teardown(session);
+      transition(session, "ERROR");
+    });
+  }
+
+  /* Whole-body fallback for browsers without AudioContext/ReadableStream:
+     the same session/state machine, one <audio> element as the sole
+     player, shown only when the audio is fully ready. */
+  function generateWholeBody(session, key, text) {
+    session.characters = text.length;
+    return fetch("/v1/audio/speech", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + key,
+        "Content-Type": "application/json",
+        "X-IntelliAI-Client": "web"
+      },
+      body: JSON.stringify({
+        model: "intelliai-tts",
+        input: text,
+        voice: voiceEl.value,
+        speed: parseFloat(speedEl.value),
+        stream: false
+      })
+    }).then(function (response) {
+      if (isStale(session)) return;
+      document.getElementById("dev-request").textContent = response.headers.get("X-Request-ID") || "—";
+      document.getElementById("dev-status").textContent = String(response.status);
+      if (!response.ok || (response.headers.get("content-type") || "").indexOf("audio/") !== 0) {
+        return response.json().catch(function () { return {}; }).then(function (body) {
+          throw new Error(friendlyError(response.status, body));
+        });
+      }
+      return response.blob().then(function (blob) {
+        if (isStale(session)) return;
+        session.pcmChunks = [];
+        var url = URL.createObjectURL(blob);
+        player.src = url;
+        player.dataset.blobUrl = url;
+        downloadLink.href = url;
+        transition(session, "COMPLETED");
+        return player.play().catch(function () {});
+      });
+    }).catch(function (error) {
+      if (isStale(session)) return;
+      session.errorMessage = (error && error.message) || "Something went wrong. Try again.";
+      transition(session, "ERROR");
     });
   }
 
@@ -335,19 +443,51 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!text) { setStatus("Type some text first.", "err"); return; }
     if (text.length > 2000) { setStatus("Text is over the 2000-character limit.", "err"); return; }
 
-    stopLivePlayback(null);           // one generation at a time
-    generateBtn.disabled = true;
-    setStatus("Generating speech…");
-    var started = performance.now();
+    var session = newSession();
+    transition(session, "GENERATING");
+    summaryEl.classList.add("hidden");
     var canStream = !!(window.AudioContext || window.webkitAudioContext) &&
       !!(window.ReadableStream) && !!(window.AbortController);
-    var run = canStream ? generateStreaming(key, text, started) : generateWholeBody(key, text, started);
-    run.catch(function (error) {
-      setStatus((error && error.message) || "Something went wrong. Try again.", "err");
-    }).finally(function () {
-      generateBtn.disabled = false;
-    });
+    var run = canStream ? generateStreaming(session, key, text) : generateWholeBody(session, key, text);
+    run.finally(function () { if (!isStale(session)) generateBtn.disabled = false; debugExpose(); });
   });
+
+  pauseBtn.addEventListener("click", function () {
+    var session = activeSession;
+    if (!session || isStale(session) || !session.ctx) return;
+    if (session.state === "STREAMING") {
+      session.ctx.suspend().then(function () {
+        if (!isStale(session)) transition(session, "PAUSED");
+      });
+    } else if (session.state === "PAUSED") {
+      session.ctx.resume().then(function () {
+        if (!isStale(session)) transition(session, "STREAMING");
+      });
+    }
+  });
+
+  stopBtn.addEventListener("click", function () {
+    var session = activeSession;
+    if (!session || isStale(session)) return;
+    transition(session, "STOPPED");
+    teardown(session);
+    debugExpose();
+  });
+
+  // The replay element only ever exists in COMPLETED — but belt-and-
+  // braces: if it somehow starts while a live context exists, the live
+  // session yields (one audible source, enforced, not assumed).
+  player.addEventListener("play", function () {
+    var session = activeSession;
+    if (session && !isStale(session) && session.ctx &&
+        (session.state === "STREAMING" || session.state === "PAUSED")) {
+      transition(session, "STOPPED");
+      teardown(session);
+    }
+    debugExpose();
+  });
+  player.addEventListener("pause", debugExpose);
+  player.addEventListener("ended", debugExpose);
 });
 </script>
 </body>

@@ -569,13 +569,30 @@ async def test_the_speech_studio_is_a_real_tts_client(
     ):
         assert phrase in page
     # M36: progressive playback is the page's default path - stream mode
-    # requested, gapless AudioContext scheduling, live states, and a
-    # whole-body fallback for browsers without the APIs.
-    assert "stream: stream" in page
+    # requested, gapless AudioContext scheduling, and a whole-body
+    # fallback for browsers without the APIs.
+    assert "stream: true" in page
+    assert "stream: false" in page  # the fallback path stays whole-body
     assert "AudioContext" in page
-    for state in ("Playing…", "Completed.", "Stopped.", "first audio"):
-        assert state in page
     assert "generateWholeBody" in page
+    # M37: ONE playback session, ONE audible source - the state machine,
+    # the stale-session guard, and the structural guarantees that the
+    # replay element can never sound while the live context exists.
+    for state in ("GENERATING", "STREAMING", "PAUSED", "COMPLETED", "STOPPED", "ERROR"):
+        assert '"' + state + '"' in page
+    for word in ("Playing…", "Paused.", "Completed.", "Stopped.", "first audio"):
+        assert word in page
+    assert "activeSessionId" in page and "isStale" in page  # session identity
+    assert 'playerWrap.classList.toggle("hidden", state !== "COMPLETED")' in page
+    assert "__iaiPlayback" in page and "audibleSources" in page  # observable proof
+    assert "ctx.suspend()" in page and "ctx.resume()" in page  # pause/resume, same session
+    # Completion order law: the live context is torn down BEFORE the
+    # replay src is attached - the two mechanisms never overlap.
+    completed_block = page[
+        page.index("function completeSession") : page.index('transition(session, "COMPLETED")')
+    ]
+    assert "teardown(session)" in completed_block
+    assert completed_block.index("teardown(session)") < completed_block.index("player.src")
 
 
 async def test_the_services_card_links_the_speech_studio_without_claiming_launch(
