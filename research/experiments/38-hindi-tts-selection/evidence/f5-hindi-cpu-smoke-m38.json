@@ -1,0 +1,58 @@
+{
+  "experiment": "38-hindi-tts-selection",
+  "instrument": "m38_f5_hindi_bench.py",
+  "engine": "f5-hindi-24khz (SPRINGLab, F5TTS_Small 151M, flow matching)",
+  "identity": {
+    "hub_repo": "SPRINGLab/F5-Hindi-24KHz",
+    "checkpoint": "model_2500000.safetensors",
+    "license": "CC-BY-4.0 (card, verified 2026-08-22); card: trained from scratch",
+    "device": "cpu",
+    "nfe_step": 32,
+    "reference_interface": "cloning-style: ref audio+text required per generation; reference here is an IntelliAI-synthesized Kokoro-hi WAV (synthetic voice, no human speaker) - naturalness is biased DOWN by the robotic reference; RTF and round-trip intelligibility remain fair",
+    "ref_audio": "hi-general-02.wav"
+  },
+  "load_seconds": 8.36,
+  "rss_before_load_mib": 220.7,
+  "rss_after_load_mib": 1412.3,
+  "rss_peak_mib": 2015.0,
+  "probe_count": 3,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 5.4813,
+  "rtf_p95": 5.7432,
+  "rows": [
+    {
+      "id": "hi-general-01",
+      "language": "hi",
+      "category": "general",
+      "chars": 52,
+      "wall_ms": 22159.0,
+      "ttfa_ms": null,
+      "audio_seconds": 4.043,
+      "rtf": 5.4813,
+      "sample_rate_hz": 24000
+    },
+    {
+      "id": "hi-general-02",
+      "language": "hi",
+      "category": "general",
+      "chars": 43,
+      "wall_ms": 20215.9,
+      "ttfa_ms": null,
+      "audio_seconds": 3.52,
+      "rtf": 5.7432,
+      "sample_rate_hz": 24000
+    },
+    {
+      "id": "hi-conjuncts-01",
+      "language": "hi",
+      "category": "conjuncts",
+      "chars": 53,
+      "wall_ms": 23103.1,
+      "ttfa_ms": null,
+      "audio_seconds": 4.384,
+      "rtf": 5.2699,
+      "sample_rate_hz": 24000
+    }
+  ]
+}

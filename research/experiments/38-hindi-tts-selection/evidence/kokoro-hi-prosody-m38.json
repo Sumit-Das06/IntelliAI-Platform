@@ -1,0 +1,71 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "prosody_analyze.py",
+  "method": "autocorrelation F0 (25ms/10ms, 60-400Hz, voicing by energy); tail slope over the final 40% of voiced frames; signal-level facts only — naturalness remains a human-listening question",
+  "audio_dir": "/home/vikashan_technologie/m38/audio/kokoro-hi-hf_alpha",
+  "pairs": [
+    {
+      "pair": "hi-comma",
+      "with_mark": {
+        "duration_s": 4.2,
+        "voiced_duration_s": 3.73,
+        "f0_mean_hz": 219.8,
+        "f0_tail_slope_hz_per_frame": 0.163,
+        "voiced_frames": 223
+      },
+      "without_mark": {
+        "duration_s": 4.275,
+        "voiced_duration_s": 3.78,
+        "f0_mean_hz": 219.6,
+        "f0_tail_slope_hz_per_frame": -0.092,
+        "voiced_frames": 224
+      },
+      "delta_duration_s": -0.075,
+      "delta_voiced_duration_s": -0.05,
+      "delta_f0_mean_hz": 0.2,
+      "delta_f0_tail_slope_hz_per_frame": 0.255
+    },
+    {
+      "pair": "hi-danda",
+      "with_mark": {
+        "duration_s": 3.35,
+        "voiced_duration_s": 2.85,
+        "f0_mean_hz": 223.3,
+        "f0_tail_slope_hz_per_frame": -0.891,
+        "voiced_frames": 165
+      },
+      "without_mark": {
+        "duration_s": 3.35,
+        "voiced_duration_s": 2.85,
+        "f0_mean_hz": 223.0,
+        "f0_tail_slope_hz_per_frame": -0.822,
+        "voiced_frames": 166
+      },
+      "delta_duration_s": 0.0,
+      "delta_voiced_duration_s": 0.0,
+      "delta_f0_mean_hz": 0.3,
+      "delta_f0_tail_slope_hz_per_frame": -0.069
+    },
+    {
+      "pair": "hi-question-mark",
+      "with_mark": {
+        "duration_s": 1.975,
+        "voiced_duration_s": 1.55,
+        "f0_mean_hz": 216.4,
+        "f0_tail_slope_hz_per_frame": -2.535,
+        "voiced_frames": 80
+      },
+      "without_mark": {
+        "duration_s": 1.95,
+        "voiced_duration_s": 1.53,
+        "f0_mean_hz": 220.2,
+        "f0_tail_slope_hz_per_frame": -1.415,
+        "voiced_frames": 78
+      },
+      "delta_duration_s": 0.025,
+      "delta_voiced_duration_s": 0.02,
+      "delta_f0_mean_hz": -3.8,
+      "delta_f0_tail_slope_hz_per_frame": -1.12
+    }
+  ]
+}

@@ -112,10 +112,45 @@ Community ONNX was measured and DECLINED (RTF 1.078 / WER 0.0956 via
 the wrapper; RAM win real — a first-party export stays a PROPOSED
 lever). Determinism documented: stochastic sampling, stable durations.
 
+## 13c. M38 addendum (2026-08-22) — Hindi re-measured, all four voices
+
+The M38 fixed Hindi benchmark (61 probes incl. long-text ladder,
+Devanagari numerals, phone/time/slash-date traps) re-ran the upstream
+Hindi path for ALL FOUR voice packs — solo runs, E3 judge, evidence at
+`research/experiments/38-hindi-tts-selection/`:
+
+| Voice | hi clean RT-WER/CER | median RTF | peak RSS |
+|---|---|---|---|
+| hf_alpha (F) | 0.0593 / 0.0193 | 0.169 | 2.28 GiB |
+| hf_beta (F) | 0.0710 / 0.0222 | 0.181 | 2.21 GiB |
+| hm_omega (M) | 0.0653 / 0.0255 | 0.185 | 2.37 GiB |
+| **hm_psi (M)** | **0.0450 / 0.0178** (best) | 0.183 | 2.25 GiB |
+
+M32's comparable slice reproduces (alpha 0.1634/0.1191 vs 0.1615/0.1190).
+Two NEW facts that supersede §6's optimism:
+
+1. **Silent long-text truncation**: the upstream KPipeline (`lang h`)
+   saturates at ~23.9 s audio (~510 phonemes) for EVERY input beyond
+   ~300-350 chars — 683/1189/1897-char ladder texts all emit the same
+   duration, no error raised. M32's 545-char "zero failures" probe was
+   already truncated, unnoticed. Danda-aware chunking is therefore a
+   CORRECTNESS requirement for the serving milestone, not a latency fix.
+2. **In-process espeak chain is not thread-safe**: concurrent phonemize
+   calls corrupt espeak's shared buffer (measured crash). Irrelevant to
+   the production shape (isolated subprocess per call) — recorded so
+   nobody ever "optimizes" the subprocess back in-process.
+
+Also measured: espeak `hi` over the M35 subprocess transport works
+as-is (stdin, `-q --ipa -v hi`; `(en)/(hi)` markers appear exactly as
+the M32 parity table predicted); Devanagari numerals ०-९ are MISREAD
+by espeak-hi (४५ → "पंद्रह सौ") — a normalization-layer rule, not an
+engine fix. M38 recommendation: extend the incumbent to Hindi (Option
+A re-confirmed) — see the M38 report §21/§25.
+
 ## 14. Open questions
 
 1. Founder listening verdict on the 4 Hindi voices (naturalness ≠
-   intelligibility; intelligibility is now measured).
+   intelligibility; intelligibility is now measured — hm_psi leads).
 2. ONNX build: RAM/RTF gains vs torch (PROPOSED optimization).
 3. Long-term: which owned lineage eventually replaces it (see M32 §22 —
    the VITS-class in-house Hindi voice experiment).

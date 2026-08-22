@@ -1,0 +1,43 @@
+{
+  "experiment": "38-hindi-tts-selection",
+  "instrument": "m38_concurrency_probe.py",
+  "engine": "kokoro-hi (upstream KPipeline, research venv)",
+  "voice": "hf_alpha",
+  "case_id": "m38-ladder-300",
+  "chars": 298,
+  "note": "research-only in-process thread ladder; NOT production capacity - no gateway, no admission law, WSL venv",
+  "levels": [
+    {
+      "concurrency": 1,
+      "wall_s": 4.9,
+      "per_request_p50_s": 4.9,
+      "per_request_max_s": 4.9,
+      "audio_seconds_total": 23.52,
+      "throughput_audio_seconds_per_wall_second": 4.8
+    },
+    {
+      "concurrency": 2,
+      "wall_s": 8.47,
+      "per_request_p50_s": 8.47,
+      "per_request_max_s": 8.47,
+      "audio_seconds_total": 47.05,
+      "throughput_audio_seconds_per_wall_second": 5.55
+    },
+    {
+      "concurrency": 4,
+      "wall_s": 14.29,
+      "per_request_p50_s": 14.26,
+      "per_request_max_s": 14.28,
+      "audio_seconds_total": 94.1,
+      "throughput_audio_seconds_per_wall_second": 6.59
+    },
+    {
+      "concurrency": 8,
+      "wall_s": 24.2,
+      "per_request_p50_s": 23.77,
+      "per_request_max_s": 24.19,
+      "audio_seconds_total": 188.2,
+      "throughput_audio_seconds_per_wall_second": 7.78
+    }
+  ]
+}

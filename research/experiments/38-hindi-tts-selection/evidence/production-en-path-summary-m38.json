@@ -1,0 +1,154 @@
+{
+  "experiment": "38-hindi-tts-selection",
+  "instrument": "m38_aggregate.py",
+  "engine_label": "production-en-path",
+  "source": "production-en-path-roundtrip-m38.json",
+  "clean_slice_definition": "hi/mixed rows whose category is NOT verbalization-prone; excluded: abbreviations, currency, dates, numbers, numerals_devanagari, percent, phone, time",
+  "full": {
+    "rows": 58,
+    "wer_mean": 0.728,
+    "cer_mean": 0.5593
+  },
+  "clean_slice": {
+    "rows": 39,
+    "wer_mean": 0.6497,
+    "cer_mean": 0.4388
+  },
+  "by_category": {
+    "abbreviations": {
+      "rows": 1,
+      "wer_mean": 0.9286,
+      "cer_mean": 0.7222
+    },
+    "api_terms": {
+      "rows": 1,
+      "wer_mean": 0.875,
+      "cer_mean": 0.6889
+    },
+    "code_mixed": {
+      "rows": 2,
+      "wer_mean": 0.7046,
+      "cer_mean": 0.6111
+    },
+    "code_switch_devanagari": {
+      "rows": 6,
+      "wer_mean": 0.8912,
+      "cer_mean": 0.8397
+    },
+    "conjuncts": {
+      "rows": 2,
+      "wer_mean": 0.6666,
+      "cer_mean": 0.3245
+    },
+    "currency": {
+      "rows": 3,
+      "wer_mean": 0.881,
+      "cer_mean": 1.2308
+    },
+    "dates": {
+      "rows": 3,
+      "wer_mean": 0.7996,
+      "cer_mean": 0.7929
+    },
+    "exclamation": {
+      "rows": 2,
+      "wer_mean": 0.6459,
+      "cer_mean": 0.402
+    },
+    "general": {
+      "rows": 2,
+      "wer_mean": 0.4204,
+      "cer_mean": 0.2245
+    },
+    "loanwords": {
+      "rows": 1,
+      "wer_mean": 0.8333,
+      "cer_mean": 0.45
+    },
+    "long": {
+      "rows": 1,
+      "wer_mean": 0.3571,
+      "cer_mean": 0.2071
+    },
+    "long_ladder": {
+      "rows": 5,
+      "wer_mean": 0.3988,
+      "cer_mean": 0.2105
+    },
+    "matras": {
+      "rows": 2,
+      "wer_mean": 0.5,
+      "cer_mean": 0.2564
+    },
+    "numbers": {
+      "rows": 2,
+      "wer_mean": 1.007,
+      "cer_mean": 1.0612
+    },
+    "numerals_devanagari": {
+      "rows": 1,
+      "wer_mean": 0.8889,
+      "cer_mean": 0.5435
+    },
+    "org_product": {
+      "rows": 1,
+      "wer_mean": 0.6364,
+      "cer_mean": 0.4262
+    },
+    "paragraph": {
+      "rows": 1,
+      "wer_mean": 0.5435,
+      "cer_mean": 0.2844
+    },
+    "percent": {
+      "rows": 1,
+      "wer_mean": 1.0,
+      "cer_mean": 0.9048
+    },
+    "phone": {
+      "rows": 2,
+      "wer_mean": 2.1965,
+      "cer_mean": 1.7326
+    },
+    "place_names": {
+      "rows": 1,
+      "wer_mean": 0.8182,
+      "cer_mean": 0.3934
+    },
+    "programming": {
+      "rows": 1,
+      "wer_mean": 0.4,
+      "cer_mean": 0.4918
+    },
+    "proper_names": {
+      "rows": 3,
+      "wer_mean": 0.6131,
+      "cer_mean": 0.3669
+    },
+    "prosody_pair": {
+      "rows": 6,
+      "wer_mean": 0.3667,
+      "cer_mean": 0.2754
+    },
+    "question": {
+      "rows": 4,
+      "wer_mean": 0.7695,
+      "cer_mean": 0.3551
+    },
+    "short": {
+      "rows": 2,
+      "wer_mean": 1.125,
+      "cer_mean": 0.6093
+    },
+    "technical": {
+      "rows": 1,
+      "wer_mean": 0.2857,
+      "cer_mean": 0.1034
+    },
+    "time": {
+      "rows": 1,
+      "wer_mean": 0.625,
+      "cer_mean": 0.4444
+    }
+  }
+}
