@@ -36,7 +36,7 @@ account, no domain. Install `cloudflared` once
 — on Windows: `winget install Cloudflare.cloudflared`), then:
 
 ```
-cloudflared tunnel --url https://localhost:443 --no-tls-verify
+cloudflared tunnel --url https://localhost:443 --no-tls-verify --http-host-header localhost
 ```
 
 - `--url https://localhost:443` targets the CADDY EDGE, so every request
@@ -45,6 +45,13 @@ cloudflared tunnel --url https://localhost:443 --no-tls-verify
 - `--no-tls-verify` accepts Caddy's self-signed localhost certificate on
   the LOCAL hop only; clients on the internet see a REAL Cloudflare
   certificate for the tunnel hostname.
+- `--http-host-header localhost` is REQUIRED on current cloudflared
+  (verified on 2026.8.2): newer versions pass the public
+  `*.trycloudflare.com` Host through to the origin, Caddy's
+  `{$DOMAIN:localhost}` site block doesn't match it, and every response
+  comes back as an empty 200. The flag pins the origin Host to the site
+  Caddy actually serves. (Older cloudflared sent the origin URL's host
+  by default, which is why this file didn't need the flag before.)
 - cloudflared prints a line like:
 
   ```
