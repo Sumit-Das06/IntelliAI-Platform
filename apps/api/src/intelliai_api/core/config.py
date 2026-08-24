@@ -155,6 +155,17 @@ class RuntimeSettings(BaseSettings):
     # is unchanged.
     timeout_seconds: float = 450.0
 
+    #: Whether THIS deployment runs the speech-synthesis service and so
+    #: must answer for it in readiness (M42). Default OFF because the
+    #: base stack keeps TTS behind a compose profile: probing an absent
+    #: service would report a permanent, meaningless DEGRADED and train
+    #: operators to ignore the one signal that matters. A deployment
+    #: that starts TTS — the production overlay and the production-shaped
+    #: local stack — declares it here, so readiness is truthful in both
+    #: directions: green only when everything the deployment serves is
+    #: actually up.
+    tts_enabled: bool = False
+
     def deployment_urls(self) -> dict[str, str]:
         """The deployment → URL map the gateway keys its clients by.
 

@@ -96,11 +96,14 @@ class TestCommittedManifest:
             assert served.deployment == "stt-runtime"
 
     def test_synthesis_refuses_the_languages_the_ladder_refuses(self) -> None:
+        # Since the M42 promotion the manifest carries Hindi synthesis on
+        # the same artifact as English; Arabic remains the refused route,
+        # and the evaluation plane must still honour that refusal.
         registry = load_manifest(COMMITTED)
-        assert registry.resolve("intelliai-tts", "en").artifact == "kokoro-82m"
-        for language in ("hi", "ar"):
-            with pytest.raises(UnservedError, match="nothing to evaluate"):
-                registry.resolve("intelliai-tts", language)
+        for language in ("en", "hi"):
+            assert registry.resolve("intelliai-tts", language).artifact == "kokoro-82m"
+        with pytest.raises(UnservedError, match="nothing to evaluate"):
+            registry.resolve("intelliai-tts", "ar")
 
     def test_voices_resolve_to_the_artifact_that_renders_them(self) -> None:
         registry = load_manifest(COMMITTED)

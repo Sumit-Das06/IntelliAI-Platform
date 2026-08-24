@@ -300,12 +300,15 @@ window.IntelliAI = (function () {
       .then(function (response) { return response.ok ? response.json() : null; })
       .then(function (payload) {
         var tts = payload && payload.services && payload.services.tts;
-        if (tts && tts.status === "preview") {
+        var served = tts && (tts.status === "preview" || tts.status === "production");
+        if (served) {
           SERVICES.forEach(function (service) {
             if (service.id !== "tts") return;
-            service.status = "preview";
-            service.desc = "Natural speech from text with English and Hindi voices, " +
-              "streaming playback, and local preview access.";
+            service.status = tts.status;
+            service.desc = tts.status === "production"
+              ? "Natural speech from text with English and Hindi voices and streaming playback."
+              : "Natural speech from text with English and Hindi voices, " +
+                "streaming playback, and local preview access.";
             service.languages = (tts.languages || []).map(function (code) {
               return { name: LANGUAGE_NAMES[code] || code };
             });

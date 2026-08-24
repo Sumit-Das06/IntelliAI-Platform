@@ -632,33 +632,73 @@ async def test_the_services_card_links_the_speech_studio_without_claiming_launch
     assert '"Preview"' in js and '"Coming Soon"' in js and '"Production"' in js
 
 
-class TestM41LaunchStatus:
-    """M41: environment-aware launch status — the same static console
-    says Preview on a staging deployment and Coming Soon in production,
-    driven by the registry through /console/status."""
+class TestLaunchStatus:
+    """Environment-aware launch status (M41 mechanism, M42 posture): the
+    SAME static console says Preview on a local/staging deployment,
+    Production where the deployment itself is production, and Coming
+    Soon again the moment the catalog stops serving the service —
+    every answer read from the registry + this deployment's env, never
+    a hardcoded string."""
 
-    async def test_production_profile_reports_tts_soon_english_only(
+    async def test_a_local_or_staging_deployment_says_preview(
         self, settings: Settings, db_engine: AsyncEngine
     ) -> None:
+        # The promoted catalog serves Hindi TTS, but a non-prod box is
+        # not the customer's production service: Preview is the honest
+        # claim, deployed or not.
         async with client_with_db(settings, db_engine) as (client, _factory):
             payload = (await client.get("/console/status")).json()
-        assert payload["services"]["tts"]["status"] == "soon"
-        assert payload["services"]["tts"]["languages"] == ["en"]
+        assert payload["services"]["tts"]["status"] == "preview"
+        assert payload["services"]["tts"]["languages"] == ["en", "hi"]
 
-    async def test_staging_profile_reports_tts_preview_with_hindi(
+    async def test_a_production_deployment_says_production(
         self, settings: Settings, db_engine: AsyncEngine
     ) -> None:
         from fastapi import FastAPI
 
-        from intelliai_api.registry.proposals import staging_registry
+        from intelliai_api.core.config import Environment
 
-        def use_staging(app: FastAPI) -> None:
-            app.state.registry = staging_registry()
+        production = settings.model_copy(update={"env": Environment.PROD})
 
-        async with client_with_db(settings, db_engine, use_staging) as (client, _factory):
+        def as_production(app: FastAPI) -> None:
+            app.state.settings = production
+
+        async with client_with_db(settings, db_engine, as_production) as (client, _factory):
             payload = (await client.get("/console/status")).json()
-        assert payload["services"]["tts"]["status"] == "preview"
+        assert payload["services"]["tts"]["status"] == "production"
         assert payload["services"]["tts"]["languages"] == ["en", "hi"]
+
+    async def test_the_rollback_posture_says_coming_soon_again(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        # The UI half of the M42 rollback proof: compose the registry the
+        # revert commit would produce (refusal route, no Hindi voices)
+        # and the console goes back to promising nothing.
+        from fastapi import FastAPI
+
+        from intelliai_api.registry.catalog import _ARTIFACTS, _MODELS, _ROUTES, _VOICES
+        from intelliai_api.registry.proposals import ROLLBACK_TTS_PRODUCTION_ROUTE
+        from intelliai_api.registry.registry import Registry
+
+        rolled_back = Registry(
+            artifacts=_ARTIFACTS,
+            models=_MODELS,
+            voices=tuple(v for v in _VOICES if not v.id.startswith("hindi-")),
+            routes=tuple(
+                ROLLBACK_TTS_PRODUCTION_ROUTE
+                if (r.public_model_id == "intelliai-tts" and r.selector.language == "hi")
+                else r
+                for r in _ROUTES
+            ),
+        )
+
+        def as_rolled_back(app: FastAPI) -> None:
+            app.state.registry = rolled_back
+
+        async with client_with_db(settings, db_engine, as_rolled_back) as (client, _factory):
+            payload = (await client.get("/console/status")).json()
+        assert payload["services"]["tts"]["status"] == "soon"
+        assert payload["services"]["tts"]["languages"] == ["en"]
 
     async def test_status_payload_carries_no_engine_vocabulary(
         self, settings: Settings, db_engine: AsyncEngine

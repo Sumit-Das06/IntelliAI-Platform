@@ -20,6 +20,7 @@ from fastapi.responses import (
     Response,
 )
 
+from intelliai_api.core.config import Environment, Settings
 from intelliai_api.registry import Registry
 from intelliai_api.registry.records import LanguageStatus
 
@@ -53,18 +54,30 @@ async def root() -> RedirectResponse:
 
 @router.get("/console/status", include_in_schema=False)
 async def console_status(request: Request) -> JSONResponse:
-    """Deployment-honest launch status for the console pages (M41).
+    """Deployment-honest launch status for the console pages (M41/M42).
 
-    The static pages carry PRODUCTION-SAFE defaults ("Coming Soon");
-    this endpoint upgrades a service to "preview" only where THIS
-    deployment's registry actually serves it — the staging profile
-    composes the Hindi TTS proposal, production does not, so the same
-    static console never over-claims on a production box. Product
-    facts only (status + language codes): no artifacts, no engines,
-    no routes. Unauthenticated like the pages themselves.
+    Two facts, never a hardcoded string: does THIS deployment's registry
+    serve the service, and is THIS deployment production?
+
+        registry serves it + INTELLIAI_ENV=prod  → "production"
+        registry serves it, any other env        → "preview"
+        registry does not serve it               → "soon"
+
+    So the promoted catalog says *approved for production*, while a
+    local or staging box — which is not the customer's production
+    service, deployed or not — keeps saying Preview from the same
+    static files. Product facts only (status + language codes): no
+    artifacts, no engines, no routes. Unauthenticated like the pages.
     """
     registry = cast(Registry, request.app.state.registry)
-    tts_preview = registry.language_status("intelliai-tts", "hi") is LanguageStatus.AVAILABLE
+    settings = cast(Settings, request.app.state.settings)
+    serves_hindi_tts = registry.language_status("intelliai-tts", "hi") is LanguageStatus.AVAILABLE
+    if not serves_hindi_tts:
+        tts_status = "soon"
+    elif settings.env is Environment.PROD:
+        tts_status = "production"
+    else:
+        tts_status = "preview"
     tts_languages = sorted(
         {
             language
@@ -74,14 +87,7 @@ async def console_status(request: Request) -> JSONResponse:
         }
     )
     return JSONResponse(
-        {
-            "services": {
-                "tts": {
-                    "status": "preview" if tts_preview else "soon",
-                    "languages": tts_languages,
-                }
-            }
-        },
+        {"services": {"tts": {"status": tts_status, "languages": tts_languages}}},
         headers=_NO_CACHE,
     )
 

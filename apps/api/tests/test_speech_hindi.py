@@ -99,22 +99,44 @@ async def test_hindi_male_resolves_too(settings: Settings, db_engine: AsyncEngin
         assert fake.calls[0].voice == "hindi-male"
 
 
-async def test_production_profile_refuses_hindi_voices_before_any_plane_crossing(
+async def test_the_default_production_profile_now_serves_the_hindi_voices(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
+    # M42: the promotion landed in the LIVE catalog, so the default
+    # (production) profile serves the Hindi voices exactly as staging
+    # does — the two profiles agree because no proposal is pending.
     from tests.test_speech_api import install  # the default-profile shape
 
-    fake = FakeSynthesisClient(envelope=make_envelope())
+    fake = FakeSynthesisClient(envelope=make_envelope(voice="hindi-female", characters=7))
     async with client_with_db(settings, db_engine, install(fake)) as (client, factory):
-        tenant = await _tenant(factory, "hindi-prod-refusal@example.com")
+        tenant = await _tenant(factory, "hindi-prod-serves@example.com")
         response = await client.post(
             "/v1/audio/speech",
             json={"model": "intelliai-tts", "input": "नमस्ते।", "voice": "hindi-female"},
             headers={"Authorization": f"Bearer {tenant.generated.secret}"},
         )
+        assert response.status_code == 200
+        assert fake.calls[0].voice == "hindi-female"
+
+
+async def test_engine_voice_tokens_are_still_refused_before_any_plane_crossing(
+    settings: Settings, db_engine: AsyncEngine
+) -> None:
+    # The promotion promoted PRODUCT names, never engine assets: asking
+    # for the pack behind the voice is still a plain voice_not_found,
+    # refused by the registry before the runtime is ever called.
+    from tests.test_speech_api import install
+
+    fake = FakeSynthesisClient(envelope=make_envelope())
+    async with client_with_db(settings, db_engine, install(fake)) as (client, factory):
+        tenant = await _tenant(factory, "hindi-engine-token@example.com")
+        response = await client.post(
+            "/v1/audio/speech",
+            json={"model": "intelliai-tts", "input": "नमस्ते।", "voice": "hf_alpha"},
+            headers={"Authorization": f"Bearer {tenant.generated.secret}"},
+        )
         assert response.status_code == 400
         assert response.json()["error"]["code"] == "voice_not_found"
-        # Refused BY THE REGISTRY: the runtime was never called.
         assert fake.calls == []
 
 

@@ -82,7 +82,18 @@
         },
         {
           "language": "hi",
-          "status": "unavailable"
+          "status": "available",
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime",
+          "evidence": {
+            "corpus": "m38-hindi-tts-probe-texts@v1",
+            "corpus_ownership": "owned",
+            "quality_baseline": "2026-08-22-hindi-tts-model-selection",
+            "production_benchmark": "2026-08-24-kokoro-hindi-staging-validation-m40",
+            "approval": "F-M42 — founder promotion decision, 2026-08-24 (docs/milestones/42-tts-production-promotion.md); readiness evidence: docs/milestones/40-hindi-tts-final-staging-validation.md",
+            "approved_on": "2026-08-24"
+          }
         },
         {
           "language": "ar",
@@ -121,6 +132,24 @@
           "voice": "reference-bass",
           "languages": [
             "en"
+          ],
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
+          "voice": "hindi-female",
+          "languages": [
+            "hi"
+          ],
+          "artifact": "kokoro-82m",
+          "artifact_version": 1,
+          "deployment": "tts-runtime"
+        },
+        {
+          "voice": "hindi-male",
+          "languages": [
+            "hi"
           ],
           "artifact": "kokoro-82m",
           "artifact_version": 1,

@@ -33,14 +33,17 @@ case "$(uname -s 2>/dev/null)" in MINGW*|MSYS*) DEVNULL="NUL" ;; esac
 set -a; . "./$ENV_FILE"; set +a
 
 # ── 1. Every expected service is up ─────────────────────────────────────
-for service in caddy api stt-runtime postgres redis minio; do
+# M42: tts-runtime joined the roster when speech synthesis became an
+# approved production service - a promoted service that nobody checks
+# is a promise nobody keeps.
+for service in caddy api stt-runtime tts-runtime postgres redis minio; do
   state="$($COMPOSE ps --format '{{.Service}} {{.State}}' 2>/dev/null | awk -v s="$service" '$1==s {print $2}')"
   [ "$state" = "running" ] || fail "service '$service' is not running (state: '${state:-absent}')"
 done
-note "all six services running"
+note "all seven services running"
 
 # ── 2. Container healthchecks are green ─────────────────────────────────
-for service in api stt-runtime postgres redis minio; do
+for service in api stt-runtime tts-runtime postgres redis minio; do
   health="$($COMPOSE ps --format '{{.Service}} {{.Health}}' 2>/dev/null | awk -v s="$service" '$1==s {print $2}')"
   [ "$health" = "healthy" ] || fail "service '$service' healthcheck is '$health', not healthy"
 done
@@ -59,6 +62,16 @@ runtime_ready="$(curl -fsS --max-time 10 http://127.0.0.1:8001/health/ready || t
 echo "$runtime_ready" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"' \
   || fail "stt-runtime /health/ready is not 'ready': $runtime_ready"
 note "stt-runtime ready (artifacts hash-verified at load — ready IS the artifact check)"
+
+# -- 4a2. Speech synthesis is ready and serving the promoted posture (M42)
+tts_ready="$(curl -fsS --max-time 10 http://127.0.0.1:8002/health/ready || true)"
+echo "$tts_ready" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"' || fail "tts-runtime /health/ready is not 'ready': $tts_ready"
+tts_info="$(curl -fsS --max-time 10 http://127.0.0.1:8002/info || true)"
+echo "$tts_info" | grep -q '"hindi_g2p"[[:space:]]*:[[:space:]]*"espeak"' || fail "tts-runtime does not report the promoted Hindi posture"
+for voice in english-female english-male hindi-female hindi-male; do
+  echo "$tts_info" | grep -q "\"$voice\"" || fail "promoted voice '$voice' is not served"
+done
+note "tts-runtime ready; four promoted voices served (EN + HI)"
 
 # ── 4b. Punctuation stage posture matches the declared config (M31) ─────
 # The declared posture lives in the OVERLAY first (local-prod enables the
@@ -146,6 +159,29 @@ PY
   note "one real transcription through the edge (200)"
 else
   warn "INTELLIAI_SMOKE_API_KEY not set — skipped the real-transcription check (create a key with make bootstrap-org)"
+fi
+
+# -- 9b. One real synthesis through the edge (M42) -----------------------
+# Speech synthesis is an approved production service, so the deployment
+# smoke proves it the same way it proves transcription: a real request
+# through the real edge with a real key. English AND Hindi, because both
+# are promoted; the body rides a file so non-ASCII text survives every
+# shell this script runs in.
+if [ -n "${INTELLIAI_SMOKE_API_KEY:-}" ]; then
+  speech_body="./smoke-speech-$$.json"
+  for voice in english-female hindi-female; do
+    if [ "$voice" = "hindi-female" ]; then
+      printf '%s' '{"model":"intelliai-tts","input":"नमस्ते, आपका स्वागत है।","voice":"hindi-female"}' > "$speech_body"
+    else
+      printf '%s' '{"model":"intelliai-tts","input":"Welcome to IntelliAI.","voice":"english-female"}' > "$speech_body"
+    fi
+    code="$(curl -ks -o "$DEVNULL" -w '%{http_code}' --max-time 120 -H "Authorization: Bearer $INTELLIAI_SMOKE_API_KEY" -H "Content-Type: application/json" --data-binary @"$speech_body" "$edge/v1/audio/speech")"
+    rm -f "$speech_body"
+    [ "$code" = "200" ] || fail "smoke synthesis ($voice) returned $code, expected 200"
+  done
+  note "one real synthesis per promoted language through the edge (200)"
+else
+  warn "INTELLIAI_SMOKE_API_KEY not set - skipped the real-synthesis check"
 fi
 
 echo "SMOKE OK — the stack serves, refuses, and hides exactly what it should"

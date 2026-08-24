@@ -104,8 +104,9 @@ def test_the_default_roster_probes_database_redis_storage_and_stt(
     # The roster is the production readiness contract: database is the
     # one critical dependency; redis, storage, and the STT runtime
     # degrade the report without taking the gateway out of rotation.
-    # TTS is deliberately ABSENT while the tts profile is off — a
-    # permanently-degraded check would train operators to ignore the
+    # TTS is ABSENT unless the deployment declares it (M42): a stack
+    # that keeps synthesis behind its compose profile must not report a
+    # permanently-degraded check that trains operators to ignore the
     # signal.
     from intelliai_api.core.health import default_checks
     from intelliai_api.db.engine import create_engine
@@ -117,6 +118,31 @@ def test_the_default_roster_probes_database_redis_storage_and_stt(
         "redis": False,
         "storage": False,
         "stt-runtime": False,
+    }
+
+
+def test_a_deployment_that_serves_tts_answers_for_it_in_readiness(
+    settings: Settings,
+) -> None:
+    # M42: the production overlay and the production-shaped local stack
+    # START tts-runtime, so the gateway must probe it — green may never
+    # mean "everything except the service you just promoted".
+    from intelliai_api.core.health import default_checks
+    from intelliai_api.db.engine import create_engine
+
+    serving = settings.model_copy(
+        update={"runtimes": settings.runtimes.model_copy(update={"tts_enabled": True})}
+    )
+    checks = default_checks(serving, create_engine(serving))
+    roster = {check.name: check.critical for check in checks}
+    assert roster == {
+        "database": True,
+        "redis": False,
+        "storage": False,
+        "stt-runtime": False,
+        # Degrades the report, never takes the gateway out of rotation —
+        # the same weight every runtime dependency carries.
+        "tts-runtime": False,
     }
 
 

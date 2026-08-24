@@ -55,7 +55,9 @@ class TestLadderJoin:
         assert by_key[("transcription", "en")].requests == 4
         assert by_key[("transcription", "hi")].requests == 2
         assert by_key[("speech_synthesis", "en")].requests == 3
-        # Synthesis Hindi is refused, so it must show a promise and no traffic.
+        # Synthesis Hindi is served but unused here: a ladder row with
+        # no traffic, which `available` makes neither a defect nor a
+        # broken promise.
         assert by_key[("speech_synthesis", "hi")].requests == 0
 
     def test_regional_tags_fold_into_their_base_subtag(self) -> None:
@@ -66,9 +68,11 @@ class TestLadderJoin:
 
 class TestSignals:
     def test_traffic_on_a_refused_language_is_a_contradiction(self) -> None:
-        rows = report(usage("hi", "speech_synthesis", requests=1)).against_ladder(SHIPPED_LADDER)
+        # Arabic synthesis is the platform's refused route since the
+        # M42 promotion moved Hindi synthesis onto the ladder.
+        rows = report(usage("ar", "speech_synthesis", requests=1)).against_ladder(SHIPPED_LADDER)
         flagged = [row for row in rows if row.is_contradiction]
-        assert [(row.capability, row.language) for row in flagged] == [("speech_synthesis", "hi")]
+        assert [(row.capability, row.language) for row in flagged] == [("speech_synthesis", "ar")]
 
     def test_a_promise_nobody_used_is_a_product_signal_not_a_defect(self) -> None:
         rows = report().against_ladder(SHIPPED_LADDER)
@@ -94,7 +98,8 @@ class TestShippedLadder:
         # A report carrying its own copy of the ladder would eventually
         # disagree with what the platform serves, and disagree silently.
         assert SHIPPED_LADDER[("transcription", "hi")] == "available"
-        assert SHIPPED_LADDER[("speech_synthesis", "hi")] == "unavailable"
+        assert SHIPPED_LADDER[("speech_synthesis", "hi")] == "available"  # M42 promotion
+        assert SHIPPED_LADDER[("speech_synthesis", "ar")] == "unavailable"
         assert SHIPPED_LADDER[("transcription", "en")] == "supported"
 
     def test_both_capabilities_are_covered(self) -> None:

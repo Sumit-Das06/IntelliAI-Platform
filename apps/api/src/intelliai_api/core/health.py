@@ -236,17 +236,25 @@ class HealthService:
 
 
 def default_checks(settings: Settings, engine: AsyncEngine) -> list[HealthCheck]:
-    """The gateway's dependency roster. Future inference services register here.
+    """The gateway's dependency roster — what THIS deployment answers for.
 
-    Only the STT deployment is probed: V1 is STT-only and the TTS
-    runtime is deliberately absent (compose ``tts`` profile) — probing
-    it would report a permanent, meaningless DEGRADED that trains
-    operators to ignore the one signal that matters. When TTS returns,
-    its deployment registers here in the same line.
+    The STT deployment is always probed. The TTS deployment is probed
+    exactly when the deployment declares it (``INTELLIAI_RUNTIMES_TTS_
+    ENABLED``, set by the production overlay and the production-shaped
+    local stack since the M42 promotion): a stack that keeps TTS behind
+    its compose profile must not report a permanent, meaningless
+    DEGRADED, and a stack that SERVES TTS must not report green while
+    synthesis is down. Roster membership is deployment truth, not
+    catalog truth.
     """
-    return [
+    checks: list[HealthCheck] = [
         DatabaseHealthCheck(engine),
         RedisHealthCheck(settings.redis.url.get_secret_value()),
         StorageHealthCheck(settings.storage.endpoint_url),
         RuntimeHealthCheck("stt-runtime", f"{settings.runtimes.stt_url}/health/ready"),
     ]
+    if settings.runtimes.tts_enabled:
+        checks.append(
+            RuntimeHealthCheck("tts-runtime", f"{settings.runtimes.tts_url}/health/ready")
+        )
+    return checks

@@ -307,16 +307,20 @@ async def test_voices_is_a_product_catalog(settings: Settings, db_engine: AsyncE
         payload = response.json()
         assert payload["object"] == "list"
         voices = {voice["id"]: voice for voice in payload["data"]}
+        # The M42 promotion added the Hindi pair; the English launch
+        # names and their permanent legacy aliases are unchanged.
         assert set(voices) == {
             "english-female",
             "english-male",
             "reference-alto",
             "reference-bass",
+            "hindi-female",
+            "hindi-male",
         }
-        for voice in voices.values():
+        for voice_id, voice in voices.items():
             assert voice["object"] == "voice"
             assert voice["model"] == "intelliai-tts"
-            assert voice["languages"] == ["en"]
+            assert voice["languages"] == (["hi"] if voice_id.startswith("hindi-") else ["en"])
             assert isinstance(voice["created"], int) and voice["created"] > 0
 
 

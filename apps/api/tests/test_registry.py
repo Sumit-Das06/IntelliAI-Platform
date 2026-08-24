@@ -201,11 +201,15 @@ class TestDefaultCatalog:
         assert resolution.service == "tts-runtime"
         assert resolution.artifact.id == "kokoro-82m"
         voice_ids = [v.id for v in default_registry().list_voices("intelliai-tts")]
+        # Catalog order: the English launch pair, their permanent legacy
+        # aliases, then the M42-promoted Hindi pair.
         assert voice_ids == [
             "english-female",
             "english-male",
             "reference-alto",
             "reference-bass",
+            "hindi-female",
+            "hindi-male",
         ]
 
     def test_public_ids_never_leak_engine_names(self) -> None:
@@ -697,9 +701,12 @@ class TestDefaultLadder:
         assert registry.language_status("intelliai-stt", "ar") is LanguageStatus.AVAILABLE
 
     def test_tts_ladder(self) -> None:
+        # Hindi entered the ladder at `available` with the M42 promotion
+        # (F-M5-1: every language enters there); Arabic synthesis still
+        # has no licensed path, so its refusal remains the honest answer.
         registry = default_registry()
         assert registry.language_status("intelliai-tts", "en") is LanguageStatus.SUPPORTED
-        assert registry.language_status("intelliai-tts", "hi") is LanguageStatus.UNAVAILABLE
+        assert registry.language_status("intelliai-tts", "hi") is LanguageStatus.AVAILABLE
         assert registry.language_status("intelliai-tts", "ar") is LanguageStatus.UNAVAILABLE
 
     def test_every_promise_cites_its_evidence(self) -> None:

@@ -104,6 +104,24 @@ else
   note "punctuation stage disabled (INTELLIAI_STT_PUNCTUATION_ENABLED=$PUNCT_ENABLED)"
 fi
 
+# ── 4d. The promoted TTS artifact must be seedable (M42) ────────────────
+# Production serves English AND Hindi speech synthesis from one pinned
+# artifact (v2: base weights + config + 2 English + 2 Hindi voice packs).
+# The runtime CAN fetch it on first start, but a production box must not
+# depend on egress: seeded bytes are hash-verified at load exactly like a
+# downloaded artifact, and a box without either would crash-loop at
+# startup. Say it here instead.
+KOKORO_DIR="models/kokoro-82m/v2"
+KOKORO_MISSING=""
+for file in kokoro-v1_0.pth config.json af_heart.pt am_michael.pt hf_alpha.pt hm_psi.pt; do
+  [ -f "$KOKORO_DIR/$file" ] || KOKORO_MISSING="$KOKORO_MISSING $file"
+done
+if [ -z "$KOKORO_MISSING" ]; then
+  note "promoted TTS artifact present for seeding ($KOKORO_DIR: base + 4 voice packs)"
+else
+  fail "the promoted TTS artifact is incomplete in $KOKORO_DIR (missing:$KOKORO_MISSING) — place the pinned files under models/kokoro-82m/v2/ (see docs/ops/model-rollout.md), then 'make seed-models' seeds the model volume"
+fi
+
 # ── 5. the env file stays private ───────────────────────────────────────
 if command -v stat >/dev/null 2>&1; then
   mode="$(stat -c '%a' "$ENV_FILE" 2>/dev/null || echo '')"
@@ -113,7 +131,9 @@ if command -v stat >/dev/null 2>&1; then
 fi
 
 # ── 6. Compose configuration parses with THESE values ───────────────────
-docker compose -p "$PROJECT" --env-file "$ENV_FILE" \
+# --profile tts (M42): validate the composition that will actually
+# run - speech synthesis is an approved production service.
+docker compose -p "$PROJECT" --env-file "$ENV_FILE" --profile tts \
   -f docker-compose.yml -f "$OVERLAY" config -q \
   || fail "docker compose config rejected the production overlay"
 note "compose config (base + $OVERLAY)"

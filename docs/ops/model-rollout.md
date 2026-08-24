@@ -101,49 +101,86 @@ capacity re-measurement (~4–5 concurrent 300 s long requests, ~4 GiB
 steady-state RSS per busy long-audio slot — Windows-measured) all
 belong to the future deployment milestone.
 
-## The PREPARED promotion: Hindi TTS on Kokoro-82M (M40, pending)
+## The ACTIVE promotion: IntelliAI TTS, English + Hindi (approved at M42)
 
-*(implemented local/staging at M39; validated + prepared for promotion
-at M40; NOT approved, NOT activated — the staging route carries the
-``APPROVAL_PENDING`` sentinel and a test refuses it in any live
-registry)*
+*(implemented local/staging at M35-M39; validated at M40; APPROVED by
+the founder 2026-08-24 and ACTIVATED by the Milestone 42 promotion
+commit — F-M42)*
 
-What staging serves today and production will serve after the
-promotion commit:
+The repository's production configuration now declares speech
+synthesis an approved production service:
 
-    voice hindi-female → kokoro-82m (pack hf_alpha, artifact v2)
-    voice hindi-male   → kokoro-82m (pack hm_psi,  artifact v2)
-    hi route: UNAVAILABLE (prod today) → AVAILABLE on kokoro-82m
+    voice english-female / english-male → kokoro-82m (af_heart, am_michael)
+    voice hindi-female                  → kokoro-82m (pack hf_alpha)
+    voice hindi-male                    → kokoro-82m (pack hm_psi)
+    en route: SUPPORTED (unchanged since M3/F-M5-2)
+    hi route: UNAVAILABLE → AVAILABLE on kokoro-82m (F-M42)
 
-**The promotion is one reviewed commit** (the E3/M26 shape,
-restated in `registry/proposals.py`):
+The promotion landed as one reviewed commit moving four things
+together (the E3/M26 shape):
 
-1. catalog.py: append `HINDI_TTS_VOICES` to `_VOICES`; replace the hi
-   refusal route with `HINDI_TTS_ROUTE`.
-2. Replace `APPROVAL_PENDING` on the route evidence with the founder
-   decision reference.
-3. Flip the production-refusal guard tests to production-serving pins
-   in the same commit.
+1. **The catalog**: the two Hindi voice records join `_VOICES`, and
+   the hi refusal route becomes the served route with the founder's
+   approval and the full evidence chain riding on it
+   (`quality_baseline` `2026-08-22-hindi-tts-model-selection`,
+   `production_benchmark` `2026-08-24-kokoro-hindi-staging-validation-m40`).
+2. **The production overlay**: `infra/compose/prod.yml` pins the TTS
+   posture explicitly (`INTELLIAI_TTS_SLOTS: kokoro`,
+   `NORMALIZE_TEXT: "true"`, `OOV_FALLBACK: espeak`,
+   `HINDI_G2P: espeak`) and `make prod-*` carries `--profile tts`, so
+   the approved service is one the deployment can actually bring up.
+3. **The guards**: readiness now answers for synthesis where the
+   deployment serves it (`INTELLIAI_RUNTIMES_TTS_ENABLED`), the
+   preflight refuses a prod start whose TTS artifact is not placed for
+   seeding, and the production smoke covers the service, its posture,
+   its four voices, and one real synthesis per promoted language.
+4. **The tests**: the production-refusal pins became production-serving
+   pins in the same commit.
 
-No artifact re-admission (kokoro-82m already registered; its v2 spec
-carries both Hindi packs, SHA-pinned), no image change, no client
-change. **Two-knob law**: this catalog promotion is SEPARATE from the
-TTS production-launch gate (prod.yml tts block + Hostinger) — prod.yml
-ships no TTS at all today, so promoting the catalog alone changes
-nothing a customer can reach until the launch gate opens.
+No artifact re-admission (kokoro-82m was already registered; its v2
+file set carries all four voice packs, SHA-256-pinned at revision
+`f3ff3571…`), no image change, no client change, no API change.
 
-**Weights distribution**: kokoro-82m downloads from the pinned
-upstream at boot and is re-hashed every start; `make seed-models` ALSO
-copies `models/kokoro-82m/v2/` into the volume when present (M40), so
-an offline/airgapped box seeds exactly like E3 does.
+**Weights distribution**: `make seed-models` copies
+`models/kokoro-82m/v2/` into the model volume, and the store
+hash-verifies the placed files at every load exactly like a downloaded
+artifact — a box without egress serves the promoted voices, and
+`prod-check` refuses to proceed without them.
 
 **Rollback**: `git revert` of the promotion commit → Hindi TTS returns
-to the honest refusal. The reviewed target `ROLLBACK_HINDI_TTS_ROUTE`
-in proposals.py restates it verbatim and a test pins it EQUAL to the
-live route for as long as the proposal is pending. Staging-tier
-rollback is one env line (`INTELLIAI_TTS_HINDI_G2P=off` — the runtime
-then serves no Hindi voice, smoke-checked both ways) or the registry
-profile itself.
+to the honest refusal, whole-language, never half-promoted (the voices
+and the route leave together, so `hindi-female` answers
+`voice_not_found` before any plane crossing). The reviewed target
+`ROLLBACK_TTS_PRODUCTION_ROUTE` in proposals.py restates it verbatim
+and tests pin both the target and the rolled-back console status.
+English TTS is untouched by that revert. A deployment-tier rollback
+that keeps English while dropping Hindi is one env line
+(`INTELLIAI_TTS_HINDI_G2P=off` — the runtime then serves no Hindi
+voice; smoke checks the posture both ways), drilled live at M40 at
+~40 s per direction.
+
+**Deployment status**: the promotion is a REPOSITORY state. **Nothing
+is deployed.** Hostinger, DNS, certificates, production secrets, the
+first live smoke, and the VPS capacity measurement all belong to the
+deployment/launch milestone. The sequence is deliberately three
+separate steps: **promotion** (this commit) → **deployment** (a host
+runs `prod-check` → `prod-up` → `prod-migrate` → `prod-smoke`) →
+**launch** (customer traffic).
+
+### Deploying the promoted TTS service (when a host exists)
+
+1. `make prod-check` — now also refuses a start whose
+   `models/kokoro-82m/v2/` files are missing (base + 4 voice packs).
+2. `make prod-up` — brings up the seven-service stack (`--profile tts`
+   included); the TTS runtime hash-verifies its artifact at load and
+   only then reports ready.
+3. `make prod-health` — the gateway's readiness now includes
+   `tts-runtime`; green means synthesis is actually up.
+4. `INTELLIAI_SMOKE_API_KEY=… make prod-smoke` — seven services, the
+   TTS posture (`hindi_g2p`), all four promoted voices, and one real
+   synthesis per promoted language through the edge.
+5. Rollback: `git revert` the promotion commit → `make prod-up`; or
+   drop Hindi alone with `INTELLIAI_TTS_HINDI_G2P=off`.
 
 ## What the future ML milestone adds (not now)
 

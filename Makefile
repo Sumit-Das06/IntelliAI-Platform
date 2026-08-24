@@ -273,7 +273,9 @@ staging-seed-models: seed-models ## Back-compat alias (the seeding path now serv
 LOCAL_PROD_OVERLAY := infra/compose/local-prod.yml
 # --profile tts: M35 — the production-shaped LOCAL stack serves TTS so
 # the Web Speech Studio verifies end to end through the HTTPS edge.
-# prod.yml still ships no TTS service; this flag changes nothing there.
+# Since the M42 promotion the PRODUCTION target carries the same flag:
+# TTS is an approved production service, and a profile-gated service
+# that never starts would be an approval nobody could deploy.
 LOCAL_PROD := docker compose --profile tts -f docker-compose.yml -f $(LOCAL_PROD_OVERLAY)
 
 local-prod-check: ## Preflight the local production-shaped stack (same battery as prod-check)
@@ -303,6 +305,10 @@ local-prod-down: ## Stop the local production-shaped stack (volumes are kept)
 # The deployment sequence, in call order:
 #   prod-check → prod-build → prod-up → prod-migrate → prod-health → prod-smoke
 # Every target is idempotent; nothing here reaches beyond this machine.
+#
+# --profile tts (M42): speech synthesis is an APPROVED production
+# service, so the production compose brings it up like every other one.
+PROD := docker compose --profile tts -f docker-compose.yml -f infra/compose/prod.yml
 
 prod-check: ## Preflight: docker, .env completeness, secrets, compose config, Caddyfile — BEFORE touching services
 	bash infra/prod-preflight.sh
@@ -310,10 +316,10 @@ prod-check: ## Preflight: docker, .env completeness, secrets, compose config, Ca
 prod-config-check: prod-check ## Alias for prod-check (configuration validation only)
 
 prod-build: ## Build the production images without starting anything
-	docker compose -f docker-compose.yml -f infra/compose/prod.yml build
+	$(PROD) build
 
 prod-up: seed-models ## Deploy/refresh the production stack (base + prod overlay, builds images)
-	docker compose -f docker-compose.yml -f infra/compose/prod.yml up -d --build
+	$(PROD) up -d --build
 
 # Migrations refuse to run without a fresh backup (<24 h): the runbook's
 # backup-before-migration rule, made mechanical. force=1 overrides for
@@ -324,7 +330,7 @@ prod-migrate: ## Apply database migrations (requires a <24h backup; first deploy
 	  echo "  Run 'make prod-backup' first (or force=1 for a first deploy of an empty database)."; \
 	  exit 2; \
 	fi
-	docker compose -f docker-compose.yml -f infra/compose/prod.yml run --rm --no-deps api \
+	$(PROD) run --rm --no-deps api \
 	  alembic -c apps/api/alembic.ini upgrade head
 
 prod-health: ## Quick health read: gateway live/ready + runtime ready (running stack)
@@ -343,7 +349,7 @@ prod-restore-check: ## Prove the newest pg backup restores (disposable container
 	bash infra/restore-check.sh
 
 prod-down: ## Stop the production stack (volumes are kept)
-	docker compose -f docker-compose.yml -f infra/compose/prod.yml down
+	$(PROD) down
 
 backup: ## Full backup: pg dump + volume tar + object-level mirror (docs/ops/backup.md)
 	bash infra/backup.sh

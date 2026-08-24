@@ -45,6 +45,11 @@ services:
   api:
     environment:
       INTELLIAI_ENV: prod
+      # M42: this deployment SERVES speech synthesis, so the gateway
+      # answers for it in readiness — green means every service this
+      # deployment runs is actually up (no false green, no permanent
+      # meaningless DEGRADED).
+      INTELLIAI_RUNTIMES_TTS_ENABLED: "true"
 
   stt-runtime:
     environment:
@@ -60,6 +65,27 @@ services:
       # battery — explicit here so a stray dev variable can never enable
       # a stage this deployment has not approved.
       INTELLIAI_STT_PUNCTUATION_ENABLED: "false"
+
+  # ── Speech synthesis (M42 promotion, founder decision F-M42) ──────────
+  # TTS is an APPROVED production service: English (M3→M37) and Hindi
+  # (M38→M40) on one Kokoro-82M artifact. The posture is explicit here,
+  # never inherited from a stray dev variable, and mirrors exactly what
+  # the production-shaped local stack validated:
+  #   slots kokoro          — one hosted artifact, hash-verified at load
+  #   normalize_text true   — the M35/M39 speech-only normalization seam
+  #   oov_fallback espeak   — English OOV rescue at the exec boundary
+  #   hindi_g2p espeak      — Hindi G2P + the two approved Hindi voices
+  # The voice packs ship inside the pinned artifact; `make seed-models`
+  # places them (models/kokoro-82m/v2/) and the preflight refuses a prod
+  # start without them, so a box with no egress never silently degrades.
+  # NOTE: promotion is repository posture. Bringing this service UP on a
+  # real host is the separate deployment/launch milestone.
+  tts-runtime:
+    environment:
+      INTELLIAI_TTS_SLOTS: kokoro
+      INTELLIAI_TTS_NORMALIZE_TEXT: "true"
+      INTELLIAI_TTS_OOV_FALLBACK: espeak
+      INTELLIAI_TTS_HINDI_G2P: espeak
 
 volumes:
   caddydata:

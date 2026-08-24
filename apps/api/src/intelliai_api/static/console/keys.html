@@ -160,8 +160,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // TTS from the Coming Soon list. Production keeps the static text.
   IntelliAI.withStatus(function () {
     var tts = IntelliAI.SERVICES.filter(function (s) { return s.id === "tts"; })[0];
-    if (tts && tts.status === "preview") {
-      document.getElementById("tts-preview-chip").classList.remove("hidden");
+    if (tts && tts.status !== "soon") {
+      // One chip, labelled by the shared status model: "Preview" on
+      // a staging box, "Production" where the deployment IS production.
+      var badge = IntelliAI.badgeFor(tts);
+      var chip = document.getElementById("tts-preview-chip");
+      chip.textContent = "IntelliAI TTS · " + badge.text;
+      chip.className = "badge " + badge.cls;
       document.getElementById("services-soon-note").textContent =
         "  IntelliAI OCR, Translate, Vision, and LLM — Coming Soon. " +
         "Keys automatically gain access to new services as they launch.";

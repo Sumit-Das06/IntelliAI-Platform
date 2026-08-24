@@ -398,16 +398,62 @@ def test_dev_compose_declares_the_m35_tts_posture() -> None:
 
 
 def test_local_prod_serves_tts_with_the_hardened_posture() -> None:
-    # The production-shaped LOCAL stack serves TTS for the Web E2E; the
-    # posture is pinned explicitly, and prod.yml still ships no TTS.
+    # The production-shaped LOCAL stack serves TTS for the Web E2E, with
+    # the posture pinned explicitly — since M42 it mirrors production.
     overlay = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
     assert "tts-runtime:" in overlay
     assert 'INTELLIAI_TTS_NORMALIZE_TEXT: "true"' in overlay
     assert "INTELLIAI_TTS_OOV_FALLBACK: espeak" in overlay
-    prod = (REPO / "infra/compose/prod.yml").read_text(encoding="utf-8")
-    assert "tts-runtime" not in prod
+    assert 'INTELLIAI_RUNTIMES_TTS_ENABLED: "true"' in overlay
     makefile = (REPO / "Makefile").read_text(encoding="utf-8")
     assert "docker compose --profile tts -f docker-compose.yml" in makefile
+
+
+def test_the_prod_overlay_declares_the_promoted_tts_posture() -> None:
+    # M42 (founder decision F-M42): speech synthesis is an APPROVED
+    # production service. The overlay pins the exact posture the staging
+    # validation proved — never inherited from a stray dev variable —
+    # and the production compose actually brings the service up.
+    prod = (REPO / "infra/compose/prod.yml").read_text(encoding="utf-8")
+    assert "tts-runtime:" in prod
+    assert "INTELLIAI_TTS_SLOTS: kokoro" in prod
+    assert 'INTELLIAI_TTS_NORMALIZE_TEXT: "true"' in prod
+    assert "INTELLIAI_TTS_OOV_FALLBACK: espeak" in prod
+    assert "INTELLIAI_TTS_HINDI_G2P: espeak" in prod
+    # Readiness must answer for what this deployment serves.
+    assert 'INTELLIAI_RUNTIMES_TTS_ENABLED: "true"' in prod
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert (
+        "PROD := docker compose --profile tts -f docker-compose.yml -f infra/compose/prod.yml"
+        in makefile
+    )
+    # Every production target goes through that one definition.
+    for target in ("$(PROD) build", "$(PROD) up -d --build", "$(PROD) down"):
+        assert target in makefile
+
+
+def test_the_preflight_requires_the_promoted_tts_artifact() -> None:
+    # A production box must never depend on egress for a promoted
+    # artifact: the preflight refuses a prod start whose TTS bytes are
+    # not placed for seeding (the E3 rule, applied to synthesis).
+    preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
+    assert "models/kokoro-82m/v2" in preflight
+    for pack in ("af_heart.pt", "am_michael.pt", "hf_alpha.pt", "hm_psi.pt"):
+        assert pack in preflight
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert "/src/kokoro-82m/v2" in makefile  # seed-models places the same set
+
+
+def test_the_production_smoke_covers_the_promoted_service() -> None:
+    # A promoted service that nobody checks is a promise nobody keeps.
+    smoke = (REPO / "infra/prod-smoke.sh").read_text(encoding="utf-8")
+    assert "for service in caddy api stt-runtime tts-runtime postgres redis minio" in smoke
+    assert "all seven services running" in smoke
+    assert "8002/health/ready" in smoke
+    assert '"hindi_g2p"' in smoke
+    for voice in ("english-female", "english-male", "hindi-female", "hindi-male"):
+        assert voice in smoke
+    assert "/v1/audio/speech" in smoke  # one real synthesis, key-gated like transcription
 
 
 def test_tts_smoke_is_the_stale_image_guard() -> None:

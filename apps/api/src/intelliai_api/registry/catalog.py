@@ -73,11 +73,15 @@ _ARTIFACTS = (
         version=1,
         capability=Capability.SPEECH_SYNTHESIS,
         provenance=(
-            "hexgrad/Kokoro-82M v1.0 (Apache-2.0): weights, config, and voice "
-            "packs, all SHA-256-pinned from the Hugging Face distribution; "
-            "served English-only, espeak-free (M3 design review §8). Training "
-            "data includes synthetic audio from third-party models (provenance "
-            "note, informational)."
+            "hexgrad/Kokoro-82M v1.0 (Apache-2.0) @ revision f3ff3571…: weights, "
+            "config, and voice packs, all SHA-256-pinned from the Hugging Face "
+            "distribution. Serves ENGLISH (af_heart, am_michael — espeak-free "
+            "misaki G2P, M3 design review §8) and, since the M42 promotion, "
+            "HINDI (hf_alpha, hm_psi — sentence-level G2P through the pinned "
+            "espeak-ng BINARY at an exec boundary; the GPL python chain stays "
+            "banned in-process, build-verified). Training data includes "
+            "synthetic audio from third-party models (provenance note, "
+            "informational)."
         ),
         license=LicenseVerdict(
             license="Apache-2.0",
@@ -209,6 +213,45 @@ _KOKORO_SERVING_PATH = LicenseVerdict(
     ),
 )
 
+#: Serving-path verdict for the PROMOTED Hindi TTS route (M42). Weights
+#: and Hindi voice packs are the same Apache-2.0 artifact; the only
+#: Hindi-specific component is espeak-ng — a GPL-3.0 BINARY invoked as a
+#: subprocess (constant argv, stdin transport), the M3 §8 posture
+#: recorded CLOSED at M35 and reused unchanged for Hindi G2P. No GPL code
+#: links into any IntelliAI process (build-verified, isolation-tested).
+_KOKORO_HI_SERVING_PATH = LicenseVerdict(
+    license="Apache-2.0",
+    commercial_use=True,
+    verified_on=date(2026, 8, 24),
+    source="https://huggingface.co/hexgrad/Kokoro-82M",
+    covers=(
+        "weights, config, and Hindi voice packs (hf_alpha, hm_psi — SHA-256-pinned "
+        "at revision f3ff3571…); Hindi G2P via the pinned espeak-ng 1.51 binary at "
+        "an exec boundary (GPL binary invoked as a subprocess, never linked)"
+    ),
+)
+
+#: The Hindi TTS evidence chain the promotion cites, immutable by
+#: reference: the frozen M38 benchmark (61 probes) through the REAL
+#: gateway path, judged by the promoted E3 Hindi route with the frozen
+#: evaluation methodology. Numbers at promotion (M40 replicate, both
+#: approved voices): clean-slice RT-WER 0.0620 (hindi-female) / 0.0547
+#: (hindi-male) against the proposed ≤0.08 product gate; long-text
+#: ladder 0.0458 / 0.0260 with zero truncation to 1897 chars; stream
+#: TTFA 0.77-1.5 s length-independent; zero synthesis failures.
+_TTS_HI_EVIDENCE = LanguageEvidence(
+    corpus="m38-hindi-tts-probe-texts@v1",
+    corpus_ownership=CorpusOwnership.OWNED,
+    quality_baseline="2026-08-22-hindi-tts-model-selection",
+    production_benchmark="2026-08-24-kokoro-hindi-staging-validation-m40",
+    approval=(
+        "F-M42 — founder promotion decision, 2026-08-24 "
+        "(docs/milestones/42-tts-production-promotion.md); readiness evidence: "
+        "docs/milestones/40-hindi-tts-final-staging-validation.md"
+    ),
+    approved_on=date(2026, 8, 24),
+)
+
 _ROUTES = (
     ServingRoute(
         public_model_id="intelliai-stt",
@@ -252,13 +295,21 @@ _ROUTES = (
         license=_KOKORO_SERVING_PATH,
         evidence=_TTS_EN_EVIDENCE,
     ),
-    # Synthesis is not transcription: the incumbent has no licensed Hindi
-    # or Arabic path at all, so the honest answer is refusal, not
-    # best-effort. Each refusal is recorded as demand evidence.
+    # Hindi synthesis: the M42 promotion — the second language to reach
+    # the product, on the SAME artifact the English route serves (M38
+    # chose extending the incumbent over a second engine; M39 built it;
+    # M40 validated it). Status stays `available`: every language enters
+    # the ladder there (F-M5-1), and `supported` remains a separate,
+    # later rung with its own decision. ROLLBACK is a deliberate route
+    # change back to refusal (registry/proposals.py restates the target
+    # verbatim; docs/ops/model-rollout.md) — never a silent fallback.
     ServingRoute(
         public_model_id="intelliai-tts",
         selector=RouteSelector(language="hi"),
-        status=LanguageStatus.UNAVAILABLE,
+        status=LanguageStatus.AVAILABLE,
+        artifact_id="kokoro-82m",
+        license=_KOKORO_HI_SERVING_PATH,
+        evidence=_TTS_HI_EVIDENCE,
     ),
     ServingRoute(
         public_model_id="intelliai-tts",
@@ -301,6 +352,24 @@ _VOICES = (
         languages=("en",),
         description="Male English voice (legacy alias of english-male)",
         released=date(2026, 8, 3),
+    ),
+    # The M42 promotion's Hindi pair. Product names only: the engine
+    # voice packs behind them never cross this plane, and each record
+    # declares exactly one language, so `resolve_voice` routes them
+    # through the Hindi route (the voice IS the routing key).
+    PublicVoiceRecord(
+        id="hindi-female",
+        model="intelliai-tts",
+        languages=("hi",),
+        description="Female Hindi voice",
+        released=date(2026, 8, 24),
+    ),
+    PublicVoiceRecord(
+        id="hindi-male",
+        model="intelliai-tts",
+        languages=("hi",),
+        description="Male Hindi voice",
+        released=date(2026, 8, 24),
     ),
 )
 

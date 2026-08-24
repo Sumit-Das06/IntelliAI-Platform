@@ -47,10 +47,14 @@ services:
 
   api:
     environment:
-      # dev env + staging profile: the ONLY composition that can serve
-      # the E3 proposal (prod refuses it). Everything else about the
-      # stack keeps the production posture.
+      # dev env + staging profile: the ONLY composition that can serve a
+      # pending proposal (prod refuses it). With none pending after the
+      # M42 promotion it composes exactly the live catalog. Everything
+      # else about the stack keeps the production posture.
       INTELLIAI_REGISTRY_PROFILE: staging
+      # This stack starts tts-runtime (--profile tts), so the gateway
+      # answers for it in readiness — same law as production (M42).
+      INTELLIAI_RUNTIMES_TTS_ENABLED: "true"
 
   stt-runtime:
     environment:
