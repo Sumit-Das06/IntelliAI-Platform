@@ -175,7 +175,7 @@ services:
   adminer:
     # Visual database browser, dev convenience only. Not started by default:
     #   make db-ui   (docker compose --profile tools up -d adminer)
-    image: adminer:5
+    image: adminer:6
     profiles: [tools]
     environment:
       ADMINER_DEFAULT_SERVER: postgres
