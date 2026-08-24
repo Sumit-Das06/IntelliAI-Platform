@@ -1,0 +1,160 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "roundtrip_judge.py",
+  "engine_label": "kokoro-oov",
+  "judge_note": "en judged by the whisper-small route, hi/mixed by the promoted E3 route, through the real gateway; frozen normalization profiles; WER/CER from intelliai_evaluation.accuracy (no parallel metric code)",
+  "aggregates": {
+    "en_round_trip_wer_mean": 0.1085,
+    "en_round_trip_cer_mean": 0.0451,
+    "hi_round_trip_wer_mean": null,
+    "hi_round_trip_cer_mean": null,
+    "mixed_round_trip_cer_mean": null,
+    "judged_rows": 12
+  },
+  "rows": [
+    {
+      "id": "m44-name-sumit",
+      "language": "en",
+      "category": "oov_names",
+      "reference": "Sumit will review the deployment checklist tonight.",
+      "judge_en": {
+        "text": "Sumit will review the deployment checklist tonight.",
+        "wall_s": 3.16
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-name-priya",
+      "language": "en",
+      "category": "oov_names",
+      "reference": "Priya scheduled the demo for Monday morning.",
+      "judge_en": {
+        "text": "Priya scheduled the demo for Monday morning.",
+        "wall_s": 1.09
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-name-rajesh",
+      "language": "en",
+      "category": "oov_names",
+      "reference": "Rajesh approved the invoice an hour ago.",
+      "judge_en": {
+        "text": "Rajesh approved the invoice an hour ago.",
+        "wall_s": 1.01
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-brand-intelliai",
+      "language": "en",
+      "category": "oov_brands",
+      "reference": "Welcome to IntelliAI support, how can I help you today?",
+      "judge_en": {
+        "text": "Welcome to IntelliAI Support. How can I help you today?",
+        "wall_s": 1.14
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-brand-qwikcart",
+      "language": "en",
+      "category": "oov_brands",
+      "reference": "Your QwikCart order has been shipped.",
+      "judge_en": {
+        "text": "Your QWIC card order has been shipped.",
+        "wall_s": 1.05
+      },
+      "wer_en": 0.3333,
+      "cer_en": 0.0833
+    },
+    {
+      "id": "m44-brand-openai",
+      "language": "en",
+      "category": "oov_brands",
+      "reference": "The article compares OpenAI and NVIDIA earnings.",
+      "judge_en": {
+        "text": "The article compares open AI and NVIDIA earnings.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.2857,
+      "cer_en": 0.0213
+    },
+    {
+      "id": "m44-tech-kubernetes",
+      "language": "en",
+      "category": "oov_technical",
+      "reference": "The Kubernetes cluster restarted the PostgreSQL pod.",
+      "judge_en": {
+        "text": "The Kubernetes cluster restarted the Posker SQL pod.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.2857,
+      "cer_en": 0.0588
+    },
+    {
+      "id": "m44-tech-fastapi",
+      "language": "en",
+      "category": "oov_technical",
+      "reference": "The FastAPI gateway logs every request identifier.",
+      "judge_en": {
+        "text": "The FastAPI Gateway logs every request identifier.",
+        "wall_s": 1.07
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-date-long",
+      "language": "en",
+      "category": "dates",
+      "reference": "The contract renews on 12 August 2026.",
+      "judge_en": {
+        "text": "The contract renews on 12 August 2026.",
+        "wall_s": 1.15
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-date-slash",
+      "language": "en",
+      "category": "dates",
+      "reference": "Your appointment is on 08/24/2026.",
+      "judge_en": {
+        "text": "Your appointment is on 24 August, 2026.",
+        "wall_s": 1.06
+      },
+      "wer_en": 0.2857,
+      "cer_en": 0.2424
+    },
+    {
+      "id": "m44-currency",
+      "language": "en",
+      "category": "numbers",
+      "reference": "The subscription costs $4.99 after the 25% discount.",
+      "judge_en": {
+        "text": "The subscription costs $4.99 after the 25% discount.",
+        "wall_s": 1.12
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "m44-phone",
+      "language": "en",
+      "category": "numbers",
+      "reference": "Call us at +1 415 555 0198 for support.",
+      "judge_en": {
+        "text": "Call us at plus 1-415-555-0198 for support.",
+        "wall_s": 1.17
+      },
+      "wer_en": 0.1111,
+      "cer_en": 0.1351
+    }
+  ]
+}

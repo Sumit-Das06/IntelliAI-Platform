@@ -1,0 +1,25 @@
+{
+  "name": "m44-oov-proper-name-probes",
+  "version": 1,
+  "description": "M44 Phase-12 dedicated OOV / proper-name / format probes (the spec's exact list), used IN ADDITION to the frozen M33 25-probe English trap set. Research instrument only. Every name is judged by round-trip through the production whisper route: preserved vs dropped vs mangled, per probe - never a one-sample claim.",
+  "provenance": {
+    "author": "IntelliAI (in-house)",
+    "created": "2026-08-24",
+    "source": "M44 spec Phase 12 verbatim + M33 trap-set conventions",
+    "license": null
+  },
+  "cases": [
+    {"id": "m44-name-sumit", "language": "en", "category": "oov_names", "text": "Sumit will review the deployment checklist tonight."},
+    {"id": "m44-name-priya", "language": "en", "category": "oov_names", "text": "Priya scheduled the demo for Monday morning."},
+    {"id": "m44-name-rajesh", "language": "en", "category": "oov_names", "text": "Rajesh approved the invoice an hour ago."},
+    {"id": "m44-brand-intelliai", "language": "en", "category": "oov_brands", "text": "Welcome to IntelliAI support, how can I help you today?"},
+    {"id": "m44-brand-qwikcart", "language": "en", "category": "oov_brands", "text": "Your QwikCart order has been shipped."},
+    {"id": "m44-brand-openai", "language": "en", "category": "oov_brands", "text": "The article compares OpenAI and NVIDIA earnings."},
+    {"id": "m44-tech-kubernetes", "language": "en", "category": "oov_technical", "text": "The Kubernetes cluster restarted the PostgreSQL pod."},
+    {"id": "m44-tech-fastapi", "language": "en", "category": "oov_technical", "text": "The FastAPI gateway logs every request identifier."},
+    {"id": "m44-date-long", "language": "en", "category": "dates", "text": "The contract renews on 12 August 2026."},
+    {"id": "m44-date-slash", "language": "en", "category": "dates", "text": "Your appointment is on 08/24/2026."},
+    {"id": "m44-currency", "language": "en", "category": "numbers", "text": "The subscription costs $4.99 after the 25% discount."},
+    {"id": "m44-phone", "language": "en", "category": "numbers", "text": "Call us at +1 415 555 0198 for support."}
+  ]
+}

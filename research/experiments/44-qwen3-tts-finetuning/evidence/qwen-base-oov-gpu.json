@@ -1,0 +1,153 @@
+{
+  "experiment": "44-qwen3-tts-finetuning",
+  "instrument": "m44_qwen_bench.py",
+  "engine": "qwen3-tts-12hz-0.6b (clone)",
+  "identity": {
+    "model_path": "/home/vikashan_technologie/m44/models/qwen3-tts-0.6b-base",
+    "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+    "mode": "clone",
+    "speaker": null,
+    "ref_audio": "LJ001-0004.wav",
+    "language_param": "English",
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "streaming_api_found": null,
+    "seeded": "torch.manual_seed(0) (AR sampling may remain stochastic)"
+  },
+  "sample_rate_hz": 24000,
+  "repetitions": 2,
+  "load_seconds": 4.73,
+  "rss_before_load_mib": 502.8,
+  "rss_after_load_mib": 1171.3,
+  "rss_peak_mib": 2720.9,
+  "vram_after_load_mib": 2072.7,
+  "vram_peak_alloc_mib": 2459.9,
+  "vram_peak_reserved_mib": 2712.0,
+  "probe_count": 12,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 1.4304,
+  "rtf_p95": 1.6522,
+  "rows": [
+    {
+      "id": "m44-name-sumit",
+      "language": "en",
+      "category": "oov_names",
+      "chars": 51,
+      "wall_ms": 5154.9,
+      "ttfa_ms": null,
+      "audio_seconds": 3.12,
+      "rtf": 1.6522
+    },
+    {
+      "id": "m44-name-priya",
+      "language": "en",
+      "category": "oov_names",
+      "chars": 44,
+      "wall_ms": 4225.6,
+      "ttfa_ms": null,
+      "audio_seconds": 2.96,
+      "rtf": 1.4275
+    },
+    {
+      "id": "m44-name-rajesh",
+      "language": "en",
+      "category": "oov_names",
+      "chars": 40,
+      "wall_ms": 4583.0,
+      "ttfa_ms": null,
+      "audio_seconds": 2.96,
+      "rtf": 1.5483
+    },
+    {
+      "id": "m44-brand-intelliai",
+      "language": "en",
+      "category": "oov_brands",
+      "chars": 55,
+      "wall_ms": 5351.0,
+      "ttfa_ms": null,
+      "audio_seconds": 3.76,
+      "rtf": 1.4231
+    },
+    {
+      "id": "m44-brand-qwikcart",
+      "language": "en",
+      "category": "oov_brands",
+      "chars": 37,
+      "wall_ms": 3547.5,
+      "ttfa_ms": null,
+      "audio_seconds": 2.48,
+      "rtf": 1.4304
+    },
+    {
+      "id": "m44-brand-openai",
+      "language": "en",
+      "category": "oov_brands",
+      "chars": 48,
+      "wall_ms": 4764.4,
+      "ttfa_ms": null,
+      "audio_seconds": 3.36,
+      "rtf": 1.418
+    },
+    {
+      "id": "m44-tech-kubernetes",
+      "language": "en",
+      "category": "oov_technical",
+      "chars": 52,
+      "wall_ms": 5369.1,
+      "ttfa_ms": null,
+      "audio_seconds": 3.84,
+      "rtf": 1.3982
+    },
+    {
+      "id": "m44-tech-fastapi",
+      "language": "en",
+      "category": "oov_technical",
+      "chars": 50,
+      "wall_ms": 5869.0,
+      "ttfa_ms": null,
+      "audio_seconds": 4.08,
+      "rtf": 1.4385
+    },
+    {
+      "id": "m44-date-long",
+      "language": "en",
+      "category": "dates",
+      "chars": 38,
+      "wall_ms": 6518.0,
+      "ttfa_ms": null,
+      "audio_seconds": 4.64,
+      "rtf": 1.4047
+    },
+    {
+      "id": "m44-date-slash",
+      "language": "en",
+      "category": "dates",
+      "chars": 34,
+      "wall_ms": 6899.6,
+      "ttfa_ms": null,
+      "audio_seconds": 4.8,
+      "rtf": 1.4374
+    },
+    {
+      "id": "m44-currency",
+      "language": "en",
+      "category": "numbers",
+      "chars": 52,
+      "wall_ms": 8525.3,
+      "ttfa_ms": null,
+      "audio_seconds": 6.0,
+      "rtf": 1.4209
+    },
+    {
+      "id": "m44-phone",
+      "language": "en",
+      "category": "numbers",
+      "chars": 39,
+      "wall_ms": 7366.1,
+      "ttfa_ms": null,
+      "audio_seconds": 5.12,
+      "rtf": 1.4387
+    }
+  ]
+}

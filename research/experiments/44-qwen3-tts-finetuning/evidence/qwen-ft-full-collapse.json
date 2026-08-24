@@ -1,0 +1,65 @@
+{
+  "experiment": "44-qwen3-tts-finetuning",
+  "instrument": "sft_12hz_m44.py (official sft_12hz.py + documented adaptations) + m44_qwen_bench.py --mode custom",
+  "date": "2026-08-24",
+  "what_this_records": "Track B full fine-tune result: training converged mechanically but every checkpoint exhibits text-conditioning collapse. No checkpoint is selectable by frozen VAL evidence; the fine-tuning verdict is FAILED (in this environment).",
+  "training": {
+    "recipe": "official Qwen3-TTS finetuning/ workflow (prepare_data.py codes -> sft_12hz.py custom_voice SFT)",
+    "init_model": "Qwen/Qwen3-TTS-12Hz-0.6B-Base @ 5d83992436eae1d760afd27aff78a71d676296fc (local pinned dir)",
+    "adaptations": [
+      "attn_implementation flash_attention_2 -> sdpa (flash-attn not installed; mathematically equivalent)",
+      "input_text_embedding wrapped with model.talker.text_projection(...) — 0.6B has text_hidden_size 2048 != hidden_size 1024; the official script (written against 1.7B) adds unprojected text embeddings and crashes on 0.6B; the projection matches the model's own inference path (modeling_qwen3_tts.py generate_icl_prompt)"
+    ],
+    "config": {
+      "train_rows": 1000,
+      "epochs": 3,
+      "batch_size": 1,
+      "grad_accum": 4,
+      "optimizer_updates_total": 750,
+      "lr": 5e-6,
+      "precision": "bf16",
+      "optimizer": "AdamW wd 0.01 clip 1.0 (official)",
+      "speaker_name": "lj_public",
+      "dataset": "qwen-en-public-train@v1 (LJSpeech-1.1 public domain, frozen seed-44 splits, 24 kHz resample)"
+    },
+    "mechanics": {
+      "wall_per_epoch_min": 21,
+      "vram_mib": "7882 / 8151",
+      "loss_curve": {
+        "epoch0": {"first": 12.2745, "last": 3.8318, "mean": 4.4708},
+        "epoch1": {"first": 3.9527, "last": 3.5309, "mean": 3.6107},
+        "epoch2": {"first": 3.3289, "last": 3.3339, "mean": 3.4737}
+      },
+      "note": "loss plateaued ~3.3-3.5 across epochs 1-2 — the collapse below is NOT under-training; initial loss 12.27 (> uniform ln(3072) ~ 8.03) shows the custom-voice training input pattern is far from the base model's operating distribution"
+    },
+    "exit": "exit code 0, three checkpoints saved (epoch-0/1/2), zero errors in log"
+  },
+  "validity_checks": {
+    "checkpoint-epoch-2": {
+      "sanity_probes": [
+        {"probe": "en-general-01", "expected": "The quick brown fox jumps over the lazy dog near the river bank.", "gateway_whisper_heard": "I don't want to talk to you about your socials, so please ignore me if you don't want to talk to me."},
+        {"probe": "m33-en-short-01", "expected": "Thank you for calling.", "gateway_whisper_heard": "Fuck! Oh!"},
+        {"probe": "m33-en-longsent-01", "result": "runaway generation — no WAV within the 480 s cap"}
+      ],
+      "frozen_val_run": {
+        "texts_attempted": 10,
+        "wall_cap_s": 1500,
+        "wavs_produced": 1,
+        "sole_wav": {"id": "LJ024-0113", "expected_words": 16, "audio_seconds": 655.3, "judgeable": false, "note": "655 s of audio for one in-domain sentence; exceeds the gateway 25 MB judge limit — runaway even on LJ-domain text"}
+      }
+    },
+    "checkpoint-epoch-1": {"sanity_probes": "0 of 2 WAVs within the 420 s cap (runaway on 'The quick brown fox …')"},
+    "checkpoint-epoch-0": {"sanity_probes": "1 of 2 WAVs; produced audio transcribed as empty by the gateway judge (silence/non-speech)"}
+  },
+  "earlier_stages": {
+    "tiny_overfit": "4 utts x 12 epochs, lr 1e-4: loss 12.43 -> 0.056 — the pipeline CAN fit (learning proven); checkpoint speaks the target voice on trained texts but runs away on unseen texts (expected overfit symptom)",
+    "pilot": "100 utts x 2 epochs, lr 5e-6: fluent LJ-voice speech with UNRELATED content ('The quick prompt function also relates to talking to the client.' for the quick-brown-fox probe)"
+  },
+  "diagnosis": {
+    "symptom": "every non-overfit checkpoint speaks fluent LJ-style audio whose content ignores the input text, and generation frequently never terminates",
+    "assembly_verified": "training input assembly was compared line-by-line against the model's own inference ICL path (text_projection + 16 codec-group embeddings) — they match",
+    "conclusion": "the released custom-voice SFT recipe, applied to the 0.6B Base checkpoint at lr 5e-6 for 750 updates on 1000 single-speaker rows, destroys text-conditioning before it teaches the speaker identity. The official script does not even run unmodified on 0.6B (2048-vs-1024 dim crash), which is consistent with the recipe being developed and validated on 1.7B only.",
+    "not_claimed": "that fine-tuning Qwen3-TTS is impossible in general — only that the official recipe on 0.6B in this environment (8 GB VRAM, documented adaptations) failed; a 1.7B run or an official fix may behave differently"
+  },
+  "verdict": "F — FINE-TUNING FAILED; no checkpoint selectable by frozen VAL evidence"
+}

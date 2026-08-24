@@ -1,0 +1,1216 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "roundtrip_judge.py",
+  "engine_label": "kokoro-lj-test",
+  "judge_note": "en judged by the whisper-small route, hi/mixed by the promoted E3 route, through the real gateway; frozen normalization profiles; WER/CER from intelliai_evaluation.accuracy (no parallel metric code)",
+  "aggregates": {
+    "en_round_trip_wer_mean": 0.0535,
+    "en_round_trip_cer_mean": 0.0317,
+    "hi_round_trip_wer_mean": null,
+    "hi_round_trip_cer_mean": null,
+    "mixed_round_trip_cer_mean": null,
+    "judged_rows": 100
+  },
+  "rows": [
+    {
+      "id": "LJ034-0082",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "None of the Depository employees is known to have seen Oswald again until after the shooting.",
+      "judge_en": {
+        "text": "None of the depository employees is known to have seen Oswald again until after the shooting.",
+        "wall_s": 4.05
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ005-0131",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "In many places too where the prisoners earned money by their work, they were granted a portion of it for their own use after proper deduction for maintenance.",
+      "judge_en": {
+        "text": "In many places, too, where the prisoners earned money by their work, they were granted a portion of it for their own use after proper deduction for maintenance.",
+        "wall_s": 1.52
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ039-0199",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The three FBI experts each fired three shots from the weapon at fifteen yards in six, seven, and nine seconds,",
+      "judge_en": {
+        "text": "The three FBI experts each fired three shots from the weapon at 15 yards and six, seven and nine seconds.",
+        "wall_s": 1.34
+      },
+      "wer_en": 0.1,
+      "cer_en": 0.0841
+    },
+    {
+      "id": "LJ025-0042",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "They retain the hydrogen and the carbon, exhale the superfluous oxygen and absorb little or no nitrogen.",
+      "judge_en": {
+        "text": "They retain the hydrogen and the carbon, exhale the superfluous oxygen, and absorb little or no nitrogen.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ049-0115",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "of the person who is actually in the exercise of the executive power, or",
+      "judge_en": {
+        "text": "of the person who is actually in the exercise of the executive power, or",
+        "wall_s": 1.02
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ004-0077",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "nor has he a right to poison or starve his fellow-creatures.\"",
+      "judge_en": {
+        "text": "Nor has he a right to poison or starve his fellow creatures.",
+        "wall_s": 1.0
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ031-0081",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "President Kennedy could have survived the neck injury, but the head wound was fatal.",
+      "judge_en": {
+        "text": "President Kennedy could have survived the neck injury, but the head wound was fatal.",
+        "wall_s": 1.05
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ026-0121",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The destruction of protoplasm, excess proteids or the fat and carbohydrate foods is catabolism, destructive metabolism.",
+      "judge_en": {
+        "text": "The destruction of protoplasm, excess protids, or the fat and carbohydrate foods, is catabolism, destructive metabolism.",
+        "wall_s": 1.15
+      },
+      "wer_en": 0.0625,
+      "cer_en": 0.0086
+    },
+    {
+      "id": "LJ029-0171",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The President's intention to pay a visit to Texas in the fall of nineteen sixty-three aroused interest throughout the State.",
+      "judge_en": {
+        "text": "The president's intention to pay a visit to Texas in the fall of 1963 aroused interest throughout the state.",
+        "wall_s": 1.09
+      },
+      "wer_en": 0.1429,
+      "cer_en": 0.1626
+    },
+    {
+      "id": "LJ012-0101",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "They had had serious work to get at the diamonds. It was necessary to force one heavy door from its hinges, and to cut through the thick panels of another.",
+      "judge_en": {
+        "text": "They had had serious work to get at the diamonds. It was necessary to force one heavy door from its hinges and to cut through the thick panels of another.",
+        "wall_s": 1.21
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ006-0121",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "for a petition of from one shilling, half pence to eight shillings, according to its length,",
+      "judge_en": {
+        "text": "For a petition of from one shilling, half pens to eight shillings, according to its length.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.0625,
+      "cer_en": 0.0225
+    },
+    {
+      "id": "LJ032-0232",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The dates surrounding the taking of this picture and the purchase of the rifle",
+      "judge_en": {
+        "text": "The dates surrounding the taking of this picture and the purchase of the rifle.",
+        "wall_s": 1.09
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ032-0052",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "According to Klein's shipping order form, one Italian carbine six point five x four x scope,",
+      "judge_en": {
+        "text": "According to Klein's shipping order form, one Italian carbine 6.5X4 X-scope.",
+        "wall_s": 1.11
+      },
+      "wer_en": 0.3125,
+      "cer_en": 0.2111
+    },
+    {
+      "id": "LJ035-0083",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Howlett was not short winded at the end of either test run.",
+      "judge_en": {
+        "text": "Howlett was not short-winded at the end of either test run.",
+        "wall_s": 1.04
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ003-0142",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "to purchase the greater ease and comfort of the master's side.",
+      "judge_en": {
+        "text": "to purchase the greater ease and comfort of the Master's side.",
+        "wall_s": 1.02
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ008-0026",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Palm, as soon as he was seated in the cart,",
+      "judge_en": {
+        "text": "Palm as soon as he was seated in the cart.",
+        "wall_s": 0.95
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ015-0089",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "in receiving guests at home, or could be spared from two rival establishments in other parts of the town.",
+      "judge_en": {
+        "text": "in receiving guests at home or could be spared from two rival establishments in other parts of the town.",
+        "wall_s": 1.11
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ008-0088",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "As many spectators as ever thronged to see the dreadful show,",
+      "judge_en": {
+        "text": "as many spectators as ever thronged to see the dreadful show.",
+        "wall_s": 1.05
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ032-0227",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Shaneyfelt testified that the published photographs appeared to be based on a copy of the original which the publications had each retouched differently.",
+      "judge_en": {
+        "text": "Shay and Eiffelt testified that the published photographs appeared to be based on a copy of the original, which the publications had each retouched differently.",
+        "wall_s": 1.19
+      },
+      "wer_en": 0.1304,
+      "cer_en": 0.0461
+    },
+    {
+      "id": "LJ014-0071",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "In his confession after sentence he declared that she plied him well with brandy at this period,",
+      "judge_en": {
+        "text": "In his confession, after sentence, he declared that she plied him well with Brandy at this period.",
+        "wall_s": 1.11
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ008-0105",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Mr. Smith's account of the condemned convict, whose cell he was permitted to enter, may be inserted here.",
+      "judge_en": {
+        "text": "Mr. Smith's account of the condemned convict, whose cell he was permitted to enter, may be inserted here.",
+        "wall_s": 1.18
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ011-0288",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Thus free, he eluded the vigilance of two of the party, who were at dinner in the front kitchen,",
+      "judge_en": {
+        "text": "Thus free, he eluded the vigilance of two of the party, who were at dinner in the front kitchen.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ048-0129",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "In view of the constant change in the nature of threats to the President and the diversity of the dangers which may arise in the various cities within the United States,",
+      "judge_en": {
+        "text": "In view of the constant change, in the nature of threats to the President, and the diversity of the dangers which may arise in the various cities within the United States.",
+        "wall_s": 1.26
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ005-0022",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "While fully admitting the good intentions of the Society, he condemned their ultra humanitarianism as misplaced.",
+      "judge_en": {
+        "text": "While fully admitting the good intentions of the society, he condemned their ultra-humanitarianism as misplaced.",
+        "wall_s": 1.23
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ017-0193",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "It was proved that Mrs. Wilson had given Mrs. Soames something peculiar to drink,",
+      "judge_en": {
+        "text": "It was proved that Mrs. Wilson had given Mrs. Psalms something peculiar to drink.",
+        "wall_s": 1.16
+      },
+      "wer_en": 0.0714,
+      "cer_en": 0.0513
+    },
+    {
+      "id": "LJ008-0141",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "the doubtfulness of the issue, or the superior position of the perpetrator,",
+      "judge_en": {
+        "text": "the doubtfulness of the issue or the superior position of the perpetrator.",
+        "wall_s": 1.03
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ005-0079",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "and improve the morals of the prisoners, and shall insure the proper measure of punishment to convicted offenders.",
+      "judge_en": {
+        "text": "and improve the morals of the prisoners and shall ensure the proper measure of punishment to convicted offenders.",
+        "wall_s": 1.08
+      },
+      "wer_en": 0.0556,
+      "cer_en": 0.0089
+    },
+    {
+      "id": "LJ011-0269",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "An appointment was made and kept by Mr. Gee,",
+      "judge_en": {
+        "text": "An appointment was made and kept by Mr. G.",
+        "wall_s": 0.94
+      },
+      "wer_en": 0.1111,
+      "cer_en": 0.0476
+    },
+    {
+      "id": "LJ003-0224",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Supplies of common necessaries, such as have now been part of the furniture of every British jail for many years,",
+      "judge_en": {
+        "text": "Supplies of common necessaries, such as have now been part of the furniture of every British jail for many years.",
+        "wall_s": 1.14
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ009-0109",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "while the capital convicts who were lately in that black pew appear faint with emotion.",
+      "judge_en": {
+        "text": "while the capital convicts who were lately in that black pew appear faint with emotion.",
+        "wall_s": 1.15
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ002-0226",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The same evils of overcrowding, uncleanliness, want of medical attendance,",
+      "judge_en": {
+        "text": "The same evils of overcrowding, uncleanliness, want of medical attendance.",
+        "wall_s": 1.07
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ046-0193",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "and twelve to fifteen of these cases as highly dangerous risks.",
+      "judge_en": {
+        "text": "and 12 to 15 of these cases as highly dangerous risks.",
+        "wall_s": 1.01
+      },
+      "wer_en": 0.1818,
+      "cer_en": 0.2097
+    },
+    {
+      "id": "LJ008-0108",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The ordinary \"gravely uttered, 'Come this way, Mr. Smith.'",
+      "judge_en": {
+        "text": "The ordinary, gravely uttered, come this way, Mr. Smith.",
+        "wall_s": 1.03
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ016-0224",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Calcraft shared the odium which his office, not strangely, has always inspired. But he was admitted into the jail,",
+      "judge_en": {
+        "text": "Calcraft shared the odium which his office, not strangely, has always inspired, but he was admitted into the jail.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ027-0030",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "is associated with an adaptive modification of locomotor structures, legs and wings,",
+      "judge_en": {
+        "text": "is associated with an adaptive modification of locomotor structures, legs and wings.",
+        "wall_s": 1.06
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ031-0053",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Dr. Carrico inserted a cuffed endotracheal tube past the injury, inflated the cuff, and connected it to a Bennett machine to assist in respiration.",
+      "judge_en": {
+        "text": "Dr. Caraco inserted a cuffed endotracheal tube past the injury, inflated the cuff, and connected it to a Bennett machine to assist in respiration.",
+        "wall_s": 1.26
+      },
+      "wer_en": 0.0417,
+      "cer_en": 0.014
+    },
+    {
+      "id": "LJ036-0177",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "knew Lee Harvey Oswald under the alias of O. H. Lee.",
+      "judge_en": {
+        "text": "Newly Harvey Oswald under the alias of O.H. Lee.",
+        "wall_s": 1.04
+      },
+      "wer_en": 0.1818,
+      "cer_en": 0.0816
+    },
+    {
+      "id": "LJ005-0051",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "At the time of its greatest prosperity, its annual income from donations and subscriptions was about one thousand six hundred pounds.",
+      "judge_en": {
+        "text": "At the time of its greatest prosperity, its annual income from donations and subscriptions was about 1,600 pounds.",
+        "wall_s": 1.14
+      },
+      "wer_en": 0.1905,
+      "cer_en": 0.1756
+    },
+    {
+      "id": "LJ029-0128",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "going one block north and then turning left onto Elm.",
+      "judge_en": {
+        "text": "Going one block north and then turning left onto Elm.",
+        "wall_s": 1.05
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ046-0087",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Absolute security is neither practical nor possible. An approach to complete security would require the President",
+      "judge_en": {
+        "text": "Absolute security is neither practical nor possible. An approach to complete security would require the president.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ007-0236",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Sometimes the stench in hot weather is said to be very bad.",
+      "judge_en": {
+        "text": "Sometimes the stench and hot weather is said to be very bad.",
+        "wall_s": 1.03
+      },
+      "wer_en": 0.0833,
+      "cer_en": 0.0345
+    },
+    {
+      "id": "LJ004-0162",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "It was \"a scene of infernal passions and distresses,\" says Buxton, \"which few have imagination sufficient to picture,",
+      "judge_en": {
+        "text": "It was a scene of infernal passions and distresses, says Buxton. Which few have imagination sufficient to picture?",
+        "wall_s": 1.21
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ045-0002",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Chapter seven. Lee Harvey Oswald: Background and Possible Motives, Part six.",
+      "judge_en": {
+        "text": "Chapter 7. Lee Harvey Oswald, Background and Possible Motives Part 6",
+        "wall_s": 1.08
+      },
+      "wer_en": 0.1818,
+      "cer_en": 0.1111
+    },
+    {
+      "id": "LJ043-0057",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "he attempted for the first time to learn something about his family background when he went to New Orleans in April of nineteen sixty-three.",
+      "judge_en": {
+        "text": "He attempted for the first time to learn something about his family background when he went to New Orleans in April of 1963.",
+        "wall_s": 1.17
+      },
+      "wer_en": 0.12,
+      "cer_en": 0.1439
+    },
+    {
+      "id": "LJ012-0167",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "But Probert, who turned king's evidence, and materially assisted conviction,",
+      "judge_en": {
+        "text": "but Probert, who turned King's evidence and materially assisted conviction.",
+        "wall_s": 1.08
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ012-0261",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "This brought suspicion on to a certain James Greenacre,",
+      "judge_en": {
+        "text": "This brought suspicion onto a certain James Greenecker.",
+        "wall_s": 0.98
+      },
+      "wer_en": 0.3333,
+      "cer_en": 0.0741
+    },
+    {
+      "id": "LJ015-0290",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "the forgers always escaped detection. But fate overtook two of the gang,",
+      "judge_en": {
+        "text": "The foragers always escaped detection, but fate overtook two of the gang.",
+        "wall_s": 1.07
+      },
+      "wer_en": 0.0833,
+      "cer_en": 0.0143
+    },
+    {
+      "id": "LJ025-0061",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Agardh and other of the botanists of Cuvier's generation who occupied themselves with the lower plants had observed that,",
+      "judge_en": {
+        "text": "Agard and other of the botanists of Covier's generation, who occupied themselves with the lower plants, had observed that.",
+        "wall_s": 1.22
+      },
+      "wer_en": 0.1053,
+      "cer_en": 0.0167
+    },
+    {
+      "id": "LJ033-0014",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Lee Harvey Oswald lived in a roominghouse in Dallas while his wife and children lived in Irving, at the home of Ruth Paine,",
+      "judge_en": {
+        "text": "Lee Harvey Oswald lived in a rooming house in Dallas, while his wife and children lived in Irving, at the home of Ruth Payne.",
+        "wall_s": 1.25
+      },
+      "wer_en": 0.1304,
+      "cer_en": 0.0165
+    },
+    {
+      "id": "LJ026-0088",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "In short, the green plant is able by cooperation with sunlight to use simple raw materials (carbon dioxide, water, oxygen, etc.)",
+      "judge_en": {
+        "text": "In short, the green plant is able by cooperation with sunlight to use simple raw materials – carbon dioxide, water, oxygen, etc.",
+        "wall_s": 1.2
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ031-0219",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "but it was difficult to measure accurately because multiple crisscross fractures radiated from the large defect.",
+      "judge_en": {
+        "text": "But it was difficult to measure accurately because multiple crisscross fractures radiated from the large defect.",
+        "wall_s": 1.14
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ018-0289",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "When all was ready, Bidwell first \"refreshed his credit\" at the Bank of England, as well as disarmed suspicion,",
+      "judge_en": {
+        "text": "When all was ready, Bidwell first refreshed his credit at the Bank of England, as well as disarmed suspicion.",
+        "wall_s": 1.21
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ012-0148",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "instead of handing it or the price of it back to the Caspars.",
+      "judge_en": {
+        "text": "instead of handing it or the price of it back to the caspers.",
+        "wall_s": 1.08
+      },
+      "wer_en": 0.0769,
+      "cer_en": 0.0167
+    },
+    {
+      "id": "LJ005-0188",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "that the jails attached to corporate jurisdictions continue to be the fruitful sources",
+      "judge_en": {
+        "text": "that the jails attached to corporate jurisdictions continue to be the fruitful sources.",
+        "wall_s": 1.06
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ037-0101",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "According to his testimony, Smith told the FBI, quote, It looked more like him than it did on television, end quote,",
+      "judge_en": {
+        "text": "According to his testimony, Smith told the FBI, quote, it looked more like him than it did on television, end quote.",
+        "wall_s": 1.19
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ012-0251",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "the lockman of \"Ben Jonson lock,\" in Stepney Fields, found a human head jammed into the lock gates.",
+      "judge_en": {
+        "text": "The lockman of Ben Johnson Lock in Stepney Fields found a human head jammed into the lock gates.",
+        "wall_s": 1.18
+      },
+      "wer_en": 0.0556,
+      "cer_en": 0.0106
+    },
+    {
+      "id": "LJ012-0025",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "at which he realized one hundred fifty pounds within a couple of years.",
+      "judge_en": {
+        "text": "at which he realized 150 pounds within a couple of years.",
+        "wall_s": 1.13
+      },
+      "wer_en": 0.2308,
+      "cer_en": 0.2429
+    },
+    {
+      "id": "LJ044-0138",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "It would not have been possible to have followed Arnold Johnson's advice to remain in the background,",
+      "judge_en": {
+        "text": "It would not have been possible to have followed Arnold Johnson's advice to remain in the background.",
+        "wall_s": 1.08
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ050-0065",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Alan H. Belmont, Assistant to the Director of the FBI, testified that this revision was initiated by the FBI itself.",
+      "judge_en": {
+        "text": "Allen H. Belmont, assistant to the director of the FBI, testified that this revision was initiated by the FBI itself.",
+        "wall_s": 1.15
+      },
+      "wer_en": 0.05,
+      "cer_en": 0.0179
+    },
+    {
+      "id": "LJ050-0077",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "and in taking preventive steps.",
+      "judge_en": {
+        "text": "and in taking preventive steps.",
+        "wall_s": 0.95
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ018-0223",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "In eighteen fifty-six the father died.",
+      "judge_en": {
+        "text": "In 1856, the father died.",
+        "wall_s": 0.93
+      },
+      "wer_en": 0.4286,
+      "cer_en": 0.4865
+    },
+    {
+      "id": "LJ019-0199",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "and the costliness of enlarging it, forbade all idea of entirely reconstructing the jail so as to constitute it a model prison.",
+      "judge_en": {
+        "text": "and the costliness of enlarging it, forbade all idea of entirely reconstructing the jail so as to constitute it a model prison.",
+        "wall_s": 1.21
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ018-0075",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "while at sea the captain of the ship was responsible for the security of the prisoner.",
+      "judge_en": {
+        "text": "While at sea, the captain of the ship was responsible for the security of the prisoner.",
+        "wall_s": 1.07
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ035-0123",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "None of these three men saw Dougherty, probably because of the anxiety of the moment and because of the books which may have blocked the view.",
+      "judge_en": {
+        "text": "None of these three men saw Dawerty, probably because of the anxiety of the moment and because of the books which may have blocked the view.",
+        "wall_s": 1.23
+      },
+      "wer_en": 0.0385,
+      "cer_en": 0.0286
+    },
+    {
+      "id": "LJ018-0338",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Greed in another form led the Stauntons to make away with Mrs. Patrick Staunton, murdering her with devilish cruelty by slow degrees.",
+      "judge_en": {
+        "text": "Greed in another form led the Stanton's to make a way with Mrs. Patrick Stanton, murdering her with devilish cruelty by slow degrees.",
+        "wall_s": 1.27
+      },
+      "wer_en": 0.1818,
+      "cer_en": 0.0308
+    },
+    {
+      "id": "LJ027-0107",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "rudiments of eyes in cave fishes, hind limbs beneath the skin of whales, the vermiform appendix in man,",
+      "judge_en": {
+        "text": "Rudiments of eyes in cave fishes, hind limbs beneath the skin of whales, the vermaform appendix in man.",
+        "wall_s": 1.24
+      },
+      "wer_en": 0.0556,
+      "cer_en": 0.01
+    },
+    {
+      "id": "LJ037-0176",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "And though only one bullet of Remington-Peters manufacture was recovered, two empty cartridge cases of that make were retrieved.",
+      "judge_en": {
+        "text": "And though only one bullet of Remington Peter's manufacture was recovered, two empty cartridge cases of that make were retrieved.",
+        "wall_s": 1.19
+      },
+      "wer_en": 0.05,
+      "cer_en": 0.0079
+    },
+    {
+      "id": "LJ017-0251",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "that they had been in the boats five days and nights, but that the captain and others had been lost.",
+      "judge_en": {
+        "text": "That they had been in the boats five days and nights, but that the captain and others had been lost.",
+        "wall_s": 1.15
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ027-0122",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "But the vacillating policy in the matter of rudiments does not end here; for it is shown in a still more aggravated form",
+      "judge_en": {
+        "text": "But the vacillating policy in the matter of rudiments does not end here, for it is shown in a still more aggravated form.",
+        "wall_s": 1.23
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ030-0138",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "At twelve:thirty p.m., Eastern Standard Time, as the President's open limousine proceeded at approximately eleven miles per hour along Elm Street",
+      "judge_en": {
+        "text": "At 12, 30 p.m., Eastern Standard Time, as the president's open limousine proceeded at approximately 11 miles per hour along Elm Street.",
+        "wall_s": 1.25
+      },
+      "wer_en": 0.1304,
+      "cer_en": 0.1268
+    },
+    {
+      "id": "LJ015-0200",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "only when single and unprotected were they in any danger of attack, and that but rarely.",
+      "judge_en": {
+        "text": "Only when single and unprotected were they in any danger of attack, and that but rarely.",
+        "wall_s": 1.12
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ013-0119",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Howse, the steward, accused the other servants, but they retorted, declaring that he had been visited by the thief the day previous,",
+      "judge_en": {
+        "text": "Howes the steward accused the other servants but they retorted declaring that he had been visited by the thief the day previous",
+        "wall_s": 1.19
+      },
+      "wer_en": 0.0455,
+      "cer_en": 0.0157
+    },
+    {
+      "id": "LJ044-0071",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Stuckey had a radio program called, quote, Latin Listening Post, end quote,",
+      "judge_en": {
+        "text": "Stuckey had a radio program called, quote, Latin Listening Post, end quote.",
+        "wall_s": 1.11
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ046-0072",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "have been confronted in recent years with increasingly difficult problems, created by the greater exposure of the President during his travels",
+      "judge_en": {
+        "text": "have been confronted in recent years with increasingly difficult problems, created by the greater exposure of the president during his travels.",
+        "wall_s": 1.2
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ014-0149",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "On this journey her manner changed completely. She became flippant, joked with the officers, asked how they liked her \"resolution\" in the dock,",
+      "judge_en": {
+        "text": "On this journey, her manner changed completely. She became flippant, joked with the officers, asked how they liked her resolution in the dock.",
+        "wall_s": 1.28
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ033-0017",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "who also worked at the Depository.",
+      "judge_en": {
+        "text": "who also worked at the depository.",
+        "wall_s": 0.93
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ008-0153",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "They were accordingly apprehended and brought to trial, the informer, Hanfield by name, being accepted as king's evidence.",
+      "judge_en": {
+        "text": "They were accordingly apprehended and brought to trial, the informer, hand-filled by name, being accepted as King's evidence.",
+        "wall_s": 1.21
+      },
+      "wer_en": 0.1111,
+      "cer_en": 0.0339
+    },
+    {
+      "id": "LJ036-0201",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "At twelve:forty-five p.m. the dispatcher ordered Number seventy-eight (Tippit) to, quote, move into central Oak Cliff area, end quote.",
+      "judge_en": {
+        "text": "At 12, 45 p.m., the dispatcher ordered number 78, tip it, to quote, move into central Oak Cliff area, end quote.",
+        "wall_s": 1.26
+      },
+      "wer_en": 0.2609,
+      "cer_en": 0.2362
+    },
+    {
+      "id": "LJ003-0116",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "A jury having been selected and duly sworn, the culprit was then arraigned. Justice, however, was not administered with absolute integrity.",
+      "judge_en": {
+        "text": "A jury having been selected and duly sworn, the culprit was then arraigned. Justice, however, was not administered with absolute integrity.",
+        "wall_s": 1.22
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ008-0271",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "This was more particularly the practice in London.",
+      "judge_en": {
+        "text": "This was more particularly the practice in London.",
+        "wall_s": 1.01
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ034-0178",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "He said that he could see the man from the middle of his chest to the top of his head, and that as he was facing the window the man was in the lower right-hand portion of the window",
+      "judge_en": {
+        "text": "He said that he could see the man from the middle of his chest to the top of his head. And that, as he was facing the window, the man was in the lower right-hand portion of the window.",
+        "wall_s": 1.39
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ037-0060",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "That Mrs. Markham described the man who killed Patrolman Tippit as, quote, short, a little on the heavy side, end quote.",
+      "judge_en": {
+        "text": "that Mrs. Markham described the man who killed Petrolman Tippett as quote short, a little on the heavy side end quote.",
+        "wall_s": 1.22
+      },
+      "wer_en": 0.0952,
+      "cer_en": 0.0263
+    },
+    {
+      "id": "LJ028-0404",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The courtyards and streets are paved with them, and as you walk about the city the name of Nebuchadnezzar everywhere meets your eye.",
+      "judge_en": {
+        "text": "The courtyards and streets are paved with them, and as you walk about the city, the name of Nebuchadnezzar, everywhere meets your eye.",
+        "wall_s": 1.3
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ015-0123",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "In many respects the embezzlement of which Leopold Redpath was guilty closely resembled that of Robson,",
+      "judge_en": {
+        "text": "In many respects, the embezzlement of which Leopold Redpath was guilty closely resembled that of Robson.",
+        "wall_s": 1.2
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ030-0187",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "When he heard the same noise again, Greer glanced over his shoulder and saw Governor Connally fall.",
+      "judge_en": {
+        "text": "When he heard the same noise again, Greer glanced over his shoulder and saw Governor Connolly fall.",
+        "wall_s": 1.16
+      },
+      "wer_en": 0.0588,
+      "cer_en": 0.0103
+    },
+    {
+      "id": "LJ023-0071",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "For nearly twenty years there was no conflict between the Congress and the Court.",
+      "judge_en": {
+        "text": "For nearly 20 years, there was no conflict between the Congress and the court.",
+        "wall_s": 1.07
+      },
+      "wer_en": 0.0714,
+      "cer_en": 0.075
+    },
+    {
+      "id": "LJ045-0172",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Answer: He said he would buy me a washing machine.",
+      "judge_en": {
+        "text": "Answer, he said he would buy me a washing machine.",
+        "wall_s": 1.01
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ015-0273",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "But Saward's operations were mainly directed to the fabrication and uttering of forged cheques.",
+      "judge_en": {
+        "text": "But Sourd's operations were mainly directed to the fabrication and uttering of forged checks.",
+        "wall_s": 1.12
+      },
+      "wer_en": 0.1429,
+      "cer_en": 0.0638
+    },
+    {
+      "id": "LJ028-0197",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Belshazzar, the King, he was really the King's son, gave a feast to a thousand of his nobles.",
+      "judge_en": {
+        "text": "Belchazar, the king, he was really the king's son, gave a feast to a thousand of his nobles.",
+        "wall_s": 1.18
+      },
+      "wer_en": 0.0556,
+      "cer_en": 0.0225
+    },
+    {
+      "id": "LJ045-0117",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "it would appear to be unlikely that his landlady in Dallas",
+      "judge_en": {
+        "text": "It would appear to be unlikely that his landlady in Dallas.",
+        "wall_s": 1.03
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ050-0176",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "to establish liaison with local intelligence gathering agencies and to provide for the immediate evaluation of information received from them.",
+      "judge_en": {
+        "text": "To establish liaison with local intelligence, gathering agencies, and to provide for the immediate evaluation of information received from them.",
+        "wall_s": 1.18
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ030-0085",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The two agents on the rear of the running boards were to advance toward the front of the President's car whenever it stopped or slowed down sufficiently for them to do so.",
+      "judge_en": {
+        "text": "The two agents on the rear of the running boards were to advance toward the front of the president's car whenever it stopped or slowed down sufficiently for them to do so.",
+        "wall_s": 1.29
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ025-0076",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Many animals of even complex structure which live parasitically within others are wholly devoid of an alimentary cavity.",
+      "judge_en": {
+        "text": "Many animals of even complex structure, which live parasitically within others, are wholly devoid of an elementary cavity.",
+        "wall_s": 1.24
+      },
+      "wer_en": 0.0556,
+      "cer_en": 0.0168
+    },
+    {
+      "id": "LJ035-0075",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "A test was also conducted to determine the time required to walk from the southeast corner of the sixth floor to the second-floor lunchroom by stairway.",
+      "judge_en": {
+        "text": "A test was also conducted to determine the time required to walk from the southeast corner of the sixth floor to the second floor lunchroom by stairway.",
+        "wall_s": 1.26
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ008-0302",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "I have heard the protracted agony of both classes described by those who witnessed it in terms so strong, that I am unwilling to repeat them.",
+      "judge_en": {
+        "text": "I have heard the protracted agony of both classes described by those who witnessed it in terms so strong that I am unwilling to repeat them.",
+        "wall_s": 1.26
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ047-0013",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "Finally, the Commission has reviewed the complete files on Oswald, as they existed at the time of the assassination, of the Department of State,",
+      "judge_en": {
+        "text": "Finally, the Commission has reviewed the complete files on Oswald as they existed at the time of the assassination of the Department of State.",
+        "wall_s": 1.19
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    },
+    {
+      "id": "LJ013-0001",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "The Chronicles of Newgate, Volume two. By Arthur Griffiths. Section sixteen: Newgate notorieties continued, part one.",
+      "judge_en": {
+        "text": "The Chronicles of Newgate, Volume 2, by Arthur Griffiths. Section 16, Newgate Notarieties Continued, Part 1.",
+        "wall_s": 1.25
+      },
+      "wer_en": 0.25,
+      "cer_en": 0.1261
+    },
+    {
+      "id": "LJ048-0192",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "show the foot patrolmen facing the passing motorcade, and not the adjacent crowds and buildings, as the procession passed.",
+      "judge_en": {
+        "text": "Show the foot patrolman facing the passing motorcade and not the adjacent crowds and buildings as the procession passed.",
+        "wall_s": 1.16
+      },
+      "wer_en": 0.0526,
+      "cer_en": 0.0084
+    },
+    {
+      "id": "LJ035-0132",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "When she reached the first floor, she actually saw Shelley and Lovelady slightly east of the east elevator.",
+      "judge_en": {
+        "text": "When she reached the first floor, she actually saw Shelly and Love Lady slightly east of the east elevator.",
+        "wall_s": 1.12
+      },
+      "wer_en": 0.1667,
+      "cer_en": 0.019
+    },
+    {
+      "id": "LJ033-0199",
+      "language": "en",
+      "category": "lj_heldout",
+      "reference": "because other types of fibers present in the blanket were not found in the bag.",
+      "judge_en": {
+        "text": "because other types of fibers present in the blanket were not found in the bag.",
+        "wall_s": 1.1
+      },
+      "wer_en": 0.0,
+      "cer_en": 0.0
+    }
+  ]
+}

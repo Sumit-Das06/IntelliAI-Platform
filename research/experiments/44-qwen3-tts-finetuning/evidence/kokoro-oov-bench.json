@@ -1,0 +1,148 @@
+{
+  "experiment": "32-tts-model-selection",
+  "instrument": "gateway_synth_bench.py",
+  "engine": "production tts-runtime via gateway (kokoro-82m slot)",
+  "voice": "english-female",
+  "unstreamed_note": "v1 returns whole-body WAV; TTFA == wall_ms by design",
+  "repetitions": 1,
+  "probe_count": 12,
+  "failure_count": 0,
+  "failures": [],
+  "wall_ms_median": 937.2,
+  "rtf_median": 0.2486,
+  "rtf_p95": 0.3731,
+  "rows": [
+    {
+      "id": "m44-name-sumit",
+      "language": "en",
+      "category": "oov_names",
+      "chars": 51,
+      "wall_ms": 1156.6,
+      "bytes": 148844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 3.1,
+      "rtf": 0.3731
+    },
+    {
+      "id": "m44-name-priya",
+      "language": "en",
+      "category": "oov_names",
+      "chars": 44,
+      "wall_ms": 937.2,
+      "bytes": 142844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 2.975,
+      "rtf": 0.315
+    },
+    {
+      "id": "m44-name-rajesh",
+      "language": "en",
+      "category": "oov_names",
+      "chars": 40,
+      "wall_ms": 924.0,
+      "bytes": 135644,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 2.825,
+      "rtf": 0.3271
+    },
+    {
+      "id": "m44-brand-intelliai",
+      "language": "en",
+      "category": "oov_brands",
+      "chars": 55,
+      "wall_ms": 1097.8,
+      "bytes": 196844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 4.1,
+      "rtf": 0.2678
+    },
+    {
+      "id": "m44-brand-qwikcart",
+      "language": "en",
+      "category": "oov_brands",
+      "chars": 37,
+      "wall_ms": 852.0,
+      "bytes": 124844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 2.6,
+      "rtf": 0.3277
+    },
+    {
+      "id": "m44-brand-openai",
+      "language": "en",
+      "category": "oov_brands",
+      "chars": 48,
+      "wall_ms": 887.7,
+      "bytes": 178844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 3.725,
+      "rtf": 0.2383
+    },
+    {
+      "id": "m44-tech-kubernetes",
+      "language": "en",
+      "category": "oov_technical",
+      "chars": 52,
+      "wall_ms": 973.0,
+      "bytes": 210044,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 4.375,
+      "rtf": 0.2224
+    },
+    {
+      "id": "m44-tech-fastapi",
+      "language": "en",
+      "category": "oov_technical",
+      "chars": 50,
+      "wall_ms": 922.3,
+      "bytes": 202844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 4.225,
+      "rtf": 0.2183
+    },
+    {
+      "id": "m44-date-long",
+      "language": "en",
+      "category": "dates",
+      "chars": 38,
+      "wall_ms": 845.0,
+      "bytes": 186044,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 3.875,
+      "rtf": 0.2181
+    },
+    {
+      "id": "m44-date-slash",
+      "language": "en",
+      "category": "dates",
+      "chars": 34,
+      "wall_ms": 866.6,
+      "bytes": 183644,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 3.825,
+      "rtf": 0.2266
+    },
+    {
+      "id": "m44-currency",
+      "language": "en",
+      "category": "numbers",
+      "chars": 52,
+      "wall_ms": 1409.1,
+      "bytes": 297644,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 6.2,
+      "rtf": 0.2273
+    },
+    {
+      "id": "m44-phone",
+      "language": "en",
+      "category": "numbers",
+      "chars": 39,
+      "wall_ms": 1485.1,
+      "bytes": 286844,
+      "sample_rate_hz": 24000,
+      "audio_seconds": 5.975,
+      "rtf": 0.2486
+    }
+  ]
+}

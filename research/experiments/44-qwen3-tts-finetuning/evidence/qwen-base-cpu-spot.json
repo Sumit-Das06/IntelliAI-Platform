@@ -1,0 +1,43 @@
+{
+  "experiment": "44-qwen3-tts-finetuning",
+  "instrument": "m44_qwen_bench.py",
+  "engine": "qwen3-tts-12hz-0.6b (clone)",
+  "identity": {
+    "model_path": "/home/vikashan_technologie/m44/models/qwen3-tts-0.6b-base",
+    "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+    "mode": "clone",
+    "speaker": null,
+    "ref_audio": "LJ001-0004.wav",
+    "language_param": "English",
+    "device": "cpu",
+    "dtype": "float32",
+    "streaming_api_found": null,
+    "seeded": "torch.manual_seed(0) (AR sampling may remain stochastic)"
+  },
+  "sample_rate_hz": 24000,
+  "repetitions": 1,
+  "load_seconds": 3.79,
+  "rss_before_load_mib": 504.0,
+  "rss_after_load_mib": 4528.8,
+  "rss_peak_mib": 5775.9,
+  "vram_after_load_mib": null,
+  "vram_peak_alloc_mib": null,
+  "vram_peak_reserved_mib": null,
+  "probe_count": 1,
+  "failure_count": 0,
+  "failures": [],
+  "rtf_median": 2.8535,
+  "rtf_p95": 2.8535,
+  "rows": [
+    {
+      "id": "en-general-01",
+      "language": "en",
+      "category": "A_normal",
+      "chars": 64,
+      "wall_ms": 12098.8,
+      "ttfa_ms": null,
+      "audio_seconds": 4.24,
+      "rtf": 2.8535
+    }
+  ]
+}
