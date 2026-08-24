@@ -633,40 +633,43 @@ async def test_the_services_card_links_the_speech_studio_without_claiming_launch
 
 
 class TestLaunchStatus:
-    """Environment-aware launch status (M41 mechanism, M42 posture): the
-    SAME static console says Preview on a local/staging deployment,
-    Production where the deployment itself is production, and Coming
-    Soon again the moment the catalog stops serving the service —
-    every answer read from the registry + this deployment's env, never
-    a hardcoded string."""
+    """ONE badge meaning for every service (the M31 law): "production"
+    says the service is LAUNCHED as a product-grade offering, never
+    that some particular host is running it. The state comes from the
+    deployment's own catalog through /console/status — so the console
+    is consistent between STT (statically production since M31) and
+    TTS (promoted at M42), and goes back to Coming Soon the moment a
+    rollback removes the route."""
 
-    async def test_a_local_or_staging_deployment_says_preview(
+    async def test_a_promoted_service_reads_production_from_the_catalog(
         self, settings: Settings, db_engine: AsyncEngine
     ) -> None:
-        # The promoted catalog serves Hindi TTS, but a non-prod box is
-        # not the customer's production service: Preview is the honest
-        # claim, deployed or not.
         async with client_with_db(settings, db_engine) as (client, _factory):
             payload = (await client.get("/console/status")).json()
-        assert payload["services"]["tts"]["status"] == "preview"
+        assert payload["services"]["tts"]["status"] == "production"
         assert payload["services"]["tts"]["languages"] == ["en", "hi"]
 
-    async def test_a_production_deployment_says_production(
+    async def test_the_environment_never_changes_the_badge(
         self, settings: Settings, db_engine: AsyncEngine
     ) -> None:
+        # The badge is a PRODUCT claim: a dev/staging box and a prod box
+        # serving the same catalog must say the same thing. (Whether the
+        # service is actually RUNNING is /health/ready's question.)
         from fastapi import FastAPI
 
         from intelliai_api.core.config import Environment
 
-        production = settings.model_copy(update={"env": Environment.PROD})
+        answers = set()
+        for environment in (Environment.DEV, Environment.PROD):
+            scoped = settings.model_copy(update={"env": environment})
 
-        def as_production(app: FastAPI) -> None:
-            app.state.settings = production
+            def use(app: FastAPI, scoped: Settings = scoped) -> None:
+                app.state.settings = scoped
 
-        async with client_with_db(settings, db_engine, as_production) as (client, _factory):
-            payload = (await client.get("/console/status")).json()
-        assert payload["services"]["tts"]["status"] == "production"
-        assert payload["services"]["tts"]["languages"] == ["en", "hi"]
+            async with client_with_db(settings, db_engine, use) as (client, _factory):
+                payload = (await client.get("/console/status")).json()
+                answers.add(payload["services"]["tts"]["status"])
+        assert answers == {"production"}
 
     async def test_the_rollback_posture_says_coming_soon_again(
         self, settings: Settings, db_engine: AsyncEngine
@@ -716,9 +719,12 @@ class TestLaunchStatus:
         async with client_with_db(settings, db_engine) as (client, _factory):
             page = (await client.get("/console/keys")).text
         assert "IntelliAI TTS, OCR, Translate, Vision, and LLM — Coming Soon" in page
-        assert 'id="tts-preview-chip"' in page
-        assert "badge-beta hidden" in page  # hidden until the deployment says preview
-        assert "IntelliAI TTS · Preview" in page
+        assert 'id="tts-status-chip"' in page
+        assert "badge-soon hidden" in page  # hidden until the catalog says otherwise
+        # No launch word is hardcoded on the page: the chip is labelled
+        # at runtime by the shared status model.
+        assert "IntelliAI TTS · Preview" not in page
+        assert "IntelliAI TTS · Production" not in page
         assert "withStatus" in page
 
     async def test_services_and_home_render_through_the_status_model(

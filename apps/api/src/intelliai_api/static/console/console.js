@@ -78,10 +78,10 @@ window.IntelliAI = (function () {
       // over-claims a language production does not serve.
       desc: "Natural speech from text. Male and female voices - try them in the Speech Studio preview.",
       // The static default stays "soon" — the PRODUCTION-SAFE claim.
-      // withStatus() upgrades it to "preview" (M41) only when THIS
-      // deployment's registry serves the preview (/console/status),
-      // so a staging console says Preview while production keeps
-      // saying Coming Soon from the same file.
+      // withStatus() upgrades it only when THIS deployment's catalog
+      // actually serves the service (/console/status), so a console
+      // whose catalog has no TTS route keeps saying Coming Soon from
+      // the same file.
       status: "soon",
       href: "/console/speech",
       cta: "Open Speech Studio"
@@ -275,14 +275,16 @@ window.IntelliAI = (function () {
     });
   }
 
-  /* ── launch-status model (M41) ──────────────────────────────
-   * Three states, one meaning each:
-   *   production  = serving production users today
-   *   preview     = implemented + verified on THIS deployment;
-   *                 production not yet enabled
+  /* ── launch-status model ────────────────────────────────────
+   * Three states, ONE meaning each — the M31 badge law, applied to
+   * every service alike (a badge is a PRODUCT claim, never a claim
+   * about which infrastructure hosts the service today):
+   *   production  = launched as a product-grade offering
+   *   preview     = implemented, not yet approved for production
    *   soon        = not yet available to try
    * The badge text/style lives HERE so every page renders the same
-   * vocabulary. */
+   * vocabulary, and /console/status supplies the state from the
+   * deployment's own catalog. */
   function badgeFor(service) {
     if (service.status === "production") return { text: "Production", cls: "badge-live" };
     if (service.status === "preview") return { text: "Preview", cls: "badge-beta" };

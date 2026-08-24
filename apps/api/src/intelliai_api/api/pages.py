@@ -20,7 +20,6 @@ from fastapi.responses import (
     Response,
 )
 
-from intelliai_api.core.config import Environment, Settings
 from intelliai_api.registry import Registry
 from intelliai_api.registry.records import LanguageStatus
 
@@ -54,30 +53,31 @@ async def root() -> RedirectResponse:
 
 @router.get("/console/status", include_in_schema=False)
 async def console_status(request: Request) -> JSONResponse:
-    """Deployment-honest launch status for the console pages (M41/M42).
+    """Catalog-driven launch status for the console pages.
 
-    Two facts, never a hardcoded string: does THIS deployment's registry
-    serve the service, and is THIS deployment production?
+    ONE meaning for the badge, the M31 law the STT card has always
+    obeyed: **"production" means the service is LAUNCHED as a
+    product-grade offering — never a claim about which infrastructure
+    currently hosts it.** So the status follows THIS deployment's
+    catalog, not its environment:
 
-        registry serves it + INTELLIAI_ENV=prod  → "production"
-        registry serves it, any other env        → "preview"
-        registry does not serve it               → "soon"
+        catalog serves the service      → "production"
+        catalog does not serve it       → "soon"
 
-    So the promoted catalog says *approved for production*, while a
-    local or staging box — which is not the customer's production
-    service, deployed or not — keeps saying Preview from the same
-    static files. Product facts only (status + language codes): no
-    artifacts, no engines, no routes. Unauthenticated like the pages.
+    ("preview" stays in the vocabulary for a service that is
+    implemented but not yet catalog-approved — the state TTS occupied
+    between M39 and the M42 promotion. Nothing emits it today.)
+
+    Whether a deployment is actually RUNNING the service is a different
+    question with its own honest answer: `/health/ready` names the
+    runtimes this deployment serves, and generation answers a 503 the
+    page explains. A catalogue badge never pretends to know that.
+
+    Product facts only (status + language codes): no artifacts, no
+    engines, no routes. Unauthenticated like the pages themselves.
     """
     registry = cast(Registry, request.app.state.registry)
-    settings = cast(Settings, request.app.state.settings)
     serves_hindi_tts = registry.language_status("intelliai-tts", "hi") is LanguageStatus.AVAILABLE
-    if not serves_hindi_tts:
-        tts_status = "soon"
-    elif settings.env is Environment.PROD:
-        tts_status = "production"
-    else:
-        tts_status = "preview"
     tts_languages = sorted(
         {
             language
@@ -87,7 +87,14 @@ async def console_status(request: Request) -> JSONResponse:
         }
     )
     return JSONResponse(
-        {"services": {"tts": {"status": tts_status, "languages": tts_languages}}},
+        {
+            "services": {
+                "tts": {
+                    "status": "production" if serves_hindi_tts else "soon",
+                    "languages": tts_languages,
+                }
+            }
+        },
         headers=_NO_CACHE,
     )
 

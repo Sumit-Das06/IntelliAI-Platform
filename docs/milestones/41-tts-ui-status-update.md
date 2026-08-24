@@ -15,6 +15,8 @@
 
     FINAL CLASSIFICATION: A — UI ACCURATELY REFLECTS CURRENT TTS STATUS
 
+> **Superseded in part by M42 (2026-08-24).** This milestone was correct for its moment: TTS was implemented and staging-verified but NOT production-approved, so the badge distinguished deployments (Preview on a local/staging box, Coming Soon on production). The M42 promotion made TTS an approved production service, which created two meanings in one badge row — the STT card had said **Production** on the same undeployed box since M31 under the documented law *"launched as a product-grade offering, NOT a claim about which infrastructure hosts it"*. The founder chose one law for every service: the badge now follows the DEPLOYMENT'S CATALOG (`production` when it serves the service, `soon` when it does not), and the environment changes nothing. The mechanism this milestone built — `/console/status`, `withStatus()`, `badgeFor()`, production-safe static defaults — is unchanged and still in use; only the mapping moved. See [M42 §9](42-tts-production-promotion.md).
+
 ## 1. The architecture — status flows from the registry, never a string
 
 The spec's preferred shape, implemented exactly:

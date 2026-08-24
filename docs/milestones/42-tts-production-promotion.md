@@ -144,19 +144,34 @@ the GPL python chain remains build-fatally banned.
 
 ## 9. UI semantics after promotion (Phase 9)
 
-The M41 mechanism, extended to three states — read from the registry
-AND this deployment's env, never hardcoded:
+**Amended 2026-08-24, same day, on the founder's review** — the first
+version of this section shipped an env-dependent badge (Preview on a
+non-prod box, Production on a prod box) and the founder immediately
+caught the contradiction it created: the STT card has said
+**Production** since M31 on the very same undeployed box, because the
+documented badge law is *"launched as a product-grade offering — NOT a
+claim about which infrastructure hosts it"*. Two meanings were running
+in one badge row. That was correct while TTS was staging-only; the M42
+promotion made it wrong, since TTS now holds exactly the product
+status STT holds. **Founder decision: one law for every service (the
+M31 one).**
 
-| Deployment | `/console/status` | Badge |
+| Deployment's catalog | `/console/status` | Badge |
 |---|---|---|
-| local / staging (`env != prod`) | `preview`, `["en","hi"]` | **Preview** |
-| production (`INTELLIAI_ENV=prod`) | `production`, `["en","hi"]` | **Production** |
-| after a rollback (catalog refuses hi) | `soon`, `["en"]` | **Coming Soon** |
+| serves the service (today: after M42) | `production`, `["en","hi"]` | **Production** |
+| does not serve it (after a rollback) | `soon`, `["en"]` | **Coming Soon** |
 
-So an undeployed local tree never claims the customer's production
-service is live, and a production box never under-claims a service it
-serves. All three states are test-pinned, including the rolled-back
-posture composed from `ROLLBACK_TTS_PRODUCTION_ROUTE`.
+`preview` stays in the vocabulary for a service that is implemented
+but not yet catalog-approved — the state TTS occupied between M39 and
+this promotion; nothing emits it today. The environment no longer
+changes any badge (test-pinned: a dev box and a prod box serving the
+same catalog answer identically), and the rolled-back posture is
+pinned by composing `ROLLBACK_TTS_PRODUCTION_ROUTE`.
+
+**"Is it actually running?" is a different question with its own
+honest answer** — `/health/ready` names the runtimes a deployment
+serves (TTS included since M42), and generation answers a 503 the
+Speech Studio explains. A catalogue badge never pretends to know that.
 
 ## 10. Rollback (Phase 11) — tested at repository level
 
