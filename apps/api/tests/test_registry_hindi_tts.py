@@ -85,6 +85,43 @@ class TestStagingServesTheProposal:
             )
 
 
+class TestPromotionPreparation:
+    """M40: the future production promotion is ONE reviewed, reversible
+    change — prepared, not activated."""
+
+    def test_rollback_target_equals_the_live_refusal_verbatim(self) -> None:
+        # Reverting the future promotion commit must land exactly the
+        # route production serves TODAY — pinned while the proposal is
+        # pending so the revert target stays reviewed.
+        from intelliai_api.registry.catalog import _ROUTES
+        from intelliai_api.registry.proposals import ROLLBACK_HINDI_TTS_ROUTE
+
+        live_hi_tts = next(
+            r
+            for r in _ROUTES
+            if r.public_model_id == "intelliai-tts" and r.selector.language == "hi"
+        )
+        assert live_hi_tts == ROLLBACK_HINDI_TTS_ROUTE
+        assert ROLLBACK_HINDI_TTS_ROUTE.status is LanguageStatus.UNAVAILABLE
+        assert ROLLBACK_HINDI_TTS_ROUTE.artifact_id is None
+
+    def test_promotion_needs_no_artifact_readmission(self) -> None:
+        # The promotion is a route+voices diff ONLY: the artifact it
+        # names is already registered in the live catalog, so rollback
+        # and rollout never wait on artifact admission mid-incident.
+        from intelliai_api.registry.catalog import _ARTIFACTS
+
+        assert HINDI_TTS_ROUTE.artifact_id == "kokoro-82m"
+        assert any(a.id == "kokoro-82m" for a in _ARTIFACTS)
+
+    def test_the_promotion_carries_the_full_evidence_chain(self) -> None:
+        evidence = HINDI_TTS_ROUTE.evidence
+        assert evidence is not None
+        assert evidence.corpus == "m38-hindi-tts-probe-texts@v1"
+        assert "2026-08-22-hindi-tts-model-selection" in evidence.quality_baseline
+        assert "39-hindi-tts-local-web" in evidence.production_benchmark
+
+
 class TestLeakGuard:
     def test_product_records_never_name_engine_tokens(self) -> None:
         banned = ("hf_alpha", "hm_psi", "hf_", "hm_", "kokoro", "espeak", "misaki")

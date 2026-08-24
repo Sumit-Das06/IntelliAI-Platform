@@ -1,4 +1,4 @@
-# Model Rollout & Rollback — IntelliAI STT
+# Model Rollout & Rollback — IntelliAI STT & TTS
 
 > The minimum production procedure for changing what serves
 > `intelliai-stt`, written at 14A. No promotion *tooling* exists yet —
@@ -100,6 +100,50 @@ deployed — Hostinger, DNS, certificates, secrets, canary, and the VPS
 capacity re-measurement (~4–5 concurrent 300 s long requests, ~4 GiB
 steady-state RSS per busy long-audio slot — Windows-measured) all
 belong to the future deployment milestone.
+
+## The PREPARED promotion: Hindi TTS on Kokoro-82M (M40, pending)
+
+*(implemented local/staging at M39; validated + prepared for promotion
+at M40; NOT approved, NOT activated — the staging route carries the
+``APPROVAL_PENDING`` sentinel and a test refuses it in any live
+registry)*
+
+What staging serves today and production will serve after the
+promotion commit:
+
+    voice hindi-female → kokoro-82m (pack hf_alpha, artifact v2)
+    voice hindi-male   → kokoro-82m (pack hm_psi,  artifact v2)
+    hi route: UNAVAILABLE (prod today) → AVAILABLE on kokoro-82m
+
+**The promotion is one reviewed commit** (the E3/M26 shape,
+restated in `registry/proposals.py`):
+
+1. catalog.py: append `HINDI_TTS_VOICES` to `_VOICES`; replace the hi
+   refusal route with `HINDI_TTS_ROUTE`.
+2. Replace `APPROVAL_PENDING` on the route evidence with the founder
+   decision reference.
+3. Flip the production-refusal guard tests to production-serving pins
+   in the same commit.
+
+No artifact re-admission (kokoro-82m already registered; its v2 spec
+carries both Hindi packs, SHA-pinned), no image change, no client
+change. **Two-knob law**: this catalog promotion is SEPARATE from the
+TTS production-launch gate (prod.yml tts block + Hostinger) — prod.yml
+ships no TTS at all today, so promoting the catalog alone changes
+nothing a customer can reach until the launch gate opens.
+
+**Weights distribution**: kokoro-82m downloads from the pinned
+upstream at boot and is re-hashed every start; `make seed-models` ALSO
+copies `models/kokoro-82m/v2/` into the volume when present (M40), so
+an offline/airgapped box seeds exactly like E3 does.
+
+**Rollback**: `git revert` of the promotion commit → Hindi TTS returns
+to the honest refusal. The reviewed target `ROLLBACK_HINDI_TTS_ROUTE`
+in proposals.py restates it verbatim and a test pins it EQUAL to the
+live route for as long as the proposal is pending. Staging-tier
+rollback is one env line (`INTELLIAI_TTS_HINDI_G2P=off` — the runtime
+then serves no Hindi voice, smoke-checked both ways) or the registry
+profile itself.
 
 ## What the future ML milestone adds (not now)
 

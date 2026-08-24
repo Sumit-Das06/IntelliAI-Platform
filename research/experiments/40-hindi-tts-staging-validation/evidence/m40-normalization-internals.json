@@ -1,0 +1,75 @@
+{
+  "experiment": "40-hindi-tts-staging-validation",
+  "check": "normalization internals: original -> speech-only internal text (normalize_for_speech_hindi, the exact function the runtime pipeline calls for hi voices)",
+  "laws": "original text remains the billing/provenance fact (gateway never sees the internal form; test-pinned in test_speech_hindi + test_tts_billing); deterministic + idempotent; no English words",
+  "rows": [
+    {
+      "original": "इसकी कीमत ₹12,500 है।",
+      "normalized_internal": "इसकी कीमत 12500 रुपये है।",
+      "rule_hits": {
+        "rupees": 1
+      },
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "कृपया मुझे 25% छूट दें।",
+      "normalized_internal": "कृपया मुझे 25 प्रतिशत छूट दें।",
+      "rule_hits": {
+        "percent": 1
+      },
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "आपकी नियुक्ति 12/08/2026 को है।",
+      "normalized_internal": "आपकी नियुक्ति 12 अगस्त 2026 को है।",
+      "rule_hits": {
+        "slash_date": 1
+      },
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "मेरा नंबर 9876543210 है।",
+      "normalized_internal": "मेरा नंबर नौ आठ सात छह पाँच, चार तीन दो एक शून्य है।",
+      "rule_hits": {
+        "phone_ten_digit": 1
+      },
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "कक्षा में ४५ विद्यार्थी हैं।",
+      "normalized_internal": "कक्षा में 45 विद्यार्थी हैं।",
+      "rule_hits": {
+        "devanagari_digits": 1
+      },
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "डिलीवरी 10:30 AM तक पहुँचेगी।",
+      "normalized_internal": "डिलीवरी सुबह 10 बजकर 30 मिनट तक पहुँचेगी।",
+      "rule_hits": {
+        "time_ampm": 1
+      },
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "मेरा policy number 12345 है।",
+      "normalized_internal": "मेरा policy number 12345 है।",
+      "rule_hits": {},
+      "idempotent": true,
+      "english_words": false
+    },
+    {
+      "original": "ट्रेन संख्या 12345 पर है।",
+      "normalized_internal": "ट्रेन संख्या 12345 पर है।",
+      "rule_hits": {},
+      "idempotent": true,
+      "english_words": false
+    }
+  ]
+}

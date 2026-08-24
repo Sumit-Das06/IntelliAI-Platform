@@ -73,7 +73,10 @@ window.IntelliAI = (function () {
       name: "IntelliAI TTS",
       category: "Speech Synthesis",
       icon: "wave",
-      desc: "Natural speech from text. English voices, male and female.",
+      // Deployment-neutral wording (M40): the Speech Studio's voice
+      // list comes from THIS deployment's catalog, so the card never
+      // over-claims a language production does not serve.
+      desc: "Natural speech from text. Male and female voices - try them in the Speech Studio preview.",
       // Launch state stays "soon" (the badge is a PRODUCT-launch claim,
       // and TTS has not launched) - but the Speech Studio preview is
       // real and linked. soon+href = "try the preview, no promise yet".

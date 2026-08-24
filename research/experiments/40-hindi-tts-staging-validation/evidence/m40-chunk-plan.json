@@ -1,0 +1,56 @@
+{
+  "experiment": "40-hindi-tts-staging-validation",
+  "check": "chunk plan from the EXACT runtime splitter (engines.kokoro._chunks/_stream_chunks) on the M38 ladder - danda-aware, no text lost, every chunk under the 300-char merge budget",
+  "rows": [
+    {
+      "id": "m38-ladder-120",
+      "chars": 118,
+      "whole_chunks": 1,
+      "whole_max_chunk_chars": 118,
+      "stream_chunks": 2,
+      "stream_first_chunk_chars": 31,
+      "text_lost_whole": false,
+      "text_lost_stream": false
+    },
+    {
+      "id": "m38-ladder-300",
+      "chars": 298,
+      "whole_chunks": 1,
+      "whole_max_chunk_chars": 298,
+      "stream_chunks": 2,
+      "stream_first_chunk_chars": 40,
+      "text_lost_whole": false,
+      "text_lost_stream": false
+    },
+    {
+      "id": "m38-ladder-700",
+      "chars": 683,
+      "whole_chunks": 3,
+      "whole_max_chunk_chars": 259,
+      "stream_chunks": 4,
+      "stream_first_chunk_chars": 71,
+      "text_lost_whole": false,
+      "text_lost_stream": false
+    },
+    {
+      "id": "m38-ladder-1200",
+      "chars": 1189,
+      "whole_chunks": 5,
+      "whole_max_chunk_chars": 259,
+      "stream_chunks": 6,
+      "stream_first_chunk_chars": 71,
+      "text_lost_whole": false,
+      "text_lost_stream": false
+    },
+    {
+      "id": "m38-ladder-2000",
+      "chars": 1897,
+      "whole_chunks": 8,
+      "whole_max_chunk_chars": 296,
+      "stream_chunks": 8,
+      "stream_first_chunk_chars": 71,
+      "text_lost_whole": false,
+      "text_lost_stream": false
+    }
+  ]
+}

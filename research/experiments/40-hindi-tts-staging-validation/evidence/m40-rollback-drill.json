@@ -1,0 +1,27 @@
+{
+  "experiment": "40-hindi-tts-staging-validation",
+  "check": "staging rollback drill, LIVE (production untouched throughout)",
+  "steps": [
+    {
+      "step": "baseline",
+      "hindi_g2p": "espeak",
+      "voices": 6,
+      "gateway_hindi": "200"
+    },
+    {
+      "step": "rollback: recreate tts-runtime with INTELLIAI_TTS_HINDI_G2P=off (one env line, compose override)",
+      "hindi_g2p": "off",
+      "voices": 4,
+      "gateway_hindi": "400 invalid_request - voice hindi-female is not served by this runtime (customer-safe, no engine tokens)",
+      "english": "still served (4 English ids)"
+    },
+    {
+      "step": "restore: recreate with the committed local-prod shape",
+      "hindi_g2p": "espeak",
+      "voices": 6,
+      "gateway_hindi": "200"
+    }
+  ],
+  "future_production_rollback": "git revert of the promotion commit; ROLLBACK_HINDI_TTS_ROUTE pinned EQUAL to the live refusal while the proposal is pending (test_registry_hindi_tts.py)",
+  "wall_clock": "each direction ~40 s (container recreate + health)"
+}

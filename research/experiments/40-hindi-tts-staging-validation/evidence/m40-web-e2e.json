@@ -1,0 +1,31 @@
+{
+  "experiment": "40-hindi-tts-staging-validation",
+  "check": "local HTTPS Web E2E through the Caddy edge, BOTH Hindi voices, streaming",
+  "page": {
+    "url": "https://localhost/console/speech",
+    "markers": "catalog-driven dropdown + Hindi labels + Devanagari example",
+    "engine_token_leaks": 0
+  },
+  "probes": [
+    {
+      "voice": "hindi-female",
+      "stream": true,
+      "content": "exclamation + IntelliAI + Hinglish (office/please/call) + 10:30 AM",
+      "ttfb_s": 1.246,
+      "total_s": 2.776,
+      "audio_seconds": 10.62,
+      "e3_heard": "नमस्ते इंटेली ए आई में आपका स्वागत है। मुझे ऑफिस जाना है, प्लीज़ मुझे कल सुबह दस बज कर तीस मिनट पर कॉल करना।"
+    },
+    {
+      "voice": "hindi-male",
+      "stream": true,
+      "content": "question + order + Rs2,750 + 15/09/2026 + IntelliAI",
+      "ttfb_s": 2.696,
+      "total_s": 3.561,
+      "audio_seconds": 14.05,
+      "e3_heard": "क्या आपका औद्योगिक समय पर पहुंच गया था आपकी अगली किस्त? दो हज़ार, सात सौ पचास रुपये की पंद्रह सितंबर दो हज़ार छब्बीस को है। धन्यवाद। इंटेली ए आई टीम।",
+      "note": "one judge/render slip: order heard as a similar Hindi word; the battery-level Hinglish rows measure token preservation cleanly"
+    }
+  ],
+  "edge_passthrough": "both streams delivered progressively (total << audio duration)"
+}

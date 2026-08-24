@@ -1,0 +1,61 @@
+{
+  "experiment": "40-hindi-tts-staging-validation",
+  "check": "LIVE billing drill - fresh internal_qa org (public id recorded in the run log, key never committed), real gateway, real Postgres ledger rows",
+  "laws_proven": [
+    "same 57-char Hindi text at speeds 0.75/1.0/1.25, both voices, whole-body AND streamed: every row bills characters=57 exactly - speed, voice, and transport never change the bill",
+    "mid-stream client abort after audio began: billable row, characters=342 (the F1 delivered-work law)",
+    "invalid voice / empty input / over-limit: refused pre-plane-crossing - ZERO rows written, nothing billable",
+    "every row carries language=hi and unit=characters only (audio_seconds telemetry rides lineage, never a quantity)"
+  ],
+  "ledger_rows": [
+    {
+      "outcome": "succeeded",
+      "billable": true,
+      "language": "hi",
+      "unit": "characters",
+      "amount": 57,
+      "case": "female speed 1.0 whole"
+    },
+    {
+      "outcome": "succeeded",
+      "billable": true,
+      "language": "hi",
+      "unit": "characters",
+      "amount": 57,
+      "case": "female speed 0.75 whole"
+    },
+    {
+      "outcome": "succeeded",
+      "billable": true,
+      "language": "hi",
+      "unit": "characters",
+      "amount": 57,
+      "case": "female speed 1.25 whole"
+    },
+    {
+      "outcome": "succeeded",
+      "billable": true,
+      "language": "hi",
+      "unit": "characters",
+      "amount": 57,
+      "case": "male speed 1.0 whole"
+    },
+    {
+      "outcome": "succeeded",
+      "billable": true,
+      "language": "hi",
+      "unit": "characters",
+      "amount": 57,
+      "case": "female stream, consumed to completion"
+    },
+    {
+      "outcome": "succeeded",
+      "billable": true,
+      "language": "hi",
+      "unit": "characters",
+      "amount": 342,
+      "case": "female stream, CLIENT ABORT after 65,573 delivered bytes (F1: delivered work is billed on the ORIGINAL text length)"
+    }
+  ],
+  "refusal_rows_written": 0
+}

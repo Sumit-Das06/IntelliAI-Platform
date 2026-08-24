@@ -112,6 +112,34 @@ HINDI_TTS_ROUTE: Final = ServingRoute(
     evidence=_KOKORO_HI_EVIDENCE,
 )
 
+#: THE FUTURE PROMOTION, prepared (M40) exactly like E3's was at M24 —
+#: one reviewed, revertible catalog commit that moves three things
+#: together (docs/ops/model-rollout.md "PREPARED promotion"):
+#:   1. catalog.py: append ``HINDI_TTS_VOICES`` to ``_VOICES`` and
+#:      replace the hi refusal route with ``HINDI_TTS_ROUTE``;
+#:   2. the route's ``evidence.approval``: replace ``APPROVAL_PENDING``
+#:      with the founder decision reference (a test refuses a live
+#:      registry that ever carries the sentinel);
+#:   3. the guards/tests: flip the production-refusal pins to
+#:      production-serving pins in the same commit.
+#: No artifact re-admission is needed (kokoro-82m is already registered
+#: and its v2 spec carries both Hindi packs), and no image change rides
+#: the commit. NOTE: the promotion changes only the CATALOG; actually
+#: serving TTS in production additionally needs the separate TTS
+#: production-launch gate (prod overlay tts block, Hostinger) — two
+#: knobs, deliberately never one commit.
+
+#: THE ROLLBACK TARGET for that future promotion: today's live refusal,
+#: restated verbatim (the M26 rollback discipline). Reverting the
+#: promotion commit must land exactly this route — and a test pins that
+#: this record equals the live catalog's current hi TTS route, so the
+#: revert target stays reviewed for as long as the proposal is pending.
+ROLLBACK_HINDI_TTS_ROUTE: Final = ServingRoute(
+    public_model_id="intelliai-tts",
+    selector=RouteSelector(language="hi"),
+    status=LanguageStatus.UNAVAILABLE,
+)
+
 
 def staging_registry() -> Registry:
     """The live catalog PLUS the pending M39 Hindi TTS proposal.
