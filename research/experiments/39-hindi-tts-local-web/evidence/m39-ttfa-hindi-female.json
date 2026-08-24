@@ -1,0 +1,184 @@
+{
+  "experiment": "39-hindi-tts-local-web",
+  "instrument": "m39_ttfa_bench.py",
+  "voice": "hindi-female",
+  "definitions": {
+    "ttfb_ms": "first response byte",
+    "ttfa_ms": "first byte past the 44-byte WAV preamble (first playable audio)",
+    "total_ms": "last byte"
+  },
+  "gateway": "http://localhost:8000",
+  "repetitions": "best-of-3 by ttfa",
+  "rows": [
+    {
+      "id": "short-question",
+      "chars": 25,
+      "mode": "whole",
+      "ttfb_ms": 473.1,
+      "ttfa_ms": 473.1,
+      "total_ms": 473.5,
+      "audio_seconds": 2.9,
+      "rtf": 0.1633,
+      "bytes": 139244
+    },
+    {
+      "id": "short-question",
+      "chars": 25,
+      "mode": "stream",
+      "ttfb_ms": 482.4,
+      "ttfa_ms": 482.4,
+      "total_ms": 489.1,
+      "audio_seconds": 2.9,
+      "rtf": 0.1687,
+      "bytes": 139244
+    },
+    {
+      "id": "chars-118",
+      "chars": 118,
+      "mode": "whole",
+      "ttfb_ms": 1870.2,
+      "ttfa_ms": 1870.2,
+      "total_ms": 1872.9,
+      "audio_seconds": 11.0,
+      "rtf": 0.1703,
+      "bytes": 528044
+    },
+    {
+      "id": "chars-118",
+      "chars": 118,
+      "mode": "stream",
+      "ttfb_ms": 546.5,
+      "ttfa_ms": 546.8,
+      "total_ms": 1974.8,
+      "audio_seconds": 11.875,
+      "rtf": 0.1663,
+      "bytes": 570044
+    },
+    {
+      "id": "chars-298",
+      "chars": 298,
+      "mode": "whole",
+      "ttfb_ms": 4867.1,
+      "ttfa_ms": 4867.1,
+      "total_ms": 4874.6,
+      "audio_seconds": 23.075,
+      "rtf": 0.2113,
+      "bytes": 1107644
+    },
+    {
+      "id": "chars-298",
+      "chars": 298,
+      "mode": "stream",
+      "ttfb_ms": 745.9,
+      "ttfa_ms": 745.9,
+      "total_ms": 5625.7,
+      "audio_seconds": 25.25,
+      "rtf": 0.2228,
+      "bytes": 1212044
+    },
+    {
+      "id": "chars-683",
+      "chars": 683,
+      "mode": "whole",
+      "ttfb_ms": 11658.3,
+      "ttfa_ms": 11658.3,
+      "total_ms": 11674.3,
+      "audio_seconds": 55.725,
+      "rtf": 0.2095,
+      "bytes": 2674844
+    },
+    {
+      "id": "chars-683",
+      "chars": 683,
+      "mode": "stream",
+      "ttfb_ms": 1099.0,
+      "ttfa_ms": 1099.2,
+      "total_ms": 11113.9,
+      "audio_seconds": 56.725,
+      "rtf": 0.1959,
+      "bytes": 2722844
+    },
+    {
+      "id": "chars-1189",
+      "chars": 1189,
+      "mode": "whole",
+      "ttfb_ms": 19716.2,
+      "ttfa_ms": 19716.2,
+      "total_ms": 19751.0,
+      "audio_seconds": 95.625,
+      "rtf": 0.2065,
+      "bytes": 4590044
+    },
+    {
+      "id": "chars-1189",
+      "chars": 1189,
+      "mode": "stream",
+      "ttfb_ms": 1067.3,
+      "ttfa_ms": 1067.3,
+      "total_ms": 20557.5,
+      "audio_seconds": 95.1,
+      "rtf": 0.2162,
+      "bytes": 4564844
+    },
+    {
+      "id": "chars-1897",
+      "chars": 1897,
+      "mode": "whole",
+      "ttfb_ms": 31558.5,
+      "ttfa_ms": 31558.5,
+      "total_ms": 31618.4,
+      "audio_seconds": 149.625,
+      "rtf": 0.2113,
+      "bytes": 7182044
+    },
+    {
+      "id": "chars-1897",
+      "chars": 1897,
+      "mode": "stream",
+      "ttfb_ms": 1055.6,
+      "ttfa_ms": 1055.7,
+      "total_ms": 30782.0,
+      "audio_seconds": 148.2,
+      "rtf": 0.2077,
+      "bytes": 7113644
+    }
+  ],
+  "stream_concurrency_ladder": [
+    {
+      "concurrency": 1,
+      "ok": 1,
+      "errors": 0,
+      "ttfa_p50_ms": 676.1,
+      "ttfa_max_ms": 676.1,
+      "wall_s": 5.16,
+      "audio_seconds_total": 25.25
+    },
+    {
+      "concurrency": 2,
+      "ok": 2,
+      "errors": 0,
+      "ttfa_p50_ms": 3869.4,
+      "ttfa_max_ms": 3869.4,
+      "wall_s": 10.01,
+      "audio_seconds_total": 50.5
+    },
+    {
+      "concurrency": 4,
+      "ok": 4,
+      "errors": 0,
+      "ttfa_p50_ms": 8735.6,
+      "ttfa_max_ms": 12085.6,
+      "wall_s": 18.67,
+      "audio_seconds_total": 101.0
+    },
+    {
+      "concurrency": 8,
+      "ok": 8,
+      "errors": 0,
+      "ttfa_p50_ms": 18925.5,
+      "ttfa_max_ms": 30809.9,
+      "wall_s": 38.35,
+      "audio_seconds_total": 202.0
+    }
+  ]
+}

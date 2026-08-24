@@ -23,7 +23,7 @@ INFO_URL="${INTELLIAI_TTS_INFO_URL:-http://127.0.0.1:8002/info}"
 GATEWAY_URL="${INTELLIAI_GATEWAY_URL:-http://127.0.0.1:8000}"
 EXPECTED_ARTIFACT="${INTELLIAI_TTS_EXPECTED_ARTIFACT:-kokoro-82m}"
 EXPECTED_OOV="${INTELLIAI_TTS_EXPECTED_OOV:-espeak}"
-VERSION_FLOOR="0.3.0"
+VERSION_FLOOR="0.4.0"
 API_KEY="${1:-${INTELLIAI_SMOKE_API_KEY:-}}"
 
 fail() { echo "TTS-SMOKE FAIL: $1" >&2; exit 1; }
@@ -55,14 +55,21 @@ case ",$ARTIFACTS," in
   *) fail "expected artifact '$EXPECTED_ARTIFACT' not loaded (got: $ARTIFACTS)" ;;
 esac
 
-# §3 M35 posture keys exist AND match the declared posture.
+# §3 M35 posture keys exist AND match the declared posture. The M39
+# key must EXIST on any current image (a pre-M39 image lacks it); its
+# VALUE is deployment policy — local/staging declare espeak, production
+# ships no TTS and would declare off.
 NORMALIZATION="$(json "d.get('normalization','MISSING')")"
 [ "$NORMALIZATION" = "on" ] || fail "normalization reported '$NORMALIZATION' (expected on)"
 OOV="$(json "d.get('oov_fallback','MISSING')")"
 [ "$OOV" = "$EXPECTED_OOV" ] || fail "oov_fallback reported '$OOV' (expected $EXPECTED_OOV)"
-note "posture: normalization=on oov_fallback=$OOV"
+HINDI="$(json "d.get('hindi_g2p','MISSING')")"
+[ "$HINDI" != "MISSING" ] || fail "hindi_g2p key missing - pre-M39 image"
+note "posture: normalization=on oov_fallback=$OOV hindi_g2p=$HINDI"
 
-# §4 launch voices served (and legacy aliases still alive).
+# §4 launch voices served (and legacy aliases still alive). When the
+# deployment declares the Hindi component, BOTH M39 voices must serve;
+# when it does not, NEITHER may (voices and phonemizer travel together).
 VOICES="$(json "','.join(d['voices'])")"
 for voice in english-female english-male reference-alto; do
   case ",$VOICES," in
@@ -70,6 +77,19 @@ for voice in english-female english-male reference-alto; do
     *) fail "voice '$voice' not served (got: $VOICES)" ;;
   esac
 done
+if [ "$HINDI" = "espeak" ]; then
+  for voice in hindi-female hindi-male; do
+    case ",$VOICES," in
+      *,"$voice",*) ;;
+      *) fail "hindi_g2p=espeak but voice '$voice' not served (got: $VOICES)" ;;
+    esac
+  done
+else
+  case ",$VOICES," in
+    *,hindi-*) fail "hindi voices served without a declared hindi_g2p component" ;;
+    *) ;;
+  esac
+fi
 note "voices: $VOICES"
 
 # §5 a real synthesis through the gateway — playable bytes, public shape.
@@ -86,6 +106,24 @@ if [ -n "$API_KEY" ]; then
   [ "$SIZE" -gt 20000 ] || fail "audio suspiciously small ($SIZE bytes)"
   grep -qi '^x-runtime-envelope' "$HEADERS_FILE" && fail "internal envelope leaked to the public response"
   note "gateway synthesis: 200 audio/wav, $SIZE bytes, no internal headers"
+
+  # §5b Hindi through the gateway — only where the deployment declares
+  # it (local/staging). The body rides a file: inline non-ASCII curl
+  # bodies are mangled by Windows dev shells (the M35 lesson).
+  if [ "$HINDI" = "espeak" ]; then
+    REQ_FILE="$(mktemp)"
+    printf '%s' '{"model":"intelliai-tts","input":"नमस्ते, आपका नाम क्या है? आपकी किस्त 12/08/2026 को ₹1,500 की है।","voice":"hindi-female"}' > "$REQ_FILE"
+    STATUS="$(curl -sS --max-time 120 -o "$BODY_FILE" -w '%{http_code}' \
+      -X POST "$GATEWAY_URL/v1/audio/speech" \
+      -H "Authorization: Bearer $API_KEY" -H "Content-Type: application/json" \
+      --data-binary @"$REQ_FILE")"
+    rm -f "$REQ_FILE"
+    [ "$STATUS" = "200" ] || fail "hindi gateway synthesis returned $STATUS"
+    head -c 4 "$BODY_FILE" | grep -q RIFF || fail "hindi response is not a WAV"
+    SIZE="$(wc -c < "$BODY_FILE")"
+    [ "$SIZE" -gt 20000 ] || fail "hindi audio suspiciously small ($SIZE bytes)"
+    note "hindi gateway synthesis: 200 audio/wav, $SIZE bytes"
+  fi
 else
   echo "  (no API key given - gateway synthesis check skipped; pass one to run it)"
 fi

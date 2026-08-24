@@ -141,6 +141,57 @@ document.addEventListener("DOMContentLoaded", function () {
     charCount.textContent = textEl.value.length + " / 2000";
   });
 
+  /* ── Voice catalog (M39) ─────────────────────────────────────────
+     The dropdown mirrors what THIS deployment actually serves: the
+     static English pair is the baseline, and the list is rebuilt from
+     GET /v1/audio/voices once a key is connected — a staging stack
+     lists the Hindi voices, production does not. Friendly names only;
+     legacy alias ids are never listed. */
+  var FRIENDLY_VOICES = [
+    { id: "english-female", label: "English Female" },
+    { id: "english-male", label: "English Male" },
+    { id: "hindi-female", label: "Hindi Female" },
+    { id: "hindi-male", label: "Hindi Male" }
+  ];
+  var HINDI_PLACEHOLDER = "नमस्ते, आपका नाम क्या है? आपकी डिलीवरी कल सुबह 10 बजे तक पहुँच जाएगी।";
+  var ENGLISH_PLACEHOLDER = textEl.getAttribute("placeholder");
+
+  function rebuildVoices(served) {
+    var current = voiceEl.value;
+    var options = FRIENDLY_VOICES.filter(function (voice) {
+      return served.indexOf(voice.id) !== -1;
+    });
+    if (!options.length) { return; }
+    voiceEl.innerHTML = "";
+    options.forEach(function (voice) {
+      var option = document.createElement("option");
+      option.value = voice.id;
+      option.textContent = voice.label;
+      voiceEl.appendChild(option);
+    });
+    if (options.some(function (voice) { return voice.id === current; })) {
+      voiceEl.value = current;
+    }
+  }
+
+  function loadVoices() {
+    if (!IntelliAI.getKey()) { return; }
+    fetch("/v1/audio/voices", { headers: { Authorization: "Bearer " + IntelliAI.getKey() } })
+      .then(function (response) { return response.ok ? response.json() : null; })
+      .then(function (payload) {
+        if (!payload || !payload.data) { return; }
+        rebuildVoices(payload.data.map(function (voice) { return voice.id; }));
+      })
+      .catch(function () { /* keep the static English baseline */ });
+  }
+  loadVoices();
+
+  voiceEl.addEventListener("change", function () {
+    // A Hindi voice invites Hindi text — swap the example, nothing else.
+    var isHindi = voiceEl.value.indexOf("hindi") === 0;
+    textEl.setAttribute("placeholder", isHindi ? HINDI_PLACEHOLDER : ENGLISH_PLACEHOLDER);
+  });
+
   /* ════════════════════════════════════════════════════════════════
      THE PLAYBACK SESSION (M37) — the one-player law made executable.
 

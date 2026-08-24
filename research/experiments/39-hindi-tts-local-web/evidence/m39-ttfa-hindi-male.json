@@ -1,0 +1,147 @@
+{
+  "experiment": "39-hindi-tts-local-web",
+  "instrument": "m39_ttfa_bench.py",
+  "voice": "hindi-male",
+  "definitions": {
+    "ttfb_ms": "first response byte",
+    "ttfa_ms": "first byte past the 44-byte WAV preamble (first playable audio)",
+    "total_ms": "last byte"
+  },
+  "gateway": "http://localhost:8000",
+  "repetitions": "best-of-3 by ttfa",
+  "rows": [
+    {
+      "id": "short-question",
+      "chars": 25,
+      "mode": "whole",
+      "ttfb_ms": 760.0,
+      "ttfa_ms": 760.0,
+      "total_ms": 760.2,
+      "audio_seconds": 2.85,
+      "rtf": 0.2667,
+      "bytes": 136844
+    },
+    {
+      "id": "short-question",
+      "chars": 25,
+      "mode": "stream",
+      "ttfb_ms": 774.2,
+      "ttfa_ms": 774.6,
+      "total_ms": 785.3,
+      "audio_seconds": 2.85,
+      "rtf": 0.2755,
+      "bytes": 136844
+    },
+    {
+      "id": "chars-118",
+      "chars": 118,
+      "mode": "whole",
+      "ttfb_ms": 2501.7,
+      "ttfa_ms": 2501.7,
+      "total_ms": 2504.9,
+      "audio_seconds": 11.65,
+      "rtf": 0.215,
+      "bytes": 559244
+    },
+    {
+      "id": "chars-118",
+      "chars": 118,
+      "mode": "stream",
+      "ttfb_ms": 892.3,
+      "ttfa_ms": 892.6,
+      "total_ms": 2896.5,
+      "audio_seconds": 12.475,
+      "rtf": 0.2322,
+      "bytes": 598844
+    },
+    {
+      "id": "chars-298",
+      "chars": 298,
+      "mode": "whole",
+      "ttfb_ms": 5908.8,
+      "ttfa_ms": 5908.8,
+      "total_ms": 5927.5,
+      "audio_seconds": 23.525,
+      "rtf": 0.252,
+      "bytes": 1129244
+    },
+    {
+      "id": "chars-298",
+      "chars": 298,
+      "mode": "stream",
+      "ttfb_ms": 1128.5,
+      "ttfa_ms": 1128.7,
+      "total_ms": 6890.7,
+      "audio_seconds": 26.0,
+      "rtf": 0.265,
+      "bytes": 1248044
+    },
+    {
+      "id": "chars-683",
+      "chars": 683,
+      "mode": "whole",
+      "ttfb_ms": 14795.3,
+      "ttfa_ms": 14795.3,
+      "total_ms": 14844.2,
+      "audio_seconds": 58.55,
+      "rtf": 0.2535,
+      "bytes": 2810444
+    },
+    {
+      "id": "chars-683",
+      "chars": 683,
+      "mode": "stream",
+      "ttfb_ms": 1551.8,
+      "ttfa_ms": 1551.9,
+      "total_ms": 14220.9,
+      "audio_seconds": 59.25,
+      "rtf": 0.24,
+      "bytes": 2844044
+    },
+    {
+      "id": "chars-1189",
+      "chars": 1189,
+      "mode": "whole",
+      "ttfb_ms": 24032.0,
+      "ttfa_ms": 24032.0,
+      "total_ms": 24080.5,
+      "audio_seconds": 100.2,
+      "rtf": 0.2403,
+      "bytes": 4809644
+    },
+    {
+      "id": "chars-1189",
+      "chars": 1189,
+      "mode": "stream",
+      "ttfb_ms": 1528.4,
+      "ttfa_ms": 1528.4,
+      "total_ms": 23176.9,
+      "audio_seconds": 98.2,
+      "rtf": 0.236,
+      "bytes": 4713644
+    },
+    {
+      "id": "chars-1897",
+      "chars": 1897,
+      "mode": "whole",
+      "ttfb_ms": 37048.6,
+      "ttfa_ms": 37048.6,
+      "total_ms": 37126.8,
+      "audio_seconds": 155.65,
+      "rtf": 0.2385,
+      "bytes": 7471244
+    },
+    {
+      "id": "chars-1897",
+      "chars": 1897,
+      "mode": "stream",
+      "ttfb_ms": 1572.2,
+      "ttfa_ms": 1572.2,
+      "total_ms": 37604.4,
+      "audio_seconds": 153.25,
+      "rtf": 0.2454,
+      "bytes": 7356044
+    }
+  ],
+  "stream_concurrency_ladder": null
+}

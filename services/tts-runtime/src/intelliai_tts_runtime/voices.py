@@ -15,7 +15,7 @@ whether the reference engine or Kokoro is deployed.
 """
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Final
 
 from intelliai_runtime_contract import RuntimeErrorType
@@ -31,10 +31,20 @@ DEFAULT_VOICE: Final = "english-female"
 
 @dataclass(frozen=True)
 class VoiceMap:
-    """One engine's bindings: public voice id -> engine voice reference."""
+    """One engine's bindings: public voice id -> engine voice reference.
+
+    ``languages`` records the language a public voice speaks — the
+    routing fact the pipeline's normalization seam needs (M39). Voices
+    absent from the map are English: every pre-M39 binding was.
+    """
 
     default_voice: str
     bindings: Mapping[str, str]
+    languages: Mapping[str, str] = field(default_factory=dict)
+
+    def language_of(self, public_id: str) -> str:
+        """The language this voice speaks; English unless declared."""
+        return self.languages.get(public_id, "en")
 
     def resolve(self, voice: str | None) -> tuple[str, str]:
         """None -> the default voice, made visible: (public_id, engine_ref)."""
@@ -74,6 +84,25 @@ KOKORO_VOICES: Final = VoiceMap(
         # Legacy aliases (M3 placeholders) — served forever, same sound.
         "reference-alto": "af_heart",
         "reference-bass": "am_michael",
+    },
+)
+
+# The M39 bindings: the English map PLUS the two M38-approved Hindi
+# voices (founder decision, M39 spec — hindi-female = hf_alpha,
+# hindi-male = hm_psi). Served ONLY when the deployment declares the
+# Hindi G2P component (`INTELLIAI_TTS_HINDI_G2P=espeak`): a Hindi voice
+# without a Hindi phonemizer would be wrong audio, so the voices and
+# the component arrive together or not at all.
+KOKORO_VOICES_WITH_HINDI: Final = VoiceMap(
+    default_voice=DEFAULT_VOICE,
+    bindings={
+        **KOKORO_VOICES.bindings,
+        "hindi-female": "hf_alpha",
+        "hindi-male": "hm_psi",
+    },
+    languages={
+        "hindi-female": "hi",
+        "hindi-male": "hi",
     },
 )
 

@@ -1,0 +1,28 @@
+{
+  "experiment": "39-hindi-tts-local-web",
+  "check": "local HTTPS Web E2E through the Caddy edge (production-shaped stack)",
+  "page": {
+    "url": "https://localhost/console/speech",
+    "m39_markers": "rebuildVoices + Hindi Female/Male present",
+    "engine_token_leaks": 0
+  },
+  "voices_via_edge": [
+    "english-female",
+    "english-male",
+    "reference-alto",
+    "reference-bass",
+    "hindi-female",
+    "hindi-male"
+  ],
+  "stream_probe": {
+    "voice": "hindi-female",
+    "stream": true,
+    "text_facts": "greeting + IntelliAI + Rs4,999 + 12/09/2026 + question, 132 chars",
+    "ttfb_s": 1.381,
+    "total_s": 3.773,
+    "bytes": 740444,
+    "audio_seconds": 15.42,
+    "edge_passthrough": "chunks delivered progressively (total >> ttfb, total < audio duration)"
+  },
+  "roundtrip_e3": "नमस्ते सुमित इंटेली ए आई में आपका स्वागत है। आपका बिल चार हज़ार नौ सौ निन्यान्यान रुपये का है और अंतिम तारीख बारह सितंबर दो हज़ार छब्बीस है। क्या मैं आपकी ओर मदद कर सकती हूँ?"
+}

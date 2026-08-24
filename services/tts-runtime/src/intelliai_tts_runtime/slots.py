@@ -28,7 +28,14 @@ from intelliai_runtime_core import DEFAULT_SLOT, ArtifactSpec, SlotSpec
 from intelliai_tts_runtime.config import Settings
 from intelliai_tts_runtime.engines import SynthesisEngine, kokoro, reference
 from intelliai_tts_runtime.engines.espeak_fallback import EspeakSubprocessFallback
-from intelliai_tts_runtime.voices import KOKORO_VOICES, REFERENCE_VOICES, VoiceCatalog, VoiceMap
+from intelliai_tts_runtime.engines.espeak_hindi import EspeakHindiG2P
+from intelliai_tts_runtime.voices import (
+    KOKORO_VOICES,
+    KOKORO_VOICES_WITH_HINDI,
+    REFERENCE_VOICES,
+    VoiceCatalog,
+    VoiceMap,
+)
 
 #: Separator between hosted-artifact declarations, and between an engine
 #: and an explicit artifact identity within one declaration.
@@ -119,12 +126,29 @@ def _kokoro_binding_for(settings: Settings) -> EngineBinding:
         if settings.oov_fallback == "espeak"
         else None
     )
+    # The M39 pairing law: the Hindi voices and their G2P component are
+    # ONE declaration. Constructed here — composition time — so a
+    # deployment declaring hindi_g2p=espeak with a missing/wrong-version
+    # binary refuses to START, and a deployment without the declaration
+    # never exposes a Hindi voice it could not pronounce.
+    hindi_g2p = (
+        EspeakHindiG2P(
+            settings.espeak_binary,
+            version_prefix=settings.espeak_version_pin,
+            timeout_seconds=settings.espeak_timeout_seconds,
+        )
+        if settings.hindi_g2p == "espeak"
+        else None
+    )
     first_chunk = settings.stream_first_chunk_chars
     return EngineBinding(
         artifact=base.artifact,
-        voices=base.voices,
+        voices=KOKORO_VOICES_WITH_HINDI if hindi_g2p is not None else KOKORO_VOICES,
         loader=lambda local_dir: kokoro.load_kokoro(
-            local_dir, oov_fallback=fallback, stream_first_chunk_chars=first_chunk
+            local_dir,
+            oov_fallback=fallback,
+            stream_first_chunk_chars=first_chunk,
+            hindi_g2p=hindi_g2p,
         ),
         files=base.files,
     )

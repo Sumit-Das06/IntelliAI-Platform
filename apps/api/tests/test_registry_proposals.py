@@ -10,9 +10,10 @@ activated in the live catalog. What these tests pin now:
 3. the ROLLBACK target stays reviewed and constructible: reverting the
    promotion commit must land Hindi back on whisper-small, whose
    artifact is still registered (no re-admission needed);
-4. the staging profile now composes exactly the live catalog — no
-   proposal is pending, and staging can never silently diverge from
-   what production would serve.
+4. the staging profile composes the live catalog plus prepared
+   proposals — for TRANSCRIPTION it must agree with production on
+   every route (the M39 pending proposal touches synthesis only; its
+   own suite is test_registry_hindi_tts.py).
 """
 
 import pytest
@@ -97,9 +98,10 @@ class TestRollback:
 
 
 class TestStagingProfile:
-    def test_staging_now_composes_exactly_the_live_catalog(self) -> None:
-        # No pending proposal: staging and production must agree on
-        # every route, or a shape would serve something unreviewed.
+    def test_staging_agrees_with_production_on_every_stt_route(self) -> None:
+        # The pending M39 proposal touches SYNTHESIS only: for STT,
+        # staging and production must agree on every route, or a shape
+        # would serve something unreviewed.
         staging = staging_registry()
         live = default_registry()
         for language in ("hi", "hi-IN", "en", "ar", None):

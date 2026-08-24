@@ -91,6 +91,10 @@ services:
       # behind an exec boundary (M3 §8) — never a linked library. Dev
       # default ON; a deployment turns it off by exporting "off".
       INTELLIAI_TTS_OOV_FALLBACK: ${INTELLIAI_TTS_OOV_FALLBACK:-espeak}
+      # M39: the two approved Hindi voices + sentence-level Hindi G2P
+      # through the SAME pinned binary at the SAME exec boundary. Dev
+      # default ON; production ships no TTS and never declares this.
+      INTELLIAI_TTS_HINDI_G2P: ${INTELLIAI_TTS_HINDI_G2P:-espeak}
     ports:
       - "127.0.0.1:8002:8002"
     volumes:

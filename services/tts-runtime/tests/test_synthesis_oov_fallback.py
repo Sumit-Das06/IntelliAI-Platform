@@ -146,17 +146,17 @@ class TestSplice:
     def test_unknown_tokens_are_rescued_in_token_order(self) -> None:
         fallback = _FakeFallback({"IntelliAI": "ɪntɛlɪʤˈA", "Kavya": "kˈɑvjə"})
         engine = self._engine(fallback)
-        assert engine._phonemize("x") == "wˈɛlkəm ɪntɛlɪʤˈA kˈɑvjə."
+        assert engine._phonemize("x", "en") == "wˈɛlkəm ɪntɛlɪʤˈA kˈɑvjə."
         assert fallback.calls == [["IntelliAI", "Kavya"]]  # deduped, sorted, one call
 
     def test_partial_rescue_keeps_the_rest_dictionary_only(self) -> None:
         engine = self._engine(_FakeFallback({"Kavya": "kˈɑvjə"}))
-        assert engine._phonemize("x") == "wˈɛlkəm ❓ˈAˌI kˈɑvjə."
+        assert engine._phonemize("x", "en") == "wˈɛlkəm ❓ˈAˌI kˈɑvjə."
 
     def test_fallback_failure_degrades_to_dictionary_behavior(self) -> None:
         engine = self._engine(_FakeFallback({}))
-        assert engine._phonemize("x") == "wˈɛlkəm ❓ˈAˌI ❓."
+        assert engine._phonemize("x", "en") == "wˈɛlkəm ❓ˈAˌI ❓."
 
     def test_disabled_fallback_is_exactly_v1(self) -> None:
         engine = self._engine(None)
-        assert engine._phonemize("x") == "wˈɛlkəm ❓ˈAˌI ❓."
+        assert engine._phonemize("x", "en") == "wˈɛlkəm ❓ˈAˌI ❓."

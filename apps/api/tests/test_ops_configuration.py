@@ -415,13 +415,19 @@ def test_tts_smoke_is_the_stale_image_guard() -> None:
     # version floor, artifact identity, posture keys, and a real
     # gateway synthesis — all asserted by one script with a Make wrapper.
     smoke = (REPO / "infra/tts-smoke.sh").read_text(encoding="utf-8")
-    assert 'VERSION_FLOOR="0.3.0"' in smoke
+    assert 'VERSION_FLOOR="0.4.0"' in smoke  # M39: a pre-Hindi image FAILS
     assert "stale image" in smoke
     assert "kokoro-82m" in smoke
     assert "oov_fallback" in smoke
     assert "english-female" in smoke
     assert "RIFF" in smoke
     assert "x-runtime-envelope" in smoke
+    # M39: the Hindi posture is smoke-checked BOTH ways — a deployment
+    # declaring the component must serve both voices; one that does not
+    # must serve neither.
+    assert "hindi_g2p" in smoke
+    assert "hindi-female" in smoke and "hindi-male" in smoke
+    assert "without a declared hindi_g2p" in smoke
     makefile = (REPO / "Makefile").read_text(encoding="utf-8")
     assert "tts-smoke:" in makefile
     assert "bash infra/tts-smoke.sh" in makefile

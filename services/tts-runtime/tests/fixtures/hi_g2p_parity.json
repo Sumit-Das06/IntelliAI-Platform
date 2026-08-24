@@ -1,0 +1,144 @@
+{
+  "description": "M39 Hindi G2P parity fixtures: expected = upstream misaki EspeakG2P(hi) output (Apache-2.0) captured in the M38/M39 research venv against espeak-ng 1.51; cli_ipa_per_segment = the raw espeak-ng CLI --ipa line per punctuation-free segment, which the stub binary replays in CI. The production component must reproduce expected_phonemes exactly from the CLI lines.",
+  "espeak_version": "1.51",
+  "rows": [
+    {
+      "text": "नमस्ते, आपका नाम क्या है?",
+      "prepared": "नमस्ते, आपका नाम क्या है?",
+      "expected_phonemes": "nəmˈʌsteː, ˌaːpkˌaː nˈaːm kːjaː hɛː?",
+      "segments": [
+        "नमस्ते",
+        "आपका नाम क्या है"
+      ],
+      "cli_ipa_per_segment": [
+        "nəmˈʌsteː",
+        "ˌaːpkˌaː nˈaːm kːjaː hɛː"
+      ]
+    },
+    {
+      "text": "मेरा नाम सुमित है।",
+      "prepared": "मेरा नाम सुमित है.",
+      "expected_phonemes": "mˌeːɾaː nˈaːm sˈʊmɪt hɛː.",
+      "segments": [
+        "मेरा नाम सुमित है"
+      ],
+      "cli_ipa_per_segment": [
+        "mˌeːɾaː nˈaːm sˈʊmɪt hɛː"
+      ]
+    },
+    {
+      "text": "आप कल सुबह दस बजे ऑफिस आएंगे?",
+      "prepared": "आप कल सुबह दस बजे ऑफिस आएंगे?",
+      "expected_phonemes": "ˌaːp kˈʌl sˈʊbəh dˈʌs bˈʌɟeː ˈɔpʰɪs aːˈẽːɡeː?",
+      "segments": [
+        "आप कल सुबह दस बजे ऑफिस आएंगे"
+      ],
+      "cli_ipa_per_segment": [
+        "ˌaːp kˈʌl sˈʊbəh dˈʌs bˈʌɟeː ˈɔpʰɪs aːˈẽːɡeː"
+      ]
+    },
+    {
+      "text": "इसकी कीमत 12500 रुपये है।",
+      "prepared": "इसकी कीमत 12500 रुपये है.",
+      "expected_phonemes": "ˈɪskˌi kˈiːmət bˈaːɾəh hˈʌɟaːɾ pˈãcsˈɔː ɾˈʊpjˌeː hɛː.",
+      "segments": [
+        "इसकी कीमत 12500 रुपये है"
+      ],
+      "cli_ipa_per_segment": [
+        "ˈɪskˌi kˈiːmət bˈaːɾəh hˈʌɟaːɾ pˈãcsˈɔː ɾˈʊpjˌeː hɛː"
+      ]
+    },
+    {
+      "text": "12 अगस्त 2026 को बैठक होगी।",
+      "prepared": "12 अगस्त 2026 को बैठक होगी.",
+      "expected_phonemes": "bˈaːɾəh ʌɡˈʌst dˈoː hˈʌɟaːɾ cʰəbbˈis koː bˈɛːʈʰək hˈoːɡi.",
+      "segments": [
+        "12 अगस्त 2026 को बैठक होगी"
+      ],
+      "cli_ipa_per_segment": [
+        "bˈaːɾəh ʌɡˈʌst dˈoː hˈʌɟaːɾ cʰəbbˈis koː bˈɛːʈʰək hˈoːɡi"
+      ]
+    },
+    {
+      "text": "कृपया मुझे 25 प्रतिशत छूट दें।",
+      "prepared": "कृपया मुझे 25 प्रतिशत छूट दें.",
+      "expected_phonemes": "kɾˈɪpjˌaː mˌʊɟʰeː pˈʌcːis pɾˈʌtɪʃˌət cʰˈuːʈ dˈẽː.",
+      "segments": [
+        "कृपया मुझे 25 प्रतिशत छूट दें"
+      ],
+      "cli_ipa_per_segment": [
+        "kɾˈɪpjˌaː mˌʊɟʰeː pˈʌcːis pɾˈʌtɪʃˌət cʰˈuːʈ dˈẽː"
+      ]
+    },
+    {
+      "text": "IntelliAI का नया version आज release हुआ है।",
+      "prepared": "IntelliAI का नया version आज release हुआ है.",
+      "expected_phonemes": "ɪntˈɛli ˈA ˈI kaː nˈʌjaː vˈɜːʃən ˈaːɟ ɹɪlˈiːs hˈʊaː hɛː.",
+      "segments": [
+        "IntelliAI का नया version आज release हुआ है"
+      ],
+      "cli_ipa_per_segment": [
+        "(en)ɪntˈɛli ˈeɪ ˈaɪ(hi) kaː nˈʌjaː (en)vˈɜːʃən(hi) ˈaːɟ (en)ɹɪlˈiːs(hi) hˈʊaː hɛː"
+      ]
+    },
+    {
+      "text": "मुझे office जाना है।",
+      "prepared": "मुझे office जाना है.",
+      "expected_phonemes": "mˌʊɟʰeː ˈɒfɪs ɟˈaːnaː hɛː.",
+      "segments": [
+        "मुझे office जाना है"
+      ],
+      "cli_ipa_per_segment": [
+        "mˌʊɟʰeː (en)ˈɒfɪs(hi) ɟˈaːnaː hɛː"
+      ]
+    },
+    {
+      "text": "ग्राहक सेवा में कॉल करने के लिए धन्यवाद।",
+      "prepared": "ग्राहक सेवा में कॉल करने के लिए धन्यवाद.",
+      "expected_phonemes": "ɡɾˈaːhək sˈeːʋaː mẽː kˈɔl kˈʌɾnˌeː keː lˈɪeː dʰˌənjəʋˈaːd.",
+      "segments": [
+        "ग्राहक सेवा में कॉल करने के लिए धन्यवाद"
+      ],
+      "cli_ipa_per_segment": [
+        "ɡɾˈaːhək sˈeːʋaː mẽː kˈɔl kˈʌɾnˌeː keː lˈɪeː dʰˌənjəʋˈaːd"
+      ]
+    },
+    {
+      "text": "क्या मैं आपकी और किसी बात में मदद कर सकती हूँ?",
+      "prepared": "क्या मैं आपकी और किसी बात में मदद कर सकती हूँ?",
+      "expected_phonemes": "kːjaː mɛ̃ ˌaːpkˌi ɔːɾ kˈɪsi bˈaːt mẽː mˈʌdəd kˈʌɾ sˈʌktˌi hũ?",
+      "segments": [
+        "क्या मैं आपकी और किसी बात में मदद कर सकती हूँ"
+      ],
+      "cli_ipa_per_segment": [
+        "kːjaː mɛ̃ ˌaːpkˌi ɔːɾ kˈɪsi bˈaːt mẽː mˈʌdəd kˈʌɾ sˈʌktˌi hũ"
+      ]
+    },
+    {
+      "text": "ट्रेन संख्या 12951 सुबह 6 बजकर 30 मिनट पर छूटती है।",
+      "prepared": "ट्रेन संख्या 12951 सुबह 6 बजकर 30 मिनट पर छूटती है.",
+      "expected_phonemes": "ʈɾˈeːn sˈʌŋkʰjaː bˈaːɾəh hˈʌɟaːɾ nˈɔːsˈɔː ɪkjˈaːwən sˈʊbəh cʰˈʌh bˈʌɟəkˌəɾ tˈiːs mˈɪnəʈ pˈʌɾ cʰˈuːʈtˌi hɛː.",
+      "segments": [
+        "ट्रेन संख्या 12951 सुबह 6 बजकर 30 मिनट पर छूटती है"
+      ],
+      "cli_ipa_per_segment": [
+        "ʈɾˈeːn sˈʌŋkʰjaː bˈaːɾəh hˈʌɟaːɾ nˈɔːsˈɔː ɪkjˈaːwən sˈʊbəh cʰˈʌh bˈʌɟəkˌəɾ tˈiːs mˈɪnəʈ pˈʌɾ cʰˈuːʈtˌi hɛː"
+      ]
+    },
+    {
+      "text": "जी हाँ, मैं कल आ जाऊँगा, आप चिंता मत कीजिए।",
+      "prepared": "जी हाँ, मैं कल आ जाऊँगा, आप चिंता मत कीजिए.",
+      "expected_phonemes": "ɟˈi hˈã, mɛ̃ kˈʌl ˈaː ɟaːˈunɡaː, ˌaːp cˈĩtaː mˈʌt kˈiːɟɪˌeː.",
+      "segments": [
+        "जी हाँ",
+        "मैं कल आ जाऊँगा",
+        "आप चिंता मत कीजिए"
+      ],
+      "cli_ipa_per_segment": [
+        "ɟˈi hˈã",
+        "mɛ̃ kˈʌl ˈaː ɟaːˈunɡaː",
+        "ˌaːp cˈĩtaː mˈʌt kˈiːɟɪˌeː"
+      ]
+    }
+  ]
+}

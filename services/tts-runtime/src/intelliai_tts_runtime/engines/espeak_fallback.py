@@ -92,6 +92,37 @@ def map_ipa_to_kokoro(ipa: str) -> str:
     return ps.replace("^", "")
 
 
+def validate_espeak_binary(binary: Path, *, version_prefix: str, timeout_seconds: float) -> str:
+    """The startup gate both espeak components share: absolute pinned
+    path, binary present, reported version under the pinned prefix.
+    Returns the reported version; raises on any deviation — a wrong
+    phonemizer is a wrong pronunciation model, caught at boot."""
+    if not binary.is_absolute():
+        msg = f"espeak binary path must be absolute, got {binary!r}"
+        raise ValueError(msg)
+    if not binary.exists():
+        msg = f"espeak binary not found at {binary}"
+        raise FileNotFoundError(msg)
+    result = subprocess.run(  # noqa: S603 — fixed argv, no user input
+        [str(binary), "--version"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        timeout=timeout_seconds,
+        check=True,
+    )
+    # "eSpeak NG text-to-speech: 1.51  Data at: ..." -> "1.51"
+    match = re.search(r":\s*([\d.]+)", result.stdout)
+    reported = match.group(1) if match else result.stdout.strip()
+    if not reported.startswith(version_prefix):
+        msg = (
+            f"espeak version {reported!r} does not match the pinned "
+            f"prefix {version_prefix!r}; refusing an unverified phonemizer"
+        )
+        raise RuntimeError(msg)
+    return reported
+
+
 class EspeakSubprocessFallback:
     """Word -> phonemes through the pinned binary, batch per request."""
 
@@ -103,35 +134,11 @@ class EspeakSubprocessFallback:
         timeout_seconds: float,
         voice: str = "en-us",
     ) -> None:
-        if not binary.is_absolute():
-            msg = f"espeak binary path must be absolute, got {binary!r}"
-            raise ValueError(msg)
-        if not binary.exists():
-            msg = f"espeak binary not found at {binary}"
-            raise FileNotFoundError(msg)
         self._argv = (str(binary), "-q", "--ipa", "-v", voice)
         self._timeout = timeout_seconds
-        reported = self._version(binary)
-        if not reported.startswith(version_prefix):
-            msg = (
-                f"espeak version {reported!r} does not match the pinned "
-                f"prefix {version_prefix!r}; refusing an unverified phonemizer"
-            )
-            raise RuntimeError(msg)
-        self.version = reported
-
-    def _version(self, binary: Path) -> str:
-        result = subprocess.run(  # noqa: S603 — fixed argv, no user input
-            [str(binary), "--version"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=self._timeout,
-            check=True,
+        self.version = validate_espeak_binary(
+            binary, version_prefix=version_prefix, timeout_seconds=timeout_seconds
         )
-        # "eSpeak NG text-to-speech: 1.51  Data at: ..." -> "1.51"
-        match = re.search(r":\s*([\d.]+)", result.stdout)
-        return match.group(1) if match else result.stdout.strip()
 
     def phonemize_words(self, words: list[str]) -> dict[str, str]:
         """One subprocess call for every unknown word in a chunk.

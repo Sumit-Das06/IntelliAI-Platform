@@ -19,6 +19,7 @@ from dataclasses import dataclass
 from intelliai_runtime_contract import RuntimeErrorType
 from intelliai_runtime_core import RuntimeServiceError
 from intelliai_tts_runtime.normalization import normalize_for_speech
+from intelliai_tts_runtime.normalization_hi import normalize_for_speech_hindi
 
 
 @dataclass(frozen=True)
@@ -34,7 +35,7 @@ class TextPipeline:
         self._max_text_chars = max_text_chars
         self._normalize = normalize
 
-    def process(self, text: str) -> TextOutput:
+    def process(self, text: str, language: str = "en") -> TextOutput:
         timings: dict[str, float] = {}
 
         started = time.perf_counter()
@@ -46,11 +47,17 @@ class TextPipeline:
             )
         timings["validate"] = (time.perf_counter() - started) * 1000.0
 
-        # The seam, occupied (M35): a speech-only rewriting. The ORIGINAL
-        # text remains the request/billing fact upstream — only the engine
+        # The seam, occupied (M35; M39 makes it voice-language-aware):
+        # a speech-only rewriting per rule pack. The ORIGINAL text
+        # remains the request/billing fact upstream — only the engine
         # ever sees this form. Off means pass-through, exactly v1.
         started = time.perf_counter()
-        normalized = normalize_for_speech(text).text if self._normalize else text
+        if not self._normalize:
+            normalized = text
+        elif language == "hi":
+            normalized = normalize_for_speech_hindi(text).text
+        else:
+            normalized = normalize_for_speech(text).text
         timings["normalize"] = (time.perf_counter() - started) * 1000.0
 
         return TextOutput(text=normalized, timings_ms=timings)

@@ -102,6 +102,10 @@ async def info(request: Request) -> dict[str, Any]:
         # a deployment running old code is CAUGHT, not trusted.
         "normalization": "on" if settings.normalize_text else "off",
         "oov_fallback": settings.oov_fallback,
+        # M39 posture fact: which deployments serve the Hindi voices
+        # (and therefore carry the Hindi G2P component). The smoke reads
+        # this key — a pre-M39 image lacks it entirely.
+        "hindi_g2p": settings.hindi_g2p,
         "max_text_chars": settings.max_text_chars,
         "voices": served,
         "models": models,
@@ -114,11 +118,12 @@ def _pipeline_and_synthesize(
     text: str,
     engine_voice: str,
     speed: float | None,
+    language: str,
 ) -> tuple[dict[str, float], SynthesizedAudio, bytes]:
     """Validate/normalize, synthesize, containerize — one blocking unit on
     a pool slot, so text processing and encoding are capped by the same
     honest admission limit as inference."""
-    output = pipeline.process(text)
+    output = pipeline.process(text, language)
     timings = dict(output.timings_ms)
 
     started = time.perf_counter()
@@ -185,14 +190,18 @@ async def synthesize(request: Request, synthesis_request: SpeechSynthesisRequest
     loaded = manager.lookup(synthesis_request.model)
 
     resolution_started = time.perf_counter()
-    public_voice, engine_voice = catalog.voices_for(loaded.engine).resolve(synthesis_request.voice)
+    voice_map = catalog.voices_for(loaded.engine)
+    public_voice, engine_voice = voice_map.resolve(synthesis_request.voice)
+    # The voice's language routes the normalization pack (M39): a Hindi
+    # voice reads Hindi rules, everything else keeps the M35 English v1.
+    language = voice_map.language_of(public_voice)
     resolution_ms = (time.perf_counter() - resolution_started) * 1000.0
 
     if synthesis_request.stream:
         # Validation + normalization run INLINE (cheap, synchronous)
         # BEFORE any byte of response: invalid input stays an ordinary
         # JSON error — a stream only ever begins for an accepted request.
-        output = pipeline.process(synthesis_request.text)
+        output = pipeline.process(synthesis_request.text, language)
         characters = len(synthesis_request.text)
         settings = request.app.state.settings
         produce: Callable[[Callable[[bytes], None]], None] = partial(
@@ -251,6 +260,7 @@ async def synthesize(request: Request, synthesis_request: SpeechSynthesisRequest
             synthesis_request.text,
             engine_voice,
             synthesis_request.speed,
+            language,
         )
     )
 

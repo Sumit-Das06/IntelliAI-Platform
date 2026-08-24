@@ -47,6 +47,7 @@ import structlog
 from intelliai_runtime_core import ArtifactFile, ArtifactSpec
 from intelliai_tts_runtime.engines.base import SynthesizedAudio
 from intelliai_tts_runtime.engines.espeak_fallback import EspeakSubprocessFallback
+from intelliai_tts_runtime.engines.espeak_hindi import EspeakHindiG2P
 
 logger = structlog.get_logger(__name__)
 
@@ -59,13 +60,16 @@ SAMPLE_RATE_HZ: Final = 24_000
 
 _HF: Final = "https://huggingface.co/hexgrad/Kokoro-82M/resolve/main"
 
-# SHA-256 pins verified at source 2026-08-03: LFS oids from the Hugging
-# Face API for the weights and voice packs; config.json (non-LFS) hashed
-# from the downloaded file. Voice assets are separate hash-pinned files —
-# never code, never repo content.
+# SHA-256 pins verified at source 2026-08-03 (English) and 2026-08-24
+# (Hindi packs, M39 — LFS oids from the Hugging Face API at the same
+# pinned revision f3ff3571… the M38 research runs recorded). Version 2:
+# the file SET changed when the two M38-approved Hindi packs joined —
+# hf_alpha (hindi-female) and hm_psi (hindi-male), the founder's M39
+# voice decision. Voice assets are separate hash-pinned files — never
+# code, never repo content.
 KOKORO_FILES: Final = ArtifactSpec(
     artifact=ARTIFACT_ID,
-    version=1,
+    version=2,
     files=(
         ArtifactFile(
             filename="kokoro-v1_0.pth",
@@ -87,15 +91,47 @@ KOKORO_FILES: Final = ArtifactSpec(
             url=f"{_HF}/voices/am_michael.pt",
             sha256="9a443b79a4b22489a5b0ab7c651a0bcd1a30bef675c28333f06971abbd47bd37",
         ),
+        ArtifactFile(
+            filename="hf_alpha.pt",
+            url=f"{_HF}/voices/hf_alpha.pt",
+            sha256="06906fe05746d13a79c5c01e21fd7233b05027221a933c9ada650f5aafc8f044",
+        ),
+        ArtifactFile(
+            filename="hm_psi.pt",
+            url=f"{_HF}/voices/hm_psi.pt",
+            sha256="2f0f055cea4f1083f4ef127ece48d71606347f6557dbb961c0ca5740a2da485b",
+        ),
     ),
 )
 
 # engine voice reference -> voice-pack file within the verified artifact
-_VOICE_FILES: Final = {"af_heart": "af_heart.pt", "am_michael": "am_michael.pt"}
+_VOICE_FILES: Final = {
+    "af_heart": "af_heart.pt",
+    "am_michael": "am_michael.pt",
+    "hf_alpha": "hf_alpha.pt",
+    "hm_psi": "hm_psi.pt",
+}
+
+#: engine voice reference -> the G2P language that renders it. The M38
+#: correctness lesson lives here: a Hindi voice through the English
+#: dictionary G2P is silently wrong audio, so the language is a property
+#: of the VOICE, decided at the same table that names its pack file.
+_VOICE_LANGUAGES: Final = {
+    "af_heart": "en",
+    "am_michael": "en",
+    "hf_alpha": "hi",
+    "hm_psi": "hi",
+}
 
 _MAX_PHONEMES: Final = 510  # the model's hard per-pass input limit
 _CHUNK_CHARS: Final = 300  # keeps sentence chunks safely under it
-_SENTENCE_SPLIT: Final = re.compile(r"(?<=[.!?;:])\s+")
+#: Sentence boundaries: the Latin set PLUS the Devanagari danda/double
+#: danda (M38's silent-truncation root cause — a danda-only Hindi
+#: paragraph must never reach the model as one giant chunk). The second
+#: alternative splits a danda jammed against the next word (common in
+#: real Hindi typing); Latin marks keep their space-required behavior
+#: exactly as before, so English chunking is byte-identical to M35/M36.
+_SENTENCE_SPLIT: Final = re.compile(r"(?<=[.!?;:।॥])\s+|(?<=[।॥])(?=\S)")
 
 
 def _install_license_firewall() -> None:
@@ -221,20 +257,27 @@ class KokoroEngine:
         voice_packs: dict[str, Any],
         oov_fallback: EspeakSubprocessFallback | None = None,
         stream_first_chunk_chars: int = 90,
+        hindi_g2p: EspeakHindiG2P | None = None,
     ) -> None:
         self._model = model
         self._g2p = g2p
         self._voice_packs = voice_packs
         self._oov_fallback = oov_fallback
         self._stream_first_chunk_chars = stream_first_chunk_chars
+        self._hindi_g2p = hindi_g2p
 
     def _needs_fallback(self, phonemes: str | None) -> bool:
         return phonemes is None or _UNKNOWN_MARK in phonemes
 
-    def _phonemize(self, chunk: str) -> str:
-        """Dictionary G2P first; unknown tokens rescued through the exec
-        boundary and spliced back IN TOKEN ORDER. Any fallback trouble
-        degrades to dictionary-only for this chunk — never an error."""
+    def _phonemize(self, chunk: str, language: str) -> str:
+        """Per-voice-language G2P: Hindi rides the subprocess component
+        (no dictionary exists — a failure fails the request); English
+        keeps the M35 dictionary-first + OOV-rescue path unchanged."""
+        if language == "hi":
+            if self._hindi_g2p is None:  # pragma: no cover — voices gated on the component
+                msg = "hindi voice served without a hindi G2P component"
+                raise RuntimeError(msg)
+            return self._hindi_g2p.phonemize(chunk)
         raw_phonemes, tokens = self._g2p(chunk)
         base: str = str(raw_phonemes).strip()
         if self._oov_fallback is None:
@@ -272,9 +315,10 @@ class KokoroEngine:
         import torch
 
         pack = self._voice_packs[voice]
+        language = _VOICE_LANGUAGES.get(voice, "en")
         with torch.inference_mode():
             for chunk in chunks:
-                phonemes = self._phonemize(chunk)
+                phonemes = self._phonemize(chunk, language)
                 if not phonemes:
                     continue
                 for piece in _bounded_phonemes(phonemes):
@@ -314,6 +358,7 @@ def load_kokoro(
     local_dir: Path | None,
     oov_fallback: EspeakSubprocessFallback | None = None,
     stream_first_chunk_chars: int = 90,
+    hindi_g2p: EspeakHindiG2P | None = None,
 ) -> KokoroEngine:
     """Slot loader: verified artifact directory -> a loaded engine.
 
@@ -343,6 +388,7 @@ def load_kokoro(
         "kokoro_loaded",
         oov_fallback="espeak-subprocess" if oov_fallback is not None else "off",
         espeak_version=oov_fallback.version if oov_fallback is not None else None,
+        hindi_g2p="espeak-subprocess" if hindi_g2p is not None else "off",
     )
     return KokoroEngine(
         model=model,
@@ -350,4 +396,5 @@ def load_kokoro(
         voice_packs=voice_packs,
         oov_fallback=oov_fallback,
         stream_first_chunk_chars=stream_first_chunk_chars,
+        hindi_g2p=hindi_g2p,
     )

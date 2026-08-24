@@ -59,6 +59,15 @@ class Settings(BaseSettings):
     # Bounded producer->consumer buffer (chunks) for one streaming
     # request: a slow client blocks synthesis instead of growing memory.
     stream_buffer_chunks: int = Field(default=4, ge=1)
+
+    # ── Hindi voices (M39, local/staging deployments) ───────────────────
+    # "espeak" serves the two M38-approved Hindi voices (hindi-female /
+    # hindi-male) with sentence-level Hindi G2P through the SAME pinned
+    # espeak-ng binary at the SAME exec boundary as the EN OOV fallback.
+    # Default OFF: the voices and their phonemizer arrive together,
+    # explicitly, per deployment — never by surprise (the M30 pattern).
+    # Production ships no TTS and never declares this.
+    hindi_g2p: Literal["off", "espeak"] = "off"
     espeak_binary: Path = Path("/usr/bin/espeak-ng")
     #: The engine refuses to start if the binary reports a different
     #: version family — a wrong phonemizer is a wrong pronunciation

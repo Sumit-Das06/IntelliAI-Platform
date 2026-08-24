@@ -593,6 +593,19 @@ async def test_the_speech_studio_is_a_real_tts_client(
     ]
     assert "teardown(session)" in completed_block
     assert completed_block.index("teardown(session)") < completed_block.index("player.src")
+    # M39: the dropdown mirrors the DEPLOYMENT's catalog — friendly
+    # Hindi names exist in the rebuild table, the list rebuilds from
+    # the public voices endpoint (staging lists Hindi, production does
+    # not), and the served-page STATIC baseline stays English-only.
+    assert '"/v1/audio/voices"' in page
+    assert '"hindi-female"' in page and "Hindi Female" in page
+    assert '"hindi-male"' in page and "Hindi Male" in page
+    assert "rebuildVoices" in page
+    assert 'value="hindi-female"' not in page  # options arrive from the catalog, never hardcoded
+    # Hindi text example rides the voice switch; engine tokens never appear.
+    assert "नमस्ते" in page
+    for banned in ("hf_alpha", "hm_psi", "af_heart", "am_michael"):
+        assert banned not in page
 
 
 async def test_the_services_card_links_the_speech_studio_without_claiming_launch(

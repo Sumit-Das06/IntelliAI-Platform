@@ -70,6 +70,9 @@ services:
       INTELLIAI_TTS_SLOTS: kokoro
       INTELLIAI_TTS_NORMALIZE_TEXT: "true"
       INTELLIAI_TTS_OOV_FALLBACK: espeak
+      # M39 staging shape: Hindi voices + G2P declared here; prod.yml
+      # remains untouched (production ships no TTS at all).
+      INTELLIAI_TTS_HINDI_G2P: espeak
 
 volumes:
   caddydata:
