@@ -607,6 +607,20 @@ async def test_the_speech_studio_is_a_real_tts_client(
     assert '"hindi-male"' in page and "Hindi Male" in page
     assert "rebuildVoices" in page
     assert 'value="hindi-female"' not in page  # options arrive from the catalog, never hardcoded
+    # The Speech Studio mirrors the Playground's developer surface:
+    # a collapsed Developer details block and a copyable "Use it from
+    # code" section calling the SAME public endpoint this page calls.
+    assert '<details class="dev-details"' in page
+    assert "<summary>Developer details</summary>" in page
+    assert "Use it from code" in page
+    assert 'data-example="curl"' in page and 'data-example="python"' in page
+    assert 'data-copy-target="example-curl"' in page
+    assert "IntelliAI.speechExamples" in page
+    # The launch badge is catalog-driven here too - no hardcoded word.
+    assert 'id="tts-status-badge"' in page
+    assert "IntelliAI TTS · Preview" not in page
+    assert "IntelliAI TTS · Production" not in page
+    assert "IntelliAI.withStatus" in page and "IntelliAI.badgeFor" in page
     # Hindi text example rides the voice switch; engine tokens never appear.
     assert "नमस्ते" in page
     for banned in ("hf_alpha", "hm_psi", "af_heart", "am_michael"):

@@ -369,6 +369,44 @@ window.IntelliAI = (function () {
     };
   }
 
+  /* ── shared code examples: synthesis (Speech Studio) ───────── */
+  function speechExamples(origin, voice) {
+    var name = voice || "english-female";
+    return {
+      curl: "curl " + origin + "/v1/audio/speech \\\n" +
+        "  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n" +
+        "  -H \"Content-Type: application/json\" \\\n" +
+        "  -d '{\"model\":\"intelliai-tts\",\"voice\":\"" + name + "\"," +
+        "\"input\":\"Hello from IntelliAI.\"}' \\\n" +
+        "  -o speech.wav",
+      python: "import requests\n\n" +
+        "response = requests.post(\n" +
+        "    \"" + origin + "/v1/audio/speech\",\n" +
+        "    headers={\"Authorization\": \"Bearer YOUR_API_KEY\"},\n" +
+        "    json={\n" +
+        "        \"model\": \"intelliai-tts\",\n" +
+        "        \"voice\": \"" + name + "\",\n" +
+        "        \"input\": \"Hello from IntelliAI.\",\n" +
+        "    },\n" +
+        ")\n" +
+        "open(\"speech.wav\", \"wb\").write(response.content)",
+      js: "const response = await fetch(\"" + origin + "/v1/audio/speech\", {\n" +
+        "  method: \"POST\",\n" +
+        "  headers: {\n" +
+        "    \"Authorization\": \"Bearer YOUR_API_KEY\",\n" +
+        "    \"Content-Type\": \"application/json\",\n" +
+        "  },\n" +
+        "  body: JSON.stringify({\n" +
+        "    model: \"intelliai-tts\",\n" +
+        "    voice: \"" + name + "\",\n" +
+        "    input: \"Hello from IntelliAI.\",\n" +
+        "  }),\n" +
+        "});\n" +
+        "const audio = new Audio(URL.createObjectURL(await response.blob()));\n" +
+        "audio.play();"
+    };
+  }
+
   /* ── copy-to-clipboard for .copy-btn[data-copy-target] ─────── */
   function bindCopyButtons() {
     document.addEventListener("click", function (event) {
@@ -413,6 +451,7 @@ window.IntelliAI = (function () {
     badgeFor: badgeFor,
     withStatus: withStatus,
     renderServices: renderServices,
-    codeExamples: codeExamples
+    codeExamples: codeExamples,
+    speechExamples: speechExamples
   };
 })();

@@ -20,7 +20,10 @@
           <h1>Speech Studio</h1>
           <p class="sub">Type text, choose a voice, and hear IntelliAI speak it.</p>
         </div>
-        <span class="badge badge-soon" style="align-self: center;">IntelliAI TTS · Preview</span>
+        <!-- Launch state comes from THIS deployment's catalog (the M31
+             badge law, one meaning for every service): the static text
+             claims nothing until /console/status answers. -->
+        <span class="badge badge-soon" style="align-self: center;" id="tts-status-badge">IntelliAI TTS</span>
       </div>
 
       <div id="connect-note" class="notice hidden" style="margin-top: 12px;">
@@ -90,14 +93,48 @@
 
           <div id="speech-summary" class="chips hidden" style="margin-top: 12px;"></div>
 
-          <div style="margin-top: 16px;">
-            <h4 class="label">Developer view</h4>
-            <div class="kv"><span>Request</span><code id="dev-request">—</code></div>
-            <div class="kv"><span>Status</span><code id="dev-status">—</code></div>
-            <div class="kv"><span>Session</span><code id="dev-session">—</code></div>
-          </div>
+          <!-- Same shape as the Playground's: collapsed by default,
+               the raw facts a developer would reproduce inside. -->
+          <details class="dev-details" id="dev-details">
+            <summary>Developer details</summary>
+            <dl class="kv">
+              <dt>Request ID</dt><dd id="dev-request">—</dd>
+              <dt>Status</dt><dd id="dev-status">—</dd>
+              <dt>Session</dt><dd id="dev-session">—</dd>
+              <dt>Client</dt><dd>web (X-IntelliAI-Client)</dd>
+            </dl>
+            <div class="codeblock">
+              <button class="copy-btn" data-copy-target="dev-response" type="button">Copy</button>
+              <pre id="dev-response">The request and what was delivered appear here after a generation.</pre>
+            </div>
+          </details>
         </div>
       </div>
+
+      <!-- ── Code examples: the same public API this page calls ── -->
+      <section class="section">
+        <h2>Use it from code</h2>
+        <div class="card">
+          <p style="margin-bottom: 12px;">The Studio uses the same public API you would. Replace <span class="mono">YOUR_API_KEY</span> with a key from <a href="/console/keys">API Keys</a>. The examples follow the voice selected above; add <span class="mono">"stream": true</span> to start playback while the rest is still being generated.</p>
+          <div class="tabs" role="tablist" aria-label="Code examples">
+            <button class="tab is-active" type="button" role="tab" id="tab-curl" aria-controls="example-curl-wrap" aria-selected="true" data-example="curl">cURL</button>
+            <button class="tab" type="button" role="tab" id="tab-python" aria-controls="example-python-wrap" aria-selected="false" tabindex="-1" data-example="python">Python</button>
+            <button class="tab" type="button" role="tab" id="tab-js" aria-controls="example-js-wrap" aria-selected="false" tabindex="-1" data-example="js">JavaScript</button>
+          </div>
+          <div class="codeblock" id="example-curl-wrap" role="tabpanel" aria-labelledby="tab-curl">
+            <button class="copy-btn" data-copy-target="example-curl" type="button">Copy</button>
+            <pre id="example-curl"></pre>
+          </div>
+          <div class="codeblock hidden" id="example-python-wrap" role="tabpanel" aria-labelledby="tab-python">
+            <button class="copy-btn" data-copy-target="example-python" type="button">Copy</button>
+            <pre id="example-python"></pre>
+          </div>
+          <div class="codeblock hidden" id="example-js-wrap" role="tabpanel" aria-labelledby="tab-js">
+            <button class="copy-btn" data-copy-target="example-js" type="button">Copy</button>
+            <pre id="example-js"></pre>
+          </div>
+        </div>
+      </section>
 
     </main>
   </div>
@@ -190,7 +227,63 @@ document.addEventListener("DOMContentLoaded", function () {
     // A Hindi voice invites Hindi text — swap the example, nothing else.
     var isHindi = voiceEl.value.indexOf("hindi") === 0;
     textEl.setAttribute("placeholder", isHindi ? HINDI_PLACEHOLDER : ENGLISH_PLACEHOLDER);
+    renderExamples();
   });
+
+  /* ── Launch badge: this deployment's catalog decides, never this
+     file (the M31 law, one meaning for every service). ─────────── */
+  IntelliAI.withStatus(function () {
+    var tts = IntelliAI.SERVICES.filter(function (s) { return s.id === "tts"; })[0];
+    if (!tts) { return; }
+    var badge = IntelliAI.badgeFor(tts);
+    var node = document.getElementById("tts-status-badge");
+    node.textContent = "IntelliAI TTS · " + badge.text;
+    node.className = "badge " + badge.cls;
+    node.style.alignSelf = "center";
+  });
+
+  /* ── Code examples: the same public API this page calls ───────── */
+  function renderExamples() {
+    var examples = IntelliAI.speechExamples(window.location.origin, voiceEl.value);
+    document.getElementById("example-curl").textContent = examples.curl;
+    document.getElementById("example-python").textContent = examples.python;
+    document.getElementById("example-js").textContent = examples.js;
+  }
+  renderExamples();
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var active = t === tab;
+      t.classList.toggle("is-active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+      t.tabIndex = active ? 0 : -1;
+    });
+    ["curl", "python", "js"].forEach(function (name) {
+      document.getElementById("example-" + name + "-wrap")
+        .classList.toggle("hidden", name !== tab.dataset.example);
+    });
+  }
+  tabs.forEach(function (tab, index) {
+    tab.addEventListener("click", function () { selectTab(tab); });
+    tab.addEventListener("keydown", function (event) {
+      var target = null;
+      if (event.key === "ArrowRight") target = tabs[(index + 1) % tabs.length];
+      else if (event.key === "ArrowLeft") target = tabs[(index + tabs.length - 1) % tabs.length];
+      else if (event.key === "Home") target = tabs[0];
+      else if (event.key === "End") target = tabs[tabs.length - 1];
+      if (target) { event.preventDefault(); selectTab(target); target.focus(); }
+    });
+  });
+
+  /* The developer block's raw view: what we sent and what actually
+     arrived. Synthesis answers with AUDIO, not JSON, so the honest
+     equivalent of the Playground's response body is the request plus
+     the measured delivery. */
+  function setDevResponse(request, delivery) {
+    document.getElementById("dev-response").textContent =
+      JSON.stringify({ request: request, delivery: delivery }, null, 2);
+  }
 
   /* ════════════════════════════════════════════════════════════════
      THE PLAYBACK SESSION (M37) — the one-player law made executable.
@@ -352,6 +445,22 @@ document.addEventListener("DOMContentLoaded", function () {
     summaryEl.appendChild(summaryChip("Total", ((performance.now() - session.marks.started) / 1000).toFixed(1) + " s"));
     summaryEl.appendChild(summaryChip("Audio", seconds.toFixed(1) + " s"));
     summaryEl.classList.remove("hidden");
+    setDevResponse(
+      {
+        model: "intelliai-tts",
+        voice: voiceEl.value,
+        speed: parseFloat(speedEl.value),
+        stream: session.streamed === true,
+        characters: session.characters
+      },
+      {
+        status: document.getElementById("dev-status").textContent,
+        audio_seconds: Number(seconds.toFixed(3)),
+        bytes: blob.size,
+        first_audio_ms: session.marks.firstAudio ? Math.round(session.marks.firstAudio) : null,
+        total_ms: Math.round(performance.now() - session.marks.started)
+      }
+    );
   }
 
   function generateStreaming(session, key, text) {
@@ -359,6 +468,7 @@ document.addEventListener("DOMContentLoaded", function () {
     session.ctx = new Ctx({ sampleRate: 24000 });
     session.abort = new AbortController();
     session.characters = text.length;
+    session.streamed = true;
     var carry = new Uint8Array(0);
     var headerSkipped = 0;
 
@@ -447,6 +557,7 @@ document.addEventListener("DOMContentLoaded", function () {
      player, shown only when the audio is fully ready. */
   function generateWholeBody(session, key, text) {
     session.characters = text.length;
+    session.streamed = false;
     return fetch("/v1/audio/speech", {
       method: "POST",
       headers: {
