@@ -1,0 +1,37 @@
+/bin/sh: 1: sox: not found
+SoX could not be found!
+
+    If you do not have SoX, proceed here:
+     - - - http://sox.sourceforge.net/ - - -
+
+    If you do (or think that you should) have SoX, double-check your
+    path variables.
+
+/home/vikashan_technologie/m32/venv-qwen/lib/python3.12/site-packages/accelerate/accelerator.py:529: UserWarning: `log_with=tensorboard` was passed but no supported trackers are currently installed.
+  warnings.warn(f"`log_with={log_with}` was passed but no supported trackers are currently installed.")
+`torch_dtype` is deprecated! Use `dtype` instead!
+
+********
+Warning: flash-attn is not installed. Will only run the manual PyTorch version. Please install flash-attn for faster inference.
+********
+
+Epoch 0 | Step 0 | Loss: 11.5755
+Epoch 0 | Step 10 | Loss: 12.0180
+Epoch 0 | Step 20 | Loss: 9.2859
+Epoch 0 | Step 30 | Loss: 8.8408
+Epoch 0 | Step 40 | Loss: 9.2993
+Epoch 0 | Step 50 | Loss: 9.3227
+Epoch 0 | Step 60 | Loss: 7.7933
+Epoch 0 | Step 70 | Loss: 6.7995
+Epoch 0 | Step 80 | Loss: 6.3476
+Epoch 0 | Step 90 | Loss: 6.5098
+Epoch 1 | Step 0 | Loss: 6.0818
+Epoch 1 | Step 10 | Loss: 5.4529
+Epoch 1 | Step 20 | Loss: 4.8796
+Epoch 1 | Step 30 | Loss: 5.2544
+Epoch 1 | Step 40 | Loss: 4.9577
+Epoch 1 | Step 50 | Loss: 4.8992
+Epoch 1 | Step 60 | Loss: 4.9524
+Epoch 1 | Step 70 | Loss: 4.4352
+Epoch 1 | Step 80 | Loss: 4.4290
+Epoch 1 | Step 90 | Loss: 4.5578

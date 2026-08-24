@@ -1,0 +1,29 @@
+/bin/sh: 1: sox: not found
+SoX could not be found!
+
+    If you do not have SoX, proceed here:
+     - - - http://sox.sourceforge.net/ - - -
+
+    If you do (or think that you should) have SoX, double-check your
+    path variables.
+
+/home/vikashan_technologie/m32/venv-qwen/lib/python3.12/site-packages/accelerate/accelerator.py:529: UserWarning: `log_with=tensorboard` was passed but no supported trackers are currently installed.
+  warnings.warn(f"`log_with={log_with}` was passed but no supported trackers are currently installed.")
+`torch_dtype` is deprecated! Use `dtype` instead!
+
+********
+Warning: flash-attn is not installed. Will only run the manual PyTorch version. Please install flash-attn for faster inference.
+********
+
+Epoch 0 | Step 0 | Loss: 12.4343
+Epoch 1 | Step 0 | Loss: 5.7732
+Epoch 2 | Step 0 | Loss: 3.3775
+Epoch 3 | Step 0 | Loss: 2.9825
+Epoch 4 | Step 0 | Loss: 2.4435
+Epoch 5 | Step 0 | Loss: 2.2708
+Epoch 6 | Step 0 | Loss: 1.4732
+Epoch 7 | Step 0 | Loss: 1.5463
+Epoch 8 | Step 0 | Loss: 1.3976
+Epoch 9 | Step 0 | Loss: 0.7800
+Epoch 10 | Step 0 | Loss: 0.2546
+Epoch 11 | Step 0 | Loss: 0.0560
