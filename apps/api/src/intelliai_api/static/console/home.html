@@ -116,7 +116,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var connectBtn = document.getElementById("connect-btn");
   var statusEl = document.getElementById("connect-status");
 
-  IntelliAI.renderServices(document.getElementById("services-grid"));
+  // Launch badges come from the deployment itself (M41): the static
+  // catalogue is the production-safe default; /console/status upgrades
+  // TTS to Preview only where this deployment serves it.
+  IntelliAI.withStatus(function () {
+    IntelliAI.renderServices(document.getElementById("services-grid"));
+  });
 
   function setStatus(text, kind) {
     statusEl.textContent = text || "";

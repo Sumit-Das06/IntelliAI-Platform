@@ -26,9 +26,15 @@
       <div class="section" style="margin-top: 18px;">
         <div class="card">
           <p>API keys let applications, playgrounds, and future IntelliAI clients — Keyboard, Mobile App, Desktop App — securely access IntelliAI services. Each key belongs to your organization and can be revoked at any time.</p>
+          <!-- Production-safe static default: TTS stays in the Coming
+               Soon list. The deployment's own status (/console/status)
+               upgrades this line to show the TTS Preview chip — a
+               staging console says Preview, production keeps this
+               exact text (M41). -->
           <p style="margin-top: 8px;">
             <span class="badge badge-live">✓ IntelliAI STT</span>
-            <span class="cell-muted" style="white-space: normal;"> &nbsp;IntelliAI TTS, OCR, Translate, Vision, and LLM — Coming Soon. Keys automatically gain access to new services as they launch.</span>
+            <span class="badge badge-beta hidden" id="tts-preview-chip">IntelliAI TTS · Preview</span>
+            <span class="cell-muted" id="services-soon-note" style="white-space: normal;"> &nbsp;IntelliAI TTS, OCR, Translate, Vision, and LLM — Coming Soon. Keys automatically gain access to new services as they launch.</span>
           </p>
         </div>
       </div>
@@ -148,6 +154,19 @@ document.addEventListener("DOMContentLoaded", function () {
   var emptyCard = document.getElementById("keys-empty");
   var tableWrap = document.getElementById("keys-table-wrap");
   var tbody = document.getElementById("keys-tbody");
+
+  // Launch status (M41): when THIS deployment serves the TTS preview,
+  // the same key already unlocks it — show the Preview chip and drop
+  // TTS from the Coming Soon list. Production keeps the static text.
+  IntelliAI.withStatus(function () {
+    var tts = IntelliAI.SERVICES.filter(function (s) { return s.id === "tts"; })[0];
+    if (tts && tts.status === "preview") {
+      document.getElementById("tts-preview-chip").classList.remove("hidden");
+      document.getElementById("services-soon-note").textContent =
+        "  IntelliAI OCR, Translate, Vision, and LLM — Coming Soon. " +
+        "Keys automatically gain access to new services as they launch.";
+    }
+  });
 
   /* ── code examples (origin-aware, key never embedded) ─────── */
   var examples = IntelliAI.codeExamples(window.location.origin);

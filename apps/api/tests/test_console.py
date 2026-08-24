@@ -529,8 +529,13 @@ async def test_badge_semantics_are_documented_and_rendered_as_designed(
         services = (await client.get("/console/services")).text
     assert "BADGE SEMANTICS" in js
     assert "NOT a claim about which infrastructure" in js
-    for surface in (js, services):
-        assert 'live ? "Production" : "Coming Soon"' in surface
+    # M41: the binary ternary became the shared three-state model —
+    # badgeFor() is the ONE place badge text is decided, and both
+    # renderers consume it (no page invents its own badge wording).
+    assert 'return { text: "Production", cls: "badge-live" }' in js
+    assert 'return { text: "Preview", cls: "badge-beta" }' in js
+    assert 'return { text: "Coming Soon", cls: "badge-soon" }' in js
+    assert "IntelliAI.badgeFor" in services
 
 
 async def test_the_playground_documents_the_audio_ceiling(
@@ -611,12 +616,81 @@ async def test_the_speech_studio_is_a_real_tts_client(
 async def test_the_services_card_links_the_speech_studio_without_claiming_launch(
     settings: Settings, db_engine: AsyncEngine
 ) -> None:
-    # The badge is a LAUNCH claim and TTS has not launched: the card
-    # stays "Coming Soon" while linking the working preview. A link is
-    # page availability; a badge is product state - documented at the
-    # data source and pinned here.
+    # The badge is a LAUNCH claim and TTS has not launched in
+    # production: the STATIC catalogue entry stays "soon" (the
+    # production-safe default) while linking the working preview.
+    # M41 upgrades it to Preview at RENDER time, only where the
+    # deployment's own /console/status says so.
     async with client_with_db(settings, db_engine) as (client, _factory):
         js = (await client.get("/console/assets/console.js")).text
     assert '"/console/speech"' in js
     assert "Open Speech Studio" in js
-    assert "no promise yet" in js  # the documented soon+href semantics
+    assert 'status: "soon"' in js  # the static tts default, never "preview"
+    assert "PRODUCTION-SAFE" in js  # the documented M41 semantics
+    assert "withStatus" in js and "badgeFor" in js
+    assert '"/console/status"' in js  # status comes from the deployment, not the file
+    assert '"Preview"' in js and '"Coming Soon"' in js and '"Production"' in js
+
+
+class TestM41LaunchStatus:
+    """M41: environment-aware launch status — the same static console
+    says Preview on a staging deployment and Coming Soon in production,
+    driven by the registry through /console/status."""
+
+    async def test_production_profile_reports_tts_soon_english_only(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        async with client_with_db(settings, db_engine) as (client, _factory):
+            payload = (await client.get("/console/status")).json()
+        assert payload["services"]["tts"]["status"] == "soon"
+        assert payload["services"]["tts"]["languages"] == ["en"]
+
+    async def test_staging_profile_reports_tts_preview_with_hindi(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        from fastapi import FastAPI
+
+        from intelliai_api.registry.proposals import staging_registry
+
+        def use_staging(app: FastAPI) -> None:
+            app.state.registry = staging_registry()
+
+        async with client_with_db(settings, db_engine, use_staging) as (client, _factory):
+            payload = (await client.get("/console/status")).json()
+        assert payload["services"]["tts"]["status"] == "preview"
+        assert payload["services"]["tts"]["languages"] == ["en", "hi"]
+
+    async def test_status_payload_carries_no_engine_vocabulary(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        async with client_with_db(settings, db_engine) as (client, _factory):
+            body = (await client.get("/console/status")).text.lower()
+        for banned in ("kokoro", "espeak", "hf_alpha", "hm_psi", "whisper", "qwen"):
+            assert banned not in body
+
+    async def test_keys_page_defaults_are_production_safe(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        # The STATIC page keeps TTS in the Coming Soon list; the Preview
+        # chip exists but ships hidden — only /console/status reveals it.
+        async with client_with_db(settings, db_engine) as (client, _factory):
+            page = (await client.get("/console/keys")).text
+        assert "IntelliAI TTS, OCR, Translate, Vision, and LLM — Coming Soon" in page
+        assert 'id="tts-preview-chip"' in page
+        assert "badge-beta hidden" in page  # hidden until the deployment says preview
+        assert "IntelliAI TTS · Preview" in page
+        assert "withStatus" in page
+
+    async def test_services_and_home_render_through_the_status_model(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        async with client_with_db(settings, db_engine) as (client, _factory):
+            services = (await client.get("/console/services")).text
+            home = (await client.get("/console/home")).text
+        assert "IntelliAI.withStatus" in services
+        assert "IntelliAI.badgeFor" in services
+        assert "IntelliAI.withStatus" in home
+        # No page hardcodes the preview claim as a string literal — the
+        # badge text must come from the shared model (badgeFor).
+        assert '"Preview"' not in services
+        assert '"Preview"' not in home

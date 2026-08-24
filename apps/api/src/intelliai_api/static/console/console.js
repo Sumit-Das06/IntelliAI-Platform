@@ -73,13 +73,15 @@ window.IntelliAI = (function () {
       name: "IntelliAI TTS",
       category: "Speech Synthesis",
       icon: "wave",
-      // Deployment-neutral wording (M40): the Speech Studio's voice
-      // list comes from THIS deployment's catalog, so the card never
+      // Deployment-neutral wording: the Speech Studio's voice list
+      // comes from THIS deployment's catalog, so the card never
       // over-claims a language production does not serve.
       desc: "Natural speech from text. Male and female voices - try them in the Speech Studio preview.",
-      // Launch state stays "soon" (the badge is a PRODUCT-launch claim,
-      // and TTS has not launched) - but the Speech Studio preview is
-      // real and linked. soon+href = "try the preview, no promise yet".
+      // The static default stays "soon" — the PRODUCTION-SAFE claim.
+      // withStatus() upgrades it to "preview" (M41) only when THIS
+      // deployment's registry serves the preview (/console/status),
+      // so a staging console says Preview while production keeps
+      // saying Coming Soon from the same file.
       status: "soon",
       href: "/console/speech",
       cta: "Open Speech Studio"
@@ -273,15 +275,56 @@ window.IntelliAI = (function () {
     });
   }
 
+  /* ── launch-status model (M41) ──────────────────────────────
+   * Three states, one meaning each:
+   *   production  = serving production users today
+   *   preview     = implemented + verified on THIS deployment;
+   *                 production not yet enabled
+   *   soon        = not yet available to try
+   * The badge text/style lives HERE so every page renders the same
+   * vocabulary. */
+  function badgeFor(service) {
+    if (service.status === "production") return { text: "Production", cls: "badge-live" };
+    if (service.status === "preview") return { text: "Preview", cls: "badge-beta" };
+    return { text: "Coming Soon", cls: "badge-soon" };
+  }
+
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+
+  /* Fetch the deployment's launch status and apply it to SERVICES,
+   * then ALWAYS call done() — a fetch failure leaves the static
+   * production-safe defaults standing (the console never claims more
+   * than the registry proves). */
+  function withStatus(done) {
+    fetch("/console/status")
+      .then(function (response) { return response.ok ? response.json() : null; })
+      .then(function (payload) {
+        var tts = payload && payload.services && payload.services.tts;
+        if (tts && tts.status === "preview") {
+          SERVICES.forEach(function (service) {
+            if (service.id !== "tts") return;
+            service.status = "preview";
+            service.desc = "Natural speech from text with English and Hindi voices, " +
+              "streaming playback, and local preview access.";
+            service.languages = (tts.languages || []).map(function (code) {
+              return { name: LANGUAGE_NAMES[code] || code };
+            });
+          });
+        }
+        done();
+      })
+      .catch(function () { done(); });
+  }
+
   /* ── services grid (Home's Explore, AI Services page) ──────── */
   function renderServices(container) {
     SERVICES.forEach(function (service) {
-      var live = service.status === "production";
-      var card = el("div", { class: "card service-card" + (live ? "" : " is-soon") }, [
+      var open = service.status === "production" || service.status === "preview";
+      var badge = badgeFor(service);
+      var card = el("div", { class: "card service-card" + (open ? "" : " is-soon") }, [
         el("div", { class: "service-head" }, [
           el("h3", {}, [service.name]),
-          el("span", { class: "badge " + (live ? "badge-live" : "badge-soon") },
-            [live ? "Production" : "Coming Soon"])
+          el("span", { class: "badge " + badge.cls }, [badge.text])
         ]),
         el("p", {}, [service.desc])
       ]);
@@ -362,6 +405,8 @@ window.IntelliAI = (function () {
     apiJSON: apiJSON,
     identity: identity,
     refreshIdentity: refreshIdentity,
+    badgeFor: badgeFor,
+    withStatus: withStatus,
     renderServices: renderServices,
     codeExamples: codeExamples
   };

@@ -9,9 +9,19 @@ StaticFiles mount, no directory semantics, no build step.
 
 from functools import lru_cache
 from importlib.resources import files
+from typing import cast
 
-from fastapi import APIRouter
-from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse, Response
+from fastapi import APIRouter, Request
+from fastapi.responses import (
+    HTMLResponse,
+    JSONResponse,
+    PlainTextResponse,
+    RedirectResponse,
+    Response,
+)
+
+from intelliai_api.registry import Registry
+from intelliai_api.registry.records import LanguageStatus
 
 router = APIRouter()
 
@@ -39,6 +49,41 @@ def _static_text(*parts: str) -> str:
 async def root() -> RedirectResponse:
     """The platform's front door is Home."""
     return RedirectResponse("/console/home", status_code=307)
+
+
+@router.get("/console/status", include_in_schema=False)
+async def console_status(request: Request) -> JSONResponse:
+    """Deployment-honest launch status for the console pages (M41).
+
+    The static pages carry PRODUCTION-SAFE defaults ("Coming Soon");
+    this endpoint upgrades a service to "preview" only where THIS
+    deployment's registry actually serves it — the staging profile
+    composes the Hindi TTS proposal, production does not, so the same
+    static console never over-claims on a production box. Product
+    facts only (status + language codes): no artifacts, no engines,
+    no routes. Unauthenticated like the pages themselves.
+    """
+    registry = cast(Registry, request.app.state.registry)
+    tts_preview = registry.language_status("intelliai-tts", "hi") is LanguageStatus.AVAILABLE
+    tts_languages = sorted(
+        {
+            language
+            for record in registry.list_voices()
+            if record.model == "intelliai-tts"
+            for language in record.languages
+        }
+    )
+    return JSONResponse(
+        {
+            "services": {
+                "tts": {
+                    "status": "preview" if tts_preview else "soon",
+                    "languages": tts_languages,
+                }
+            }
+        },
+        headers=_NO_CACHE,
+    )
 
 
 @router.get("/console", include_in_schema=False)
