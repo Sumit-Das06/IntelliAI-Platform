@@ -63,8 +63,10 @@ async def test_the_catalogue_speaks_in_products_and_languages(
 ) -> None:
     # The catalogue data lives in the shared console kit: categories are
     # product truths (Speech, Document Intelligence, ...), languages carry
-    # honest tiers (Hindi and Arabic are beta), and every future service
-    # is one entry — this test pins the vocabulary customers see.
+    # honest tiers (English and Hindi are the offered STT languages —
+    # Hindi promoted by F-M26, Arabic not offered on public surfaces per
+    # the founder's 2026-08-25 direction), and every future service is
+    # one entry — this test pins the vocabulary customers see.
     async with client_with_db(settings, db_engine) as (client, _factory):
         js = (await client.get("/console/assets/console.js")).text
 
@@ -78,8 +80,9 @@ async def test_the_catalogue_speaks_in_products_and_languages(
     ):
         assert category in js
     assert '{ name: "English", tier: "production" }' in js
-    assert '{ name: "Hindi", tier: "beta" }' in js
-    assert '{ name: "Arabic", tier: "beta" }' in js
+    assert '{ name: "Hindi", tier: "production" }' in js
+    # Arabic is not an offered language on any public surface.
+    assert '{ name: "Arabic"' not in js
 
 
 async def test_the_samples_page_is_served_as_html(

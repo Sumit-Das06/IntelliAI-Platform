@@ -58,12 +58,11 @@ window.IntelliAI = (function () {
       name: "IntelliAI STT",
       category: "Speech",
       icon: "mic",
-      desc: "Speech to text in English, with Hindi and Arabic in beta - and human-correction capture built in.",
+      desc: "Speech to text in English and Hindi - with human-correction capture built in.",
       status: "production",
       languages: [
         { name: "English", tier: "production" },
-        { name: "Hindi", tier: "beta" },
-        { name: "Arabic", tier: "beta" }
+        { name: "Hindi", tier: "production" }
       ],
       href: "/console/playground",
       cta: "Open Playground"
@@ -291,7 +290,7 @@ window.IntelliAI = (function () {
     return { text: "Coming Soon", cls: "badge-soon" };
   }
 
-  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi" };
 
   /* Fetch the deployment's launch status and apply it to SERVICES,
    * then ALWAYS call done() — a fetch failure leaves the static

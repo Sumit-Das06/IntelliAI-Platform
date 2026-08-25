@@ -34,10 +34,8 @@
           <div style="margin-top: 12px;">
             <label class="label" for="lang">Language</label>
             <select class="input" id="lang">
-              <option value="">Auto detect</option>
-              <option value="en">English</option>
-              <option value="hi">Hindi (Beta)</option>
-              <option value="ar">Arabic (Beta)</option>
+              <option value="en" selected>English</option>
+              <option value="hi">Hindi</option>
             </select>
           </div>
           <div class="btn-row" style="margin-top: 14px;">
@@ -147,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var summaryEl = document.getElementById("summary");
   var langSelect = document.getElementById("lang");
 
-  var LANGUAGE_NAMES = { en: "English", hi: "Hindi", ar: "Arabic" };
+  var LANGUAGE_NAMES = { en: "English", hi: "Hindi" };
   var audioBlob = null;
   var audioName = "recording.webm";
   var sampleId = null;
