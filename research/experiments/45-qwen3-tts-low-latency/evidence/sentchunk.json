@@ -1,0 +1,69 @@
+{
+ "experiment": "45-qwen3-tts-low-latency",
+ "instrument": "m45_sentchunk.py (sentence-chunked progressive playback)",
+ "note": "NOT model-native streaming; prosody resets at seams",
+ "rows": [
+  {
+   "id": "m34-len-120",
+   "chars": 120,
+   "mode": "sentence-chunked",
+   "fastsub": true,
+   "n_sentences": 2,
+   "ttfa_s": 7.493,
+   "total_s": 17.415,
+   "audio_s": 8.88,
+   "rtf": 1.9611,
+   "sentences": [
+    {
+     "sentence": 0,
+     "chars": 41,
+     "t_done_s": 7.493,
+     "audio_s": 3.6
+    },
+    {
+     "sentence": 1,
+     "chars": 78,
+     "t_done_s": 17.415,
+     "audio_s": 5.28
+    }
+   ]
+  },
+  {
+   "id": "m34-len-500",
+   "chars": 501,
+   "mode": "sentence-chunked",
+   "fastsub": true,
+   "n_sentences": 4,
+   "ttfa_s": 8.483,
+   "total_s": 51.89,
+   "audio_s": 30.88,
+   "rtf": 1.6804,
+   "sentences": [
+    {
+     "sentence": 0,
+     "chars": 76,
+     "t_done_s": 8.483,
+     "audio_s": 5.04
+    },
+    {
+     "sentence": 1,
+     "chars": 157,
+     "t_done_s": 25.782,
+     "audio_s": 10.88
+    },
+    {
+     "sentence": 2,
+     "chars": 199,
+     "t_done_s": 44.831,
+     "audio_s": 11.36
+    },
+    {
+     "sentence": 3,
+     "chars": 66,
+     "t_done_s": 51.89,
+     "audio_s": 3.6
+    }
+   ]
+  }
+ ]
+}

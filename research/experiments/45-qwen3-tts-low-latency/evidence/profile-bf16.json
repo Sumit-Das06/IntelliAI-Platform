@@ -1,0 +1,607 @@
+{
+ "experiment": "45-qwen3-tts-low-latency",
+ "instrument": "m45_profile.py (timing wrappers only; weights untouched)",
+ "identity": {
+  "model_dir": "/home/vikashan_technologie/m44/models/qwen3-tts-0.6b-base",
+  "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "dtype": "bf16",
+  "attn": "sdpa",
+  "device": "cuda:0",
+  "ref_audio": "LJ001-0004.wav",
+  "mode": "clone/icl",
+  "seeded": "torch.manual_seed(0); AR sampling stochastic"
+ },
+ "load_seconds": 5.87,
+ "prompt": {
+  "prompt_build_s": 1.4977,
+  "ref_codec_encode": {
+   "seconds": 1.0031,
+   "calls": 1
+  },
+  "ref_spk_embedding": {
+   "seconds": 0.2237,
+   "calls": 1
+  },
+  "ref_code_frames": 65
+ },
+ "rows": [
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "mode": "cold",
+   "total_s": 6.399,
+   "audio_s": 4.08,
+   "rtf": 1.5685,
+   "frames": 51,
+   "talker_trunk": {
+    "seconds": 1.4483,
+    "calls": 52
+   },
+   "code_predictor": {
+    "seconds": 4.3943,
+    "calls": 51
+   },
+   "codec_decode": {
+    "seconds": 0.1549,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0254,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0216,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 114.56,
+   "unaccounted_s": 0.355,
+   "vram_peak_alloc_mib": 2387.4
+  },
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "mode": "warm",
+   "total_s": 6.159,
+   "audio_s": 4.0,
+   "rtf": 1.5397,
+   "frames": 50,
+   "talker_trunk": {
+    "seconds": 1.4546,
+    "calls": 51
+   },
+   "code_predictor": {
+    "seconds": 4.413,
+    "calls": 50
+   },
+   "codec_decode": {
+    "seconds": 0.0771,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0276,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0226,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 117.35,
+   "unaccounted_s": 0.164,
+   "vram_peak_alloc_mib": 2384.5
+  },
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "mode": "warm",
+   "total_s": 6.301,
+   "audio_s": 4.08,
+   "rtf": 1.5444,
+   "frames": 51,
+   "talker_trunk": {
+    "seconds": 1.4917,
+    "calls": 52
+   },
+   "code_predictor": {
+    "seconds": 4.5105,
+    "calls": 51
+   },
+   "codec_decode": {
+    "seconds": 0.0747,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0262,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0312,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 117.69,
+   "unaccounted_s": 0.167,
+   "vram_peak_alloc_mib": 2387.7
+  },
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "mode": "warm",
+   "total_s": 5.91,
+   "audio_s": 3.76,
+   "rtf": 1.5719,
+   "frames": 47,
+   "talker_trunk": {
+    "seconds": 1.4381,
+    "calls": 48
+   },
+   "code_predictor": {
+    "seconds": 4.1928,
+    "calls": 47
+   },
+   "codec_decode": {
+    "seconds": 0.0723,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0254,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0246,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 119.81,
+   "unaccounted_s": 0.157,
+   "vram_peak_alloc_mib": 2377.5
+  },
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "mode": "warm-cachedprompt",
+   "total_s": 6.407,
+   "audio_s": 4.0,
+   "rtf": 1.6017,
+   "frames": 50,
+   "talker_trunk": {
+    "seconds": 1.5404,
+    "calls": 51
+   },
+   "code_predictor": {
+    "seconds": 4.6324,
+    "calls": 50
+   },
+   "codec_decode": {
+    "seconds": 0.067,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 123.46,
+   "unaccounted_s": 0.167,
+   "vram_peak_alloc_mib": 2384.5
+  },
+  {
+   "id": "m33-en-short-01",
+   "chars": 22,
+   "mode": "warm",
+   "total_s": 2.068,
+   "audio_s": 1.28,
+   "rtf": 1.6154,
+   "frames": 16,
+   "talker_trunk": {
+    "seconds": 0.4922,
+    "calls": 17
+   },
+   "code_predictor": {
+    "seconds": 1.396,
+    "calls": 16
+   },
+   "codec_decode": {
+    "seconds": 0.0634,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0292,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0288,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 118.01,
+   "unaccounted_s": 0.058,
+   "vram_peak_alloc_mib": 2304.5
+  },
+  {
+   "id": "m33-en-short-01",
+   "chars": 22,
+   "mode": "warm-cachedprompt",
+   "total_s": 1.901,
+   "audio_s": 1.2,
+   "rtf": 1.5844,
+   "frames": 15,
+   "talker_trunk": {
+    "seconds": 0.4688,
+    "calls": 16
+   },
+   "code_predictor": {
+    "seconds": 1.3149,
+    "calls": 15
+   },
+   "codec_decode": {
+    "seconds": 0.0669,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 118.91,
+   "unaccounted_s": 0.051,
+   "vram_peak_alloc_mib": 2302.1
+  },
+  {
+   "id": "m34-len-120",
+   "chars": 120,
+   "mode": "warm",
+   "total_s": 14.798,
+   "audio_s": 8.96,
+   "rtf": 1.6515,
+   "frames": 112,
+   "talker_trunk": {
+    "seconds": 3.5121,
+    "calls": 113
+   },
+   "code_predictor": {
+    "seconds": 10.7615,
+    "calls": 112
+   },
+   "codec_decode": {
+    "seconds": 0.1038,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0275,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.017,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 127.44,
+   "unaccounted_s": 0.376,
+   "vram_peak_alloc_mib": 2531.0
+  },
+  {
+   "id": "m34-len-120",
+   "chars": 120,
+   "mode": "warm-cachedprompt",
+   "total_s": 14.567,
+   "audio_s": 8.8,
+   "rtf": 1.6553,
+   "frames": 110,
+   "talker_trunk": {
+    "seconds": 3.4556,
+    "calls": 111
+   },
+   "code_predictor": {
+    "seconds": 10.6347,
+    "calls": 110
+   },
+   "codec_decode": {
+    "seconds": 0.1052,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 128.09,
+   "unaccounted_s": 0.372,
+   "vram_peak_alloc_mib": 2526.8
+  },
+  {
+   "id": "m34-len-500",
+   "chars": 501,
+   "mode": "warm",
+   "total_s": 46.48,
+   "audio_s": 29.84,
+   "rtf": 1.5576,
+   "frames": 373,
+   "talker_trunk": {
+    "seconds": 11.1869,
+    "calls": 374
+   },
+   "code_predictor": {
+    "seconds": 33.7869,
+    "calls": 373
+   },
+   "codec_decode": {
+    "seconds": 0.272,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0297,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0215,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 120.57,
+   "unaccounted_s": 1.183,
+   "vram_peak_alloc_mib": 2821.3
+  },
+  {
+   "id": "m34-len-500",
+   "chars": 501,
+   "mode": "warm-cachedprompt",
+   "total_s": 47.937,
+   "audio_s": 30.96,
+   "rtf": 1.5484,
+   "frames": 387,
+   "talker_trunk": {
+    "seconds": 11.5699,
+    "calls": 388
+   },
+   "code_predictor": {
+    "seconds": 34.9055,
+    "calls": 387
+   },
+   "codec_decode": {
+    "seconds": 0.2302,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 120.09,
+   "unaccounted_s": 1.231,
+   "vram_peak_alloc_mib": 2821.3
+  },
+  {
+   "id": "m34-len-795",
+   "chars": 795,
+   "mode": "warm",
+   "total_s": 75.723,
+   "audio_s": 46.56,
+   "rtf": 1.6264,
+   "frames": 582,
+   "talker_trunk": {
+    "seconds": 18.0775,
+    "calls": 583
+   },
+   "code_predictor": {
+    "seconds": 55.2694,
+    "calls": 582
+   },
+   "codec_decode": {
+    "seconds": 0.3535,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0253,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0236,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 126.03,
+   "unaccounted_s": 1.974,
+   "vram_peak_alloc_mib": 2880.8
+  },
+  {
+   "id": "m34-len-795",
+   "chars": 795,
+   "mode": "warm-cachedprompt",
+   "total_s": 78.723,
+   "audio_s": 48.48,
+   "rtf": 1.6238,
+   "frames": 606,
+   "talker_trunk": {
+    "seconds": 18.8925,
+    "calls": 607
+   },
+   "code_predictor": {
+    "seconds": 57.4498,
+    "calls": 606
+   },
+   "codec_decode": {
+    "seconds": 0.3478,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 125.98,
+   "unaccounted_s": 2.033,
+   "vram_peak_alloc_mib": 2881.2
+  },
+  {
+   "id": "m34-len-1000",
+   "chars": 1027,
+   "mode": "warm",
+   "total_s": 99.516,
+   "audio_s": 60.4,
+   "rtf": 1.6476,
+   "frames": 755,
+   "talker_trunk": {
+    "seconds": 23.7279,
+    "calls": 756
+   },
+   "code_predictor": {
+    "seconds": 72.7426,
+    "calls": 755
+   },
+   "codec_decode": {
+    "seconds": 0.4141,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0313,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0384,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 127.78,
+   "unaccounted_s": 2.561,
+   "vram_peak_alloc_mib": 2881.6
+  },
+  {
+   "id": "m34-len-1000",
+   "chars": 1027,
+   "mode": "warm-cachedprompt",
+   "total_s": 91.499,
+   "audio_s": 58.72,
+   "rtf": 1.5582,
+   "frames": 734,
+   "talker_trunk": {
+    "seconds": 21.8387,
+    "calls": 735
+   },
+   "code_predictor": {
+    "seconds": 66.8679,
+    "calls": 734
+   },
+   "codec_decode": {
+    "seconds": 0.4086,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 120.85,
+   "unaccounted_s": 2.384,
+   "vram_peak_alloc_mib": 2882.0
+  },
+  {
+   "id": "m34-len-1990",
+   "chars": 2039,
+   "mode": "warm",
+   "total_s": 177.824,
+   "audio_s": 115.36,
+   "rtf": 1.5415,
+   "frames": 1442,
+   "talker_trunk": {
+    "seconds": 42.7903,
+    "calls": 1443
+   },
+   "code_predictor": {
+    "seconds": 129.5118,
+    "calls": 1442
+   },
+   "codec_decode": {
+    "seconds": 0.8439,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.031,
+     "calls": 1
+    },
+    "spk": {
+     "seconds": 0.0171,
+     "calls": 1
+    }
+   },
+   "per_frame_ms": 119.49,
+   "unaccounted_s": 4.63,
+   "vram_peak_alloc_mib": 2886.9
+  },
+  {
+   "id": "m34-len-1990",
+   "chars": 2039,
+   "mode": "warm-cachedprompt",
+   "total_s": 197.17,
+   "audio_s": 122.16,
+   "rtf": 1.614,
+   "frames": 1527,
+   "talker_trunk": {
+    "seconds": 47.4857,
+    "calls": 1528
+   },
+   "code_predictor": {
+    "seconds": 143.8133,
+    "calls": 1527
+   },
+   "codec_decode": {
+    "seconds": 0.8125,
+    "calls": 1
+   },
+   "prompt_rebuild": {
+    "encode": {
+     "seconds": 0.0,
+     "calls": 0
+    },
+    "spk": {
+     "seconds": 0.0,
+     "calls": 0
+    }
+   },
+   "per_frame_ms": 125.28,
+   "unaccounted_s": 5.058,
+   "vram_peak_alloc_mib": 2887.0
+  }
+ ]
+}

@@ -1,0 +1,83 @@
+{
+ "experiment": "45-qwen3-tts-low-latency",
+ "instrument": "m45_conc.py (thread-pool concurrency on one model)",
+ "note": "local hardware measurement, NOT production capacity",
+ "fastsub": true,
+ "text_chars": 66,
+ "ladder": [
+  {
+   "concurrency": 1,
+   "requests": 2,
+   "ok": 2,
+   "failures": 0,
+   "wall_s": 11.41,
+   "p50_s": 5.93,
+   "p95_s": 5.47,
+   "throughput_rps": 0.175,
+   "audio_s_each": 4.32,
+   "vram_peak_alloc_mib": 2403.1
+  },
+  {
+   "concurrency": 2,
+   "requests": 4,
+   "ok": 4,
+   "failures": 0,
+   "wall_s": 34.97,
+   "p50_s": 17.61,
+   "p95_s": 17.61,
+   "throughput_rps": 0.114,
+   "audio_s_each": 4.64,
+   "vram_peak_alloc_mib": 2441.4
+  },
+  {
+   "concurrency": 4,
+   "requests": 8,
+   "ok": 8,
+   "failures": 0,
+   "wall_s": 145.53,
+   "p50_s": 72.66,
+   "p95_s": 76.48,
+   "throughput_rps": 0.055,
+   "audio_s_each": 5.36,
+   "vram_peak_alloc_mib": 2506.0
+  },
+  {
+   "concurrency": 8,
+   "requests": 16,
+   "ok": 16,
+   "failures": 0,
+   "wall_s": 495.18,
+   "p50_s": 250.13,
+   "p95_s": 267.57,
+   "throughput_rps": 0.032,
+   "audio_s_each": 4.64,
+   "vram_peak_alloc_mib": 2612.4
+  }
+ ],
+ "repeated_requests": [
+  {
+   "request": 1,
+   "vram_alloc_mib": 2186.8,
+   "vram_reserved_mib": 2626.0,
+   "rss_mib": 2437.2
+  },
+  {
+   "request": 10,
+   "vram_alloc_mib": 2186.8,
+   "vram_reserved_mib": 2806.0,
+   "rss_mib": 2440.0
+  },
+  {
+   "request": 25,
+   "vram_alloc_mib": 2186.8,
+   "vram_reserved_mib": 2806.0,
+   "rss_mib": 2444.2
+  },
+  {
+   "request": 50,
+   "vram_alloc_mib": 2186.8,
+   "vram_reserved_mib": 2806.0,
+   "rss_mib": 2445.9
+  }
+ ]
+}

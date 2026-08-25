@@ -1,0 +1,85 @@
+{
+ "experiment": "45-qwen3-tts-low-latency",
+ "instrument": "m45_fastsub.py (EXPERIMENTAL runtime; weights untouched)",
+ "identity": {
+  "model_dir": "/home/vikashan_technologie/m44/models/qwen3-tts-0.6b-base",
+  "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "dtype": "bf16",
+  "attn": "sdpa",
+  "opt": "fastsub",
+  "sampling": "official defaults via generate_config",
+  "seeded": "torch.manual_seed(0); AR sampling stochastic"
+ },
+ "rows": [
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 5.89,
+   "audio_s": 4.08,
+   "rtf": 1.4435,
+   "vram_peak_alloc_mib": 2387.3
+  },
+  {
+   "id": "m33-en-short-01",
+   "chars": 22,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 1.729,
+   "audio_s": 1.2,
+   "rtf": 1.4408,
+   "vram_peak_alloc_mib": 2302.1
+  },
+  {
+   "id": "m34-len-120",
+   "chars": 120,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 13.229,
+   "audio_s": 9.44,
+   "rtf": 1.4013,
+   "vram_peak_alloc_mib": 2544.6
+  },
+  {
+   "id": "m34-len-500",
+   "chars": 501,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 39.92,
+   "audio_s": 28.4,
+   "rtf": 1.4056,
+   "vram_peak_alloc_mib": 2821.2
+  },
+  {
+   "id": "m34-len-795",
+   "chars": 795,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 68.312,
+   "audio_s": 47.12,
+   "rtf": 1.4497,
+   "vram_peak_alloc_mib": 2881.1
+  },
+  {
+   "id": "m34-len-1000",
+   "chars": 1027,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 90.141,
+   "audio_s": 62.16,
+   "rtf": 1.4501,
+   "vram_peak_alloc_mib": 2881.7
+  },
+  {
+   "id": "m34-len-1990",
+   "chars": 2039,
+   "opt": "fastsub",
+   "rep": 0,
+   "total_s": 154.563,
+   "audio_s": 111.6,
+   "rtf": 1.385,
+   "vram_peak_alloc_mib": 2885.6
+  }
+ ]
+}

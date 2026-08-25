@@ -1,0 +1,362 @@
+{
+ "experiment": "45-qwen3-tts-low-latency",
+ "instrument": "m45_vllm_bench.py (client-side wire measurement)",
+ "rows": [
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 47.92,
+   "total_s": 61.497,
+   "audio_s": 5.985,
+   "rtf": 10.2745,
+   "n_chunks": 7,
+   "first_chunks": [
+    {
+     "t_s": 47.92,
+     "bytes": 5218
+    },
+    {
+     "t_s": 54.885,
+     "bytes": 65529
+    },
+    {
+     "t_s": 54.886,
+     "bytes": 62569
+    },
+    {
+     "t_s": 61.366,
+     "bytes": 65529
+    },
+    {
+     "t_s": 61.366,
+     "bytes": 62569
+    },
+    {
+     "t_s": 61.497,
+     "bytes": 25698
+    },
+    {
+     "t_s": 61.497,
+     "bytes": 186
+    }
+   ],
+   "true_streaming": true
+  },
+  {
+   "id": "m33-en-short-01",
+   "chars": 22,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 6.126,
+   "total_s": 6.201,
+   "audio_s": 1.608,
+   "rtf": 3.8564,
+   "n_chunks": 4,
+   "first_chunks": [
+    {
+     "t_s": 6.126,
+     "bytes": 5218
+    },
+    {
+     "t_s": 6.2,
+     "bytes": 65529
+    },
+    {
+     "t_s": 6.2,
+     "bytes": 6249
+    },
+    {
+     "t_s": 6.201,
+     "bytes": 184
+    }
+   ],
+   "true_streaming": false
+  },
+  {
+   "id": "m34-len-120",
+   "chars": 120,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 6.549,
+   "total_s": 25.981,
+   "audio_s": 11.963,
+   "rtf": 2.1718,
+   "n_chunks": 11,
+   "first_chunks": [
+    {
+     "t_s": 6.549,
+     "bytes": 5218
+    },
+    {
+     "t_s": 6.616,
+     "bytes": 65529
+    },
+    {
+     "t_s": 6.616,
+     "bytes": 62569
+    },
+    {
+     "t_s": 13.06,
+     "bytes": 65529
+    },
+    {
+     "t_s": 13.06,
+     "bytes": 62569
+    },
+    {
+     "t_s": 19.639,
+     "bytes": 65529
+    },
+    {
+     "t_s": 19.639,
+     "bytes": 62569
+    },
+    {
+     "t_s": 19.756,
+     "bytes": 65529
+    },
+    {
+     "t_s": 19.756,
+     "bytes": 62569
+    },
+    {
+     "t_s": 25.981,
+     "bytes": 56418
+    }
+   ],
+   "true_streaming": true
+  },
+  {
+   "id": "m34-len-500",
+   "chars": 501,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 6.521,
+   "total_s": 52.619,
+   "audio_s": 36.941,
+   "rtf": 1.4244,
+   "n_chunks": 30,
+   "first_chunks": [
+    {
+     "t_s": 6.521,
+     "bytes": 5218
+    },
+    {
+     "t_s": 6.586,
+     "bytes": 65529
+    },
+    {
+     "t_s": 6.586,
+     "bytes": 62569
+    },
+    {
+     "t_s": 12.988,
+     "bytes": 65529
+    },
+    {
+     "t_s": 12.988,
+     "bytes": 62569
+    },
+    {
+     "t_s": 19.333,
+     "bytes": 65529
+    },
+    {
+     "t_s": 19.333,
+     "bytes": 62569
+    },
+    {
+     "t_s": 19.451,
+     "bytes": 65476
+    },
+    {
+     "t_s": 19.451,
+     "bytes": 62622
+    },
+    {
+     "t_s": 25.889,
+     "bytes": 65529
+    }
+   ],
+   "true_streaming": true
+  },
+  {
+   "id": "m34-len-795",
+   "chars": 795,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 6.601,
+   "total_s": 193.349,
+   "audio_s": 64.377,
+   "rtf": 3.0034,
+   "n_chunks": 51,
+   "first_chunks": [
+    {
+     "t_s": 6.601,
+     "bytes": 5218
+    },
+    {
+     "t_s": 6.675,
+     "bytes": 65476
+    },
+    {
+     "t_s": 6.675,
+     "bytes": 62622
+    },
+    {
+     "t_s": 6.801,
+     "bytes": 65529
+    },
+    {
+     "t_s": 6.802,
+     "bytes": 62569
+    },
+    {
+     "t_s": 13.278,
+     "bytes": 65529
+    },
+    {
+     "t_s": 13.278,
+     "bytes": 62569
+    },
+    {
+     "t_s": 13.408,
+     "bytes": 65529
+    },
+    {
+     "t_s": 13.408,
+     "bytes": 62569
+    },
+    {
+     "t_s": 19.926,
+     "bytes": 65529
+    }
+   ],
+   "true_streaming": true
+  },
+  {
+   "id": "m34-len-1000",
+   "chars": 1027,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 6.858,
+   "total_s": 123.949,
+   "audio_s": 78.574,
+   "rtf": 1.5775,
+   "n_chunks": 61,
+   "first_chunks": [
+    {
+     "t_s": 6.858,
+     "bytes": 5218
+    },
+    {
+     "t_s": 13.637,
+     "bytes": 65529
+    },
+    {
+     "t_s": 13.637,
+     "bytes": 62569
+    },
+    {
+     "t_s": 20.258,
+     "bytes": 65529
+    },
+    {
+     "t_s": 20.258,
+     "bytes": 62569
+    },
+    {
+     "t_s": 20.371,
+     "bytes": 65529
+    },
+    {
+     "t_s": 20.371,
+     "bytes": 62569
+    },
+    {
+     "t_s": 26.936,
+     "bytes": 65529
+    },
+    {
+     "t_s": 26.936,
+     "bytes": 62569
+    },
+    {
+     "t_s": 33.531,
+     "bytes": 65529
+    }
+   ],
+   "true_streaming": true
+  },
+  {
+   "id": "m34-len-1990",
+   "chars": 2039,
+   "rep": 0,
+   "runtime": "vllm-omni-0.26.0 (vllm 0.26.0)",
+   "stream": true,
+   "ttfa_s": 5.957,
+   "total_s": 200.752,
+   "audio_s": 147.214,
+   "rtf": 1.3637,
+   "n_chunks": 113,
+   "first_chunks": [
+    {
+     "t_s": 5.957,
+     "bytes": 5218
+    },
+    {
+     "t_s": 6.031,
+     "bytes": 65529
+    },
+    {
+     "t_s": 6.031,
+     "bytes": 62569
+    },
+    {
+     "t_s": 12.571,
+     "bytes": 65529
+    },
+    {
+     "t_s": 12.571,
+     "bytes": 62569
+    },
+    {
+     "t_s": 12.685,
+     "bytes": 65476
+    },
+    {
+     "t_s": 12.685,
+     "bytes": 62622
+    },
+    {
+     "t_s": 19.33,
+     "bytes": 65529
+    },
+    {
+     "t_s": 19.33,
+     "bytes": 62569
+    },
+    {
+     "t_s": 25.598,
+     "bytes": 65529
+    }
+   ],
+   "true_streaming": true
+  },
+  {
+   "id": "en-general-01",
+   "stream": false,
+   "total_s": 13.291,
+   "bytes": 211244,
+   "status": 200
+  }
+ ]
+}

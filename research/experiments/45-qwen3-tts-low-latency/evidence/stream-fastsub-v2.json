@@ -1,0 +1,138 @@
+{
+ "experiment": "45-qwen3-tts-low-latency",
+ "instrument": "m45_stream.py (EXPERIMENTAL hook streaming; weights untouched)",
+ "identity": {
+  "model_dir": "/home/vikashan_technologie/m44/models/qwen3-tts-0.6b-base",
+  "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "dtype": "bf16",
+  "attn": "sdpa",
+  "true_streaming_definition": "PCM chunk exists before total synthesis completes"
+ },
+ "rows": [
+  {
+   "id": "en-general-01",
+   "chars": 64,
+   "fastsub": true,
+   "first_chunk_frames": 6,
+   "chunk_frames": 24,
+   "left_context_frames": 72,
+   "ttfa_s": 1.286,
+   "total_s": 6.747,
+   "audio_s": 4.08,
+   "n_chunks": 3,
+   "chunks": [
+    {
+     "frames": 6,
+     "t_s": 1.286,
+     "samples": 7520
+    },
+    {
+     "frames": 24,
+     "t_s": 4.111,
+     "samples": 46080
+    },
+    {
+     "frames": 21,
+     "t_s": 6.747,
+     "samples": 44320
+    }
+   ],
+   "len_streamed": 97920,
+   "len_gold": 97920,
+   "len_oneshot_wrapper": 97921,
+   "len_delta_vs_gold": 0,
+   "continuity_max_abs_diff": 0.0234375,
+   "continuity_rms_diff": 0.0008260286995209754
+  },
+  {
+   "id": "m33-en-short-01",
+   "chars": 22,
+   "fastsub": true,
+   "first_chunk_frames": 6,
+   "chunk_frames": 24,
+   "left_context_frames": 72,
+   "ttfa_s": 0.803,
+   "total_s": 2.058,
+   "audio_s": 1.36,
+   "n_chunks": 2,
+   "chunks": [
+    {
+     "frames": 6,
+     "t_s": 0.803,
+     "samples": 7520
+    },
+    {
+     "frames": 11,
+     "t_s": 2.058,
+     "samples": 25120
+    }
+   ],
+   "len_streamed": 32640,
+   "len_gold": 32640,
+   "len_oneshot_wrapper": 32640,
+   "len_delta_vs_gold": 0,
+   "continuity_max_abs_diff": 0.0107421875,
+   "continuity_rms_diff": 0.00026021874509751797
+  },
+  {
+   "id": "m34-len-500",
+   "chars": 501,
+   "fastsub": true,
+   "first_chunk_frames": 6,
+   "chunk_frames": 24,
+   "left_context_frames": 72,
+   "ttfa_s": 0.815,
+   "total_s": 43.4,
+   "audio_s": 30.0,
+   "n_chunks": 17,
+   "chunks": [
+    {
+     "frames": 6,
+     "t_s": 0.815,
+     "samples": 7520
+    },
+    {
+     "frames": 24,
+     "t_s": 3.322,
+     "samples": 46080
+    },
+    {
+     "frames": 24,
+     "t_s": 5.987,
+     "samples": 46080
+    },
+    {
+     "frames": 24,
+     "t_s": 8.793,
+     "samples": 46080
+    },
+    {
+     "frames": 24,
+     "t_s": 11.465,
+     "samples": 46080
+    },
+    {
+     "frames": 24,
+     "t_s": 14.204,
+     "samples": 46080
+    },
+    {
+     "frames": 24,
+     "t_s": 16.922,
+     "samples": 46080
+    },
+    {
+     "frames": 24,
+     "t_s": 19.553,
+     "samples": 46080
+    }
+   ],
+   "len_streamed": 720000,
+   "len_gold": 720000,
+   "len_oneshot_wrapper": 720000,
+   "len_delta_vs_gold": 0,
+   "continuity_max_abs_diff": 0.0302734375,
+   "continuity_rms_diff": 0.0008042092085815966
+  }
+ ]
+}
