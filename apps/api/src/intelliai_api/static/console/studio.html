@@ -67,6 +67,15 @@
           <h3>Transcript</h3>
           <textarea class="input" id="transcript" style="min-height: 170px; resize: vertical; margin-top: 12px;"
                     placeholder="Your transcript appears here…"></textarea>
+          <!-- Share is a USER-INITIATED export of the visible text only.
+               It never depends on the contribution checkbox, never calls
+               the backend, and shares exactly what the textarea shows
+               (so a saved or unsaved correction is what travels). -->
+          <div class="btn-row" style="margin-top: 10px;">
+            <button class="btn hidden" id="share" type="button"
+                    aria-label="Share transcript">📤 Share</button>
+          </div>
+          <div class="status-line" id="share-note" role="status"></div>
           <button class="btn btn-primary hidden" id="save" type="button"
                   style="width: 100%; margin-top: 10px;">Save correction</button>
           <div class="status-line" id="thanks"></div>
@@ -186,6 +195,65 @@ document.addEventListener("DOMContentLoaded", function () {
     thanksEl.className = "status-line" + (kind ? " " + kind : "");
   }
 
+  /* ── Share (M46) ──────────────────────────────────────────────
+     User-initiated export of the transcript TEXT only — no model,
+     no request/sample IDs, no developer details, no backend call.
+     Feature detection is runtime-based; destinations are decided by
+     the browser/OS share sheet, never by this page. */
+  var shareBtn = document.getElementById("share");
+  var shareNote = document.getElementById("share-note");
+
+  function setShareNote(text, kind) {
+    shareNote.textContent = text || "";
+    shareNote.className = "status-line" + (kind ? " " + kind : "");
+  }
+
+  function refreshShareButton() {
+    var busy = transcribeBtn.disabled;
+    var hasText = transcript.value.trim().length > 0;
+    shareBtn.classList.toggle("hidden", busy || !hasText);
+  }
+
+  function shareFallbackCopy(shareText, wasError) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareText).then(
+        function () {
+          setShareNote(wasError
+            ? "Sharing didn't work here — transcript copied to clipboard instead."
+            : "Sharing isn't supported here. Transcript copied to clipboard.", "ok");
+        },
+        function () { setShareNote("Sharing isn't supported in this browser.", "err"); }
+      );
+    } else {
+      setShareNote("Sharing isn't supported in this browser.", "err");
+    }
+  }
+
+  shareBtn.addEventListener("click", function () {
+    /* Snapshot at click time: if the transcript changes while the
+       native sheet is open, what travels is what the user clicked on. */
+    var shareText = transcript.value.trim();
+    if (!shareText) { refreshShareButton(); return; }
+    setShareNote("");
+    if (typeof navigator.share === "function") {
+      navigator.share({ title: "IntelliAI STT Transcript", text: shareText }).then(
+        function () { setShareNote("Shared.", "ok"); },
+        function (error) {
+          /* Cancelling the share sheet is a normal action, not an error. */
+          if (error && error.name === "AbortError") return;
+          shareFallbackCopy(shareText, true);
+        }
+      );
+    } else {
+      shareFallbackCopy(shareText, false);
+    }
+  });
+
+  transcript.addEventListener("input", function () {
+    setShareNote("");
+    refreshShareButton();
+  });
+
   function setAudio(blob, name) {
     audioBlob = blob;
     audioName = name;
@@ -290,6 +358,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!contributing) headers["X-IntelliAI-Contribution"] = "off";
 
     transcribeBtn.disabled = true;
+    setShareNote("");
+    refreshShareButton();
     setStatus("Transcribing…");
     var started = performance.now();
     fetch("/v1/audio/transcriptions", {
@@ -323,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
       setStatus(err.message || "Network error.", "err");
     }).finally(function () {
       transcribeBtn.disabled = false;
+      refreshShareButton();
     });
   });
 

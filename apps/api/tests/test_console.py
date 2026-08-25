@@ -754,3 +754,99 @@ class TestLaunchStatus:
         # badge text must come from the shared model (badgeFor).
         assert '"Preview"' not in services
         assert '"Preview"' not in home
+
+
+class TestSttShare:
+    """M46 — the Playground's Share button: a user-initiated export of
+    the visible transcript TEXT only, through the browser/OS native
+    share sheet, with a clipboard fallback. Frontend-only feature; the
+    page is static JS, so these tests pin the served source's behavior
+    the same way the usage/status suites do."""
+
+    async def _studio(self, settings: Settings, db_engine: AsyncEngine) -> str:
+        async with client_with_db(settings, db_engine) as (client, _factory):
+            return (await client.get("/console/playground")).text
+
+    async def test_share_exists_hidden_until_a_transcript_does(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (A/B) the button ships hidden and is revealed only by the
+        # refresh law: never while a request is in flight, never empty.
+        assert 'class="btn hidden" id="share"' in page
+        assert "function refreshShareButton()" in page
+        assert "var busy = transcribeBtn.disabled;" in page
+        assert "var hasText = transcript.value.trim().length > 0;" in page
+        assert 'shareBtn.classList.toggle("hidden", busy || !hasText);' in page
+        # wired into every lifecycle edge: submit, settle, and edits.
+        assert page.count("refreshShareButton();") >= 3
+        assert 'transcript.addEventListener("input"' in page
+
+    async def test_native_share_gets_title_and_snapshot_text_only(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (C/D/J) runtime feature detection, the exact clean payload,
+        # and the click-time snapshot (corrections share what is seen).
+        assert 'typeof navigator.share === "function"' in page
+        assert 'navigator.share({ title: "IntelliAI STT Transcript", text: shareText })' in page
+        assert "var shareText = transcript.value.trim();" in page
+        # (L) the app never shortens the payload on its own.
+        assert "shareText.slice" not in page
+        assert "shareText.substring" not in page
+
+    async def test_cancelling_the_share_sheet_is_not_an_error(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (F) AbortError = the user changed their mind; stay silent.
+        assert 'if (error && error.name === "AbortError") return;' in page
+        assert "Share failed" not in page
+
+    async def test_unsupported_browsers_fall_back_to_the_clipboard(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (G/H/I) fallback chain with friendly words at every rung.
+        assert "function shareFallbackCopy(" in page
+        assert "navigator.clipboard.writeText(shareText)" in page
+        assert "Sharing isn't supported here. Transcript copied to clipboard." in page
+        assert "Sharing didn't work here — transcript copied to clipboard instead." in page
+        assert "Sharing isn't supported in this browser." in page
+
+    async def test_share_is_frontend_only_and_consent_free(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (Phase 13/14) the share handler block reaches neither the
+        # network nor the consent checkbox: between the share section
+        # marker and the transcribe handler there is no fetch/apiJSON
+        # and no contribution read.
+        share_block = page.split("── Share (M46)")[1].split("transcribeBtn.addEventListener")[0]
+        assert "fetch(" not in share_block
+        assert "apiJSON" not in share_block
+        assert "contribute" not in share_block
+
+    async def test_share_payload_carries_no_internal_vocabulary(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (J/Phase 19) nothing but the transcript text enters the
+        # payload: no IDs, no model names, no developer details. The
+        # global public-product sweep already bans engine words on the
+        # whole page; here we pin the share call itself.
+        call = page.split("navigator.share({")[1].split("})")[0]
+        assert "title" in call and "shareText" in call
+        for banned in ("model", "request", "sample", "dev-", "language", "key"):
+            assert banned not in call
+
+    async def test_share_is_reachable_and_labelled_for_everyone(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._studio(settings, db_engine)
+        # (K) a real <button> (keyboard-reachable by nature), with an
+        # accessible name and a text label beside the icon, and a
+        # polite live region for its feedback.
+        assert 'aria-label="Share transcript"' in page
+        assert "📤 Share</button>" in page
+        assert 'id="share-note" role="status"' in page
