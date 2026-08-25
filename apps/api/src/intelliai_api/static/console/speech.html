@@ -86,9 +86,15 @@
                audio, now seekable; never fetches, never re-streams. -->
           <div id="player-wrap" class="hidden" style="margin-top: 12px;">
             <audio id="speech-player" controls style="width: 100%;"></audio>
+            <!-- Share (M47): a user-initiated export of the SAME completed
+                 WAV blob Download uses — never re-encoded, never re-fetched,
+                 never partial (this panel only exists in COMPLETED). -->
             <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
+              <button class="btn" id="share-audio" type="button"
+                      aria-label="Share audio">📤 Share</button>
               <a class="btn" id="download-link" download="intelliai-speech.wav">Download WAV</a>
             </div>
+            <span class="hint" id="share-audio-note" role="status"></span>
           </div>
 
           <div id="speech-summary" class="chips hidden" style="margin-top: 12px;"></div>
@@ -306,6 +312,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function isStale(session) { return session.id !== activeSessionId; }
 
+  /* ── Share audio (M47) ────────────────────────────────────────────
+     Mirrors the M46 Playground share laws for a FILE payload: the
+     exact completed WAV blob (the one Download uses), title + file
+     only, click-time snapshot, runtime feature detection
+     (navigator.share AND navigator.canShare({files}) — never device
+     sniffing), AbortError = the user changed their mind. Frontend
+     only: no fetch, no re-encode, no playback interference. */
+  var shareAudioBtn = document.getElementById("share-audio");
+  var shareAudioNote = document.getElementById("share-audio-note");
+  var completedBlob = null;
+  var completedSessionId = 0;
+
+  function setShareAudioNote(text, kind) {
+    shareAudioNote.textContent = text || "";
+    shareAudioNote.className = "hint" + (kind === "err" ? " text-err" : kind === "ok" ? " text-ok" : "");
+  }
+
+  shareAudioBtn.addEventListener("click", function () {
+    /* Snapshot at click time: a Generate that supersedes this session
+       clears the blob, so a stale session's audio can never travel. */
+    var blob = completedBlob;
+    var sid = completedSessionId;
+    if (!blob || sid !== activeSessionId) {
+      setShareAudioNote("Generate speech first — there is no completed audio to share.", "err");
+      return;
+    }
+    setShareAudioNote("");
+    var file;
+    try {
+      file = new File([blob], "intelliai-speech.wav", { type: "audio/wav" });
+    } catch (e) {
+      setShareAudioNote("Audio sharing isn't supported here. Download the WAV file instead.", "err");
+      return;
+    }
+    if (typeof navigator.share !== "function" ||
+        typeof navigator.canShare !== "function" ||
+        !navigator.canShare({ files: [file] })) {
+      setShareAudioNote("Audio sharing isn't supported here. Download the WAV file instead.", "err");
+      return;
+    }
+    navigator.share({ title: "IntelliAI TTS Audio", files: [file] }).then(
+      function () { setShareAudioNote("Shared.", "ok"); },
+      function (error) {
+        /* Cancelling the share sheet is a normal action, not an error. */
+        if (error && error.name === "AbortError") return;
+        setShareAudioNote("Couldn't share the audio. Please download the WAV file instead.", "err");
+      }
+    );
+  });
+
   function debugExpose() {
     // Observable one-player proof for tests/DevTools: at most one
     // audible source may ever be reported here.
@@ -362,6 +418,11 @@ document.addEventListener("DOMContentLoaded", function () {
     player.pause();
     player.removeAttribute("src");
     if (player.dataset.blobUrl) { URL.revokeObjectURL(player.dataset.blobUrl); delete player.dataset.blobUrl; }
+    // A new session supersedes the old audio for Share exactly as it
+    // does for the player: stale audio is never shareable (M47).
+    completedBlob = null;
+    completedSessionId = 0;
+    setShareAudioNote("");
     sessionCounter += 1;
     activeSessionId = sessionCounter;
     activeSession = {
@@ -434,6 +495,8 @@ document.addEventListener("DOMContentLoaded", function () {
     player.src = url;
     player.dataset.blobUrl = url;
     downloadLink.href = url;
+    completedBlob = blob;
+    completedSessionId = session.id;
     transition(session, "COMPLETED");
     summaryEl.replaceChildren();
     summaryEl.appendChild(summaryChip("Service", "IntelliAI TTS"));
@@ -588,6 +651,8 @@ document.addEventListener("DOMContentLoaded", function () {
         player.src = url;
         player.dataset.blobUrl = url;
         downloadLink.href = url;
+        completedBlob = blob;
+        completedSessionId = session.id;
         transition(session, "COMPLETED");
         return player.play().catch(function () {});
       });

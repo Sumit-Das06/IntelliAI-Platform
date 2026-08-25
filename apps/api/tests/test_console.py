@@ -850,3 +850,105 @@ class TestSttShare:
         assert 'aria-label="Share transcript"' in page
         assert "📤 Share</button>" in page
         assert 'id="share-note" role="status"' in page
+
+
+class TestTtsAudioShare:
+    """M47 — Speech Studio's Share button: a user-initiated export of
+    the COMPLETED WAV audio through the browser/OS native file share
+    sheet, mirroring the M46 laws for a file payload. The button lives
+    inside the replay panel, which the PlaybackSession shows only in
+    COMPLETED — so IDLE/GENERATING/STREAMING/STOPPED/ERROR all hide it
+    by the existing state machine, not by a second one."""
+
+    async def _speech(self, settings: Settings, db_engine: AsyncEngine) -> str:
+        async with client_with_db(settings, db_engine) as (client, _factory):
+            return (await client.get("/console/speech")).text
+
+    async def test_share_lives_inside_the_completed_only_panel(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (A-D/Phase 14) placement inside #player-wrap is the state law:
+        # the wrap is toggled by `state !== "COMPLETED"` alone.
+        wrap = page.split('id="player-wrap"')[1].split("</div>\n          </div>")[0]
+        assert 'id="share-audio"' in wrap
+        assert 'id="download-link"' in wrap  # side by side with Download
+        assert 'playerWrap.classList.toggle("hidden", state !== "COMPLETED");' in page
+
+    async def test_native_share_gets_title_and_the_download_wav_file_only(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (E/F/M) the exact payload: public title + the File built from
+        # the SAME blob Download uses, named by the existing Download
+        # convention, audio/wav, never re-encoded.
+        assert 'navigator.share({ title: "IntelliAI TTS Audio", files: [file] })' in page
+        assert 'new File([blob], "intelliai-speech.wav", { type: "audio/wav" })' in page
+        assert 'download="intelliai-speech.wav"' in page  # Download unchanged
+        call = page.split("navigator.share({ title")[1].split("})")[0]
+        for banned in ("model", "voice", "request", "session", "key", "speed"):
+            assert banned not in call
+
+    async def test_feature_detection_is_runtime_and_file_aware(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (J/K) navigator.share existing is NOT enough for files:
+        # canShare({files}) gates the native path.
+        assert 'typeof navigator.share !== "function"' in page
+        assert 'typeof navigator.canShare !== "function"' in page
+        assert "!navigator.canShare({ files: [file] })" in page
+        assert "Audio sharing isn't supported here. Download the WAV file instead." in page
+
+    async def test_cancel_is_silent_and_errors_stay_friendly(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (I/L) AbortError = normal cancellation; unexpected failures
+        # point at the Download path in plain words.
+        share_block = page.split("── Share audio (M47)")[1].split("function debugExpose")[0]
+        assert 'if (error && error.name === "AbortError") return;' in share_block
+        assert "Couldn't share the audio. Please download the WAV file instead." in page
+        assert "Share failed" not in page
+
+    async def test_only_the_current_completed_session_is_shareable(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (G/H) the click-time snapshot must match the ACTIVE session;
+        # a new Generate clears the blob before any audio exists again,
+        # and both completion paths stamp the owning session id.
+        assert "var blob = completedBlob;" in page
+        assert "var sid = completedSessionId;" in page
+        assert "if (!blob || sid !== activeSessionId)" in page
+        assert page.count("completedBlob = blob;") == 2  # stream + whole-body
+        assert page.count("completedSessionId = session.id;") == 2
+        assert "completedBlob = null;" in page  # newSession supersedes
+
+    async def test_share_never_touches_playback_or_the_network(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (N/Phase 10/19) the share block neither fetches nor plays:
+        # no second audible source, no backend, no re-synthesis.
+        share_block = page.split("── Share audio (M47)")[1].split("function debugExpose")[0]
+        for forbidden in (
+            "fetch(",
+            "apiJSON",
+            "player.",
+            "AudioContext",
+            "createBuffer",
+            "generate",
+            ".play(",
+        ):
+            assert forbidden not in share_block
+
+    async def test_share_is_reachable_and_labelled_for_everyone(
+        self, settings: Settings, db_engine: AsyncEngine
+    ) -> None:
+        page = await self._speech(settings, db_engine)
+        # (O) a real <button>, accessible name, icon PLUS text, and a
+        # polite live region for its feedback.
+        assert 'aria-label="Share audio"' in page
+        assert "📤 Share</button>" in page
+        assert 'id="share-audio-note" role="status"' in page
