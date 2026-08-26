@@ -33,7 +33,6 @@ from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, ROUTE_TRANSCRIBE
 from intelliai_stt_runtime.engines import TranscriptionEngine
 from intelliai_stt_runtime.engines.punctuation import PunctuationRestorer
-from intelliai_stt_runtime.engines.punctuation_en import EnPunctuationRestorer
 from intelliai_stt_runtime.identity import SERVICE_NAME, runtime_metadata
 from intelliai_stt_runtime.pipeline import MediaPipeline, PipelineOutput
 
@@ -81,13 +80,11 @@ async def ready(request: Request) -> JSONResponse:
     # loaded in the lifespan (or startup refused), so a live process
     # reports "ready". Additive key — tolerant readers unaffected.
     punctuation = "ready" if request.app.state.punctuator is not None else "disabled"
-    punctuation_en = "ready" if request.app.state.punctuator_en is not None else "disabled"
     return JSONResponse(
         {
             "status": "degraded" if degraded else "ready",
             "slots": slots,
             "punctuation": punctuation,
-            "punctuation_en": punctuation_en,
         }
     )
 
@@ -183,8 +180,7 @@ def _ingest_and_transcribe(
     payload: bytes,
     request: TranscriptionRequest,
     punctuator: PunctuationRestorer | None,
-    punctuator_en: EnPunctuationRestorer | None,
-) -> tuple[PipelineOutput, TranscriptionResult, float, float | None, float | None]:
+) -> tuple[PipelineOutput, TranscriptionResult, float, float | None]:
     """Stages 1-5 plus handoff, as one blocking unit on a pool slot.
 
     The handoff stage's short-circuit: when VAD found no speech, the
@@ -212,14 +208,7 @@ def _ingest_and_transcribe(
         stage = punctuator.restore_safely(result, request.language)
         result = stage.result
         punctuation_ms = stage.elapsed_ms
-    # The M50 English stage rides the same slot, gated on its own
-    # language list — at most one of the two stages ever applies.
-    punctuation_en_ms: float | None = None
-    if punctuator_en is not None and result.text:
-        stage_en = punctuator_en.restore_safely(result, request.language)
-        result = stage_en.result
-        punctuation_en_ms = stage_en.elapsed_ms
-    return output, result, inference_ms, punctuation_ms, punctuation_en_ms
+    return output, result, inference_ms, punctuation_ms
 
 
 @router.post(ROUTE_TRANSCRIBE)
@@ -242,14 +231,13 @@ async def transcribe(
     pipeline: MediaPipeline = request.app.state.pipeline
     pool: WorkerPool = request.app.state.pool
     punctuator: PunctuationRestorer | None = request.app.state.punctuator
-    punctuator_en: EnPunctuationRestorer | None = request.app.state.punctuator_en
     loaded = manager.lookup(transcription_request.model)
 
     payload = await file.read()
     # Admission happens BEFORE any expensive work: pipeline decode and
     # inference share one bounded slot, so ffmpeg concurrency is capped
     # by the same honest limit as the engines.
-    output, result, inference_ms, punctuation_ms, punctuation_en_ms = await pool.run(
+    output, result, inference_ms, punctuation_ms = await pool.run(
         partial(
             _ingest_and_transcribe,
             pipeline,
@@ -257,15 +245,12 @@ async def transcribe(
             payload,
             transcription_request,
             punctuator,
-            punctuator_en,
         )
     )
 
     stages = {**output.timings_ms, "inference": inference_ms}
     if punctuation_ms is not None:
         stages["punctuation"] = punctuation_ms
-    if punctuation_en_ms is not None:
-        stages["punctuation_en"] = punctuation_en_ms
     envelope = RuntimeResponse[TranscriptionResult](
         output=result,
         model=loaded.artifact,
