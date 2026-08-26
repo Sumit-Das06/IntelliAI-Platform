@@ -1,0 +1,167 @@
+{
+ "reference_status": "DRAFT - awaiting human verification (founder listens)",
+ "reference_words": 214,
+ "systems": {
+  "intelliai_raw": {
+   "wer": 0.0421,
+   "cer": 0.0197,
+   "sub": 5,
+   "ins": 2,
+   "del": 2,
+   "hyp_words": 214,
+   "punctuation": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "ref_marks": 37,
+    "hyp_marks": 0,
+    "matched": 0
+   },
+   "boundary": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "ref_marks": 15,
+    "hyp_marks": 0,
+    "matched": 0
+   },
+   "word_diffs_vs_ref": [
+    {
+     "op": "insert",
+     "ref": "",
+     "hyp": "to",
+     "ref_pos": 5
+    },
+    {
+     "op": "delete",
+     "ref": "i have",
+     "hyp": "",
+     "ref_pos": 72
+    },
+    {
+     "op": "replace",
+     "ref": "added",
+     "hyp": "add",
+     "ref_pos": 122
+    },
+    {
+     "op": "replace",
+     "ref": "used",
+     "hyp": "use",
+     "ref_pos": 126
+    },
+    {
+     "op": "replace",
+     "ref": "added",
+     "hyp": "did",
+     "ref_pos": 143
+    },
+    {
+     "op": "replace",
+     "ref": "chatgpt",
+     "hyp": "chat gpt",
+     "ref_pos": 171
+    },
+    {
+     "op": "replace",
+     "ref": "drafts",
+     "hyp": "droughts",
+     "ref_pos": 192
+    }
+   ]
+  },
+  "sarvam_saaras_v4": {
+   "wer": 0.0,
+   "cer": 0.0,
+   "sub": 0,
+   "ins": 0,
+   "del": 0,
+   "hyp_words": 214,
+   "punctuation": {
+    "precision": 0.871,
+    "recall": 0.7297,
+    "f1": 0.7941,
+    "ref_marks": 37,
+    "hyp_marks": 31,
+    "matched": 27
+   },
+   "boundary": {
+    "precision": 0.8235,
+    "recall": 0.9333,
+    "f1": 0.875,
+    "ref_marks": 15,
+    "hyp_marks": 17,
+    "matched": 14
+   },
+   "word_diffs_vs_ref": []
+  },
+  "intelliai_plus_punct_stage": {
+   "wer": 0.0421,
+   "cer": 0.0197,
+   "sub": 5,
+   "ins": 2,
+   "del": 2,
+   "hyp_words": 214,
+   "punctuation": {
+    "precision": 0.1071,
+    "recall": 0.0811,
+    "f1": 0.0923,
+    "ref_marks": 37,
+    "hyp_marks": 28,
+    "matched": 3
+   },
+   "boundary": {
+    "precision": 0.125,
+    "recall": 0.1333,
+    "f1": 0.129,
+    "ref_marks": 15,
+    "hyp_marks": 16,
+    "matched": 2
+   },
+   "word_diffs_vs_ref": [
+    {
+     "op": "insert",
+     "ref": "",
+     "hyp": "to",
+     "ref_pos": 5
+    },
+    {
+     "op": "delete",
+     "ref": "i have",
+     "hyp": "",
+     "ref_pos": 72
+    },
+    {
+     "op": "replace",
+     "ref": "added",
+     "hyp": "add",
+     "ref_pos": 122
+    },
+    {
+     "op": "replace",
+     "ref": "used",
+     "hyp": "use",
+     "ref_pos": 126
+    },
+    {
+     "op": "replace",
+     "ref": "added",
+     "hyp": "did",
+     "ref_pos": 143
+    },
+    {
+     "op": "replace",
+     "ref": "chatgpt",
+     "hyp": "chat gpt",
+     "ref_pos": 171
+    },
+    {
+     "op": "replace",
+     "ref": "drafts",
+     "hyp": "droughts",
+     "ref_pos": 192
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,51 @@
+{
+ "experiment": "48-stt-sarvam-comparison",
+ "clip": {
+  "name": "boss-audio (WhatsApp Ptt 2026-08-26 19:58)",
+  "sha256": "117cba69b4795fcc4b02f24e03e7993b13082a93ac1cbf8b210a5bddd05af635",
+  "bytes": 247263,
+  "duration_s": 102.1665,
+  "codec": "opus 48k mono",
+  "language": "English (Indian accent)",
+  "storage": "OUTSIDE git per privacy law (session scratchpad + WSL only)",
+  "provenance": "founder-supplied real-world voice note; consent: founder own test audio"
+ },
+ "probes": {
+  "silence-5s": {
+   "text": "",
+   "latency_s": 0.295,
+   "verdict": "clean - no hallucination"
+  },
+  "short-0.5s": {
+   "text": "You",
+   "latency_s": 1.045
+  },
+  "short-1s": {
+   "text": "Thank you.",
+   "latency_s": 1.046,
+   "verdict": "HALLUCINATION (classic short/ambiguous-audio artifact)"
+  },
+  "short-2s": {
+   "text": "Uh...",
+   "latency_s": 1.068
+  }
+ },
+ "intelliai_fresh_run": {
+  "endpoint": "/v1/audio/transcriptions",
+  "model": "intelliai-stt",
+  "language": "en",
+  "contribution": "off",
+  "wall_s": 6.708,
+  "audio_s": 102.1535,
+  "rtf": 0.0657,
+  "date": "2026-08-27"
+ },
+ "sarvam_run": {
+  "source": "founder playground screenshot 2026-08-26",
+  "model": "saaras:v4",
+  "mode": "Batch/Transcribe",
+  "language": "English",
+  "latency": "UNKNOWN (not exposed by playground)",
+  "api_settings": "UNKNOWN beyond visible"
+ }
+}
