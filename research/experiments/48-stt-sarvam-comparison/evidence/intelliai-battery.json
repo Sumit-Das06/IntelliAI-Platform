@@ -1,0 +1,149 @@
+{
+ "date": "2026-08-27",
+ "sarvam_side": {
+  "status": "BLOCKED",
+  "reason": "Sarvam API access not available; nothing fabricated"
+ },
+ "latency_boss_102s_x5": {
+  "walls_s": [
+   8.29,
+   6.258,
+   6.334,
+   6.367,
+   6.531
+  ],
+  "median_s": 6.367,
+  "audio_s": 102.15,
+  "rtf_median": 0.0623
+ },
+ "long_audio": [
+  {
+   "item": "boss-30s",
+   "audio_s": 30.0,
+   "wall_s": 2.2,
+   "hyp_words": 48,
+   "completed": true
+  },
+  {
+   "item": "long-5min",
+   "audio_s": 301.0,
+   "wall_s": 26.87,
+   "hyp_words": 767,
+   "completed": true,
+   "wer": 0.0667,
+   "ref_words": 780,
+   "truncation_check": "PASS"
+  },
+  {
+   "item": "long-9.5min",
+   "audio_s": 572.2,
+   "wall_s": 52.25,
+   "hyp_words": 1462,
+   "completed": true,
+   "wer": 0.0582,
+   "ref_words": 1477,
+   "truncation_check": "PASS"
+  }
+ ],
+ "numbers_names_synthetic_roundtrip": {
+  "note": "synthetic probe: OUR TTS speaks the text, OUR STT hears it - measures the pair, labeled as such",
+  "mean_rt_wer": 0.1085,
+  "rows": [
+   {
+    "id": "m44-name-sumit",
+    "ref": "Sumit will review the deployment checklist tonight.",
+    "hyp": "Sumit will review the deployment checklist tonight.",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-name-priya",
+    "ref": "Priya scheduled the demo for Monday morning.",
+    "hyp": "Priya scheduled the demo for Monday morning.",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-name-rajesh",
+    "ref": "Rajesh approved the invoice an hour ago.",
+    "hyp": "Rajesh approved the invoice an hour ago.",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-brand-intelliai",
+    "ref": "Welcome to IntelliAI support, how can I help you today?",
+    "hyp": "Welcome to IntelliAI Support. How can I help you today?",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-brand-qwikcart",
+    "ref": "Your QwikCart order has been shipped.",
+    "hyp": "Your QWIC card order has been shipped.",
+    "rt_wer": 0.3333
+   },
+   {
+    "id": "m44-brand-openai",
+    "ref": "The article compares OpenAI and NVIDIA earnings.",
+    "hyp": "The article compares open AI and NVIDIA earnings.",
+    "rt_wer": 0.2857
+   },
+   {
+    "id": "m44-tech-kubernetes",
+    "ref": "The Kubernetes cluster restarted the PostgreSQL pod.",
+    "hyp": "The Kubernetes cluster restarted the Posker SQL pod.",
+    "rt_wer": 0.2857
+   },
+   {
+    "id": "m44-tech-fastapi",
+    "ref": "The FastAPI gateway logs every request identifier.",
+    "hyp": "The FastAPI Gateway logs every request identifier.",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-date-long",
+    "ref": "The contract renews on 12 August 2026.",
+    "hyp": "The contract renews on 12 August 2026.",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-date-slash",
+    "ref": "Your appointment is on 08/24/2026.",
+    "hyp": "Your appointment is on 24 August 2026.",
+    "rt_wer": 0.2857
+   },
+   {
+    "id": "m44-currency",
+    "ref": "The subscription costs $4.99 after the 25% discount.",
+    "hyp": "The subscription costs $4.99 after the 25% discount.",
+    "rt_wer": 0.0
+   },
+   {
+    "id": "m44-phone",
+    "ref": "Call us at +1 415 555 0198 for support.",
+    "hyp": "Call us at plus 1-415-555-0198 for support.",
+    "rt_wer": 0.1111
+   }
+  ]
+ },
+ "hinglish_synthetic": {
+  "note": "qualitative + English-token preservation only (frozen EN ruler does not score Devanagari)",
+  "rows": [
+   {
+    "ref": "IntelliAI का नया version आज release हुआ है।",
+    "hyp": "इंटेली एआई का नया वर्शन आज रिलीज हुआ है।",
+    "english_tokens": 3,
+    "english_tokens_kept": 0
+   },
+   {
+    "ref": "मेरा order QwikCart पर confirm हो गया।",
+    "hyp": "मेरा ऑर्डर क्यूबिक कार्ड पर कन्फर्म हो गया।",
+    "english_tokens": 3,
+    "english_tokens_kept": 0
+   },
+   {
+    "ref": "कल सुबह 10 बजे PostgreSQL migration करना है।",
+    "hyp": "कल सुबह दस बजे पोस्ट कर एस क्यू एल माइग्रेशन करना है।",
+    "english_tokens": 2,
+    "english_tokens_kept": 0
+   }
+  ]
+ }
+}

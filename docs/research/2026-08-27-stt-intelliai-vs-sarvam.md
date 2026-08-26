@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | MEASURED (head-to-head n=1 real-world clip + IntelliAI-side probes) · reference transcript DRAFT pending founder listen-through · Sarvam extended battery BLOCKED pending API access |
+| **Status** | MEASURED (IntelliAI side, full battery) · Sarvam quantitative comparison **BLOCKED — CREDENTIALS REQUIRED** (captured playground output used as QUALITATIVE evidence only; no Sarvam WER/CER/latency is claimed) · reference transcript DRAFT pending founder listen-through |
 | **Date** | 2026-08-27 |
 | **Question** | Is IntelliAI's user-visible STT weakness recognition accuracy, latency, punctuation/readability, or something else? |
 | **Answer (preview)** | **B — punctuation/readability is the gap.** The word-recognition delta on the same audio is tiny and inside reference-uncertainty; the punctuation delta is structural: the product ships NO English punctuation stage at all. |
@@ -56,17 +56,29 @@ error (semantics); span 6 is a normalization difference, not an error.
 
 ## 9-12. Scores on the boss clip (vs DRAFT reference, 214 words)
 
+**IntelliAI (MEASURED, fresh API run):**
+
 | System | WER | CER | Punctuation F1 | Boundary F1 |
 |---|---|---|---|---|
 | IntelliAI raw | 0.0421 (9 word-errors) | 0.0197 | **0.000** | **0.000** |
 | IntelliAI + punct probe (EXPERIMENTAL, §15) | 0.0421 (unchanged — word-copy invariant held) | 0.0197 | 0.092 | 0.129 |
-| Sarvam saaras:v4 | 0.000* | 0.000* | 0.794 | 0.875 |
 
-\* Circular against the draft (see §4); true value after adjudication
-will be > 0 if any disputed span goes IntelliAI's way. **Either way the
-word-level delta is at most ~4 percentage points on n=1, while the
-punctuation delta is 0.00 → 0.79 F1 — two different orders of
-magnitude of "gap."**
+**Sarvam (QUALITATIVE ONLY — captured playground text, not an API
+measurement; per the founder's directive no Sarvam WER/CER/latency is
+claimed):** the captured transcript is fully sentence-punctuated
+(periods, commas, question marks, capitalization throughout — a
+text-structure count over the capture shows ~30 marks / ~16 sentence
+boundaries against the draft's punctuation, versus ZERO in IntelliAI's
+raw output), its words agree with IntelliAI's on ~96% of tokens, and
+its visible normalization ("ChatGPT", casing) indicates a readability
+post-stage. Quantitative scoring of Sarvam is **BLOCKED — CREDENTIALS
+REQUIRED** and will run through `m48_harness.py` when access exists.
+
+**What we can already PROVE from the capture alone:** on the same
+audio the two systems heard nearly the same words, one output is
+sentence-punctuated and one has no punctuation at all — and the
+product reason is structural: IntelliAI ships NO English punctuation
+stage. That conclusion does not depend on any Sarvam metric.
 
 ## 13. Readability — UNSCORED
 
@@ -77,9 +89,12 @@ better") is what triggered M48 and matches the punctuation numbers.
 
 ## 14. Latency — MEASURED (IntelliAI) / UNKNOWN (Sarvam)
 
-IntelliAI: 6.71 s whole-response for 102 s audio (RTF 0.066); silence
-probe answers in 0.29 s; ~1 s clips answer in ~1.05 s. Sarvam batch
-latency is not exposed by its playground — **no comparison is claimed.**
+IntelliAI: 5-rep battery on the 102 s clip — walls 6.26-8.29 s,
+**median 6.37 s (RTF 0.062)**, stable; long ladder scales linearly
+(5 min → 26.9 s, 9.5 min → 52.3 s, RTF ~0.09); silence answers in
+0.29 s; ~1 s clips in ~1.05 s. Sarvam latency: **BLOCKED —
+CREDENTIALS REQUIRED** (playground exposes nothing) — no comparison
+is claimed.
 
 ## 15-17. IntelliAI-side probes (Sarvam side BLOCKED pending API key)
 
@@ -104,7 +119,9 @@ production flag is OFF and untouched):
 - Words: byte-identical (the word-copy invariant held) → WER unchanged.
 - Punctuation F1: 0.000 → 0.092; boundary 0.000 → 0.129 — real marks
   appear, but placement on English is poor ("right fit? break the
-  statement?"), far from Sarvam's 0.79/0.88.
+  statement?"), nowhere near the fully-punctuated structure of the
+captured Sarvam text (qualitative comparison only — Sarvam scoring is
+BLOCKED pending credentials).
 
 **Reading:** the gap is punctuation, AND our existing Hindi-scoped v1
 stage does not transfer to English as-is. Closing the gap needs an
@@ -113,24 +130,34 @@ milestone, not a tweak.
 
 ## 18. Results table
 
-| Metric | IntelliAI | Sarvam | Winner | Basis |
+| Metric | IntelliAI (MEASURED) | Sarvam | Verdict | Basis |
 |---|---|---|---|---|
-| WER (boss clip) | 0.042 | 0.000* | INCONCLUSIVE (n=1, draft ref, ≤4 pt delta) | boss-scores.json |
-| CER | 0.020 | 0.000* | INCONCLUSIVE (same) | same |
-| Punctuation F1 | 0.000 | 0.794 | **Sarvam, decisively** | same |
-| Boundary F1 | 0.000 | 0.875 | **Sarvam, decisively** | same |
-| Latency | 6.7 s / 102 s (RTF 0.066) | UNKNOWN | NOT COMPARABLE | manifest |
-| Silence hallucination | clean | UNTESTED | — | probes |
-| Short-speech | 1 s clip fabricates "Thank you." | UNTESTED | — | probes |
-| Long audio / Hinglish / numbers | standing frozen coverage | BLOCKED (no API) | — | ledger |
-| Raw-transcript fidelity | verbatim incl. fillers/repeats | normalizes ("ChatGPT", drops a repeat?) | depends on product goal | §4 spans 2,6 |
+| WER (boss clip) | 0.042 | **BLOCKED — CREDENTIALS REQUIRED** | word agreement between outputs ~96% (qualitative) | boss-scores.json |
+| CER | 0.020 | BLOCKED | — | same |
+| Punctuation presence | F1 0.000 (no marks at all) | qualitative: fully punctuated capture | **readability gap is real and structural** | captures |
+| Latency | 6.7 s / 102 s (RTF 0.066), ×5 reps in battery | BLOCKED | no comparison claimed | manifest, battery |
+| Long audio (30 s → 9.5 min) | 5 min WER 0.067 · 9.5 min WER 0.058 · zero truncation (PASS both) | BLOCKED | — | battery |
+| Short-speech | 1 s clip fabricates "Thank you." | BLOCKED | — | probes |
+| Silence | clean ("") | BLOCKED | — | probes |
+| Numbers/names (synthetic round-trip) | mean RT-WER 0.108 — names/IntelliAI/FastAPI/currency/date perfect; QwikCart 0.33, OpenAI 0.29, Kubernetes 0.29, slash-date 0.29 slip | BLOCKED | — | battery |
+| Hinglish (synthetic) | hi route TRANSLITERATES English tokens to Devanagari (0/8 kept in Latin; "QwikCart"→"क्यूबिक कार्ड" mangled) — script policy + brand handling recorded as product questions | BLOCKED | — | battery |
+| Raw-transcript fidelity | verbatim incl. fillers/repeats | qualitative: normalizes ("ChatGPT", casing) | depends on product goal | §4 spans 2,6 |
+
+**Blocked-until-credentials list (exact reruns, all through
+`m48_harness.py` + the frozen clip manifest):** Sarvam WER/CER on the
+boss clip and the long ladder, Sarvam latency, Sarvam
+silence/short-speech behavior, Sarvam numbers/names and Hinglish
+handling. The harness's Sarvam adapter refuses with
+`BLOCKED - CREDENTIALS REQUIRED` today and takes a key + endpoint when
+legitimate access exists — nothing else changes.
 
 ## 19-20. Product interpretation & recommendation
 
 1. Word recognition worse? **Not materially provable** — ≤9 words on
    214 either direction; one clear IntelliAI miss ("droughts").
 2. Punctuation worse? **Yes, categorically** — English output has NO
-   punctuation stage; Sarvam restores sentences at F1 ~0.8.
+   punctuation stage; the captured Sarvam output is fully
+   sentence-punctuated (qualitative).
 3. Slower? **No evidence** — IntelliAI RTF 0.066 is excellent; Sarvam
    unknown.
 4. Sarvam post-processing? Visible normalization ("ChatGPT",

@@ -29,8 +29,31 @@ transcripts are recorded.
 
 ## Headline
 
-WER delta ≤ ~4 pts on n=1 (inside reference uncertainty); punctuation
-F1 0.000 vs 0.794 — **the gap is readability, not recognition**. Our
-own 47-lang model with an English map reaches only 0.092 F1 — v1's
-Hindi scope does not transfer. Recommendation: **M49 = English
-punctuation/readability stage** under the M29/M30 gate discipline.
+IntelliAI MEASURED: boss-clip WER 0.042 vs the DRAFT reference,
+punctuation F1 0.000 (no English punctuation stage exists). Sarvam
+QUALITATIVE (captured output only): near-identical words, fully
+sentence-punctuated — **the gap is readability, not recognition**, and
+that conclusion needs no Sarvam metric. Our own 47-lang model with an
+English map reaches only 0.092 F1 — v1's Hindi scope does not
+transfer. Recommendation: **M49 = English punctuation/readability
+stage** under the M29/M30 gate discipline.
+
+## Founder directive update (2026-08-27)
+
+Sarvam API credentials are NOT available. Accordingly: the captured
+playground output is QUALITATIVE evidence only, no Sarvam
+WER/CER/latency is claimed anywhere, and every Sarvam-side measurement
+is classified **BLOCKED - CREDENTIALS REQUIRED**. `m48_harness.py` is
+the reproducible plug-in runner: the IntelliAI adapter works today,
+the Sarvam adapter refuses loudly until a legitimate key exists, and
+the same clip manifest reruns both when it does.
+
+## IntelliAI-side battery (evidence/intelliai-battery.json)
+
+- Latency ×5 on the 102 s clip: median 6.37 s (RTF 0.062), stable.
+- Long ladder: 5 min WER 0.067, 9.5 min WER 0.058, zero truncation.
+- Numbers/names synthetic round-trip: mean RT-WER 0.108 (names clean;
+  QwikCart/OpenAI/Kubernetes/slash-date slip).
+- Hinglish (hi route): English tokens come back TRANSLITERATED to
+  Devanagari (0/8 Latin kept; "QwikCart" mangled) - recorded as a
+  product/script-policy question, not scored as WER.
