@@ -1,0 +1,728 @@
+{
+ "system": "no-op",
+ "dataset_sha256": "c7343b28e8a8f79bcae4e42c3f5c73a11caac5d0328fc34ddaf8006a9f6a5c08",
+ "invariant_failures": 0,
+ "wall_s": 0.01,
+ "predictions": [
+  {
+   "id": "lj-sent-LJ004-0191",
+   "input": "and in comparative comfort with a bed and proper bedding",
+   "predicted_text": "and in comparative comfort with a bed and proper bedding",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ017-0088",
+   "input": "Quantities of antimony were found in the body after death",
+   "predicted_text": "Quantities of antimony were found in the body after death",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ019-0345",
+   "input": "The Act of eighteen sixty five also encouraged and empowered the local authorities to alter enlarge or rebuild their prisons",
+   "predicted_text": "The Act of eighteen sixty five also encouraged and empowered the local authorities to alter enlarge or rebuild their prisons",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ006-0268",
+   "input": "Women saw men if they merely pretended to be wives even boys were visited by their sweethearts",
+   "predicted_text": "Women saw men if they merely pretended to be wives even boys were visited by their sweethearts",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ016-0227",
+   "input": "whose business it was to provide the rope and do the pinioning and who was paid a fee of five shillings",
+   "predicted_text": "whose business it was to provide the rope and do the pinioning and who was paid a fee of five shillings",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ041-0098",
+   "input": "All the Marine Corps did was to teach you to kill and after you got out of the Marines you might be good gangsters end quote",
+   "predicted_text": "All the Marine Corps did was to teach you to kill and after you got out of the Marines you might be good gangsters end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ030-0010",
+   "input": "spoke at the Rice University Stadium and attended a dinner in honor of U S Representative Albert Thomas",
+   "predicted_text": "spoke at the Rice University Stadium and attended a dinner in honor of U S Representative Albert Thomas",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ028-0123",
+   "input": "I dug its moat to the water level",
+   "predicted_text": "I dug its moat to the water level",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ045-0110",
+   "input": "Ruth Paine and Marina Oswald decided to call Oswald at the place where he was living unbeknownst to them under the name of O H Lee",
+   "predicted_text": "Ruth Paine and Marina Oswald decided to call Oswald at the place where he was living unbeknownst to them under the name of O H Lee",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ003-0270",
+   "input": "Owing to the facility of intercourse between inside and outside many crimes were doubtless hatched in Newgate",
+   "predicted_text": "Owing to the facility of intercourse between inside and outside many crimes were doubtless hatched in Newgate",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ037-0116",
+   "input": "Guinyard and Callaway viewed the same lineup of four men from which Mrs Markham had earlier made her identification of Lee Harvey Oswald",
+   "predicted_text": "Guinyard and Callaway viewed the same lineup of four men from which Mrs Markham had earlier made her identification of Lee Harvey Oswald",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ003-0201",
+   "input": "unlimited drink was not denied them provided it was obtained in regulated quantities at one time",
+   "predicted_text": "unlimited drink was not denied them provided it was obtained in regulated quantities at one time",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ042-0006",
+   "input": "he almost immediately left for the Soviet Union where he attempted to renounce his citizenship",
+   "predicted_text": "he almost immediately left for the Soviet Union where he attempted to renounce his citizenship",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ040-0114",
+   "input": "Relations soon became strained however so in late September Lee and his mother moved to their own apartment in the Bronx",
+   "predicted_text": "Relations soon became strained however so in late September Lee and his mother moved to their own apartment in the Bronx",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ014-0257",
+   "input": "was a mass of blots and erasures should not have created suspicion of foul play either at the bank or at the company s board",
+   "predicted_text": "was a mass of blots and erasures should not have created suspicion of foul play either at the bank or at the company s board",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ009-0125",
+   "input": "could any one not disgusted with the religious ceremonials of Newgate witness this scene without emotion",
+   "predicted_text": "could any one not disgusted with the religious ceremonials of Newgate witness this scene without emotion",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ023-0026",
+   "input": "Individual or local or state effort alone cannot protect us in nineteen thirty seven any better than ten years ago",
+   "predicted_text": "Individual or local or state effort alone cannot protect us in nineteen thirty seven any better than ten years ago",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ040-0078",
+   "input": "Lee Oswald remained with his mother and Ekdahl to whom he became quite attached",
+   "predicted_text": "Lee Oswald remained with his mother and Ekdahl to whom he became quite attached",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ003-0208",
+   "input": "a number of amateurs were ever ready to give their gratuitous ministrations to the condemned",
+   "predicted_text": "a number of amateurs were ever ready to give their gratuitous ministrations to the condemned",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ034-0118",
+   "input": "that the description of the suspect in the Tippit shooting was similar to the description which had been given by Brennan in connection with the assassination",
+   "predicted_text": "that the description of the suspect in the Tippit shooting was similar to the description which had been given by Brennan in connection with the assassination",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ029-0090",
+   "input": "were deployed in and around the Trade Mart",
+   "predicted_text": "were deployed in and around the Trade Mart",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ028-0037",
+   "input": "It was about twenty two fifty B C when the great Hammurabi made it his capital that it became the chief city of Babylonia",
+   "predicted_text": "It was about twenty two fifty B C when the great Hammurabi made it his capital that it became the chief city of Babylonia",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ012-0108",
+   "input": "There was a hunt for the two well known house breakers who were eventually heard of at a lodging in Kennington",
+   "predicted_text": "There was a hunt for the two well known house breakers who were eventually heard of at a lodging in Kennington",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ048-0139",
+   "input": "The Service had twenty eight agents participating in the Dallas visit",
+   "predicted_text": "The Service had twenty eight agents participating in the Dallas visit",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ050-0238",
+   "input": "which represents a departure from its prior practice",
+   "predicted_text": "which represents a departure from its prior practice",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ032-0208",
+   "input": "He found quote one notch in the stock at this point that appears very faintly in the photograph end quote",
+   "predicted_text": "He found quote one notch in the stock at this point that appears very faintly in the photograph end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ015-0042",
+   "input": "Then it was that instead of merely pledging securities the bank sold them outright and thus passed the Rubicon of fraud",
+   "predicted_text": "Then it was that instead of merely pledging securities the bank sold them outright and thus passed the Rubicon of fraud",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ031-0031",
+   "input": "Despite his serious wounds Governor Connally tried to get out of the way so that medical help could reach the President",
+   "predicted_text": "Despite his serious wounds Governor Connally tried to get out of the way so that medical help could reach the President",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ018-0171",
+   "input": "Mother plates for engraving the body of the notes lay about and other plates for various processes",
+   "predicted_text": "Mother plates for engraving the body of the notes lay about and other plates for various processes",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ019-0178",
+   "input": "and abandoned because of the expense As to the entire reconstruction of Newgate nothing had been done as yet",
+   "predicted_text": "and abandoned because of the expense As to the entire reconstruction of Newgate nothing had been done as yet",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ003-0002",
+   "input": "The squalor and uncleanness of the debtors side was intensified by constant overcrowding",
+   "predicted_text": "The squalor and uncleanness of the debtors side was intensified by constant overcrowding",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ013-0190",
+   "input": "and at last his lordship s watch was found secreted under the leads of the sink",
+   "predicted_text": "and at last his lordship s watch was found secreted under the leads of the sink",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ039-0232",
+   "input": "the assassin was then required to hit the target one more time within a space of from four point eight to five point six seconds",
+   "predicted_text": "the assassin was then required to hit the target one more time within a space of from four point eight to five point six seconds",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ008-0176",
+   "input": "then the mob began to thin and the streets were cleared by the city marshals and a number of constables",
+   "predicted_text": "then the mob began to thin and the streets were cleared by the city marshals and a number of constables",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ006-0055",
+   "input": "and when the population fell they shut up one half the jail and crowded up the other",
+   "predicted_text": "and when the population fell they shut up one half the jail and crowded up the other",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ020-0066",
+   "input": "One quart and a cup of flour sifted",
+   "predicted_text": "One quart and a cup of flour sifted",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ040-0024",
+   "input": "Perhaps the most outstanding conclusion of such a study is that Oswald was profoundly alienated from the world in which he lived",
+   "predicted_text": "Perhaps the most outstanding conclusion of such a study is that Oswald was profoundly alienated from the world in which he lived",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ018-0233",
+   "input": "To this fraudulent instrument he appended forged signatures and in due course obtained probate",
+   "predicted_text": "To this fraudulent instrument he appended forged signatures and in due course obtained probate",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ016-0266",
+   "input": "No notion that they were assisting at a vindication of the law filled the minds of those present with dread",
+   "predicted_text": "No notion that they were assisting at a vindication of the law filled the minds of those present with dread",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ042-0226",
+   "input": "and horror at the misguided line of reasoning of the United States Government end quote",
+   "predicted_text": "and horror at the misguided line of reasoning of the United States Government end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ017-0276",
+   "input": "Then he wanted to know when the policemen would arrive and was told none would come",
+   "predicted_text": "Then he wanted to know when the policemen would arrive and was told none would come",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ014-0156",
+   "input": "and through all ate heartily at every meal slept soundly at nights and talked with cheerfulness on almost any subject",
+   "predicted_text": "and through all ate heartily at every meal slept soundly at nights and talked with cheerfulness on almost any subject",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ036-0024",
+   "input": "on a trip which passed a check point at St Paul and Elm Streets at twelve thirty six p m November twenty two nineteen sixty three",
+   "predicted_text": "on a trip which passed a check point at St Paul and Elm Streets at twelve thirty six p m November twenty two nineteen sixty three",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ019-0157",
+   "input": "sharp tests which generally broke down the fidelity of the inmates of the ward to one another",
+   "predicted_text": "sharp tests which generally broke down the fidelity of the inmates of the ward to one another",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ033-0107",
+   "input": "No other employee has been found who saw Oswald enter that morning",
+   "predicted_text": "No other employee has been found who saw Oswald enter that morning",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ033-0190",
+   "input": "The Depository shipping department was on the first floor to which Oswald had access in the normal performance of his duties filling orders",
+   "predicted_text": "The Depository shipping department was on the first floor to which Oswald had access in the normal performance of his duties filling orders",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ003-0315",
+   "input": "All three governor chaplain and surgeon should keep journals which should be inspected periodically by the visiting magistrates",
+   "predicted_text": "All three governor chaplain and surgeon should keep journals which should be inspected periodically by the visiting magistrates",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ036-0109",
+   "input": "he told them what he thought about them They knew what they were doing and they were trying to railroad him and he wanted his lawyer",
+   "predicted_text": "he told them what he thought about them They knew what they were doing and they were trying to railroad him and he wanted his lawyer",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ019-0340",
+   "input": "The latter was rendered nearly impossible by the penalties imposed on persons bringing spirituous liquors into the jail",
+   "predicted_text": "The latter was rendered nearly impossible by the penalties imposed on persons bringing spirituous liquors into the jail",
+   "invariant": true
+  },
+  {
+   "id": "lj-sent-LJ037-0223",
+   "input": "Shortly after Tippit was slain policemen found a light colored zipper jacket along the route taken by the killer as he attempted to escape",
+   "predicted_text": "Shortly after Tippit was slain policemen found a light colored zipper jacket along the route taken by the killer as he attempted to escape",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ039-0132",
+   "input": "and as compared to the average male of his age throughout the civilian throughout the United States that he is an excellent shot end quote",
+   "predicted_text": "and as compared to the average male of his age throughout the civilian throughout the United States that he is an excellent shot end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ043-0030",
+   "input": "If somebody did that to me a lousy trick like that to take my wife away and all the furniture I would be mad as hell too",
+   "predicted_text": "If somebody did that to me a lousy trick like that to take my wife away and all the furniture I would be mad as hell too",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ014-0007",
+   "input": "He entered into conversation with the policemen and learnt as it seemed for the first time what had happened",
+   "predicted_text": "He entered into conversation with the policemen and learnt as it seemed for the first time what had happened",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ045-0075",
+   "input": "She was quote sorry that I had not married him the Russian boyfriend instead that it would have been much easier for me end quote",
+   "predicted_text": "She was quote sorry that I had not married him the Russian boyfriend instead that it would have been much easier for me end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ005-0291",
+   "input": "In some large towns as at Berwick on Tweed Southampton and Southwark they the prisons are in a very discreditable condition",
+   "predicted_text": "In some large towns as at Berwick on Tweed Southampton and Southwark they the prisons are in a very discreditable condition",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ040-0210",
+   "input": "It may also be significant that as reported by John Pic quote Lee slept with my mother until I joined the service in nineteen fifty",
+   "predicted_text": "It may also be significant that as reported by John Pic quote Lee slept with my mother until I joined the service in nineteen fifty",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ016-0090",
+   "input": "Taking advantage of being unobserved he got out through the roof on to the leads and traveled along them towards Number one Newgate Street",
+   "predicted_text": "Taking advantage of being unobserved he got out through the roof on to the leads and traveled along them towards Number one Newgate Street",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ039-0070",
+   "input": "testified that the shots which struck the President in the neck and in the head were quote not particularly difficult end quote",
+   "predicted_text": "testified that the shots which struck the President in the neck and in the head were quote not particularly difficult end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ042-0110",
+   "input": "stated that Mrs Oswald told her everybody in Russia quote hated him end quote",
+   "predicted_text": "stated that Mrs Oswald told her everybody in Russia quote hated him end quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-comma-LJ038-0202",
+   "input": "Prior to the Walker shooting on April ten Oswald had been attending typing classes on Monday Tuesday and Thursday evenings",
+   "predicted_text": "Prior to the Walker shooting on April ten Oswald had been attending typing classes on Monday Tuesday and Thursday evenings",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ033-0097",
+   "input": "Frazier parked the car in the company parking lot about 2 blocks north of the Depository Building",
+   "predicted_text": "Frazier parked the car in the company parking lot about 2 blocks north of the Depository Building",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ017-0244",
+   "input": "The murders were perpetrated on the 10th September and the ship continued her voyage for nearly three weeks meeting and speaking one ship only",
+   "predicted_text": "The murders were perpetrated on the 10th September and the ship continued her voyage for nearly three weeks meeting and speaking one ship only",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ038-0194",
+   "input": "7 Certain of my documents are in the small blue valise",
+   "predicted_text": "7 Certain of my documents are in the small blue valise",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ029-0171",
+   "input": "The President s intention to pay a visit to Texas in the fall of 1963 aroused interest throughout the State",
+   "predicted_text": "The President s intention to pay a visit to Texas in the fall of 1963 aroused interest throughout the State",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ033-0184",
+   "input": "had different characteristics from both the actual bag and the sample taken on November 22",
+   "predicted_text": "had different characteristics from both the actual bag and the sample taken on November 22",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ031-0036",
+   "input": "but then Kellerman Greer and Lawson lifted the President onto a stretcher and pushed it into trauma room 1",
+   "predicted_text": "but then Kellerman Greer and Lawson lifted the President onto a stretcher and pushed it into trauma room 1",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ044-0002",
+   "input": "The Warren Commission Report By The President s Commission on the Assassination of President Kennedy Chapter 7",
+   "predicted_text": "The Warren Commission Report By The President s Commission on the Assassination of President Kennedy Chapter 7",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ037-0094",
+   "input": "He looked west on 10th and saw a man running to the west and a policeman falling to the ground",
+   "predicted_text": "He looked west on 10th and saw a man running to the west and a policeman falling to the ground",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ045-0182",
+   "input": "Instead of returning to Irving on November 15 for his customary weekend visit he remained in Dallas at his wife s suggestion because of the birthday party",
+   "predicted_text": "Instead of returning to Irving on November 15 for his customary weekend visit he remained in Dallas at his wife s suggestion because of the birthday party",
+   "invariant": true
+  },
+  {
+   "id": "lj-num-LJ038-0202",
+   "input": "Prior to the Walker shooting on April 10 Oswald had been attending typing classes on Monday Tuesday and Thursday evenings",
+   "predicted_text": "Prior to the Walker shooting on April 10 Oswald had been attending typing classes on Monday Tuesday and Thursday evenings",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0001+5",
+   "input": "Printing in the only sense with which we are at present concerned differs from most if not from all the arts and crafts represented in the Exhibition in being comparatively modern For although the Chinese took impressions from wood blocks engraved in relief for centuries before the woodcutters of the Netherlands by a similar process produced the block books which were the immediate predecessors of the true printed book the invention of movable metal letters in the middle of the fifteenth century may justly be considered as the invention of the art of printing",
+   "predicted_text": "Printing in the only sense with which we are at present concerned differs from most if not from all the arts and crafts represented in the Exhibition in being comparatively modern For although the Chinese took impressions from wood blocks engraved in relief for centuries before the woodcutters of the Netherlands by a similar process produced the block books which were the immediate predecessors of the true printed book the invention of movable metal letters in the middle of the fifteenth century may justly be considered as the invention of the art of printing",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0015+5",
+   "input": "the forms of printed letters should be beautiful and that their arrangement on the page should be reasonable and a help to the shapeliness of the letters themselves The Middle Ages brought calligraphy to perfection and it was natural therefore that the forms of printed letters should follow more or less closely those of the written character and they followed them very closely The first books were printed in black letter i e the letter which was a Gothic development of the ancient Roman character and which developed more completely and satisfactorily on the side of the lower case than the capital letters",
+   "predicted_text": "the forms of printed letters should be beautiful and that their arrangement on the page should be reasonable and a help to the shapeliness of the letters themselves The Middle Ages brought calligraphy to perfection and it was natural therefore that the forms of printed letters should follow more or less closely those of the written character and they followed them very closely The first books were printed in black letter i e the letter which was a Gothic development of the ancient Roman character and which developed more completely and satisfactorily on the side of the lower case than the capital letters",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0029+5",
+   "input": "But though on the whole except in Italy Gothic letter was most often used a very few years saw the birth of Roman character not only in Italy but in Germany and France In fourteen sixty five Sweynheim and Pannartz began printing in the monastery of Subiaco near Rome and used an exceedingly beautiful type which is indeed to look at a transition between Gothic and Roman but which must certainly have come from the study of the twelfth or even the eleventh century MSS",
+   "predicted_text": "But though on the whole except in Italy Gothic letter was most often used a very few years saw the birth of Roman character not only in Italy but in Germany and France In fourteen sixty five Sweynheim and Pannartz began printing in the monastery of Subiaco near Rome and used an exceedingly beautiful type which is indeed to look at a transition between Gothic and Roman but which must certainly have come from the study of the twelfth or even the eleventh century MSS",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0047+3",
+   "input": "Of Jenson it must be said that he carried the development of Roman type as far as it can go his letter is admirably clear and regular but at least as beautiful as any other Roman type After his death in the fourteen eighties or at least by fourteen ninety printing in Venice had declined very much",
+   "predicted_text": "Of Jenson it must be said that he carried the development of Roman type as far as it can go his letter is admirably clear and regular but at least as beautiful as any other Roman type After his death in the fourteen eighties or at least by fourteen ninety printing in Venice had declined very much",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0063+5",
+   "input": "which was generally more formally Gothic than the printing of the German workmen many of whose types indeed like that of the Subiaco works are of a transitional character This was notably the case with the early works printed at Ulm and in a somewhat lesser degree at Augsburg In fact Gunther Zeiner s first type afterwards used by Schussler is remarkably like the type of the before mentioned Subiaco books In the Low Countries and Cologne which were very fertile of printed books Gothic was the favorite",
+   "predicted_text": "which was generally more formally Gothic than the printing of the German workmen many of whose types indeed like that of the Subiaco works are of a transitional character This was notably the case with the early works printed at Ulm and in a somewhat lesser degree at Augsburg In fact Gunther Zeiner s first type afterwards used by Schussler is remarkably like the type of the before mentioned Subiaco books In the Low Countries and Cologne which were very fertile of printed books Gothic was the favorite",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0081+4",
+   "input": "type cast from his matrices is still in everyday use In spite however of his praiseworthy efforts printing had still one last degradation to undergo The seventeenth century founts were bad rather negatively than positively But for the beauty of the earlier work they might have seemed tolerable",
+   "predicted_text": "type cast from his matrices is still in everyday use In spite however of his praiseworthy efforts printing had still one last degradation to undergo The seventeenth century founts were bad rather negatively than positively But for the beauty of the earlier work they might have seemed tolerable",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0094+3",
+   "input": "were induced to cut punches for a series of old style letters These and similar founts cast by the above firm and others have now come into general use and are obviously a great improvement on the ordinary modern style in use in England which is in fact the Bodoni type",
+   "predicted_text": "were induced to cut punches for a series of old style letters These and similar founts cast by the above firm and others have now come into general use and are obviously a great improvement on the ordinary modern style in use in England which is in fact the Bodoni type",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0110+4",
+   "input": "Even the Caslon type when enlarged shows great shortcomings in this respect the ends of many of the letters such as the t and e are hooked up in a vulgar and meaningless way instead of ending in the sharp and clear stroke of Jenson s letters there is a grossness in the upper finishings of letters like the c the a and so on",
+   "predicted_text": "Even the Caslon type when enlarged shows great shortcomings in this respect the ends of many of the letters such as the t and e are hooked up in a vulgar and meaningless way instead of ending in the sharp and clear stroke of Jenson s letters there is a grossness in the upper finishings of letters like the c the a and so on",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0123+4",
+   "input": "this is awkward if you have to read Bradshaw s Guide in a hurry One of the differences between the fine type and the utilitarian must probably be put down to a misapprehension of a commercial necessity this is the narrowing of the modern letters Most of Jenson s letters are designed within a square",
+   "predicted_text": "this is awkward if you have to read Bradshaw s Guide in a hurry One of the differences between the fine type and the utilitarian must probably be put down to a misapprehension of a commercial necessity this is the narrowing of the modern letters Most of Jenson s letters are designed within a square",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0140+5",
+   "input": "the desirable thing being the breaking of the line as in bonding masonry or brickwork The general solidity of a page is much to be sought for modern printers generally overdo the whites in the spacing a defect probably forced on them by the characterless quality of the letters For where these are boldly and carefully designed and each letter is thoroughly individual in form the words may be set much closer together without loss of clearness",
+   "predicted_text": "the desirable thing being the breaking of the line as in bonding masonry or brickwork The general solidity of a page is much to be sought for modern printers generally overdo the whites in the spacing a defect probably forced on them by the characterless quality of the letters For where these are boldly and carefully designed and each letter is thoroughly individual in form the words may be set much closer together without loss of clearness",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0154+3",
+   "input": "the result as measured by the eye being that the lower margin is less than the top one and that the whole opening has an upside down look vertically and that laterally the page looks as if it were being driven off the paper The paper on which the printing is to be done is a necessary part of our subject",
+   "predicted_text": "the result as measured by the eye being that the lower margin is less than the top one and that the whole opening has an upside down look vertically and that laterally the page looks as if it were being driven off the paper The paper on which the printing is to be done is a necessary part of our subject",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0166+3",
+   "input": "is the habit that publishers have of eking out a thin volume by printing it on thick paper almost of the substance of cardboard a device which deceives nobody and makes a book very unpleasant to read On the whole a small book should be printed on paper which is as thin as may be without being transparent",
+   "predicted_text": "is the habit that publishers have of eking out a thin volume by printing it on thick paper almost of the substance of cardboard a device which deceives nobody and makes a book very unpleasant to read On the whole a small book should be printed on paper which is as thin as may be without being transparent",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0174+3",
+   "input": "should be a part of the whole scheme of the book Simple as this proposition is it is necessary to be stated because the modern practice is to disregard the relation between the printing and the ornament altogether",
+   "predicted_text": "should be a part of the whole scheme of the book Simple as this proposition is it is necessary to be stated because the modern practice is to disregard the relation between the printing and the ornament altogether",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ001-0182+3",
+   "input": "the books so ornamented are amongst the most delightful works of art that have ever been produced Therefore granted well designed type due spacing of the lines and words and proper position of the page on the paper all books might be at least comely and well looking and if to these good qualities were added really beautiful ornament and pictures",
+   "predicted_text": "the books so ornamented are amongst the most delightful works of art that have ever been produced Therefore granted well designed type due spacing of the lines and words and proper position of the page on the paper all books might be at least comely and well looking and if to these good qualities were added really beautiful ornament and pictures",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ002-0012+3",
+   "input": "After that they fell as steadily till eighteen oh eight the lowest point was touched of one hundred ninety seven debtors and one hundred eighty two felons or three hundred seventy nine in all The numbers soon increased however and by eighteen eleven had again risen to six hundred twenty nine and Mr Neild was told that there had been at one time",
+   "predicted_text": "After that they fell as steadily till eighteen oh eight the lowest point was touched of one hundred ninety seven debtors and one hundred eighty two felons or three hundred seventy nine in all The numbers soon increased however and by eighteen eleven had again risen to six hundred twenty nine and Mr Neild was told that there had been at one time",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ002-0028+4",
+   "input": "In order to realize the evils entailed by incarceration in Newgate in these days it is necessary to give some account of its interior as it was occupied and appropriated in eighteen ten Full details of the arrangements are to be found in Mr Neild s State of Prisons in England Scotland and Wales published in eighteen twelve The jail at that date was divided into eight separate and more or less distinct departments each of which had its own wards and yard",
+   "predicted_text": "In order to realize the evils entailed by incarceration in Newgate in these days it is necessary to give some account of its interior as it was occupied and appropriated in eighteen ten Full details of the arrangements are to be found in Mr Neild s State of Prisons in England Scotland and Wales published in eighteen twelve The jail at that date was divided into eight separate and more or less distinct departments each of which had its own wards and yard",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ002-0041+4",
+   "input": "Two other wards were appropriated to the master s side debtors they were each twenty three feet by fourteen and a half and supposed to accommodate twenty persons The eight remaining wards were for the common side debtors long narrow rooms one thirty six feet six twenty three feet and the eighth eighteen the whole about fifteen feet wide",
+   "predicted_text": "Two other wards were appropriated to the master s side debtors they were each twenty three feet by fourteen and a half and supposed to accommodate twenty persons The eight remaining wards were for the common side debtors long narrow rooms one thirty six feet six twenty three feet and the eighth eighteen the whole about fifteen feet wide",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ002-0054+5",
+   "input": "those who were the oldest offenders sentenced to transportation and who had narrowly escaped the penalty of death This arrangement was however modified after eighteen eleven and the chapel yard was allotted to misdemeanants and prisoners awaiting trial The wards in this part were five in number all in dimensions twenty feet by fifteen with a sixth ward fifteen feet square These wards were all fitted with barrack beds but no bedding was supplied The chapel yard led to the chapel and on the staircase were two rooms frequently set apart for the king s witnesses",
+   "predicted_text": "those who were the oldest offenders sentenced to transportation and who had narrowly escaped the penalty of death This arrangement was however modified after eighteen eleven and the chapel yard was allotted to misdemeanants and prisoners awaiting trial The wards in this part were five in number all in dimensions twenty feet by fifteen with a sixth ward fifteen feet square These wards were all fitted with barrack beds but no bedding was supplied The chapel yard led to the chapel and on the staircase were two rooms frequently set apart for the king s witnesses",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ002-0072+4",
+   "input": "The inmates were privileged either by antecedents or the fortunate possession of sufficient funds to pay the charges of the place Neild takes it for granted that the former rather than the latter prevailed in the selection and tells us that in the state side quote such prisoners were safely associated whose manners and conduct evince a more liberal style of education and who are therefore lodged apart from all other districts of the jail End quote",
+   "predicted_text": "The inmates were privileged either by antecedents or the fortunate possession of sufficient funds to pay the charges of the place Neild takes it for granted that the former rather than the latter prevailed in the selection and tells us that in the state side quote such prisoners were safely associated whose manners and conduct evince a more liberal style of education and who are therefore lodged apart from all other districts of the jail End quote",
+   "invariant": true
+  },
+  {
+   "id": "lj-para-LJ002-0085+5",
+   "input": "Security was provided for in these condemned cells by lining the substantial stone walls with planks studded with broad headed nails they were lighted by a double grated window two feet nine inches by fourteen inches and in the doors which were four inches thick a circular aperture had been let in to give ventilation and secure a free current of air In each cell there was a barrack bedstead on the floor without bedding eight The female felons were deprived of part of the space which the architect had intended for them",
+   "predicted_text": "Security was provided for in these condemned cells by lining the substantial stone walls with planks studded with broad headed nails they were lighted by a double grated window two feet nine inches by fourteen inches and in the doors which were four inches thick a circular aperture had been let in to give ventilation and secure a free current of air In each cell there was a barrack bedstead on the floor without bedding eight The female felons were deprived of part of the space which the architect had intended for them",
+   "invariant": true
+  },
+  {
+   "id": "probe-q-00",
+   "input": "Hello my name is Sumit How are you",
+   "predicted_text": "Hello my name is Sumit How are you",
+   "invariant": true
+  },
+  {
+   "id": "probe-q-01",
+   "input": "Can you send the report today",
+   "predicted_text": "Can you send the report today",
+   "invariant": true
+  },
+  {
+   "id": "probe-q-02",
+   "input": "Do you want tea or coffee",
+   "predicted_text": "Do you want tea or coffee",
+   "invariant": true
+  },
+  {
+   "id": "probe-q-03",
+   "input": "Where did you keep the invoice",
+   "predicted_text": "Where did you keep the invoice",
+   "invariant": true
+  },
+  {
+   "id": "probe-q-04",
+   "input": "Is the meeting still on for Friday",
+   "predicted_text": "Is the meeting still on for Friday",
+   "invariant": true
+  },
+  {
+   "id": "probe-e-05",
+   "input": "Wow that was amazing",
+   "predicted_text": "Wow that was amazing",
+   "invariant": true
+  },
+  {
+   "id": "probe-e-06",
+   "input": "Stop that hurts",
+   "predicted_text": "Stop that hurts",
+   "invariant": true
+  },
+  {
+   "id": "probe-e-07",
+   "input": "What a fantastic result that was",
+   "predicted_text": "What a fantastic result that was",
+   "invariant": true
+  },
+  {
+   "id": "probe-l-08",
+   "input": "We need three things patience funding and time",
+   "predicted_text": "We need three things patience funding and time",
+   "invariant": true
+  },
+  {
+   "id": "probe-l-09",
+   "input": "The kit includes a cable a charger a manual and a case",
+   "predicted_text": "The kit includes a cable a charger a manual and a case",
+   "invariant": true
+  },
+  {
+   "id": "probe-l-10",
+   "input": "Bring pens paper and a laptop to the workshop",
+   "predicted_text": "Bring pens paper and a laptop to the workshop",
+   "invariant": true
+  },
+  {
+   "id": "probe-qt-11",
+   "input": "He said I will call you tomorrow",
+   "predicted_text": "He said I will call you tomorrow",
+   "invariant": true
+  },
+  {
+   "id": "probe-qt-12",
+   "input": "She asked are we done yet",
+   "predicted_text": "She asked are we done yet",
+   "invariant": true
+  },
+  {
+   "id": "probe-qt-13",
+   "input": "The manager said ship it on Monday",
+   "predicted_text": "The manager said ship it on Monday",
+   "invariant": true
+  },
+  {
+   "id": "probe-n-14",
+   "input": "I bought it for $49 99 yesterday",
+   "predicted_text": "I bought it for $49 99 yesterday",
+   "invariant": true
+  },
+  {
+   "id": "probe-n-15",
+   "input": "Call me at +91 9876543210",
+   "predicted_text": "Call me at +91 9876543210",
+   "invariant": true
+  },
+  {
+   "id": "probe-n-16",
+   "input": "The meeting is on August 12 2026",
+   "predicted_text": "The meeting is on August 12 2026",
+   "invariant": true
+  },
+  {
+   "id": "probe-n-17",
+   "input": "Version 2 5 is ready",
+   "predicted_text": "Version 2 5 is ready",
+   "invariant": true
+  },
+  {
+   "id": "probe-b-18",
+   "input": "OpenAI released the new model",
+   "predicted_text": "OpenAI released the new model",
+   "invariant": true
+  },
+  {
+   "id": "probe-b-19",
+   "input": "IntelliAI and QwikCart signed the deal",
+   "predicted_text": "IntelliAI and QwikCart signed the deal",
+   "invariant": true
+  },
+  {
+   "id": "probe-b-20",
+   "input": "NVIDIA and PostgreSQL support arrived",
+   "predicted_text": "NVIDIA and PostgreSQL support arrived",
+   "invariant": true
+  },
+  {
+   "id": "probe-a-21",
+   "input": "Mr Smith called at 10 a m",
+   "predicted_text": "Mr Smith called at 10 a m",
+   "invariant": true
+  },
+  {
+   "id": "probe-a-22",
+   "input": "Dr Rao joined the U N panel",
+   "predicted_text": "Dr Rao joined the U N panel",
+   "invariant": true
+  },
+  {
+   "id": "probe-a-23",
+   "input": "The GMT offset changed didn t it",
+   "predicted_text": "The GMT offset changed didn t it",
+   "invariant": true
+  },
+  {
+   "id": "probe-d-24",
+   "input": "Uh I mean we could you know try again tomorrow",
+   "predicted_text": "Uh I mean we could you know try again tomorrow",
+   "invariant": true
+  },
+  {
+   "id": "probe-d-25",
+   "input": "So um the report is well mostly done",
+   "predicted_text": "So um the report is well mostly done",
+   "invariant": true
+  },
+  {
+   "id": "probe-d-26",
+   "input": "I was going to say actually let s wait",
+   "predicted_text": "I was going to say actually let s wait",
+   "invariant": true
+  },
+  {
+   "id": "boss-spont-0",
+   "input": "See this is a text which I generated from my speech Okay and if you see it has taken the whole statement or speech as one statement So that s where we need to add punctuations and signs where it understand where is the right fit break the statement and then start So full stops comma all of those things should be there So check how this can be improved",
+   "predicted_text": "See this is a text which I generated from my speech Okay and if you see it has taken the whole statement or speech as one statement So that s where we need to add punctuations and signs where it understand where is the right fit break the statement and then start So full stops comma all of those things should be there So check how this can be improved",
+   "invariant": true
+  },
+  {
+   "id": "boss-spont-1",
+   "input": "Secondly I have I have placed the stars on the places right Like that was the one it repeated There was a is Because it is joining the statement it was supposed to be comma so that person can read it properly so it did not work After that in below I have added a star",
+   "predicted_text": "Secondly I have I have placed the stars on the places right Like that was the one it repeated There was a is Because it is joining the statement it was supposed to be comma so that person can read it properly so it did not work After that in below I have added a star",
+   "invariant": true
+  },
+  {
+   "id": "boss-spont-2",
+   "input": "I used that filler to kind of I would say unable to understand what to speak so I added the fillers of 2 3 but it repeated the statement So it should be understanding these are filler and correct them If you give it to the ChatGPT and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper drafts And then see the comparison what it gave and what it is giving So all those things should should get added",
+   "predicted_text": "I used that filler to kind of I would say unable to understand what to speak so I added the fillers of 2 3 but it repeated the statement So it should be understanding these are filler and correct them If you give it to the ChatGPT and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper drafts And then see the comparison what it gave and what it is giving So all those things should should get added",
+   "invariant": true
+  }
+ ]
+}

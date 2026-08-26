@@ -1,0 +1,37 @@
+{
+ "experiment": "49-english-punctuation-selection",
+ "dataset": "ml/evaluation/punctuation/datasets/en-punct-eval-v1.json (frozen; ruler punct_slots@v1 unchanged)",
+ "candidates": {
+  "kredor/punctuate-all": {
+   "revision": "0fe37019de3f5e4fbd83289fd94e07fa588e47df",
+   "weights_sha256": "9aec7aa51b4f8622be527ec668505d748932cdfb177a774f3f7fd204e01dcbae",
+   "license": "MIT"
+  },
+  "oliverguhr/fullstop-punctuation-multilang-large": {
+   "revision": "345e80adc07e761d3a35feafd20f2f44a151f453",
+   "weights_sha256": "270f27d7398a5fdad43bdf9953ea532fbe62c5f5227ed5f5316e9bd64a9255e1",
+   "license": "MIT"
+  },
+  "felflare/bert-restore-punctuation": {
+   "revision": "954108a105ef1f89f08b71c25d6e33bb89cde724",
+   "weights_sha256": "fb8efcdafa21bf982d03fd1aa86f95227353e7ea624ca08afe2cac7d726a8cb2",
+   "license": "MIT",
+   "label_map": "rpunct hardcoded order (config carries LABEL_n placeholders)"
+  },
+  "vendored punct-cap-seg-47 + EN map": {
+   "artifact": "models/punct-cap-seg-47/v1 (shipped, hash-verified)",
+   "license": "Apache-2.0",
+   "status": "EXPERIMENTAL English label map, research process only"
+  },
+  "Silero TE": {
+   "license": "CC BY-NC-SA",
+   "audit": "BLOCKED - not downloaded"
+  },
+  "NVIDIA NeMo punctuation_en_*": {
+   "license": "NVIDIA Open Model License",
+   "audit": "REVIEW REQUIRED - deferred, not measured"
+  }
+ },
+ "environment": "WSL Ubuntu, venv-qwen (torch 2.11 CPU mode, transformers 4.57.3), i7-14650HX",
+ "decoding": "word-copy: original tokens verbatim + predicted marks (frozen apply_marks); window 180 words, overlap 20"
+}

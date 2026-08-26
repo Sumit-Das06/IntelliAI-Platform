@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-27 (Milestone 48 completed under the no-Sarvam-credentials directive: IntelliAI fully MEASURED — boss clip WER 0.042/punct F1 0.000, latency RTF 0.062, long audio to 9.5 min zero-truncation, numbers/names RT-WER 0.108, hi-route transliteration recorded; Sarvam quantitative BLOCKED — CREDENTIALS REQUIRED, captured output qualitative only. The gap is READABILITY: English ships no punctuation stage. Classification B; next: M49 English punctuation/readability) |
+| **Last entry** | 2026-08-28 (Milestone 49: English punctuation model selection on the new frozen en-punct-eval@v1 — decision A: kredor/punctuate-all (MIT) selected with boundary F1 0.827, spontaneous 0.639/0.727, 0.83 s per 10-min transcript, word-copy invariant 0 failures; fullstop-large = quality ceiling backup; felflare rejected; recommended M50 = English punctuation runtime stage (int8 ONNX, M30 discipline, flag OFF). Production untouched) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -1366,6 +1366,19 @@ Dossier (framework §11, first non-transcription entry):
 implementation-complete and staged. Hindi's remaining path to users is
 DEPLOYMENT: the Hostinger milestone now carries both the E3 promotion
 (M26) and the punctuation flag decision, each with its own gates.
+
+---
+
+## Milestone 49 — English punctuation model selection (appended 2026-08-28)
+
+Full report: [2026-08-28-english-punctuation-model-selection.md](2026-08-28-english-punctuation-model-selection.md).
+New frozen benchmark: `en-punct-eval@v1` (120 rows; LJSpeech read speech + authored probes + the M48 boss-DRAFT spontaneous slice), scored with the UNCHANGED `punct_slots@v1` ruler. Word-copy invariant: zero failures across every candidate, row, and ladder rung. Production untouched (STT 205 + evaluation 677 suites green).
+
+- **kredor/punctuate-all** (XLM-RoBERTa-base, rev `0fe37019…`, weights sha `9aec7aa5…`) — **Approved for Benchmark → M49 SELECTION (decision A)** — **[MEASURED]** micro F1 0.674, **boundary F1 0.827** (the best measured), comma 0.557, question 0.824-0.857, spontaneous 0.639/0.727; 10-min transcript in **0.83 s** CPU (~1.6 % of STT p50 — the proposed ≤10 % latency gate passes with margin); peak RSS 1489 MiB fp32 (the proposed ≤700 MiB gate FAILS as-fp32 for every candidate — the M50 int8/ONNX export is the named lever, M30 precedent 437 MiB). License MIT, Europarl-trained, 12 languages. Boundary recall 0.841 — a narrow miss of the proposed 0.85 on this set (3-row DRAFT spontaneous slice); the gate stays PROPOSED and re-measures through the shipped stage. **Recommended M50: English punctuation runtime stage** (int8 ONNX + artifact pinning + the shipped M30 word-copy wrapper with en gating, flag OFF, founder listening before any flip). NOT promoted — M50 is the implementation gate.
+- **oliverguhr/fullstop-punctuation-multilang-large** (XLM-R-large, rev `345e80ad…`, sha `270f27d7…`, MIT) — **Researching (quality ceiling/backup)** — [MEASURED] best micro 0.695 / comma 0.601 / spontaneous 0.732, but 2.3 GiB RSS and 5.37 s per 10-min transcript (10.3 % of STT p50 — borderline on the proposed gate). Falls back into play only if M50's export measurably degrades kredor.
+- **felflare/bert-restore-punctuation** (bert-base, rev `954108a1…`, MIT) — **Rejected — domain mismatch** — [MEASURED] micro 0.420 / boundary 0.422 despite being English-only (Yelp training does not transfer to speech transcripts).
+- **vendored punct-cap-seg-47 + EN label map** — [MEASURED, EXPERIMENTAL] clean-sentence specialist (probe boundary 0.941, question 1.0) but spontaneous 0.444 — confirms M48: the shipped Hindi v1 model is not the English answer alone; it remains the Hindi stage only.
+- **Silero TE** — **Rejected — license** (CC BY-NC-SA; not downloaded). **NVIDIA NeMo punctuation_en_\*** — REVIEW REQUIRED (NVIDIA Open Model License); deferred, not measured.
 
 ---
 

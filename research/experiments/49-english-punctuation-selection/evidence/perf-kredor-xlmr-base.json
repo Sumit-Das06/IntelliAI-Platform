@@ -1,0 +1,36 @@
+{
+ "system": "kredor-xlmr-base",
+ "ladder": {
+  "100": {
+   "p50_s": 0.059,
+   "max_s": 0.06,
+   "invariant": true,
+   "out_words": 100
+  },
+  "300": {
+   "p50_s": 0.175,
+   "max_s": 0.184,
+   "invariant": true,
+   "out_words": 300
+  },
+  "700": {
+   "p50_s": 0.406,
+   "max_s": 0.407,
+   "invariant": true,
+   "out_words": 700
+  },
+  "1200": {
+   "p50_s": 0.713,
+   "max_s": 0.713,
+   "invariant": true,
+   "out_words": 1200
+  },
+  "2000": {
+   "p50_s": 0.836,
+   "max_s": 0.844,
+   "invariant": true,
+   "out_words": 1412
+  }
+ },
+ "peak_rss_mib": 1489.3
+}

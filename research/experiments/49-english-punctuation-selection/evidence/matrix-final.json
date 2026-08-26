@@ -1,0 +1,1146 @@
+{
+ "ruler": "punct_slots@v1",
+ "dataset_sha256": "c7343b28e8a8f79bcae4e42c3f5c73a11caac5d0328fc34ddaf8006a9f6a5c08",
+ "systems": {
+  "felflare-bert": {
+   "invariant_failures": 0,
+   "overall": {
+    "।": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ",": {
+     "precision": 0.6957,
+     "recall": 0.2977,
+     "f1": 0.4169
+    },
+    "?": {
+     "precision": 0.6667,
+     "recall": 0.4444,
+     "f1": 0.5333
+    },
+    "!": {
+     "precision": 1.0,
+     "recall": 0.3333,
+     "f1": 0.5
+    },
+    ".": {
+     "precision": 0.56,
+     "recall": 0.3294,
+     "f1": 0.4148
+    },
+    "boundary": {
+     "precision": 0.5701,
+     "recall": 0.3352,
+     "f1": 0.4221
+    },
+    "micro": {
+     "precision": 0.6281,
+     "recall": 0.3149,
+     "f1": 0.4195
+    }
+   },
+   "per_class": {
+    "single": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.6667,
+      "recall": 0.1951,
+      "f1": 0.3019
+     },
+     "?": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.6471,
+      "recall": 0.2588,
+      "f1": 0.3697
+     },
+     "boundary": {
+      "precision": 0.6571,
+      "recall": 0.2674,
+      "f1": 0.3802
+     },
+     "micro": {
+      "precision": 0.661,
+      "recall": 0.2321,
+      "f1": 0.3436
+     }
+    },
+    "paragraph": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.661,
+      "recall": 0.4535,
+      "f1": 0.5379
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.4821,
+      "recall": 0.587,
+      "f1": 0.5294
+     },
+     "boundary": {
+      "precision": 0.4821,
+      "recall": 0.587,
+      "f1": 0.5294
+     },
+     "micro": {
+      "precision": 0.5739,
+      "recall": 0.5,
+      "f1": 0.5344
+     }
+    },
+    "probe": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 1.0,
+      "recall": 0.28,
+      "f1": 0.4375
+     },
+     "?": {
+      "precision": 0.6,
+      "recall": 0.4286,
+      "f1": 0.5
+     },
+     "!": {
+      "precision": 1.0,
+      "recall": 0.3333,
+      "f1": 0.5
+     },
+     ".": {
+      "precision": 1.0,
+      "recall": 0.16,
+      "f1": 0.2759
+     },
+     "boundary": {
+      "precision": 0.8,
+      "recall": 0.2286,
+      "f1": 0.3556
+     },
+     "micro": {
+      "precision": 0.8824,
+      "recall": 0.25,
+      "f1": 0.3896
+     }
+    },
+    "spontaneous": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 1.0,
+      "recall": 0.0909,
+      "f1": 0.1667
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.5,
+      "recall": 0.2143,
+      "f1": 0.3
+     },
+     "boundary": {
+      "precision": 0.5,
+      "recall": 0.2,
+      "f1": 0.2857
+     },
+     "micro": {
+      "precision": 0.625,
+      "recall": 0.1351,
+      "f1": 0.2222
+     }
+    }
+   }
+  },
+  "fullstop-xlmr-large": {
+   "invariant_failures": 0,
+   "overall": {
+    "।": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ",": {
+     "precision": 0.6575,
+     "recall": 0.5535,
+     "f1": 0.601
+    },
+    "?": {
+     "precision": 1.0,
+     "recall": 0.8889,
+     "f1": 0.9412
+    },
+    "!": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ".": {
+     "precision": 0.7722,
+     "recall": 0.8176,
+     "f1": 0.7943
+    },
+    "boundary": {
+     "precision": 0.7979,
+     "recall": 0.8242,
+     "f1": 0.8108
+    },
+    "micro": {
+     "precision": 0.7209,
+     "recall": 0.67,
+     "f1": 0.6945
+    }
+   },
+   "per_class": {
+    "single": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.661,
+      "recall": 0.4756,
+      "f1": 0.5532
+     },
+     "?": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.8571,
+      "recall": 0.8471,
+      "f1": 0.8521
+     },
+     "boundary": {
+      "precision": 0.8588,
+      "recall": 0.8488,
+      "f1": 0.8538
+     },
+     "micro": {
+      "precision": 0.7778,
+      "recall": 0.6667,
+      "f1": 0.7179
+     }
+    },
+    "paragraph": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.5795,
+      "recall": 0.593,
+      "f1": 0.5862
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.6333,
+      "recall": 0.8261,
+      "f1": 0.717
+     },
+     "boundary": {
+      "precision": 0.6333,
+      "recall": 0.8261,
+      "f1": 0.717
+     },
+     "micro": {
+      "precision": 0.6014,
+      "recall": 0.6742,
+      "f1": 0.6357
+     }
+    },
+    "probe": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.9333,
+      "recall": 0.56,
+      "f1": 0.7
+     },
+     "?": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.8571,
+      "recall": 0.72,
+      "f1": 0.7826
+     },
+     "boundary": {
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1": 0.8889
+     },
+     "micro": {
+      "precision": 0.907,
+      "recall": 0.65,
+      "f1": 0.7573
+     }
+    },
+    "spontaneous": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.7895,
+      "recall": 0.6818,
+      "f1": 0.7317
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.7333,
+      "recall": 0.7857,
+      "f1": 0.7586
+     },
+     "boundary": {
+      "precision": 0.7333,
+      "recall": 0.7333,
+      "f1": 0.7333
+     },
+     "micro": {
+      "precision": 0.7647,
+      "recall": 0.7027,
+      "f1": 0.7324
+     }
+    }
+   }
+  },
+  "kredor-xlmr-base": {
+   "invariant_failures": 0,
+   "overall": {
+    "।": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ",": {
+     "precision": 0.6111,
+     "recall": 0.5116,
+     "f1": 0.557
+    },
+    "?": {
+     "precision": 0.875,
+     "recall": 0.7778,
+     "f1": 0.8235
+    },
+    "!": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ".": {
+     "precision": 0.7833,
+     "recall": 0.8294,
+     "f1": 0.8057
+    },
+    "boundary": {
+     "precision": 0.8138,
+     "recall": 0.8407,
+     "f1": 0.827
+    },
+    "micro": {
+     "precision": 0.7011,
+     "recall": 0.6499,
+     "f1": 0.6745
+    }
+   },
+   "per_class": {
+    "single": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.6167,
+      "recall": 0.4512,
+      "f1": 0.5211
+     },
+     "?": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.9231,
+      "recall": 0.8471,
+      "f1": 0.8834
+     },
+     "boundary": {
+      "precision": 0.9241,
+      "recall": 0.8488,
+      "f1": 0.8848
+     },
+     "micro": {
+      "precision": 0.7914,
+      "recall": 0.6548,
+      "f1": 0.7166
+     }
+    },
+    "paragraph": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.5495,
+      "recall": 0.5814,
+      "f1": 0.565
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.6393,
+      "recall": 0.8478,
+      "f1": 0.729
+     },
+     "boundary": {
+      "precision": 0.6393,
+      "recall": 0.8478,
+      "f1": 0.729
+     },
+     "micro": {
+      "precision": 0.5855,
+      "recall": 0.6742,
+      "f1": 0.6268
+     }
+    },
+    "probe": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 1.0,
+      "recall": 0.48,
+      "f1": 0.6486
+     },
+     "?": {
+      "precision": 0.8571,
+      "recall": 0.8571,
+      "f1": 0.8571
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.7826,
+      "recall": 0.72,
+      "f1": 0.75
+     },
+     "boundary": {
+      "precision": 0.9667,
+      "recall": 0.8286,
+      "f1": 0.8923
+     },
+     "micro": {
+      "precision": 0.8571,
+      "recall": 0.6,
+      "f1": 0.7059
+     }
+    },
+    "spontaneous": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.6471,
+      "recall": 0.5,
+      "f1": 0.5641
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.6667,
+      "recall": 0.8571,
+      "f1": 0.75
+     },
+     "boundary": {
+      "precision": 0.6667,
+      "recall": 0.8,
+      "f1": 0.7273
+     },
+     "micro": {
+      "precision": 0.6571,
+      "recall": 0.6216,
+      "f1": 0.6389
+     }
+    }
+   }
+  },
+  "no-op": {
+   "invariant_failures": 0,
+   "overall": {
+    "।": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ",": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "?": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "!": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ".": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "boundary": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "micro": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    }
+   },
+   "per_class": {
+    "single": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "boundary": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "micro": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "paragraph": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "boundary": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "micro": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "probe": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "boundary": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "micro": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "spontaneous": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "boundary": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "micro": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    }
+   }
+  },
+  "rules": {
+   "invariant_failures": 0,
+   "overall": {
+    "।": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ",": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "?": {
+     "precision": 0.4545,
+     "recall": 0.5556,
+     "f1": 0.5
+    },
+    "!": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ".": {
+     "precision": 0.8807,
+     "recall": 0.5647,
+     "f1": 0.6882
+    },
+    "boundary": {
+     "precision": 0.9167,
+     "recall": 0.6044,
+     "f1": 0.7285
+    },
+    "micro": {
+     "precision": 0.8417,
+     "recall": 0.2544,
+     "f1": 0.3907
+    }
+   },
+   "per_class": {
+    "single": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1": 0.5
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 1.0,
+      "recall": 0.7882,
+      "f1": 0.8816
+     },
+     "boundary": {
+      "precision": 1.0,
+      "recall": 0.814,
+      "f1": 0.8974
+     },
+     "micro": {
+      "precision": 0.9714,
+      "recall": 0.4048,
+      "f1": 0.5714
+     }
+    },
+    "paragraph": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.5294,
+      "recall": 0.1957,
+      "f1": 0.2857
+     },
+     "boundary": {
+      "precision": 0.5,
+      "recall": 0.2174,
+      "f1": 0.303
+     },
+     "micro": {
+      "precision": 0.45,
+      "recall": 0.0682,
+      "f1": 0.1184
+     }
+    },
+    "probe": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.8,
+      "recall": 0.5714,
+      "f1": 0.6667
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.7727,
+      "recall": 0.68,
+      "f1": 0.7234
+     },
+     "boundary": {
+      "precision": 1.0,
+      "recall": 0.7714,
+      "f1": 0.871
+     },
+     "micro": {
+      "precision": 0.7778,
+      "recall": 0.35,
+      "f1": 0.4828
+     }
+    },
+    "spontaneous": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 1.0,
+      "recall": 0.2143,
+      "f1": 0.3529
+     },
+     "boundary": {
+      "precision": 1.0,
+      "recall": 0.2,
+      "f1": 0.3333
+     },
+     "micro": {
+      "precision": 1.0,
+      "recall": 0.0811,
+      "f1": 0.15
+     }
+    }
+   }
+  },
+  "vendored47-en-map": {
+   "invariant_failures": 0,
+   "overall": {
+    "।": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ",": {
+     "precision": 0.4894,
+     "recall": 0.3209,
+     "f1": 0.3876
+    },
+    "?": {
+     "precision": 0.6667,
+     "recall": 0.8889,
+     "f1": 0.7619
+    },
+    "!": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    ".": {
+     "precision": 0.5685,
+     "recall": 0.8059,
+     "f1": 0.6667
+    },
+    "boundary": {
+     "precision": 0.5889,
+     "recall": 0.8187,
+     "f1": 0.6851
+    },
+    "micro": {
+     "precision": 0.5431,
+     "recall": 0.539,
+     "f1": 0.5411
+    }
+   },
+   "per_class": {
+    "single": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.4783,
+      "recall": 0.2683,
+      "f1": 0.3438
+     },
+     "?": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1": 0.5
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.75,
+      "recall": 0.9529,
+      "f1": 0.8394
+     },
+     "boundary": {
+      "precision": 0.7477,
+      "recall": 0.9651,
+      "f1": 0.8426
+     },
+     "micro": {
+      "precision": 0.6624,
+      "recall": 0.619,
+      "f1": 0.64
+     }
+    },
+    "paragraph": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.3944,
+      "recall": 0.3256,
+      "f1": 0.3567
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.2903,
+      "recall": 0.587,
+      "f1": 0.3885
+     },
+     "boundary": {
+      "precision": 0.2872,
+      "recall": 0.587,
+      "f1": 0.3857
+     },
+     "micro": {
+      "precision": 0.3333,
+      "recall": 0.4167,
+      "f1": 0.3704
+     }
+    },
+    "probe": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.9231,
+      "recall": 0.48,
+      "f1": 0.6316
+     },
+     "?": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.8462,
+      "recall": 0.88,
+      "f1": 0.8627
+     },
+     "boundary": {
+      "precision": 0.9697,
+      "recall": 0.9143,
+      "f1": 0.9412
+     },
+     "micro": {
+      "precision": 0.8913,
+      "recall": 0.6833,
+      "f1": 0.7736
+     }
+    },
+    "spontaneous": {
+     "।": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ",": {
+      "precision": 0.6364,
+      "recall": 0.3182,
+      "f1": 0.4242
+     },
+     "?": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "!": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     ".": {
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5
+     },
+     "boundary": {
+      "precision": 0.4667,
+      "recall": 0.4667,
+      "f1": 0.4667
+     },
+     "micro": {
+      "precision": 0.5385,
+      "recall": 0.3784,
+      "f1": 0.4444
+     }
+    }
+   }
+  }
+ }
+}

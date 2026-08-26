@@ -1,0 +1,36 @@
+{
+ "system": "fullstop-xlmr-large",
+ "ladder": {
+  "100": {
+   "p50_s": 0.352,
+   "max_s": 0.373,
+   "invariant": true,
+   "out_words": 100
+  },
+  "300": {
+   "p50_s": 1.081,
+   "max_s": 1.203,
+   "invariant": true,
+   "out_words": 300
+  },
+  "700": {
+   "p50_s": 2.619,
+   "max_s": 2.637,
+   "invariant": true,
+   "out_words": 700
+  },
+  "1200": {
+   "p50_s": 4.441,
+   "max_s": 4.565,
+   "invariant": true,
+   "out_words": 1200
+  },
+  "2000": {
+   "p50_s": 5.372,
+   "max_s": 5.407,
+   "invariant": true,
+   "out_words": 1412
+  }
+ },
+ "peak_rss_mib": 2326.5
+}
