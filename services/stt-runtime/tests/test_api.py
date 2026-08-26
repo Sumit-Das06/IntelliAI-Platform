@@ -133,8 +133,10 @@ class TestOperationalSurface:
             "status": "ready",
             "slots": {"reference": "ready"},
             # M31: readiness reports the punctuation stage; the default
-            # deployment ships it disabled.
+            # deployment ships it disabled. M50 adds the English stage
+            # under the same law.
             "punctuation": "disabled",
+            "punctuation_en": "disabled",
         }
 
     def test_info_is_operational_identity_only(self, client: TestClient) -> None:

@@ -90,6 +90,19 @@ class Settings(BaseSettings):
     # ~0.45 s on the dev box, so 3 s is generous without masking hangs.
     punctuation_timeout_ms: float = Field(default=3000.0, gt=0)
 
+    # ── english punctuation stage (Milestone 50) ────────────────────────
+    # The SAME laws as the Hindi stage, on a separate flag and a separate
+    # artifact (punct-en-kredor@v1, INT8 ONNX): OFF by default everywhere;
+    # fail-open at request time; an ENABLED deployment with an unseeded or
+    # mishashed artifact refuses to start. English is deliberately NOT
+    # merged into `punctuation_languages` — the two stages gate and ship
+    # independently.
+    punctuation_en_enabled: bool = False
+    punctuation_en_languages: str = "en,en-US,en-IN"
+    # Measured M50 latency: a ~10-minute transcript punctuates in ~0.65 s
+    # on the dev box, so 3 s is generous without masking hangs.
+    punctuation_en_timeout_ms: float = Field(default=3000.0, gt=0)
+
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be
     # ignored silently and a deployment meant to serve whisper would

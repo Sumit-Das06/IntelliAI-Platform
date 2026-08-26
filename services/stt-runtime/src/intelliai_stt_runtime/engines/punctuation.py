@@ -158,12 +158,18 @@ def invariant_holds(input_text: str, output_text: str) -> bool:
     return depunct(input_text) == depunct(output_text)
 
 
-def apply_marks(text: str, marks_per_slot: Sequence[Sequence[str]]) -> str:
+def apply_marks(
+    text: str,
+    marks_per_slot: Sequence[Sequence[str]],
+    allowed: Sequence[str] = SUPPORTED_MARKS,
+) -> str:
     """Original whitespace tokens verbatim + supported marks appended.
 
     ``marks_per_slot`` has ``len(tokens) + 1`` entries (slot 0 = before the
     first token). Word changes are impossible by construction: tokens are
     copies, and every supported mark is category P, so it depuncts away.
+    ``allowed`` defaults to the Hindi v1 scope; the English stage (M50)
+    passes its own scope — the copy law itself never varies.
     """
     tokens = text.split()
     if len(marks_per_slot) != len(tokens) + 1:
@@ -171,7 +177,7 @@ def apply_marks(text: str, marks_per_slot: Sequence[Sequence[str]]) -> str:
         raise PunctuationStageError(msg)
     for slot in marks_per_slot:
         for mark in slot:
-            if mark not in SUPPORTED_MARKS:
+            if mark not in allowed:
                 msg = f"unsupported mark {mark!r}"
                 raise PunctuationStageError(msg)
     if not tokens:
