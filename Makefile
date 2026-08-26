@@ -256,6 +256,9 @@ seed-models: ## Seed the model volume (chown to runtime uid 999 - the M31 rehear
 	  && if [ -d /src/punct-cap-seg-47/v1 ]; then mkdir -p /models/punct-cap-seg-47 \
 	  && cp -r /src/punct-cap-seg-47/v1 /models/punct-cap-seg-47/; \
 	  else echo 'punctuation artifact not present locally - skipped (stage is OFF unless seeded)'; fi \
+	  && if [ -d /src/punct-en-kredor/v1 ]; then mkdir -p /models/punct-en-kredor \
+	  && cp -r /src/punct-en-kredor/v1 /models/punct-en-kredor/; \
+	  else echo 'english punctuation artifact not present locally - skipped (stage is OFF unless seeded)'; fi \
 	  && if [ -d /src/kokoro-82m/v2 ]; then mkdir -p /models/kokoro-82m \
 	  && cp -r /src/kokoro-82m/v2 /models/kokoro-82m/; \
 	  else echo 'kokoro-82m v2 not present locally - skipped (tts runtime downloads + re-hashes at boot)'; fi \

@@ -31,6 +31,11 @@ from intelliai_stt_runtime.engines.punctuation import (
     PunctuationRestorer,
     load_punctuation,
 )
+from intelliai_stt_runtime.engines.punctuation_en import (
+    PUNCTUATION_EN_FILES,
+    EnPunctuationRestorer,
+    load_punctuation_en,
+)
 from intelliai_stt_runtime.identity import SERVICE_NAME
 from intelliai_stt_runtime.pipeline import EnergyVad, FfmpegDecoder, MediaPipeline, canonical_audio
 from intelliai_stt_runtime.slots import build_slot_specs
@@ -107,10 +112,25 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 languages=settings.punctuation_languages.split(","),
                 timeout_ms=settings.punctuation_timeout_ms,
             )
+        if settings.punctuation_en_enabled:
+            # The M50 English stage: same startup law, separate artifact
+            # and flag — an ENABLED stage with missing or mishashed
+            # artifacts refuses to serve.
+            store_en = ArtifactStore(settings.model_dir)
+            local_dir_en = await asyncio.to_thread(store_en.ensure, PUNCTUATION_EN_FILES)
+            app.state.punctuator_en = await asyncio.to_thread(
+                load_punctuation_en,
+                local_dir_en,
+                languages=settings.punctuation_en_languages.split(","),
+                timeout_ms=settings.punctuation_en_timeout_ms,
+            )
         yield
         punctuator: PunctuationRestorer | None = app.state.punctuator
         if punctuator is not None:
             punctuator.close()
+        punctuator_en: EnPunctuationRestorer | None = app.state.punctuator_en
+        if punctuator_en is not None:
+            punctuator_en.close()
         await manager.shutdown()
         pool.shutdown()
 
@@ -120,6 +140,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.pipeline = pipeline
     app.state.pool = pool
     app.state.punctuator = None  # set by the lifespan when the stage is enabled
+    app.state.punctuator_en = None  # M50: same law, separate flag/artifact
 
     @app.middleware("http")
     async def request_context(
