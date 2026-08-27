@@ -1,0 +1,9 @@
+{
+  "topology_staging": "Browser (AudioWorklet PCM16@16k, 100ms frames) -> wss Caddy -> gateway /v1/audio/realtime (auth, collection) -> ws -> host realtime stt-runtime :8003 (flag ON, whisper CUDA in-process; hindi via pinned CUDA llama-server :8797)",
+  "engines": {
+    "en": "whisper-small, dedicated realtime instance, greedy partials / beam-5 finals, device=cuda",
+    "hi": "qwen3-asr-0.6b-hi-ft-e3 GGUF via llama.cpp b10344 CUDA (same commit as the production pin), temp 0, cache off, duration-scaled max_tokens"
+  },
+  "policies": "VAD-gated decodes; skip-to-latest; rolling window 25s; VAD-aligned commits OFF the hot path; is_final captured at decode start; LA2 monotonic display client-side; punctuation final-only via the existing stages",
+  "batch_path": "UNTOUCHED - POST /v1/audio/transcriptions identical (evidence/batch-regression.json)"
+}

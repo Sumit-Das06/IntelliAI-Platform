@@ -1,0 +1,30 @@
+{
+  "boss30.wav": {
+    "fpt_s": 1.113,
+    "partial_gap_p50_s": 0.54,
+    "finalization_ms": 1213.9,
+    "partials": 52,
+    "degraded": false
+  },
+  "2min.wav": {
+    "fpt_s": 1.175,
+    "partial_gap_p50_s": 0.54,
+    "finalization_ms": 1115.1,
+    "partials": 235,
+    "degraded": false
+  },
+  "5min.wav": {
+    "fpt_s": 1.074,
+    "partial_gap_p50_s": 0.57,
+    "finalization_ms": 4020.0,
+    "partials": 451,
+    "degraded": false
+  },
+  "10min.wav": {
+    "fpt_s": 1.264,
+    "partial_gap_p50_s": 0.56,
+    "finalization_ms": 369.7,
+    "partials": 966,
+    "degraded": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "16k_short_no.wav",
+  "language": "en",
+  "mode": "realtime",
+  "audio_seconds": 1.2,
+  "session_id": "f6aa3694d8f96792",
+  "events_total": 5,
+  "first_partial_at_s": 0.572,
+  "partial_count": 2,
+  "partial_gap_p50_s": 0.51,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.29,
+  "final_at_s": 1.371,
+  "finalization_ms": 85.1,
+  "final_text": "No.",
+  "final_raw_text": "No.",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

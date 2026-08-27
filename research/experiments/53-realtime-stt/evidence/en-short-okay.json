@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "16k_short_okay.wav",
+  "language": "en",
+  "mode": "realtime",
+  "audio_seconds": 1.3,
+  "session_id": "0fcdad507e106321",
+  "events_total": 5,
+  "first_partial_at_s": 0.581,
+  "partial_count": 2,
+  "partial_gap_p50_s": 0.5,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.46,
+  "final_at_s": 1.607,
+  "finalization_ms": 151.5,
+  "final_text": "Okay.",
+  "final_raw_text": "Okay",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

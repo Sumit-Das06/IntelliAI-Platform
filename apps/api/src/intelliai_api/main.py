@@ -19,6 +19,7 @@ from intelliai_api.api.errors import register_error_handlers
 from intelliai_api.api.health import router as health_router
 from intelliai_api.api.middleware import RequestBodySizeLimitMiddleware, RequestContextMiddleware
 from intelliai_api.api.pages import router as pages_router
+from intelliai_api.api.v1.audio.realtime import router as realtime_router
 from intelliai_api.api.v1.router import router as v1_router
 from intelliai_api.core.config import Settings, get_settings
 from intelliai_api.core.health import HealthService, default_checks
@@ -167,6 +168,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # enforcement is structural, and a test refuses the diff that removes
     # it (ADR-0022).
     app.include_router(v1_router, dependencies=[Depends(enforce_limits)])
+    # Realtime STT WebSocket (M53) mounts OUTSIDE the v1 HTTP router:
+    # WebSockets cannot ride HTTP dependencies, so the route carries its
+    # OWN first-message authentication (the same AuthService pipeline)
+    # and refuses the handshake entirely while the feature flag is off.
+    app.include_router(realtime_router)
 
     return app
 

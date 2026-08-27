@@ -1,0 +1,10 @@
+{
+  "auth_before_audio": true,
+  "session_isolation": "unit-tested (unique ids, no stale events); disconnect kills the session with nothing persisted",
+  "bounded_buffers": "runtime 60s/900s caps; gateway 64KB frame cap + 30min collection cap",
+  "leak_scans": {
+    "browser_en": [],
+    "browser_hi": []
+  },
+  "no_token_or_transcript_logging": "route reviewed; logs carry ids and reasons only"
+}

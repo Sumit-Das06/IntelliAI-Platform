@@ -1,0 +1,8 @@
+{
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "sample_width": "PCM16 s16le",
+  "framing": "100ms frames (3200 bytes) from an AudioWorklet at a fixed-rate AudioContext",
+  "oversize_frames": "dropped at the gateway (64KB cap)",
+  "conversion": "the browser resamples to 16k in the AudioContext; no codec payloads ever reach the model"
+}

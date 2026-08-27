@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "silence5.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 5.0,
+  "session_id": "967cd03683219069",
+  "events_total": 3,
+  "first_partial_at_s": null,
+  "partial_count": 0,
+  "partial_gap_p50_s": null,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 5.46,
+  "final_at_s": 5.546,
+  "finalization_ms": 82.4,
+  "final_text": "",
+  "final_raw_text": "",
+  "sample_id_present": false,
+  "degraded": false,
+  "errors": []
+}

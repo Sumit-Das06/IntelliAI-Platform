@@ -1,0 +1,30 @@
+{
+  "vram_before_mib": 2899,
+  "levels": {
+    "c1": {
+      "sessions": 4,
+      "session_ms_p50": 2168.9,
+      "session_ms_p95": 3147.6,
+      "wall_s": 3.18,
+      "finals_ok": 4,
+      "vram_mib": 2899
+    },
+    "c2": {
+      "sessions": 8,
+      "session_ms_p50": 5300.4,
+      "session_ms_p95": 8100.5,
+      "wall_s": 8.11,
+      "finals_ok": 8,
+      "vram_mib": 2899
+    },
+    "c4": {
+      "sessions": 16,
+      "session_ms_p50": 7916.9,
+      "session_ms_p95": 13279.8,
+      "wall_s": 14.06,
+      "finals_ok": 16,
+      "vram_mib": 2899
+    }
+  },
+  "vram_after_10_more_sessions_mib": 2899
+}

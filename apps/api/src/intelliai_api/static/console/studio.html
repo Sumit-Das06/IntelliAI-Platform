@@ -41,6 +41,7 @@
           <div class="btn-row" style="margin-top: 14px;">
             <button class="btn" id="record" type="button">🎤 Record</button>
             <button class="btn" id="upload" type="button">Upload file</button>
+            <button class="btn" id="realtime" type="button">⚡ Realtime</button>
           </div>
           <input id="file" type="file" accept="audio/*" hidden>
           <p class="sub" style="margin-top: 6px;">Up to 10 minutes of audio per file (25&nbsp;MB). Longer files are refused, never cut short.</p>
@@ -413,6 +414,181 @@ document.addEventListener("DOMContentLoaded", function () {
     }).finally(function () {
       saveBtn.disabled = false;
     });
+  });
+
+  /* ── Realtime mode (M53) ──────────────────────────────────────
+     Live partials over an authenticated WebSocket; the DISPLAY obeys
+     LocalAgreement-2: only the word-prefix on which the last two
+     partials agree is shown, and the shown text never shrinks (no
+     flicker). The final replaces the display with the punctuated
+     transcript from the existing pipeline; Copy/Share/Correction then
+     operate on it exactly as after a batch transcription. Additive:
+     if this deployment has realtime off, or the browser lacks the
+     needed APIs, the button explains and everything else still works. */
+  var realtimeBtn = document.getElementById("realtime");
+  var rt = null; /* { ws, ctx, node, stream, prevWords, shownCount } */
+
+  function laAgree(prevWords, currWords, shownCount) {
+    var agreed = 0;
+    var limit = Math.min(prevWords.length, currWords.length);
+    while (agreed < limit && prevWords[agreed] === currWords[agreed]) agreed += 1;
+    return Math.max(shownCount, agreed);
+  }
+
+  function rtCleanup(message, kind) {
+    if (!rt) return;
+    var session = rt;
+    rt = null;
+    try { if (session.node) session.node.disconnect(); } catch (e) {}
+    try {
+      if (session.stream) session.stream.getTracks().forEach(function (t) { t.stop(); });
+    } catch (e) {}
+    try { if (session.ctx) session.ctx.close(); } catch (e) {}
+    try {
+      if (session.ws && session.ws.readyState <= 1) session.ws.close();
+    } catch (e) {}
+    realtimeBtn.textContent = "\u26a1 Realtime";
+    realtimeBtn.classList.remove("btn-danger");
+    transcribeBtn.disabled = false;
+    transcript.readOnly = false;
+    if (message) setStatus(message, kind);
+    refreshShareButton();
+  }
+
+  realtimeBtn.addEventListener("click", function () {
+    if (rt) { /* acting as Stop: mic off NOW, end-of-stream, await the final */
+      try { if (rt.node) rt.node.disconnect(); } catch (e) {}
+      try {
+        if (rt.stream) rt.stream.getTracks().forEach(function (t) { t.stop(); });
+      } catch (e) {}
+      try { rt.ws.send(JSON.stringify({ event: "end" })); } catch (e) {}
+      setStatus("Finalizing\u2026");
+      return;
+    }
+    var key = IntelliAI.getKey();
+    if (!key) { setStatus("Connect your API key on Home first.", "err"); return; }
+    if (!window.WebSocket || !window.AudioWorkletNode || !navigator.mediaDevices) {
+      setStatus("Realtime needs a newer browser \u2014 Upload still works.", "err");
+      return;
+    }
+    var protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    var ws = new WebSocket(protocol + window.location.host + "/v1/audio/realtime");
+    var session = { ws: ws, ctx: null, node: null, stream: null, prevWords: [], shownCount: 0 };
+    rt = session;
+    sampleId = null;
+    saveBtn.classList.add("hidden");
+    setThanks("");
+    setShareNote("");
+    transcript.value = "";
+    transcript.readOnly = true;
+    transcribeBtn.disabled = true;
+    refreshShareButton();
+    realtimeBtn.textContent = "\u25a0 Stop";
+    realtimeBtn.classList.add("btn-danger");
+    setStatus("Connecting\u2026");
+
+    ws.onopen = function () {
+      var contributing = document.getElementById("contribute").checked;
+      ws.send(JSON.stringify({
+        event: "auth",
+        api_key: key,
+        language: langSelect.value || "en",
+        contribution: contributing ? "on" : "off"
+      }));
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+        if (rt !== session) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
+        session.stream = stream;
+        var ctx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+        session.ctx = ctx;
+        var workletSource =
+          "class RtCapture extends AudioWorkletProcessor {" +
+          "  constructor() { super(); this.buf = new Float32Array(1600); this.n = 0; }" +
+          "  process(inputs) {" +
+          "    var ch = inputs[0][0]; if (!ch) return true;" +
+          "    for (var i = 0; i < ch.length; i++) {" +
+          "      this.buf[this.n++] = ch[i];" +
+          "      if (this.n === 1600) { this.port.postMessage(this.buf.slice(0)); this.n = 0; }" +
+          "    } return true; } }" +
+          "registerProcessor('rt-capture', RtCapture);";
+        var url = URL.createObjectURL(new Blob([workletSource], { type: "application/javascript" }));
+        ctx.audioWorklet.addModule(url).then(function () {
+          if (rt !== session) return;
+          var source = ctx.createMediaStreamSource(stream);
+          var node = new AudioWorkletNode(ctx, "rt-capture");
+          session.node = node;
+          node.port.onmessage = function (event) {
+            if (rt !== session || ws.readyState !== 1) return;
+            var floats = event.data;
+            var ints = new Int16Array(floats.length);
+            for (var i = 0; i < floats.length; i++) {
+              var v = Math.max(-1, Math.min(1, floats[i]));
+              ints[i] = v < 0 ? v * 32768 : v * 32767;
+            }
+            ws.send(ints.buffer);
+          };
+          source.connect(node);
+          setStatus("\U0001f399 Listening\u2026 speak now, press Stop to finish.");
+        }).catch(function () {
+          rtCleanup("Realtime audio setup failed \u2014 Upload still works.", "err");
+        });
+      }).catch(function () {
+        rtCleanup("Microphone permission was refused.", "err");
+      });
+    };
+
+    ws.onmessage = function (messageEvent) {
+      var data;
+      try { data = JSON.parse(messageEvent.data); } catch (e) { return; }
+      if (rt !== session) return;
+      if (data.event === "transcript.partial") {
+        var words = (data.text || "").split(/\s+/).filter(Boolean);
+        var agreed = laAgree(session.prevWords, words, 0);
+        session.prevWords = words;
+        /* Monotonic by construction: the display only ever advances -
+           a shorter or rewritten partial can never shrink what the user
+           already saw. */
+        if (agreed > session.shownCount) {
+          session.shownCount = agreed;
+          transcript.value = words.slice(0, agreed).join(" ");
+        }
+      } else if (data.event === "transcript.final") {
+        transcript.value = data.text || "";
+      } else if (data.event === "session.completed") {
+        if (data.sample_id) {
+          sampleId = data.sample_id;
+          document.getElementById("dev-sample").textContent = sampleId;
+          saveBtn.classList.remove("hidden");
+        }
+        summaryEl.replaceChildren();
+        summaryEl.appendChild(summaryChip("Service", "IntelliAI STT"));
+        summaryEl.appendChild(summaryChip("Language", LANGUAGE_NAMES[langSelect.value] || langSelect.value));
+        if (typeof data.audio_seconds === "number") {
+          summaryEl.appendChild(summaryChip("Audio", data.audio_seconds.toFixed(1) + " s"));
+        }
+        summaryEl.appendChild(summaryChip("Mode", "Realtime"));
+        summaryEl.classList.remove("hidden");
+        rtCleanup("Done. Edit the text if anything is wrong.");
+      } else if (data.event === "session.degraded") {
+        setStatus("\U0001f399 Listening\u2026 (network is behind, catching up)");
+      } else if (data.event === "session.error") {
+        rtCleanup(data.message || "Realtime transcription is unavailable.", "err");
+      }
+    };
+
+    ws.onclose = function (closeEvent) {
+      if (rt !== session) return;
+      if (closeEvent.code === 4404) {
+        rtCleanup("Realtime isn't available on this deployment yet \u2014 Upload still works.", "err");
+      } else if (closeEvent.code === 4401) {
+        rtCleanup("Connect a valid API key on Home first.", "err");
+      } else {
+        rtCleanup("Realtime session ended.", "");
+      }
+    };
+    ws.onerror = function () {
+      if (rt !== session) return;
+      rtCleanup("Realtime connection failed \u2014 Upload still works.", "err");
+    };
   });
 });
 </script>

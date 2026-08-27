@@ -155,6 +155,16 @@ class RuntimeSettings(BaseSettings):
     # is unchanged.
     timeout_seconds: float = 450.0
 
+    #: Realtime STT sessions (Milestone 53): the runtime deployment that
+    #: hosts them, as a WebSocket URL (``ws://…/v1/realtime``). Empty —
+    #: the default everywhere — means realtime is OFF on this gateway:
+    #: the public WS route refuses before accepting any audio. Production
+    #: pins this empty until realtime's own promotion decision. The URL
+    #: may name a deployment OUTSIDE the compose network (the staging GPU
+    #: host) — that is deployment topology, exactly what this settings
+    #: group exists to carry.
+    stt_realtime_ws_url: str = ""
+
     #: Whether THIS deployment runs the speech-synthesis service and so
     #: must answer for it in readiness (M42). Default OFF because the
     #: base stack keeps TTS behind a compose profile: probing an absent

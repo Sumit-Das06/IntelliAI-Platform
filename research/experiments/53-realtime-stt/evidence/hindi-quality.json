@@ -1,0 +1,59 @@
+{
+  "ruler": "unicode_generic@v2 (frozen)",
+  "sessions": {
+    "real30s": {
+      "realtime_final_vs_truth": {
+        "wer": 0.1092,
+        "cer": 0.0531
+      },
+      "m52h_offline_per_clip_baseline": null,
+      "final_words": 117,
+      "ref_words": 119
+    },
+    "real2min": {
+      "realtime_final_vs_truth": {
+        "wer": 0.2251,
+        "cer": 0.1334
+      },
+      "m52h_offline_per_clip_baseline": {
+        "wer": 0.1588,
+        "cer": 0.0811
+      },
+      "final_words": 396,
+      "ref_words": 422
+    },
+    "real5min": {
+      "realtime_final_vs_truth": {
+        "wer": 0.2521,
+        "cer": 0.1463
+      },
+      "m52h_offline_per_clip_baseline": {
+        "wer": 0.2317,
+        "cer": 0.1271
+      },
+      "final_words": 841,
+      "ref_words": 833
+    },
+    "real10min": {
+      "realtime_final_vs_truth": {
+        "wer": 0.1673,
+        "cer": 0.0725
+      },
+      "m52h_offline_per_clip_baseline": {
+        "wer": 0.1553,
+        "cer": 0.0692
+      },
+      "final_words": 1837,
+      "ref_words": 1835
+    }
+  },
+  "finding_generation_loop": {
+    "what": "the FIRST 2min run inflated to 602/422 words (WER 60%) — one commit-span hit a qwen generation loop",
+    "mitigation_shipped": "duration-scaled max_tokens cap (14 tokens/s) in QwenRealtime + realtime_commit_suspect_repetition observability log",
+    "rerun_after_fix": {
+      "wer": 0.2251,
+      "cer": 0.1334
+    },
+    "named_follow_up": "decode-output repetition guard (retry/trim policy) at promotion hardening"
+  }
+}

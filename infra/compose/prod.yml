@@ -50,6 +50,10 @@ services:
       # deployment runs is actually up (no false green, no permanent
       # meaningless DEGRADED).
       INTELLIAI_RUNTIMES_TTS_ENABLED: "true"
+      # M53: realtime STT is IMPLEMENTED but production stays OFF until
+      # its own promotion decision — pinned empty so a stray variable can
+      # never open a WebSocket surface this deployment has not approved.
+      INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ""
 
   stt-runtime:
     environment:

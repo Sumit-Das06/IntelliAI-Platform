@@ -1,0 +1,6 @@
+{
+  "clip": "boss30",
+  "reference": "the batch pipeline's own punctuated text (same stack, same clip)",
+  "realtime_vs_batch_wer": 0.0208,
+  "note": "punctuation differences count as substitutions under this ruler; word-stream equality is the law being checked"
+}

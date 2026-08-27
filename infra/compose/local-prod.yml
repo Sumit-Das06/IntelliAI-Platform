@@ -55,6 +55,10 @@ services:
       # This stack starts tts-runtime (--profile tts), so the gateway
       # answers for it in readiness — same law as production (M42).
       INTELLIAI_RUNTIMES_TTS_ENABLED: "true"
+      # M53 staging battery: realtime STT sessions ride a HOST-side GPU
+      # runtime instance (whisper CUDA in-process + the M52H CUDA
+      # llama-server for Hindi E3). Empty everywhere else = feature off.
+      INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ws://host.docker.internal:8003/v1/realtime
 
   stt-runtime:
     environment:

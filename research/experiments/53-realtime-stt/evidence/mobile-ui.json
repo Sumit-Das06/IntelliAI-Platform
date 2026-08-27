@@ -1,0 +1,10 @@
+{
+  "mobile-390": {
+    "realtime_visible": true,
+    "no_horizontal_scroll": true
+  },
+  "tablet-820": {
+    "realtime_visible": true,
+    "no_horizontal_scroll": true
+  }
+}

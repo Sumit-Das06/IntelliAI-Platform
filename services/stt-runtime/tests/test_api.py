@@ -137,6 +137,8 @@ class TestOperationalSurface:
             # under the same law.
             "punctuation": "disabled",
             "punctuation_en": "disabled",
+            # M53: realtime sessions report under the same law.
+            "realtime": "disabled",
         }
 
     def test_info_is_operational_identity_only(self, client: TestClient) -> None:

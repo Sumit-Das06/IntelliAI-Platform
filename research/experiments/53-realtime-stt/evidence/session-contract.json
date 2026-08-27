@@ -1,0 +1,28 @@
+{
+  "client_to_server": [
+    {
+      "event": "auth",
+      "api_key": "ik_...",
+      "language": "en|en-US|en-IN|hi|hi-IN",
+      "contribution": "on|off"
+    },
+    "binary PCM16 mono 16k frames (~100ms, 3.2KB)",
+    {
+      "event": "end"
+    }
+  ],
+  "server_to_client": [
+    "session.started {session_id}",
+    "transcript.partial {session_id, sequence, text, is_final:false}",
+    "transcript.final {session_id, sequence, text, raw_text, language, duration_seconds, is_final:true}",
+    "session.completed {session_id, audio_seconds, sample_id?}",
+    "session.degraded {reason}",
+    "session.error {code, message}"
+  ],
+  "laws": [
+    "sequence monotonic (asserted in every battery run)",
+    "partials EPHEMERAL",
+    "exactly one collected sample per session, batch-equivalent consent",
+    "ordered shutdown: the client closes after completed (transport-flush race found+fixed in browser E2E)"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "realshort_0.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 1.2,
+  "session_id": "7a918f7211c369d5",
+  "events_total": 5,
+  "first_partial_at_s": 0.906,
+  "partial_count": 2,
+  "partial_gap_p50_s": 0.44,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.33,
+  "final_at_s": 1.703,
+  "finalization_ms": 368.6,
+  "final_text": "धार्मिक स्थान है।",
+  "final_raw_text": "धार्मिक स्थान है",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

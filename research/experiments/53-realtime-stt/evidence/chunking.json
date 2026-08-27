@@ -1,0 +1,8 @@
+{
+  "transport_frame_ms": 100,
+  "decode_min_step_s": 0.5,
+  "rolling_window_s": 25,
+  "commit_margin_s": 5,
+  "commit_alignment": "latest VAD-silent boundary; the commit decode runs on a separate executor and never blocks partials",
+  "skip_to_latest": "the hot loop always decodes the newest buffer snapshot; unit-tested with a slow fake engine"
+}

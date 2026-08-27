@@ -124,7 +124,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 languages=settings.punctuation_en_languages.split(","),
                 timeout_ms=settings.punctuation_en_timeout_ms,
             )
+        if settings.realtime_enabled:
+            # M53 realtime sessions: engines load once at startup under
+            # the same law — an ENABLED deployment with a missing model
+            # artifact or an unreachable Hindi backend refuses to serve.
+            from intelliai_stt_runtime.realtime import build_realtime_service
+
+            app.state.realtime = await asyncio.to_thread(
+                build_realtime_service, settings, settings.model_dir
+            )
         yield
+        realtime_service = app.state.realtime
+        if realtime_service is not None:
+            realtime_service.close()
         punctuator: PunctuationRestorer | None = app.state.punctuator
         if punctuator is not None:
             punctuator.close()
@@ -141,6 +153,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.pool = pool
     app.state.punctuator = None  # set by the lifespan when the stage is enabled
     app.state.punctuator_en = None  # M50: same law, separate flag/artifact
+    app.state.realtime = None  # M53: realtime session service, flag-gated
 
     @app.middleware("http")
     async def request_context(

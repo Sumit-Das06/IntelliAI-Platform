@@ -317,6 +317,24 @@ def test_english_punctuation_ships_off_in_prod_and_on_only_in_the_local_stage() 
     assert '"punctuation_en"' in smoke
 
 
+def test_realtime_stt_ships_off_in_prod_and_on_only_in_the_local_stage() -> None:
+    # M53: realtime sessions follow the SAME law as every staged feature —
+    # the local production-shaped stack is the ONLY committed deployment
+    # that points the gateway at a realtime runtime; production pins the
+    # URL EMPTY so no stray variable can open the WebSocket surface, and
+    # the base compose never mentions it.
+    assert 'INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ""' in PROD_OVERLAY
+    local_prod = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    assert "INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ws://" in local_prod
+    assert "REALTIME" not in COMPOSE
+    # The runtime-side flag defaults FALSE and no committed compose file
+    # enables it in a container (the staging realtime runtime is a HOST
+    # instance; containers stay batch-only).
+    assert "INTELLIAI_STT_REALTIME_ENABLED" not in COMPOSE
+    assert "INTELLIAI_STT_REALTIME_ENABLED" not in local_prod
+    assert "INTELLIAI_STT_REALTIME_ENABLED" not in PROD_OVERLAY
+
+
 def test_preflight_refuses_an_enabled_stage_without_seeded_artifacts() -> None:
     preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
     assert "INTELLIAI_STT_PUNCTUATION_ENABLED" in preflight

@@ -955,3 +955,29 @@ class TestTtsAudioShare:
         assert 'aria-label="Share audio"' in page
         assert "📤 Share</button>" in page
         assert 'id="share-audio-note" role="status"' in page
+
+
+def test_realtime_mode_ships_in_the_playground_as_designed() -> None:
+    # M53: realtime is ADDITIVE UI inside the existing Playground — one
+    # button, the LocalAgreement-2 display law, friendly refusals, and
+    # zero new copy/share behaviors (they operate on the same textarea).
+    studio = (files("intelliai_api") / "static" / "console" / "studio.html").read_text(
+        encoding="utf-8"
+    )
+    assert 'id="realtime"' in studio
+    assert "/v1/audio/realtime" in studio
+    # The display law: agreed-prefix, never shrinking.
+    assert "laAgree" in studio
+    assert "Math.max(shownCount, agreed)" in studio
+    # Finality replaces the display; the completed event carries the
+    # sample id so the EXISTING correction flow works unchanged.
+    assert "transcript.final" in studio
+    assert "sample_id" in studio
+    # Friendly refusals keep batch working when realtime is off/unsupported.
+    assert "4404" in studio
+    assert "Upload still works" in studio
+    # The auth message carries the key over WSS; it must never be logged.
+    assert "console.log" not in studio.split("Realtime mode (M53)")[1]
+    # Internal engine names stay off the public page (the standing law).
+    for word in ("whisper", "kredor", "qwen", "kokoro"):
+        assert word not in studio.casefold()

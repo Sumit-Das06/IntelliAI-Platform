@@ -1,0 +1,6 @@
+{
+  "law": "M53 touched ZERO batch-path code (route, service, runtime /v1/transcribe all unchanged; realtime is an additive WS route + flag)",
+  "live_check": "POST /v1/audio/transcriptions on the realtime-enabled staging stack",
+  "boss30_run1_vs_run2_byte_identical": true,
+  "text": "see, this is a text to which I generated from my speech. okay, and if you see it has taken the whole statement or speech as one statement. so that's where we need to add punctuations and signs where it understand. where is the right fit break the."
+}

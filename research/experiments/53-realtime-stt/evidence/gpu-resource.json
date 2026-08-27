@@ -1,0 +1,5 @@
+{
+  "note": "single shared GPU serves whisper-realtime (in-process) + qwen llama-server + whisper batch container is CPU; VRAM sampled via nvidia-smi",
+  "vram_before_mib": 2899,
+  "vram_after_battery_and_concurrency_mib": 2899
+}

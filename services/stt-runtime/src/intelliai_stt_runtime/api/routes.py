@@ -5,7 +5,7 @@ from functools import partial
 from typing import Annotated, Any, Final
 
 import structlog
-from fastapi import APIRouter, File, Form, Request, Response, UploadFile
+from fastapi import APIRouter, File, Form, Request, Response, UploadFile, WebSocket
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
@@ -30,7 +30,11 @@ from intelliai_runtime_core import (
     package_versions,
 )
 from intelliai_stt_runtime import __version__
-from intelliai_stt_runtime.api.binding import HEADER_CONTRACT_VERSION, ROUTE_TRANSCRIBE
+from intelliai_stt_runtime.api.binding import (
+    HEADER_CONTRACT_VERSION,
+    ROUTE_REALTIME,
+    ROUTE_TRANSCRIBE,
+)
 from intelliai_stt_runtime.engines import TranscriptionEngine
 from intelliai_stt_runtime.engines.punctuation import PunctuationRestorer
 from intelliai_stt_runtime.engines.punctuation_en import EnPunctuationRestorer
@@ -82,12 +86,16 @@ async def ready(request: Request) -> JSONResponse:
     # reports "ready". Additive key — tolerant readers unaffected.
     punctuation = "ready" if request.app.state.punctuator is not None else "disabled"
     punctuation_en = "ready" if request.app.state.punctuator_en is not None else "disabled"
+    # M53: realtime sessions are readiness truth the same way — additive
+    # key, "disabled" the honest default everywhere.
+    realtime = "ready" if request.app.state.realtime is not None else "disabled"
     return JSONResponse(
         {
             "status": "degraded" if degraded else "ready",
             "slots": slots,
             "punctuation": punctuation,
             "punctuation_en": punctuation_en,
+            "realtime": realtime,
         }
     )
 
@@ -288,4 +296,25 @@ async def transcribe(
         content=envelope.model_dump_json(),
         media_type="application/json",
         headers=_CONTRACT_HEADERS,
+    )
+
+
+@router.websocket(ROUTE_REALTIME)
+async def realtime(websocket: WebSocket) -> None:
+    """Realtime STT sessions (M53), flag-gated.
+
+    The whole protocol lives in ``realtime.run_realtime_endpoint`` so it
+    is unit-testable without HTTP plumbing; this route only hands over
+    the process-wide state the lifespan created. When the flag is OFF,
+    ``app.state.realtime`` is None and the handshake refuses with the
+    UNAVAILABLE close code — the additive-feature law: absence must be
+    indistinguishable from the feature never having shipped.
+    """
+    from intelliai_stt_runtime.realtime import run_realtime_endpoint
+
+    await run_realtime_endpoint(
+        websocket,
+        service=websocket.app.state.realtime,
+        punctuator=websocket.app.state.punctuator,
+        punctuator_en=websocket.app.state.punctuator_en,
     )

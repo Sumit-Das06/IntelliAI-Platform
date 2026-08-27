@@ -1,0 +1,15 @@
+{
+  "detector": "production EnergyVad (annotation-only, deterministic)",
+  "law": "every window decode is VAD-gated",
+  "evidence": {
+    "en_silence_session": {
+      "partials": 0,
+      "final_empty": true,
+      "sample_stored": false
+    },
+    "hi_silence_session": {
+      "partials": 0,
+      "final_empty": true
+    }
+  }
+}

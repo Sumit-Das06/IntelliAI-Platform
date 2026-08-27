@@ -267,6 +267,17 @@ seed-models: ## Seed the model volume (chown to runtime uid 999 - the M31 rehear
 
 staging-seed-models: seed-models ## Back-compat alias (the seeding path now serves prod AND staging)
 
+# ── Realtime STT staging backends (M53; GPU host, research/staging only) ─
+# The realtime feature is flag-gated OFF everywhere. These two targets
+# bring up the STAGING serving pair on the GPU host; the local
+# production-shaped stack's gateway points at them via
+# INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL (compose overlay).
+realtime-qwen: ## Launch the pinned CUDA llama-server for Hindi realtime (127.0.0.1:8797)
+	uv run python tools/realtime/launch_qwen_gpu.py
+
+realtime-stt: ## Host the realtime STT runtime on :8003 (whisper CUDA + qwen URL)
+	INTELLIAI_STT_REALTIME_ENABLED=true 	INTELLIAI_STT_SLOTS=reference 	INTELLIAI_STT_REALTIME_WHISPER_DEVICE=cuda 	INTELLIAI_STT_REALTIME_QWEN_URL=http://127.0.0.1:8797 	INTELLIAI_STT_PUNCTUATION_ENABLED=true 	INTELLIAI_STT_PUNCTUATION_EN_ENABLED=true 	uv run --package intelliai-stt-runtime --extra whisper --extra punctuation 	  uvicorn --factory intelliai_stt_runtime.main:create_app --host 127.0.0.1 --port 8003
+
 # ── Local production-shaped stack (M25; see docs/ops/local-tunnel.md) ─
 # The EXACT production architecture (base + Caddy edge) with the ONE
 # staging difference: hi -> qwen3-asr-0.6b-hi-ft-e3 via the staging

@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "boss30.wav",
+  "language": "en",
+  "mode": "realtime",
+  "audio_seconds": 30.0,
+  "session_id": "1b827e21c35e58fe",
+  "events_total": 56,
+  "first_partial_at_s": 1.113,
+  "partial_count": 52,
+  "partial_gap_p50_s": 0.54,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 31.79,
+  "final_at_s": 33.001,
+  "finalization_ms": 1213.9,
+  "final_text": "see, this is the text to which I generated from my speech okay, and if you see it has taken the whole statement or speech as one statement. so that's where We need to add punctuations and signs where it understand. where is the right fit break the?",
+  "final_raw_text": "see this is the text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where We need to add punctuations and signs where it understand where is the right fit break the",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

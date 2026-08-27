@@ -1,0 +1,8 @@
+{
+  "policy": "bounded buffer; session.degraded at 60s unprocessed; complete-but-lagged final; hard cap closes with session_too_long",
+  "evidence_flood_8x_2min": {
+    "degraded": true,
+    "final_present": true,
+    "sample": true
+  }
+}

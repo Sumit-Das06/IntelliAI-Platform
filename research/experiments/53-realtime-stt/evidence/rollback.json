@@ -1,0 +1,10 @@
+{
+  "ws_probe_flag_off": "refused (InvalidStatus)",
+  "batch_works_flag_off": true,
+  "batch_text": "Hello",
+  "browser_flag_off": "friendly message + Upload enabled (rollback-off-browser.json)",
+  "restore_check": {
+    "final_present": true,
+    "sample_id_present": true
+  }
+}

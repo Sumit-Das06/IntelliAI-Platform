@@ -1,0 +1,13 @@
+{
+  "display_law": "LocalAgreement-2 word-prefix, monotonic by construction (a shorter or rewritten partial can never shrink the display)",
+  "browser_measured": {
+    "en_boss30": {
+      "monotonic": true,
+      "first_visible_s": 4.41
+    },
+    "hi_real30s": {
+      "monotonic": true,
+      "first_visible_s": 2.62
+    }
+  }
+}

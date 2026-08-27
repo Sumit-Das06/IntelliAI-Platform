@@ -24,6 +24,14 @@ dependencies = [
 whisper = [
     "faster-whisper>=1.1",
 ]
+# GPU serving for the realtime feature (M53): the CUDA 12 runtime DLLs
+# CT2 links against, as wheels, so a GPU deployment is one extra rather
+# than a hand-installed toolkit. Windows-only markers today because the
+# staging GPU host is Windows; Linux GPU serving adds its own markers.
+cuda = [
+    "nvidia-cublas-cu12>=12.6; sys_platform == 'win32'",
+    "nvidia-cudnn-cu12>=9.10; sys_platform == 'win32'",
+]
 punctuation = [
     "onnxruntime>=1.28",
     "sentencepiece>=0.2",

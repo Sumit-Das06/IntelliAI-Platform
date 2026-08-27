@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "16k_short_hello.wav",
+  "language": "en",
+  "mode": "realtime",
+  "audio_seconds": 1.3,
+  "session_id": "1d3f43d673eb42c8",
+  "events_total": 5,
+  "first_partial_at_s": 0.793,
+  "partial_count": 2,
+  "partial_gap_p50_s": 0.32,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.41,
+  "final_at_s": 1.698,
+  "finalization_ms": 289.6,
+  "final_text": "Hello.",
+  "final_raw_text": "Hello",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

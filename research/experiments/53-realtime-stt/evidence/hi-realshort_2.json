@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "realshort_2.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 2.4,
+  "session_id": "4306ca62b19b060e",
+  "events_total": 7,
+  "first_partial_at_s": 0.826,
+  "partial_count": 4,
+  "partial_gap_p50_s": 0.56,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 2.7,
+  "final_at_s": 3.113,
+  "finalization_ms": 413.5,
+  "final_text": "और धार्मिक के साथ वहाँ पर।",
+  "final_raw_text": "और धार्मिक के साथ वहाँ पर",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

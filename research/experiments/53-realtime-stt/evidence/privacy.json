@@ -1,0 +1,7 @@
+{
+  "realtime_audio": "processed in memory on the runtime; the gateway buffers PCM only for the ONE final consented sample",
+  "partials": "ephemeral - never persisted anywhere",
+  "final_sample": "existing DataCollectionService path: organization consent ceiling + per-session contribution-off honored (unit-tested); at most one sample per session, exactly like one batch upload",
+  "cancel_or_disconnect": "the session dies; buffers are discarded; nothing persists (no final means no collect)",
+  "retention": "unchanged from the batch policy; no broadening"
+}

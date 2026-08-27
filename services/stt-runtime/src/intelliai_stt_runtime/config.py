@@ -103,6 +103,34 @@ class Settings(BaseSettings):
     # on the dev box, so 3 s is generous without masking hangs.
     punctuation_en_timeout_ms: float = Field(default=3000.0, gt=0)
 
+    # ── realtime streaming sessions (Milestone 53) ──────────────────────
+    # The M52/M52H architecture behind a flag that is OFF by default
+    # everywhere; production stays OFF until its own promotion decision.
+    # The public boundary is the GATEWAY (it authenticates before opening
+    # a runtime session); this service's WS endpoint carries the same
+    # internal posture as /v1/transcribe.
+    realtime_enabled: bool = False
+    realtime_languages: str = "en,en-US,en-IN,hi,hi-IN"
+    # English partials run on a DEDICATED faster-whisper instance so a
+    # realtime session never queues behind batch inference. Device is
+    # deployment configuration (M52: cpu ≈1.5 s cadence; cuda passes
+    # every proposed gate). Empty compute_type → int8 on cpu, float16
+    # on cuda.
+    realtime_whisper_device: str = "cpu"
+    realtime_whisper_compute_type: str = ""
+    # Hindi realtime decodes go to an OpenAI-compatible llama-server URL
+    # (the M52H-verified CUDA build hosting the UNCHANGED E3 GGUF).
+    # Empty → Hindi realtime unavailable on this deployment (clean
+    # refusal); an ENABLED deployment with an unreachable URL refuses to
+    # start — the artifact-seeding law applied to a network backend.
+    realtime_qwen_url: str = ""
+    # Session policy, all M52/M52H-measured defaults.
+    realtime_min_step_seconds: float = Field(default=0.5, gt=0)
+    realtime_max_window_seconds: float = Field(default=25.0, gt=0)
+    realtime_commit_margin_seconds: float = Field(default=5.0, gt=0)
+    realtime_max_buffer_seconds: float = Field(default=60.0, gt=0)
+    realtime_max_session_seconds: float = Field(default=900.0, gt=0)
+
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be
     # ignored silently and a deployment meant to serve whisper would

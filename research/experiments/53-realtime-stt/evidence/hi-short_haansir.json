@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "short_haansir.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 1.5,
+  "session_id": "140961a87b062b74",
+  "events_total": 4,
+  "first_partial_at_s": 1.302,
+  "partial_count": 1,
+  "partial_gap_p50_s": null,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.67,
+  "final_at_s": 1.907,
+  "finalization_ms": 232.7,
+  "final_text": "हाँ सर",
+  "final_raw_text": "हाँ सर",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

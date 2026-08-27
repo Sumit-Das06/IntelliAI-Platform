@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "realshort_1.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 1.6,
+  "session_id": "b470f579ff9fc0ed",
+  "events_total": 6,
+  "first_partial_at_s": 0.86,
+  "partial_count": 3,
+  "partial_gap_p50_s": 0.54,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.77,
+  "final_at_s": 2.312,
+  "finalization_ms": 545.8,
+  "final_text": "वहाँ पर धार्मिक भी है।",
+  "final_raw_text": "वहाँ पर धार्मिक भी है",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

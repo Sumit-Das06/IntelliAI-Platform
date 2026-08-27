@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "short_theek.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 1.5,
+  "session_id": "48adfbbe56c3ec3e",
+  "events_total": 5,
+  "first_partial_at_s": 1.317,
+  "partial_count": 2,
+  "partial_gap_p50_s": 0.47,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.7,
+  "final_at_s": 2.068,
+  "finalization_ms": 371.2,
+  "final_text": "ठीक है।",
+  "final_raw_text": "ठीक है",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

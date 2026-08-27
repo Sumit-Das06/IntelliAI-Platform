@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "short_nahin.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 1.4,
+  "session_id": "f8ccf398a4a8c1c4",
+  "events_total": 4,
+  "first_partial_at_s": 1.475,
+  "partial_count": 1,
+  "partial_gap_p50_s": null,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.58,
+  "final_at_s": 2.06,
+  "finalization_ms": 480.1,
+  "final_text": "नहीं",
+  "final_raw_text": "नहीं",
+  "sample_id_present": true,
+  "degraded": false,
+  "errors": []
+}

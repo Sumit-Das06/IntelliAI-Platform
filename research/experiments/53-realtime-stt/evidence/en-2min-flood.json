@@ -1,0 +1,21 @@
+{
+  "url_path": "v1/audio/realtime",
+  "wav": "2min.wav",
+  "language": "en",
+  "mode": "flood",
+  "audio_seconds": 120.0,
+  "session_id": "b468914d94ce2891",
+  "events_total": 5,
+  "first_partial_at_s": 0.38,
+  "partial_count": 1,
+  "partial_gap_p50_s": null,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 0.26,
+  "final_at_s": 2.413,
+  "finalization_ms": 2154.7,
+  "final_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly. So it did not work. After that in below I have add a star. I use that filler to kind of I would say unable to understand what to speak. So I did the fillers of 2, 3, but it repeated the statement. So it should be understanding these are filler and correct them. If you give it to the charity and ask it to write it properly with proper punctuation and blah blah blah, it will give you a proper drafts and then see the comparison what it gave and what it is giving. So all those things should should get added. this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one",
+  "final_raw_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly. So it did not work. After that in below I have add a star. I use that filler to kind of I would say unable to understand what to speak. So I did the fillers of 2, 3, but it repeated the statement. So it should be understanding these are filler and correct them. If you give it to the charity and ask it to write it properly with proper punctuation and blah blah blah, it will give you a proper drafts and then see the comparison what it gave and what it is giving. So all those things should should get added. this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one",
+  "sample_id_present": true,
+  "degraded": true,
+  "errors": []
+}

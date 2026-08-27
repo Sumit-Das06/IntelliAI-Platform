@@ -1,0 +1,49 @@
+{
+  "english": {
+    "2min.wav": {
+      "fpt_s": 1.175,
+      "partial_gap_p50_s": 0.54,
+      "finalization_ms": 1115.1,
+      "partials": 235,
+      "degraded": false
+    },
+    "5min.wav": {
+      "fpt_s": 1.074,
+      "partial_gap_p50_s": 0.57,
+      "finalization_ms": 4020.0,
+      "partials": 451,
+      "degraded": false
+    },
+    "10min.wav": {
+      "fpt_s": 1.264,
+      "partial_gap_p50_s": 0.56,
+      "finalization_ms": 369.7,
+      "partials": 966,
+      "degraded": false
+    }
+  },
+  "hindi": {
+    "real2min.wav": {
+      "fpt_s": 0.679,
+      "partial_gap_p50_s": 0.82,
+      "finalization_ms": 1165.1,
+      "partials": 148,
+      "degraded": false
+    },
+    "real5min.wav": {
+      "fpt_s": 0.852,
+      "partial_gap_p50_s": 1.4,
+      "finalization_ms": 5627.7,
+      "partials": 219,
+      "degraded": false
+    },
+    "real10min.wav": {
+      "fpt_s": 1.059,
+      "partial_gap_p50_s": 1.53,
+      "finalization_ms": 4691.6,
+      "partials": 387,
+      "degraded": false
+    }
+  },
+  "memory": "VRAM flat (gpu-resource.json); host runtime state bounded by the 25s window + committed text only"
+}
