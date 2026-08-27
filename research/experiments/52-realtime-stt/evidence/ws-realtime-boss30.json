@@ -1,0 +1,16 @@
+{
+  "label": "realtime",
+  "pace": 1.0,
+  "audio_seconds": 30.0,
+  "session_id": "45e95cc50363f6f1",
+  "events_total": 24,
+  "first_partial_s": 3.114,
+  "partial_count": 20,
+  "partial_cadence_s": 1.59,
+  "end_sent_s": 32.44,
+  "final_at_s": 35.872,
+  "finalization_ms": 3432.6,
+  "final_text": "See, this is a text to which I generated from my speech, okay, and if you see it has taken the whole statement or speech as one statement. So that's where we need to add punctuations and signs where it understand where is the right fit break the",
+  "degraded": false,
+  "last_partial_text": "See, this is a text to which I generated from my speech, okay, and if you see it has taken the whole statement or speech as one statement. So that's where we need to add punctuations and signs where it understand where is the right fit break the"
+}

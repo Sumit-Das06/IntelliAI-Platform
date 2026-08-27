@@ -1,0 +1,42 @@
+{
+  "device": "cuda (RTX 5070 Laptop, WSL2), compute_type=float16",
+  "model": "whisper-small (current production artifact)",
+  "decode_curve_ms": {
+    "0.5s": {
+      "beam1_ms_median": 71.3,
+      "beam5_ms_median": 117.7
+    },
+    "1s": {
+      "beam1_ms_median": 87.0,
+      "beam5_ms_median": 117.0
+    },
+    "2s": {
+      "beam1_ms_median": 76.7,
+      "beam5_ms_median": 120.6
+    },
+    "5s": {
+      "beam1_ms_median": 157.7,
+      "beam5_ms_median": 209.2
+    },
+    "10s": {
+      "beam1_ms_median": 204.1,
+      "beam5_ms_median": 259.4
+    },
+    "25s": {
+      "beam1_ms_median": 386.7,
+      "beam5_ms_median": 451.3
+    },
+    "30s": {
+      "beam1_ms_median": 514.2,
+      "beam5_ms_median": 658.5
+    }
+  },
+  "stream_sim_500ms_greedy": {
+    "updates": 142,
+    "fpt_ms": 92.6,
+    "fpt_done_at_s": 1.09,
+    "update_latency_p50_ms": 446.4,
+    "cadence_p50_s": 0.0,
+    "finalization_ms": 974.3
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "wav": "16k_short_okay.wav",
+  "language": "en",
+  "chunk_ms": 200,
+  "mode": "growing",
+  "audio_seconds": 1.27,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 1.87,
+  "offline_rtf": 1.47,
+  "events": [
+    {
+      "audio_available_s": 0.2,
+      "done_at_s": 2.21,
+      "latency_ms": 2010.8,
+      "decode_ms": 2010.8,
+      "window_s": 0.2,
+      "chars": 3
+    },
+    {
+      "audio_available_s": 1.27,
+      "done_at_s": 4.09,
+      "latency_ms": 2811.9,
+      "decode_ms": 1875.5,
+      "window_s": 1.27,
+      "chars": 4
+    }
+  ],
+  "updates": 2,
+  "fpt_ms": 2210.0,
+  "update_latency_ms": {
+    "p50": 2010.8,
+    "max": 2010.8
+  },
+  "effective_cadence_s": 1.88,
+  "finalization_ms": 2811.9,
+  "decode_rtf": {
+    "p50": 5.763,
+    "max": 10.054
+  },
+  "stability": {
+    "stable_token_ratio_mean": 0.0,
+    "stable_token_ratio_min": 0.0,
+    "rewrite_events": 1,
+    "partials": 2
+  },
+  "final_vs_offline_wer": 0.0,
+  "adjacent_3gram_repeat": false,
+  "final_text": "Okay",
+  "offline_text": "Okay",
+  "rss_mib_end": 645.9
+}

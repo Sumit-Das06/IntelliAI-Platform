@@ -1,0 +1,15 @@
+{
+  "machine": "founder dev laptop",
+  "cpu": "Intel Core i7-14650HX, 16 cores / 24 threads",
+  "ram_gb": 31.6,
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU (8 GB)",
+  "os": "Windows 11 Home; experiments in WSL2 Ubuntu (production-parity Linux) unless noted",
+  "environments": {
+    "cpu_sim": "WSL2 ~/m52/venv, faster-whisper 1.2.1 (same pin as repo venv), CT2 CPU INT8",
+    "gpu": "WSL2 ~/m45/venv-vllm, CT2 4.8.1 CUDA via torch 2.11 cu130 bundled NVIDIA libs, float16",
+    "qwen_e3": "staging docker container (linux), llama.cpp pinned build, CPU",
+    "note_windows_ct2": "Windows-native CT2 measured ~3x slower per decode than Linux on the same CPU (7.6 s vs 2.6 s for a 30 s clip) — all CPU streaming numbers therefore come from WSL/container Linux, matching production shape"
+  },
+  "date": "2026-08-27",
+  "labels": "MEASURED unless stated otherwise in each evidence file"
+}

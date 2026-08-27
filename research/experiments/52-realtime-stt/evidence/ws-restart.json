@@ -1,0 +1,23 @@
+{
+  "label": "restart",
+  "first_session_id": "52d3f298666f2d47",
+  "first_session_finalized": false,
+  "second": {
+    "label": "after-restart",
+    "pace": 1.0,
+    "audio_seconds": 30.0,
+    "session_id": "596772db05a8e680",
+    "events_total": 25,
+    "first_partial_s": 2.918,
+    "partial_count": 21,
+    "partial_cadence_s": 1.52,
+    "end_sent_s": 32.24,
+    "final_at_s": 36.261,
+    "finalization_ms": 4022.0,
+    "final_text": "See this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement. So that's where we need to add punctuations in science where it understand where is the right fit break the",
+    "degraded": false,
+    "last_partial_text": "See this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement. So that's where we need to add punctuations and signs where it understand where is the right fit break the"
+  },
+  "ids_differ": true,
+  "stale_text_leaked": false
+}

@@ -1,0 +1,83 @@
+{
+  "wav": "noise5.wav",
+  "language": "en",
+  "chunk_ms": 500,
+  "mode": "growing",
+  "audio_seconds": 5.0,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 1.17,
+  "offline_rtf": 0.233,
+  "events": [
+    {
+      "audio_available_s": 0.5,
+      "done_at_s": 1.43,
+      "latency_ms": 934.0,
+      "decode_ms": 934.0,
+      "window_s": 0.5,
+      "chars": 10
+    },
+    {
+      "audio_available_s": 1.0,
+      "done_at_s": 2.41,
+      "latency_ms": 1411.6,
+      "decode_ms": 977.6,
+      "window_s": 1.0,
+      "chars": 10
+    },
+    {
+      "audio_available_s": 2.0,
+      "done_at_s": 3.61,
+      "latency_ms": 1614.6,
+      "decode_ms": 1203.0,
+      "window_s": 2.0,
+      "chars": 10
+    },
+    {
+      "audio_available_s": 3.5,
+      "done_at_s": 4.94,
+      "latency_ms": 1444.9,
+      "decode_ms": 1330.3,
+      "window_s": 3.5,
+      "chars": 3
+    },
+    {
+      "audio_available_s": 4.5,
+      "done_at_s": 6.37,
+      "latency_ms": 1873.8,
+      "decode_ms": 1428.9,
+      "window_s": 4.5,
+      "chars": 3
+    },
+    {
+      "audio_available_s": 5.0,
+      "done_at_s": 7.7,
+      "latency_ms": 2700.8,
+      "decode_ms": 1327.1,
+      "window_s": 5.0,
+      "chars": 3
+    }
+  ],
+  "updates": 6,
+  "fpt_ms": 1430.0,
+  "update_latency_ms": {
+    "p50": 1444.9,
+    "max": 1873.8
+  },
+  "effective_cadence_s": 1.33,
+  "finalization_ms": 2700.8,
+  "decode_rtf": {
+    "p50": 0.491,
+    "max": 1.868
+  },
+  "stability": {
+    "stable_token_ratio_mean": 0.8,
+    "stable_token_ratio_min": 0.0,
+    "rewrite_events": 1,
+    "partials": 6
+  },
+  "final_vs_offline_wer": 0.0,
+  "adjacent_3gram_repeat": false,
+  "final_text": "You",
+  "offline_text": "You",
+  "rss_mib_end": 648.6
+}

@@ -1,0 +1,187 @@
+{
+  "wav": "boss30.wav",
+  "language": "en",
+  "chunk_ms": 300,
+  "mode": "growing",
+  "audio_seconds": 30.0,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 2.42,
+  "offline_rtf": 0.081,
+  "events": [
+    {
+      "audio_available_s": 0.3,
+      "done_at_s": 1.34,
+      "latency_ms": 1038.3,
+      "decode_ms": 1038.3,
+      "window_s": 0.3,
+      "chars": 3
+    },
+    {
+      "audio_available_s": 1.2,
+      "done_at_s": 2.55,
+      "latency_ms": 1348.6,
+      "decode_ms": 1210.3,
+      "window_s": 1.2,
+      "chars": 0
+    },
+    {
+      "audio_available_s": 2.4,
+      "done_at_s": 3.89,
+      "latency_ms": 1491.7,
+      "decode_ms": 1343.1,
+      "window_s": 2.4,
+      "chars": 5
+    },
+    {
+      "audio_available_s": 3.6,
+      "done_at_s": 5.15,
+      "latency_ms": 1554.2,
+      "decode_ms": 1262.6,
+      "window_s": 3.6,
+      "chars": 12
+    },
+    {
+      "audio_available_s": 5.1,
+      "done_at_s": 6.5,
+      "latency_ms": 1398.2,
+      "decode_ms": 1344.0,
+      "window_s": 5.1,
+      "chars": 37
+    },
+    {
+      "audio_available_s": 6.3,
+      "done_at_s": 7.89,
+      "latency_ms": 1590.2,
+      "decode_ms": 1392.0,
+      "window_s": 6.3,
+      "chars": 49
+    },
+    {
+      "audio_available_s": 7.8,
+      "done_at_s": 9.23,
+      "latency_ms": 1433.9,
+      "decode_ms": 1343.7,
+      "window_s": 7.8,
+      "chars": 58
+    },
+    {
+      "audio_available_s": 9.0,
+      "done_at_s": 10.58,
+      "latency_ms": 1575.9,
+      "decode_ms": 1342.0,
+      "window_s": 9.0,
+      "chars": 68
+    },
+    {
+      "audio_available_s": 10.5,
+      "done_at_s": 12.03,
+      "latency_ms": 1525.9,
+      "decode_ms": 1450.0,
+      "window_s": 10.5,
+      "chars": 74
+    },
+    {
+      "audio_available_s": 12.0,
+      "done_at_s": 13.59,
+      "latency_ms": 1587.9,
+      "decode_ms": 1562.0,
+      "window_s": 12.0,
+      "chars": 81
+    },
+    {
+      "audio_available_s": 13.5,
+      "done_at_s": 15.1,
+      "latency_ms": 1598.4,
+      "decode_ms": 1510.5,
+      "window_s": 13.5,
+      "chars": 103
+    },
+    {
+      "audio_available_s": 15.0,
+      "done_at_s": 16.67,
+      "latency_ms": 1669.8,
+      "decode_ms": 1571.4,
+      "window_s": 15.0,
+      "chars": 107
+    },
+    {
+      "audio_available_s": 16.5,
+      "done_at_s": 18.41,
+      "latency_ms": 1908.8,
+      "decode_ms": 1739.0,
+      "window_s": 16.5,
+      "chars": 124
+    },
+    {
+      "audio_available_s": 18.3,
+      "done_at_s": 20.12,
+      "latency_ms": 1816.8,
+      "decode_ms": 1708.1,
+      "window_s": 18.3,
+      "chars": 134
+    },
+    {
+      "audio_available_s": 20.1,
+      "done_at_s": 21.95,
+      "latency_ms": 1849.1,
+      "decode_ms": 1832.3,
+      "window_s": 20.1,
+      "chars": 150
+    },
+    {
+      "audio_available_s": 21.9,
+      "done_at_s": 23.86,
+      "latency_ms": 1963.5,
+      "decode_ms": 1914.4,
+      "window_s": 21.9,
+      "chars": 153
+    },
+    {
+      "audio_available_s": 23.7,
+      "done_at_s": 27.09,
+      "latency_ms": 3390.6,
+      "decode_ms": 3227.1,
+      "window_s": 23.7,
+      "chars": 175
+    },
+    {
+      "audio_available_s": 27.0,
+      "done_at_s": 30.51,
+      "latency_ms": 3505.1,
+      "decode_ms": 3414.6,
+      "window_s": 27.0,
+      "chars": 213
+    },
+    {
+      "audio_available_s": 30.0,
+      "done_at_s": 33.92,
+      "latency_ms": 3920.4,
+      "decode_ms": 3415.2,
+      "window_s": 30.0,
+      "chars": 241
+    }
+  ],
+  "updates": 19,
+  "fpt_ms": 1340.0,
+  "update_latency_ms": {
+    "p50": 1589.1,
+    "max": 3505.1
+  },
+  "effective_cadence_s": 1.54,
+  "finalization_ms": 3920.4,
+  "decode_rtf": {
+    "p50": 0.136,
+    "max": 3.461
+  },
+  "stability": {
+    "stable_token_ratio_mean": 0.608,
+    "stable_token_ratio_min": 0.0,
+    "rewrite_events": 10,
+    "partials": 19
+  },
+  "final_vs_offline_wer": 0.0,
+  "adjacent_3gram_repeat": false,
+  "final_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the",
+  "offline_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the",
+  "rss_mib_end": 693.1
+}

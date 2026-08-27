@@ -1,0 +1,51 @@
+{
+  "wav": "16k_short_yes.wav",
+  "language": "en",
+  "chunk_ms": 200,
+  "mode": "growing",
+  "audio_seconds": 1.27,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 1.89,
+  "offline_rtf": 1.479,
+  "events": [
+    {
+      "audio_available_s": 0.2,
+      "done_at_s": 2.07,
+      "latency_ms": 1874.7,
+      "decode_ms": 1874.7,
+      "window_s": 0.2,
+      "chars": 3
+    },
+    {
+      "audio_available_s": 1.27,
+      "done_at_s": 3.94,
+      "latency_ms": 2661.0,
+      "decode_ms": 1860.7,
+      "window_s": 1.27,
+      "chars": 4
+    }
+  ],
+  "updates": 2,
+  "fpt_ms": 2070.0,
+  "update_latency_ms": {
+    "p50": 1874.7,
+    "max": 1874.7
+  },
+  "effective_cadence_s": 1.87,
+  "finalization_ms": 2661.0,
+  "decode_rtf": {
+    "p50": 5.417,
+    "max": 9.373
+  },
+  "stability": {
+    "stable_token_ratio_mean": 0.0,
+    "stable_token_ratio_min": 0.0,
+    "rewrite_events": 1,
+    "partials": 2
+  },
+  "final_vs_offline_wer": 0.0,
+  "adjacent_3gram_repeat": false,
+  "final_text": "Yes.",
+  "offline_text": "Yes.",
+  "rss_mib_end": 646.4
+}

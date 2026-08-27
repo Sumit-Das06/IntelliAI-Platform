@@ -1,0 +1,7 @@
+{
+  "auth_probes": {
+    "wrong_token": "refused (InvalidStatus)",
+    "no_token": "refused (InvalidStatus)"
+  },
+  "design": "shared-secret before accept; session-scoped state only; no model/path in any event; buffer bounded with loud degraded event"
+}

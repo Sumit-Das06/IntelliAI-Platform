@@ -1,0 +1,51 @@
+{
+  "wav": "16k_short_callme.wav",
+  "language": "en",
+  "chunk_ms": 200,
+  "mode": "growing",
+  "audio_seconds": 1.37,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 2.16,
+  "offline_rtf": 1.571,
+  "events": [
+    {
+      "audio_available_s": 0.2,
+      "done_at_s": 1.99,
+      "latency_ms": 1790.6,
+      "decode_ms": 1790.6,
+      "window_s": 0.2,
+      "chars": 0
+    },
+    {
+      "audio_available_s": 1.37,
+      "done_at_s": 3.82,
+      "latency_ms": 2441.6,
+      "decode_ms": 1825.4,
+      "window_s": 1.37,
+      "chars": 8
+    }
+  ],
+  "updates": 2,
+  "fpt_ms": 3820.0,
+  "update_latency_ms": {
+    "p50": 1790.6,
+    "max": 1790.6
+  },
+  "effective_cadence_s": 1.83,
+  "finalization_ms": 2441.6,
+  "decode_rtf": {
+    "p50": 5.14,
+    "max": 8.953
+  },
+  "stability": {
+    "stable_token_ratio_mean": 1.0,
+    "stable_token_ratio_min": 1.0,
+    "rewrite_events": 0,
+    "partials": 2
+  },
+  "final_vs_offline_wer": 0.0,
+  "adjacent_3gram_repeat": false,
+  "final_text": "Call me.",
+  "offline_text": "Call me.",
+  "rss_mib_end": 646.4
+}

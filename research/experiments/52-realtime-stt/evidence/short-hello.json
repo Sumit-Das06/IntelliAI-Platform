@@ -1,0 +1,51 @@
+{
+  "wav": "16k_short_hello.wav",
+  "language": "en",
+  "chunk_ms": 200,
+  "mode": "growing",
+  "audio_seconds": 1.28,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 2.0,
+  "offline_rtf": 1.559,
+  "events": [
+    {
+      "audio_available_s": 0.2,
+      "done_at_s": 2.15,
+      "latency_ms": 1953.0,
+      "decode_ms": 1953.0,
+      "window_s": 0.2,
+      "chars": 1
+    },
+    {
+      "audio_available_s": 1.28,
+      "done_at_s": 4.03,
+      "latency_ms": 2747.5,
+      "decode_ms": 1873.8,
+      "window_s": 1.28,
+      "chars": 5
+    }
+  ],
+  "updates": 2,
+  "fpt_ms": 2150.0,
+  "update_latency_ms": {
+    "p50": 1953.0,
+    "max": 1953.0
+  },
+  "effective_cadence_s": 1.88,
+  "finalization_ms": 2747.5,
+  "decode_rtf": {
+    "p50": 5.615,
+    "max": 9.765
+  },
+  "stability": {
+    "stable_token_ratio_mean": 0.0,
+    "stable_token_ratio_min": 0.0,
+    "rewrite_events": 1,
+    "partials": 2
+  },
+  "final_vs_offline_wer": 0.0,
+  "adjacent_3gram_repeat": false,
+  "final_text": "Hello",
+  "offline_text": "Hello",
+  "rss_mib_end": 647.4
+}

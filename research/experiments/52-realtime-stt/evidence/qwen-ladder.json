@@ -1,0 +1,89 @@
+{
+  "engine": "qwen3-asr-0.6b-hi-ft-e3 via llama.cpp llama-server (staging container, CPU)",
+  "state_reuse": "NONE — repo-verified: one WAV per completion request, full re-inference per update",
+  "ladder": {
+    "1s": {
+      "duration_s": 1.0,
+      "inference_ms_median": 1306.8,
+      "rtf_median": 1.307,
+      "text": "नमस्ते"
+    },
+    "2s": {
+      "duration_s": 2.0,
+      "inference_ms_median": 1614.0,
+      "rtf_median": 0.807,
+      "text": "नमस्ते दोस्तो आज हम।"
+    },
+    "3s": {
+      "duration_s": 3.0,
+      "inference_ms_median": 14488.1,
+      "rtf_median": 4.829,
+      "text": "नमस्ते दोस्तो, आज हम एक ने शुविट्ताग।"
+    },
+    "5s": {
+      "duration_s": 5.0,
+      "inference_ms_median": 2085.6,
+      "rtf_median": 0.417,
+      "text": "नमस्ते दुस्तो। आज हम एक नहीं सूविदा के बारे में बात करेंगे।"
+    },
+    "8s": {
+      "duration_s": 8.0,
+      "inference_ms_median": 2715.8,
+      "rtf_median": 0.339,
+      "text": "नमस्ते दुस्तो। आज हम एक नहीं सूविदा के बारे में बात करेंगे। हमारी तीमने पिछले महीने बहुत महनत की है।"
+    },
+    "12s": {
+      "duration_s": 12.0,
+      "inference_ms_median": 4777.2,
+      "rtf_median": 0.398,
+      "text": "नमस्ते दुस्तो। आज हम एक नहीं सूविदा के बारे में बात करेंगे। हमारी तीम ने पिछले महीने बहुत महनत की है। यह है सूविदा आपके काम को आसान बना देगी। क्रिप्या अपन...।"
+    },
+    "16s": {
+      "duration_s": 16.0,
+      "inference_ms_median": 4579.1,
+      "rtf_median": 0.286,
+      "text": "नमस्ते दुस्तो। आज हम एक नहीं सूविदा के बारे में बात करेंगे। हमारी तीमने पिछले महीने बहुत महनत की है। यहे सूविदा आपके काम को आसान बना देगी। क्रिप्या अपनी प्रतिक्रिया हमें जरुर भेजे। अगले हबते हम इसका पूर।"
+    },
+    "full": {
+      "duration_s": 19.93,
+      "inference_ms_median": 7546.0,
+      "rtf_median": 0.379,
+      "text": "नमस्ते दुस्तो। आज हम एक नहीं सूविदा के बारे में बात करेंगे। हमारी तीम ने पिछले महीने बहुत महनत की है। यह सूविदा आपके काम को आसान बना देगी। क्रिप्या अपनी प्रतिक्रिया हमें जरुर भेजे। अगले हबते हम इसका पुरा प्रदरशन दिखाएंगे, दहनिवाद और फिर मिलेंगे।"
+    }
+  },
+  "cadence_crossings": {
+    "window_seconds_decodable_in_500ms": 0.0,
+    "window_seconds_decodable_in_1000ms": 0.0,
+    "window_seconds_decodable_in_2000ms": 2.0
+  },
+  "language_mix_qualitative_n1": {
+    "hindi_short_hi_route": {
+      "duration_s": 4.6,
+      "inference_ms": 2129.1,
+      "rtf": 0.463,
+      "wall_s": 2.24,
+      "text": "क्या आप कल अप्हिस आवगे? मुझे रिपोर्ट आज जाहीए?।"
+    },
+    "english_hi_route": {
+      "duration_s": 2.45,
+      "inference_ms": 20445.6,
+      "rtf": 8.348,
+      "wall_s": 20.53,
+      "text": "अए उत्ड़ा वेर्ए तुम्रो।"
+    },
+    "hinglish_hi_route": {
+      "duration_s": 7.05,
+      "inference_ms": 2718.5,
+      "rtf": 0.386,
+      "wall_s": 2.85,
+      "text": "क्या आप कल अप्हिस आवगे, मुझे रिपोर्ट आज चाहिये?, आप कल अप्हिस आवगे, मुझे रिपोर्ट आज चाहिये?।"
+    },
+    "hinglish_en_route_whisper": {
+      "duration_s": 7.05,
+      "inference_ms": 1589.7,
+      "rtf": 0.226,
+      "wall_s": 1.68,
+      "text": "I will send the report tomorrow."
+    }
+  }
+}

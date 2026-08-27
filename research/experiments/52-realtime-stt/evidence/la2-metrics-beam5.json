@@ -1,0 +1,25 @@
+{
+  "partials": 14,
+  "policy": "LocalAgreement-2 word prefix, monotonic display",
+  "monotonic": true,
+  "lag_words": {
+    "mean": 6.5,
+    "max": 14
+  },
+  "live_coverage_of_final": 0.708,
+  "displayed_growth": [
+    0,
+    1,
+    1,
+    3,
+    13,
+    13,
+    13,
+    23,
+    27,
+    31,
+    34,
+    34,
+    34
+  ]
+}

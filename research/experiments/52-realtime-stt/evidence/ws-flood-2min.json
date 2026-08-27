@@ -1,0 +1,16 @@
+{
+  "label": "flood-8x",
+  "pace": 8.0,
+  "audio_seconds": 120.0,
+  "session_id": "ff8887182b948e54",
+  "events_total": 5,
+  "first_partial_s": 1.55,
+  "partial_count": 1,
+  "partial_cadence_s": null,
+  "end_sent_s": 0.36,
+  "final_at_s": 9.878,
+  "finalization_ms": 9519.6,
+  "final_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly. So it did not work. After that in below I have add a star. I used that filler to kind of I would say unable to understand what to speak. So I did the fillers of 2, 3 but it repeated the statement. So it should be understanding these are filler and correct them. If you give it to the charity and ask it to write it properly with proper punctuation and blah blah blah, it will give you a proper drafts and then see the comparison what it gave and what it is giving. So all those things should should get added. this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one",
+  "degraded": true,
+  "last_partial_text": "See this is a text which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to"
+}

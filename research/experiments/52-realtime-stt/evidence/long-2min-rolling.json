@@ -1,0 +1,531 @@
+{
+  "wav": "2min.wav",
+  "language": "en",
+  "chunk_ms": 500,
+  "mode": "rolling",
+  "audio_seconds": 119.99,
+  "engine": "faster-whisper whisper-small INT8 CPU, partial_beam=5, final/offline beam=5, condition_on_previous_text=False",
+  "offline_decode_s": 9.09,
+  "offline_rtf": 0.076,
+  "events": [
+    {
+      "audio_available_s": 0.5,
+      "done_at_s": 1.7,
+      "latency_ms": 1203.5,
+      "decode_ms": 1203.5,
+      "window_s": 0.5,
+      "chars": 0
+    },
+    {
+      "audio_available_s": 1.5,
+      "done_at_s": 2.92,
+      "latency_ms": 1423.9,
+      "decode_ms": 1220.4,
+      "window_s": 1.5,
+      "chars": 2
+    },
+    {
+      "audio_available_s": 2.5,
+      "done_at_s": 4.02,
+      "latency_ms": 1516.5,
+      "decode_ms": 1092.6,
+      "window_s": 2.5,
+      "chars": 5
+    },
+    {
+      "audio_available_s": 4.0,
+      "done_at_s": 5.29,
+      "latency_ms": 1293.5,
+      "decode_ms": 1277.0,
+      "window_s": 4.0,
+      "chars": 16
+    },
+    {
+      "audio_available_s": 5.0,
+      "done_at_s": 6.59,
+      "latency_ms": 1588.2,
+      "decode_ms": 1294.7,
+      "window_s": 5.0,
+      "chars": 29
+    },
+    {
+      "audio_available_s": 6.5,
+      "done_at_s": 7.99,
+      "latency_ms": 1493.1,
+      "decode_ms": 1404.9,
+      "window_s": 6.5,
+      "chars": 49
+    },
+    {
+      "audio_available_s": 7.5,
+      "done_at_s": 9.4,
+      "latency_ms": 1904.0,
+      "decode_ms": 1410.9,
+      "window_s": 7.5,
+      "chars": 56
+    },
+    {
+      "audio_available_s": 9.0,
+      "done_at_s": 10.89,
+      "latency_ms": 1889.5,
+      "decode_ms": 1485.5,
+      "window_s": 9.0,
+      "chars": 68
+    },
+    {
+      "audio_available_s": 10.5,
+      "done_at_s": 12.28,
+      "latency_ms": 1784.1,
+      "decode_ms": 1394.6,
+      "window_s": 10.5,
+      "chars": 74
+    },
+    {
+      "audio_available_s": 12.0,
+      "done_at_s": 13.77,
+      "latency_ms": 1770.6,
+      "decode_ms": 1486.5,
+      "window_s": 12.0,
+      "chars": 81
+    },
+    {
+      "audio_available_s": 13.5,
+      "done_at_s": 15.45,
+      "latency_ms": 1953.3,
+      "decode_ms": 1682.7,
+      "window_s": 13.5,
+      "chars": 103
+    },
+    {
+      "audio_available_s": 15.0,
+      "done_at_s": 17.01,
+      "latency_ms": 2013.8,
+      "decode_ms": 1560.4,
+      "window_s": 15.0,
+      "chars": 107
+    },
+    {
+      "audio_available_s": 17.0,
+      "done_at_s": 18.48,
+      "latency_ms": 1476.6,
+      "decode_ms": 1462.8,
+      "window_s": 17.0,
+      "chars": 124
+    },
+    {
+      "audio_available_s": 18.0,
+      "done_at_s": 20.09,
+      "latency_ms": 2088.4,
+      "decode_ms": 1611.9,
+      "window_s": 18.0,
+      "chars": 124
+    },
+    {
+      "audio_available_s": 20.0,
+      "done_at_s": 21.74,
+      "latency_ms": 1736.3,
+      "decode_ms": 1647.8,
+      "window_s": 20.0,
+      "chars": 150
+    },
+    {
+      "audio_available_s": 21.5,
+      "done_at_s": 23.4,
+      "latency_ms": 1895.6,
+      "decode_ms": 1659.3,
+      "window_s": 21.5,
+      "chars": 153
+    },
+    {
+      "audio_available_s": 23.0,
+      "done_at_s": 25.09,
+      "latency_ms": 2090.1,
+      "decode_ms": 1694.5,
+      "window_s": 23.0,
+      "chars": 165
+    },
+    {
+      "audio_available_s": 25.0,
+      "done_at_s": 26.82,
+      "latency_ms": 1818.7,
+      "decode_ms": 1728.6,
+      "window_s": 25.0,
+      "chars": 188
+    },
+    {
+      "audio_available_s": 26.5,
+      "done_at_s": 29.58,
+      "latency_ms": 3075.6,
+      "decode_ms": 2756.9,
+      "window_s": 26.5,
+      "chars": 197
+    },
+    {
+      "audio_available_s": 29.5,
+      "done_at_s": 31.09,
+      "latency_ms": 1585.6,
+      "decode_ms": 1510.0,
+      "window_s": 8.62,
+      "chars": 244
+    },
+    {
+      "audio_available_s": 31.0,
+      "done_at_s": 32.57,
+      "latency_ms": 1566.1,
+      "decode_ms": 1480.5,
+      "window_s": 10.12,
+      "chars": 255
+    },
+    {
+      "audio_available_s": 32.5,
+      "done_at_s": 34.06,
+      "latency_ms": 1556.1,
+      "decode_ms": 1489.9,
+      "window_s": 11.62,
+      "chars": 270
+    },
+    {
+      "audio_available_s": 34.0,
+      "done_at_s": 35.57,
+      "latency_ms": 1566.8,
+      "decode_ms": 1510.7,
+      "window_s": 13.12,
+      "chars": 288
+    },
+    {
+      "audio_available_s": 35.5,
+      "done_at_s": 37.3,
+      "latency_ms": 1796.0,
+      "decode_ms": 1729.2,
+      "window_s": 14.62,
+      "chars": 300
+    },
+    {
+      "audio_available_s": 37.0,
+      "done_at_s": 38.88,
+      "latency_ms": 1884.4,
+      "decode_ms": 1588.4,
+      "window_s": 16.12,
+      "chars": 318
+    },
+    {
+      "audio_available_s": 38.5,
+      "done_at_s": 40.54,
+      "latency_ms": 2040.6,
+      "decode_ms": 1656.2,
+      "window_s": 17.62,
+      "chars": 326
+    },
+    {
+      "audio_available_s": 40.5,
+      "done_at_s": 43.48,
+      "latency_ms": 2976.0,
+      "decode_ms": 2935.3,
+      "window_s": 19.62,
+      "chars": 357
+    },
+    {
+      "audio_available_s": 43.0,
+      "done_at_s": 46.52,
+      "latency_ms": 3521.8,
+      "decode_ms": 3045.8,
+      "window_s": 22.12,
+      "chars": 387
+    },
+    {
+      "audio_available_s": 46.5,
+      "done_at_s": 49.66,
+      "latency_ms": 3158.2,
+      "decode_ms": 3136.5,
+      "window_s": 25.62,
+      "chars": 423
+    },
+    {
+      "audio_available_s": 49.5,
+      "done_at_s": 51.16,
+      "latency_ms": 1661.4,
+      "decode_ms": 1503.2,
+      "window_s": 8.1,
+      "chars": 445
+    },
+    {
+      "audio_available_s": 51.0,
+      "done_at_s": 53.7,
+      "latency_ms": 2696.6,
+      "decode_ms": 2535.2,
+      "window_s": 9.6,
+      "chars": 453
+    },
+    {
+      "audio_available_s": 53.5,
+      "done_at_s": 56.29,
+      "latency_ms": 2790.9,
+      "decode_ms": 2594.2,
+      "window_s": 12.1,
+      "chars": 464
+    },
+    {
+      "audio_available_s": 56.0,
+      "done_at_s": 58.02,
+      "latency_ms": 2022.0,
+      "decode_ms": 1731.2,
+      "window_s": 14.6,
+      "chars": 536
+    },
+    {
+      "audio_available_s": 58.0,
+      "done_at_s": 60.69,
+      "latency_ms": 2687.4,
+      "decode_ms": 2665.4,
+      "window_s": 16.6,
+      "chars": 541
+    },
+    {
+      "audio_available_s": 60.5,
+      "done_at_s": 63.86,
+      "latency_ms": 3363.2,
+      "decode_ms": 3175.8,
+      "window_s": 19.1,
+      "chars": 594
+    },
+    {
+      "audio_available_s": 63.5,
+      "done_at_s": 67.14,
+      "latency_ms": 3643.5,
+      "decode_ms": 3280.2,
+      "window_s": 22.1,
+      "chars": 621
+    },
+    {
+      "audio_available_s": 67.0,
+      "done_at_s": 70.39,
+      "latency_ms": 3388.1,
+      "decode_ms": 3244.6,
+      "window_s": 25.6,
+      "chars": 638
+    },
+    {
+      "audio_available_s": 70.0,
+      "done_at_s": 71.9,
+      "latency_ms": 1901.1,
+      "decode_ms": 1513.0,
+      "window_s": 9.28,
+      "chars": 646
+    },
+    {
+      "audio_available_s": 71.5,
+      "done_at_s": 73.33,
+      "latency_ms": 1826.9,
+      "decode_ms": 1425.8,
+      "window_s": 10.78,
+      "chars": 648
+    },
+    {
+      "audio_available_s": 73.0,
+      "done_at_s": 74.71,
+      "latency_ms": 1705.5,
+      "decode_ms": 1378.6,
+      "window_s": 12.28,
+      "chars": 660
+    },
+    {
+      "audio_available_s": 74.5,
+      "done_at_s": 77.59,
+      "latency_ms": 3086.4,
+      "decode_ms": 2880.9,
+      "window_s": 13.78,
+      "chars": 695
+    },
+    {
+      "audio_available_s": 77.5,
+      "done_at_s": 80.19,
+      "latency_ms": 2686.0,
+      "decode_ms": 2599.7,
+      "window_s": 16.78,
+      "chars": 715
+    },
+    {
+      "audio_available_s": 80.0,
+      "done_at_s": 83.21,
+      "latency_ms": 3213.5,
+      "decode_ms": 3027.5,
+      "window_s": 19.28,
+      "chars": 746
+    },
+    {
+      "audio_available_s": 83.0,
+      "done_at_s": 85.94,
+      "latency_ms": 2937.8,
+      "decode_ms": 2724.3,
+      "window_s": 22.28,
+      "chars": 786
+    },
+    {
+      "audio_available_s": 85.5,
+      "done_at_s": 88.97,
+      "latency_ms": 3473.6,
+      "decode_ms": 3035.8,
+      "window_s": 24.78,
+      "chars": 818
+    },
+    {
+      "audio_available_s": 88.5,
+      "done_at_s": 92.11,
+      "latency_ms": 3607.7,
+      "decode_ms": 3134.1,
+      "window_s": 27.78,
+      "chars": 861
+    },
+    {
+      "audio_available_s": 92.0,
+      "done_at_s": 93.72,
+      "latency_ms": 1723.1,
+      "decode_ms": 1615.4,
+      "window_s": 10.42,
+      "chars": 937
+    },
+    {
+      "audio_available_s": 93.5,
+      "done_at_s": 96.6,
+      "latency_ms": 3098.7,
+      "decode_ms": 2875.5,
+      "window_s": 11.92,
+      "chars": 954
+    },
+    {
+      "audio_available_s": 96.5,
+      "done_at_s": 98.48,
+      "latency_ms": 1978.5,
+      "decode_ms": 1879.9,
+      "window_s": 14.92,
+      "chars": 1004
+    },
+    {
+      "audio_available_s": 98.0,
+      "done_at_s": 100.35,
+      "latency_ms": 2347.3,
+      "decode_ms": 1868.8,
+      "window_s": 16.42,
+      "chars": 1012
+    },
+    {
+      "audio_available_s": 100.0,
+      "done_at_s": 102.39,
+      "latency_ms": 2388.5,
+      "decode_ms": 2041.2,
+      "window_s": 18.42,
+      "chars": 1045
+    },
+    {
+      "audio_available_s": 102.0,
+      "done_at_s": 104.4,
+      "latency_ms": 2397.8,
+      "decode_ms": 2009.3,
+      "window_s": 20.42,
+      "chars": 1069
+    },
+    {
+      "audio_available_s": 104.0,
+      "done_at_s": 106.35,
+      "latency_ms": 2349.1,
+      "decode_ms": 1951.3,
+      "window_s": 22.42,
+      "chars": 1069
+    },
+    {
+      "audio_available_s": 106.0,
+      "done_at_s": 108.48,
+      "latency_ms": 2477.8,
+      "decode_ms": 2128.7,
+      "window_s": 24.42,
+      "chars": 1081
+    },
+    {
+      "audio_available_s": 108.0,
+      "done_at_s": 111.68,
+      "latency_ms": 3682.7,
+      "decode_ms": 3204.9,
+      "window_s": 26.42,
+      "chars": 1120
+    },
+    {
+      "audio_available_s": 111.5,
+      "done_at_s": 113.22,
+      "latency_ms": 1721.5,
+      "decode_ms": 1538.8,
+      "window_s": 11.8,
+      "chars": 1133
+    },
+    {
+      "audio_available_s": 113.0,
+      "done_at_s": 114.68,
+      "latency_ms": 1682.2,
+      "decode_ms": 1460.7,
+      "window_s": 13.3,
+      "chars": 1143
+    },
+    {
+      "audio_available_s": 114.5,
+      "done_at_s": 116.16,
+      "latency_ms": 1661.6,
+      "decode_ms": 1479.4,
+      "window_s": 14.8,
+      "chars": 1157
+    },
+    {
+      "audio_available_s": 116.0,
+      "done_at_s": 117.65,
+      "latency_ms": 1652.3,
+      "decode_ms": 1490.7,
+      "window_s": 16.3,
+      "chars": 1176
+    },
+    {
+      "audio_available_s": 117.5,
+      "done_at_s": 119.23,
+      "latency_ms": 1728.1,
+      "decode_ms": 1575.8,
+      "window_s": 17.8,
+      "chars": 1186
+    },
+    {
+      "audio_available_s": 119.0,
+      "done_at_s": 120.79,
+      "latency_ms": 1790.4,
+      "decode_ms": 1562.3,
+      "window_s": 19.3,
+      "chars": 1193
+    },
+    {
+      "audio_available_s": 119.99,
+      "done_at_s": 122.45,
+      "latency_ms": 2463.9,
+      "decode_ms": 1660.5,
+      "window_s": 20.29,
+      "chars": 1194
+    }
+  ],
+  "updates": 62,
+  "fpt_ms": 2920.0,
+  "update_latency_ms": {
+    "p50": 1904.0,
+    "max": 3682.7
+  },
+  "effective_cadence_s": 1.66,
+  "finalization_ms": 2463.9,
+  "decode_rtf": {
+    "p50": 0.124,
+    "max": 2.407
+  },
+  "stability": {
+    "stable_token_ratio_mean": 0.814,
+    "stable_token_ratio_min": 0.0,
+    "rewrite_events": 43,
+    "partials": 62
+  },
+  "final_vs_offline_wer": 0.0418,
+  "adjacent_3gram_repeat": false,
+  "final_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we We need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops, comma all of those things should be there. So check how this can be improved. Secondly, I have placed the stars on the places, like that was the one it repeated. There was a is, because it is joining the statement, it was supposed to be comma, so that person can read it properly, so it did not work. that in below I have add a star I use that filler to kind of I would say unable to understand what to speak so I did the fillers of two three but it repeated the statement so it should be understanding these are filler and correct them. If you give it to the chat gpt and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper drafts and then see the comparison what it gave and what it is giving. So all those thing should should get added. See this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one",
+  "offline_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly. So it did not work. After that in below I have add a star. I used that filler to kind of I would say unable to understand what to speak. So I did the fillers of 2, 3 but it repeated the statement. So it should be understanding these are filler and correct them. If you give it to the charity and ask it to write it properly with proper punctuation and blah blah blah, it will give you a proper drafts and then see the comparison what it gave and what it is giving. So all those things should should get added. this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one",
+  "rss_mib_end": 863.9
+}
