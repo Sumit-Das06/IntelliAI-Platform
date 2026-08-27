@@ -1,0 +1,40 @@
+{
+  "label": "SYNTHETIC TTS audio, qualitative only",
+  "probes": [
+    {
+      "clip": "probe_name",
+      "decode_ms": 137.8,
+      "text": "मेरा नाम सुमित है"
+    },
+    {
+      "clip": "probe_office",
+      "decode_ms": 141.7,
+      "text": "मैं कल ऑफिस जाऊँगा"
+    },
+    {
+      "clip": "probe_currency",
+      "decode_ms": 236.2,
+      "text": "इसकी कीमत बारह हज़ार पाँच सौ रुपये है"
+    },
+    {
+      "clip": "probe_date",
+      "decode_ms": 213.9,
+      "text": "बैठक बारह अगस्त दो हज़ार छब्बीस को होगी"
+    },
+    {
+      "clip": "probe_phone",
+      "decode_ms": 263.0,
+      "text": "मेरा नंबर नौ आठ सात छः है पाँच चार तीन दो एक शून्य है"
+    },
+    {
+      "clip": "probe_brand",
+      "decode_ms": 280.0,
+      "text": "इंटेलीआई और क्यूमॉन्ट दोनों अच्छे प्रोडक्ट हैं"
+    },
+    {
+      "clip": "probe_mixed",
+      "decode_ms": 261.4,
+      "text": "मैं आपको रिपोर्ट कल ईमेल कर दूंगा मीटिंग के बाद"
+    }
+  ]
+}

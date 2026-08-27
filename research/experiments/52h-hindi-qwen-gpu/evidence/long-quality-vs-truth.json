@@ -1,0 +1,26 @@
+{
+  "ruler": "unicode_generic@v2",
+  "note": "streamed rolling finals vs IndicVoices ground truth; single-clip offline baseline on this material is 15.3% WER (quality.json)",
+  "real2min": {
+    "wer": 0.1588,
+    "cer": 0.086,
+    "final_words": 417,
+    "ref_words": 422
+  },
+  "real5min": {
+    "wer": 0.2389,
+    "cer": 0.1377,
+    "final_words": 828,
+    "ref_words": 833
+  },
+  "real10min": {
+    "wer": 0.176,
+    "cer": 0.0787,
+    "final_words": 1832,
+    "ref_words": 1835
+  },
+  "real5min_window15_variant": {
+    "wer": 0.2557,
+    "cer": 0.146
+  }
+}

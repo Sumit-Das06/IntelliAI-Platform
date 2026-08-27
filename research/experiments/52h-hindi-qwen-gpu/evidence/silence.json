@@ -1,0 +1,20 @@
+{
+  "law": "VAD gates every realtime window; bare model behavior recorded for evidence",
+  "results": {
+    "hi-silence-10s.wav": {
+      "vad_has_speech": false,
+      "bare_model_output": "",
+      "decode_ms": 112.4
+    },
+    "silence5.wav": {
+      "vad_has_speech": false,
+      "bare_model_output": "",
+      "decode_ms": 98.8
+    },
+    "noise5.wav": {
+      "vad_has_speech": false,
+      "bare_model_output": "",
+      "decode_ms": 99.9
+    }
+  }
+}

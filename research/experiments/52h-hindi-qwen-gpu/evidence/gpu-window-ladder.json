@@ -1,0 +1,45 @@
+{
+  "rows": {
+    "250ms": {
+      "decode_ms_median": 70.0,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी"
+    },
+    "500ms": {
+      "decode_ms_median": 75.7,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी"
+    },
+    "750ms": {
+      "decode_ms_median": 62.0,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी"
+    },
+    "1000ms": {
+      "decode_ms_median": 84.6,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी जी जी"
+    },
+    "1500ms": {
+      "decode_ms_median": 103.9,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी जी यहाँ से"
+    },
+    "2000ms": {
+      "decode_ms_median": 115.8,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी जी यहाँ से क्या"
+    },
+    "3000ms": {
+      "decode_ms_median": 172.3,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी जी यहाँ से एक यहाँ से बीस पैंसठ किलो"
+    },
+    "5000ms": {
+      "decode_ms_median": 294.2,
+      "keeps_up_at_this_cadence": true,
+      "text": "जी जी यहाँ से एक यहाँ से बीस पाँच किलोमीटर की दूरी पर नागपुर रोड पर एक सीमा रियल"
+    }
+  },
+  "smallest_realtime_window_ms": 250
+}

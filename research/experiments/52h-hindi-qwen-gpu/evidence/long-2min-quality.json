@@ -1,0 +1,16 @@
+{
+  "reference": "real2min.ref.txt (IndicVoices ground truth)",
+  "streamed_final": {
+    "wer": 0.1588,
+    "cer": 0.086
+  },
+  "offline_single_pass": {
+    "wer": 0.5024,
+    "cer": 0.4409
+  },
+  "production_cpu_chunked": {
+    "wer": 0.9787,
+    "cer": 0.8835
+  },
+  "note": "offline single-pass >2min is TRUNCATED (254 words vs 417 streamed) - the M19 chunking exists for exactly this; ground truth is the honest ruler for long audio"
+}

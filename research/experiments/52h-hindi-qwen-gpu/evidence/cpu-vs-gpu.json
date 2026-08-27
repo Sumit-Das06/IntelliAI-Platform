@@ -1,0 +1,77 @@
+{
+  "prefix_ladder_ms": {
+    "1s": {
+      "cpu": 873.6,
+      "gpu": 64.4
+    },
+    "2s": {
+      "cpu": 986.7,
+      "gpu": 133.5
+    },
+    "3s": {
+      "cpu": 9808.2,
+      "gpu": 161.7
+    },
+    "5s": {
+      "cpu": 1417.2,
+      "gpu": 292.4
+    },
+    "8s": {
+      "cpu": 1770.0,
+      "gpu": 471.4
+    },
+    "12s": {
+      "cpu": 3348.7,
+      "gpu": 665.5
+    },
+    "16s": {
+      "cpu": 3266.3,
+      "gpu": 913.1
+    },
+    "full": {
+      "cpu": 5315.3,
+      "gpu": 1070.1
+    }
+  },
+  "fpt_ms_from_speech_start_gpu": 520.0,
+  "fpt_cpu": "not achievable (1 s audio costs ~874-1307 ms; cadence collapses)",
+  "partial_p50_ms": {
+    "gpu": 524.2,
+    "cpu": "n/a (blocked)"
+  },
+  "partial_p95_ms": {
+    "gpu": 1556.9,
+    "cpu": "n/a (blocked)"
+  },
+  "finalization_ms": {
+    "gpu": 1668.4,
+    "cpu": "n/a (blocked)"
+  },
+  "rtf_20s": {
+    "cpu": 0.267,
+    "gpu": 0.054
+  },
+  "quality_30_real_clips": {
+    "gpu": {
+      "wer": 0.156,
+      "cer": 0.0777,
+      "decode_ms_median": 527.8
+    },
+    "cpu": {
+      "wer": 0.1528,
+      "cer": 0.0729,
+      "decode_ms_median": 886.2
+    },
+    "identical_texts": "25/30"
+  },
+  "vram_mib": 2118,
+  "ram": "server RSS ~1.1 GiB (model in VRAM; host copy + runtime)",
+  "concurrency_gpu": {
+    "c1": 121.8,
+    "c2": 188.7,
+    "c4": 223.3,
+    "c8": 419.2
+  },
+  "stability_gpu": 0.867,
+  "long_session_gpu": "10 min bounded, see long-speech.json"
+}

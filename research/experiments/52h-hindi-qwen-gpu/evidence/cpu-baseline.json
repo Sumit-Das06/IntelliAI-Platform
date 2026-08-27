@@ -1,0 +1,45 @@
+{
+  "engine": "staging container (pinned CPU build)",
+  "rows": {
+    "1s": {
+      "duration_s": 1.0,
+      "inference_ms": 873.6,
+      "m52_reference_ms": 1306.8
+    },
+    "2s": {
+      "duration_s": 2.0,
+      "inference_ms": 986.7,
+      "m52_reference_ms": 1614.0
+    },
+    "3s": {
+      "duration_s": 3.0,
+      "inference_ms": 9808.2,
+      "m52_reference_ms": 14488.1
+    },
+    "5s": {
+      "duration_s": 5.0,
+      "inference_ms": 1417.2,
+      "m52_reference_ms": 2085.6
+    },
+    "8s": {
+      "duration_s": 8.0,
+      "inference_ms": 1770.0,
+      "m52_reference_ms": 2715.8
+    },
+    "12s": {
+      "duration_s": 12.0,
+      "inference_ms": 3348.7,
+      "m52_reference_ms": 4777.2
+    },
+    "16s": {
+      "duration_s": 16.0,
+      "inference_ms": 3266.3,
+      "m52_reference_ms": 4579.1
+    },
+    "full": {
+      "duration_s": 19.93,
+      "inference_ms": 5315.3,
+      "m52_reference_ms": 7546.0
+    }
+  }
+}

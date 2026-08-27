@@ -1,0 +1,258 @@
+{
+  "ruler": "unicode_generic@v2 (frozen)",
+  "dataset": "IndicVoices hindi valid, 30 real clips 3-15s, pinned manifest references",
+  "comparison": "both sides DIRECT llama-server (pinned CPU build in container vs b10344 CUDA build), identical payloads",
+  "gpu_mean": {
+    "wer": 0.156,
+    "cer": 0.0777,
+    "decode_ms_median": 527.8
+  },
+  "cpu_mean": {
+    "wer": 0.1528,
+    "cer": 0.0729,
+    "decode_ms_median": 886.2
+  },
+  "identical_text_clips": "25/30",
+  "per_clip": [
+    {
+      "id": "indicvoices-hindi-valid-0-000000",
+      "gpu_wer": 0.2,
+      "cpu_wer": 0.2,
+      "gpu_cer": 0.0408,
+      "cpu_cer": 0.0408,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000002",
+      "gpu_wer": 0.125,
+      "cpu_wer": 0.125,
+      "gpu_cer": 0.0192,
+      "cpu_cer": 0.0192,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000003",
+      "gpu_wer": 0.4118,
+      "cpu_wer": 0.4118,
+      "gpu_cer": 0.2118,
+      "cpu_cer": 0.2118,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000007",
+      "gpu_wer": 0.16,
+      "cpu_wer": 0.16,
+      "gpu_cer": 0.069,
+      "cpu_cer": 0.0517,
+      "identical": false
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000008",
+      "gpu_wer": 0.2273,
+      "cpu_wer": 0.2273,
+      "gpu_cer": 0.0851,
+      "cpu_cer": 0.1064,
+      "identical": false
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000009",
+      "gpu_wer": 0.0,
+      "cpu_wer": 0.0,
+      "gpu_cer": 0.0,
+      "cpu_cer": 0.0,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000010",
+      "gpu_wer": 0.125,
+      "cpu_wer": 0.125,
+      "gpu_cer": 0.0714,
+      "cpu_cer": 0.0714,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000011",
+      "gpu_wer": 0.0714,
+      "cpu_wer": 0.0714,
+      "gpu_cer": 0.0492,
+      "cpu_cer": 0.0492,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000012",
+      "gpu_wer": 0.0625,
+      "cpu_wer": 0.0625,
+      "gpu_cer": 0.0154,
+      "cpu_cer": 0.0154,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000013",
+      "gpu_wer": 0.4167,
+      "cpu_wer": 0.4167,
+      "gpu_cer": 0.2712,
+      "cpu_cer": 0.2712,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000014",
+      "gpu_wer": 0.1667,
+      "cpu_wer": 0.1667,
+      "gpu_cer": 0.191,
+      "cpu_cer": 0.191,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000015",
+      "gpu_wer": 0.1905,
+      "cpu_wer": 0.1905,
+      "gpu_cer": 0.0865,
+      "cpu_cer": 0.0577,
+      "identical": false
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000016",
+      "gpu_wer": 0.3333,
+      "cpu_wer": 0.3333,
+      "gpu_cer": 0.1111,
+      "cpu_cer": 0.1111,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000017",
+      "gpu_wer": 0.0,
+      "cpu_wer": 0.0,
+      "gpu_cer": 0.0,
+      "cpu_cer": 0.0,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000018",
+      "gpu_wer": 0.0,
+      "cpu_wer": 0.0,
+      "gpu_cer": 0.0,
+      "cpu_cer": 0.0,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000019",
+      "gpu_wer": 0.1538,
+      "cpu_wer": 0.1538,
+      "gpu_cer": 0.0339,
+      "cpu_cer": 0.0339,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000020",
+      "gpu_wer": 0.2632,
+      "cpu_wer": 0.2632,
+      "gpu_cer": 0.1075,
+      "cpu_cer": 0.1075,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000022",
+      "gpu_wer": 0.4667,
+      "cpu_wer": 0.3333,
+      "gpu_cer": 0.2836,
+      "cpu_cer": 0.1493,
+      "identical": false
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000025",
+      "gpu_wer": 0.0385,
+      "cpu_wer": 0.0769,
+      "gpu_cer": 0.008,
+      "cpu_cer": 0.024,
+      "identical": false
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000028",
+      "gpu_wer": 0.0,
+      "cpu_wer": 0.0,
+      "gpu_cer": 0.0,
+      "cpu_cer": 0.0,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000029",
+      "gpu_wer": 0.0952,
+      "cpu_wer": 0.0952,
+      "gpu_cer": 0.0198,
+      "cpu_cer": 0.0198,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000030",
+      "gpu_wer": 0.25,
+      "cpu_wer": 0.25,
+      "gpu_cer": 0.253,
+      "cpu_cer": 0.253,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000032",
+      "gpu_wer": 0.12,
+      "cpu_wer": 0.12,
+      "gpu_cer": 0.1311,
+      "cpu_cer": 0.1311,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000033",
+      "gpu_wer": 0.05,
+      "cpu_wer": 0.05,
+      "gpu_cer": 0.0241,
+      "cpu_cer": 0.0241,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000035",
+      "gpu_wer": 0.4167,
+      "cpu_wer": 0.4167,
+      "gpu_cer": 0.1429,
+      "cpu_cer": 0.1429,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000038",
+      "gpu_wer": 0.1333,
+      "cpu_wer": 0.1333,
+      "gpu_cer": 0.0484,
+      "cpu_cer": 0.0484,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000039",
+      "gpu_wer": 0.0,
+      "cpu_wer": 0.0,
+      "gpu_cer": 0.0,
+      "cpu_cer": 0.0,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000041",
+      "gpu_wer": 0.0,
+      "cpu_wer": 0.0,
+      "gpu_cer": 0.0,
+      "cpu_cer": 0.0,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000042",
+      "gpu_wer": 0.125,
+      "cpu_wer": 0.125,
+      "gpu_cer": 0.037,
+      "cpu_cer": 0.037,
+      "identical": true
+    },
+    {
+      "id": "indicvoices-hindi-valid-0-000044",
+      "gpu_wer": 0.0769,
+      "cpu_wer": 0.0769,
+      "gpu_cer": 0.0185,
+      "cpu_cer": 0.0185,
+      "identical": true
+    }
+  ]
+}

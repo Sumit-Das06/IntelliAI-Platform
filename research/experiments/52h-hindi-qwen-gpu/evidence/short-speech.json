@@ -1,0 +1,102 @@
+{
+  "real": [
+    {
+      "file": "realshort_0.wav",
+      "duration_s": 1.128,
+      "decode_ms": 107.9,
+      "wer": 0.0,
+      "cer": 0.0,
+      "text": "धार्मिक स्थान है",
+      "ref": "धार्मिक स्थान है",
+      "vad_has_speech": true
+    },
+    {
+      "file": "realshort_1.wav",
+      "duration_s": 1.6,
+      "decode_ms": 147.5,
+      "wer": 0.2,
+      "cer": 0.0476,
+      "text": "वहाँ पर धार्मिक भी है",
+      "ref": "वहाँ पे धार्मिक भी है",
+      "vad_has_speech": true
+    },
+    {
+      "file": "realshort_2.wav",
+      "duration_s": 2.338,
+      "decode_ms": 172.6,
+      "wer": 0.0,
+      "cer": 0.0,
+      "text": "और धार्मिक के साथ वहाँ पर",
+      "ref": "और धार्मिक के साथ वहाँ पर",
+      "vad_has_speech": true
+    },
+    {
+      "file": "realshort_3.wav",
+      "duration_s": 1.726,
+      "decode_ms": 169.9,
+      "wer": 0.1667,
+      "cer": 0.1667,
+      "text": "एक अच्छी मानी गई हैं",
+      "ref": "हाँ एक अच्छी मानी गई हैं",
+      "vad_has_speech": true
+    },
+    {
+      "file": "realshort_4.wav",
+      "duration_s": 2.176,
+      "decode_ms": 127.0,
+      "wer": 0.3333,
+      "cer": 0.2,
+      "text": "तो वहाँ पर",
+      "ref": "और वहाँ पर",
+      "vad_has_speech": true
+    },
+    {
+      "file": "realshort_5.wav",
+      "duration_s": 2.369,
+      "decode_ms": 210.2,
+      "wer": 0.0,
+      "cer": 0.0,
+      "text": "लोग जाते हैं देखते हैं अच्छा है",
+      "ref": "लोग जाते हैं देखते हैं अच्छा है",
+      "vad_has_speech": true
+    }
+  ],
+  "tts_synthetic": [
+    {
+      "clip": "short_haan",
+      "expected": "हाँ",
+      "decode_ms": 108.4,
+      "text": "हाँ जी"
+    },
+    {
+      "clip": "short_nahin",
+      "expected": "नहीं",
+      "decode_ms": 96.8,
+      "text": "नहीं"
+    },
+    {
+      "clip": "short_theek",
+      "expected": "ठीक है",
+      "decode_ms": 110.4,
+      "text": "ठीक है"
+    },
+    {
+      "clip": "short_ruko",
+      "expected": "रुको",
+      "decode_ms": 97.5,
+      "text": "जो कोई"
+    },
+    {
+      "clip": "short_chalo",
+      "expected": "चलो",
+      "decode_ms": 86.8,
+      "text": "चलो"
+    },
+    {
+      "clip": "short_haansir",
+      "expected": "हाँ सर",
+      "decode_ms": 89.6,
+      "text": "हाँ सर"
+    }
+  ]
+}

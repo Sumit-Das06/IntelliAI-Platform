@@ -1,0 +1,45 @@
+{
+  "clip": "2s hindi",
+  "results": {
+    "c1": {
+      "requests": 16,
+      "p50_ms": 121.8,
+      "p95_ms": 135.4,
+      "wall_s": 1.92,
+      "throughput_rps": 8.31,
+      "failures": 0,
+      "vram_used_mib": 2118,
+      "gpu_util_percent": 73
+    },
+    "c2": {
+      "requests": 16,
+      "p50_ms": 188.7,
+      "p95_ms": 205.6,
+      "wall_s": 1.46,
+      "throughput_rps": 10.95,
+      "failures": 0,
+      "vram_used_mib": 2118,
+      "gpu_util_percent": 48
+    },
+    "c4": {
+      "requests": 16,
+      "p50_ms": 223.3,
+      "p95_ms": 225.4,
+      "wall_s": 0.89,
+      "throughput_rps": 17.95,
+      "failures": 0,
+      "vram_used_mib": 2118,
+      "gpu_util_percent": 44
+    },
+    "c8": {
+      "requests": 16,
+      "p50_ms": 419.2,
+      "p95_ms": 441.0,
+      "wall_s": 0.87,
+      "throughput_rps": 18.44,
+      "failures": 0,
+      "vram_used_mib": 2118,
+      "gpu_util_percent": 49
+    }
+  }
+}

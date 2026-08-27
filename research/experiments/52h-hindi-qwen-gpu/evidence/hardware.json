@@ -1,0 +1,25 @@
+{
+  "machine": "founder dev laptop",
+  "cpu": "Intel Core i7-14650HX, 16 cores / 24 threads",
+  "ram_gb": 31.6,
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU, 8151 MiB VRAM (nvidia-smi)",
+  "driver": "591.91 (CUDA 13 capable)",
+  "gpu_runtime": {
+    "build": "llama.cpp b10344 (7a20b417f) win-cuda-13.3-x64 — the SAME commit as the production pin, CUDA variant",
+    "zips_sha256": {
+      "llama-b10344-bin-win-cuda-13.3-x64.zip": "f76f9f6267f5fdc5b15dfed333d878bb6662ec523cb65e7138a7e224abbe5ce0",
+      "cudart-llama-bin-win-cuda-13.3-x64.zip": "1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e"
+    },
+    "flags": "-m <E3 gguf> --mmproj <E3 mmproj> -c 4096 -ngl 99 --host 127.0.0.1 --port 8795",
+    "status": "RESEARCH runtime only — the production pin (CPU builds) is untouched; adopting a CUDA build for production would be a reviewed RUNTIME_BINARY_PINS edit"
+  },
+  "model": {
+    "artifact": "qwen3-asr-0.6b-hi-ft-e3 v1 (UNCHANGED production GGUF + mmproj, hash-verified by the store)",
+    "request_shape": "identical to the production engine: OpenAI chat completion, input_audio wav base64 + 'Transcribe the audio.', temperature 0.0, max_tokens (engine default 2048; harness 1024)",
+    "cache_note": "every benchmark decode sends cache_prompt=false — numbers are full-inference costs, never llama-server prefix-cache hits"
+  },
+  "cpu_reference": "staging container (pinned linux CPU build) + direct-child calls inside it",
+  "gpu_offload_proof": "1 s Hindi audio: 1307 ms (M52 CPU) / 874 ms (reproduced CPU) vs 64 ms (GPU, no-cache median) — a ~14-20x delta impossible without GPU execution; VRAM rose to ~1990 MiB with the server loaded (8151 total)",
+  "date": "2026-08-27",
+  "labels": "MEASURED unless stated otherwise per evidence file"
+}

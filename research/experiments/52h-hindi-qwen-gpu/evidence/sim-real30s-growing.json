@@ -1,0 +1,485 @@
+{
+  "wav": "real30s.wav",
+  "mode": "growing",
+  "chunk_ms": 500,
+  "audio_seconds": 31.78,
+  "speech_start_s": 0.03,
+  "updates": 75,
+  "fpt_ms_from_session_start": 550.0,
+  "fpt_ms_from_speech_start": 520.0,
+  "update_latency_ms": {
+    "p50": 524.2,
+    "p95": 1556.9
+  },
+  "cadence_s_p50": 0.25,
+  "finalization_ms": 1668.4,
+  "stability": {
+    "stable_token_ratio_mean": 0.803,
+    "rewrite_events": 29,
+    "partials": 75
+  },
+  "la2": {
+    "monotonic": true,
+    "lag_words_mean": 4.0,
+    "live_coverage_of_final": 0.889
+  },
+  "final_vs_offline": {
+    "wer": 0.0,
+    "cer": 0.0
+  },
+  "offline_decode_ms": 1707.0,
+  "final_text": "जी जी यहाँ से एक यहाँ से बीस पाँच किलोमीटर की दूरी पर नागपुर ऋतुकी सिमरिया मंदिर है आप वहाँ पर भी घूम सकते हो बहुत अच्छा अनुमान जी का मंदिर है वो जी नहीं नहीं नहीं कोई दिक्कत नहीं है मेन रोड पर है आप बहुत अच्छे से वहाँ पर घूम सकते हो और इसके बाद यहाँ पर एक शिव जी का भी बहुत अच्छा रामेश्वर धाम बना हुआ है सिवनी रोड पर यहाँ वो भी यहाँ से बीस से पाँच किलोमीटर पड़ेगा यहाँ से भी होरा गाँव में आप वहाँ पर भी बहुत जा सकते हो वहाँ पर भी बहुत सारे लोग घूमने आते हैं बाहर से यहाँ पर लोकल पार्क भी है यहाँ यहाँ",
+  "offline_text": "जी जी यहाँ से एक यहाँ से बीस पाँच किलोमीटर की दूरी पर नागपुर ऋतुकी सिमरिया मंदिर है आप वहाँ पर भी घूम सकते हो बहुत अच्छा अनुमान जी का मंदिर है वो जी नहीं नहीं नहीं कोई दिक्कत नहीं है मेन रोड पर है आप बहुत अच्छे से वहाँ पर घूम सकते हो और इसके बाद यहाँ पर एक शिव जी का भी बहुत अच्छा रामेश्वर धाम बना हुआ है सिवनी रोड पर यहाँ वो भी यहाँ से बीस से पाँच किलोमीटर पड़ेगा यहाँ से भी होरा गाँव में आप वहाँ पर भी बहुत जा सकते हो वहाँ पर भी बहुत सारे लोग घूमने आते हैं बाहर से यहाँ पर लोकल पार्क भी है यहाँ यहाँ",
+  "events": [
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.55,
+      "latency_ms": 54.5,
+      "decode_ms": 54.5
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.63,
+      "latency_ms": 127.2,
+      "decode_ms": 72.8
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.69,
+      "latency_ms": 191.6,
+      "decode_ms": 64.4
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.74,
+      "latency_ms": 243.7,
+      "decode_ms": 52.1
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.81,
+      "latency_ms": 309.2,
+      "decode_ms": 65.5
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.88,
+      "latency_ms": 378.3,
+      "decode_ms": 69.1
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.94,
+      "latency_ms": 437.6,
+      "decode_ms": 59.4
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 1.0,
+      "latency_ms": 497.3,
+      "decode_ms": 59.7
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 1.06,
+      "latency_ms": 557.8,
+      "decode_ms": 60.5
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.15,
+      "latency_ms": 146.7,
+      "decode_ms": 88.9
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.23,
+      "latency_ms": 232.7,
+      "decode_ms": 86.0
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.31,
+      "latency_ms": 310.7,
+      "decode_ms": 78.0
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.38,
+      "latency_ms": 379.0,
+      "decode_ms": 68.3
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.48,
+      "latency_ms": 476.4,
+      "decode_ms": 97.3
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.57,
+      "latency_ms": 567.3,
+      "decode_ms": 90.9
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.66,
+      "latency_ms": 155.2,
+      "decode_ms": 87.9
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.74,
+      "latency_ms": 241.0,
+      "decode_ms": 85.8
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.83,
+      "latency_ms": 328.9,
+      "decode_ms": 87.9
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.93,
+      "latency_ms": 433.2,
+      "decode_ms": 104.3
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 2.01,
+      "latency_ms": 510.7,
+      "decode_ms": 77.5
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.11,
+      "latency_ms": 109.0,
+      "decode_ms": 98.3
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.22,
+      "latency_ms": 219.2,
+      "decode_ms": 110.2
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.31,
+      "latency_ms": 313.2,
+      "decode_ms": 94.1
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.43,
+      "latency_ms": 425.7,
+      "decode_ms": 112.5
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.54,
+      "latency_ms": 536.8,
+      "decode_ms": 111.1
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 2.67,
+      "latency_ms": 170.0,
+      "decode_ms": 133.2
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 2.8,
+      "latency_ms": 301.3,
+      "decode_ms": 131.3
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 2.93,
+      "latency_ms": 430.2,
+      "decode_ms": 128.9
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 3.06,
+      "latency_ms": 562.0,
+      "decode_ms": 131.8
+    },
+    {
+      "audio_s": 3.0,
+      "done_at_s": 3.26,
+      "latency_ms": 264.7,
+      "decode_ms": 202.8
+    },
+    {
+      "audio_s": 3.0,
+      "done_at_s": 3.43,
+      "latency_ms": 433.8,
+      "decode_ms": 169.1
+    },
+    {
+      "audio_s": 3.0,
+      "done_at_s": 3.6,
+      "latency_ms": 603.2,
+      "decode_ms": 169.4
+    },
+    {
+      "audio_s": 3.5,
+      "done_at_s": 3.78,
+      "latency_ms": 281.7,
+      "decode_ms": 178.5
+    },
+    {
+      "audio_s": 3.5,
+      "done_at_s": 3.97,
+      "latency_ms": 466.8,
+      "decode_ms": 185.1
+    },
+    {
+      "audio_s": 3.5,
+      "done_at_s": 4.14,
+      "latency_ms": 644.1,
+      "decode_ms": 177.3
+    },
+    {
+      "audio_s": 4.0,
+      "done_at_s": 4.39,
+      "latency_ms": 386.5,
+      "decode_ms": 242.3
+    },
+    {
+      "audio_s": 4.0,
+      "done_at_s": 4.61,
+      "latency_ms": 607.9,
+      "decode_ms": 221.4
+    },
+    {
+      "audio_s": 4.5,
+      "done_at_s": 4.85,
+      "latency_ms": 346.6,
+      "decode_ms": 238.8
+    },
+    {
+      "audio_s": 4.5,
+      "done_at_s": 5.09,
+      "latency_ms": 595.0,
+      "decode_ms": 248.4
+    },
+    {
+      "audio_s": 5.0,
+      "done_at_s": 5.41,
+      "latency_ms": 412.3,
+      "decode_ms": 317.3
+    },
+    {
+      "audio_s": 5.0,
+      "done_at_s": 5.69,
+      "latency_ms": 692.3,
+      "decode_ms": 280.0
+    },
+    {
+      "audio_s": 5.5,
+      "done_at_s": 5.99,
+      "latency_ms": 491.6,
+      "decode_ms": 299.4
+    },
+    {
+      "audio_s": 5.5,
+      "done_at_s": 6.28,
+      "latency_ms": 784.1,
+      "decode_ms": 292.5
+    },
+    {
+      "audio_s": 6.0,
+      "done_at_s": 6.59,
+      "latency_ms": 586.0,
+      "decode_ms": 301.9
+    },
+    {
+      "audio_s": 6.5,
+      "done_at_s": 6.94,
+      "latency_ms": 442.0,
+      "decode_ms": 356.0
+    },
+    {
+      "audio_s": 6.5,
+      "done_at_s": 7.3,
+      "latency_ms": 801.5,
+      "decode_ms": 359.5
+    },
+    {
+      "audio_s": 7.0,
+      "done_at_s": 7.7,
+      "latency_ms": 697.2,
+      "decode_ms": 395.6
+    },
+    {
+      "audio_s": 7.5,
+      "done_at_s": 8.1,
+      "latency_ms": 596.1,
+      "decode_ms": 398.9
+    },
+    {
+      "audio_s": 8.0,
+      "done_at_s": 8.52,
+      "latency_ms": 517.6,
+      "decode_ms": 421.5
+    },
+    {
+      "audio_s": 8.5,
+      "done_at_s": 9.0,
+      "latency_ms": 500.8,
+      "decode_ms": 483.2
+    },
+    {
+      "audio_s": 9.0,
+      "done_at_s": 9.51,
+      "latency_ms": 506.9,
+      "decode_ms": 506.2
+    },
+    {
+      "audio_s": 9.5,
+      "done_at_s": 10.03,
+      "latency_ms": 530.7,
+      "decode_ms": 523.8
+    },
+    {
+      "audio_s": 10.0,
+      "done_at_s": 10.59,
+      "latency_ms": 589.0,
+      "decode_ms": 558.3
+    },
+    {
+      "audio_s": 10.5,
+      "done_at_s": 11.15,
+      "latency_ms": 648.4,
+      "decode_ms": 559.4
+    },
+    {
+      "audio_s": 11.0,
+      "done_at_s": 11.75,
+      "latency_ms": 748.0,
+      "decode_ms": 599.6
+    },
+    {
+      "audio_s": 11.5,
+      "done_at_s": 12.35,
+      "latency_ms": 849.1,
+      "decode_ms": 601.1
+    },
+    {
+      "audio_s": 12.0,
+      "done_at_s": 13.01,
+      "latency_ms": 1009.5,
+      "decode_ms": 660.5
+    },
+    {
+      "audio_s": 13.0,
+      "done_at_s": 13.71,
+      "latency_ms": 712.2,
+      "decode_ms": 702.6
+    },
+    {
+      "audio_s": 13.5,
+      "done_at_s": 14.46,
+      "latency_ms": 955.9,
+      "decode_ms": 743.7
+    },
+    {
+      "audio_s": 14.0,
+      "done_at_s": 15.25,
+      "latency_ms": 1253.3,
+      "decode_ms": 797.4
+    },
+    {
+      "audio_s": 15.0,
+      "done_at_s": 16.04,
+      "latency_ms": 1040.8,
+      "decode_ms": 787.5
+    },
+    {
+      "audio_s": 16.0,
+      "done_at_s": 16.89,
+      "latency_ms": 892.6,
+      "decode_ms": 851.8
+    },
+    {
+      "audio_s": 16.5,
+      "done_at_s": 17.79,
+      "latency_ms": 1287.1,
+      "decode_ms": 894.5
+    },
+    {
+      "audio_s": 17.5,
+      "done_at_s": 18.75,
+      "latency_ms": 1247.9,
+      "decode_ms": 960.8
+    },
+    {
+      "audio_s": 18.5,
+      "done_at_s": 19.77,
+      "latency_ms": 1267.4,
+      "decode_ms": 1019.6
+    },
+    {
+      "audio_s": 19.5,
+      "done_at_s": 20.82,
+      "latency_ms": 1316.5,
+      "decode_ms": 1049.1
+    },
+    {
+      "audio_s": 20.5,
+      "done_at_s": 21.93,
+      "latency_ms": 1426.0,
+      "decode_ms": 1109.6
+    },
+    {
+      "audio_s": 21.5,
+      "done_at_s": 23.09,
+      "latency_ms": 1586.3,
+      "decode_ms": 1160.3
+    },
+    {
+      "audio_s": 23.0,
+      "done_at_s": 24.32,
+      "latency_ms": 1322.9,
+      "decode_ms": 1236.6
+    },
+    {
+      "audio_s": 24.0,
+      "done_at_s": 25.65,
+      "latency_ms": 1645.7,
+      "decode_ms": 1322.8
+    },
+    {
+      "audio_s": 25.5,
+      "done_at_s": 27.06,
+      "latency_ms": 1556.9,
+      "decode_ms": 1411.2
+    },
+    {
+      "audio_s": 27.0,
+      "done_at_s": 28.53,
+      "latency_ms": 1531.6,
+      "decode_ms": 1474.7
+    },
+    {
+      "audio_s": 28.5,
+      "done_at_s": 30.11,
+      "latency_ms": 1612.0,
+      "decode_ms": 1580.4
+    },
+    {
+      "audio_s": 30.0,
+      "done_at_s": 31.72,
+      "latency_ms": 1721.1,
+      "decode_ms": 1609.1
+    },
+    {
+      "audio_s": 31.78,
+      "done_at_s": 33.45,
+      "latency_ms": 1668.4,
+      "decode_ms": 1668.4
+    }
+  ]
+}

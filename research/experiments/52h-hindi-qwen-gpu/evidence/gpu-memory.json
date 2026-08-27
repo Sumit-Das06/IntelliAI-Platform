@@ -1,0 +1,13 @@
+{
+  "requests": 50,
+  "baseline": {
+    "vram_used_mib": 2118,
+    "gpu_util_percent": 0
+  },
+  "peak_vram_mib_sampled": 2118,
+  "after": {
+    "vram_used_mib": 2118,
+    "gpu_util_percent": 63
+  },
+  "vram_growth_mib": 0
+}

@@ -1,0 +1,1097 @@
+{
+  "wav": "real2min.wav",
+  "mode": "rolling",
+  "chunk_ms": 500,
+  "audio_seconds": 121.52,
+  "speech_start_s": 0.03,
+  "updates": 177,
+  "fpt_ms_from_session_start": 570.0,
+  "fpt_ms_from_speech_start": 540.0,
+  "update_latency_ms": {
+    "p50": 880.1,
+    "p95": 1607.0
+  },
+  "cadence_s_p50": 0.64,
+  "finalization_ms": 1217.2,
+  "stability": {
+    "stable_token_ratio_mean": 0.843,
+    "rewrite_events": 107,
+    "partials": 177
+  },
+  "la2": {
+    "monotonic": true,
+    "lag_words_mean": 7.5,
+    "live_coverage_of_final": 0.986
+  },
+  "final_vs_offline": {
+    "wer": 0.7953,
+    "cer": 0.7109
+  },
+  "offline_decode_ms": 4181.0,
+  "final_text": "यहाँ पे एक छिंदवाड़ा से सर फिर दो किलोमीटर की दूरी पर अटल बार्टिका पार्क है धरम टेकरी में आप वहाँ पर भी घूम सकते हो उस पार्क में टेकरी में बहुत बहुत अच्छा पार्क बना हुआ है वहाँ मंदिर भी है मस्जिद की मजार भी है आप वहाँ पर भी घूम सकते हो जी हाँ और यहाँ से कुछ चालीस से पचास किलोमीटर की दूरी पर एक हिंगला अच्छे मंदिर हैं आप वहाँ पर भी घूम सकते हो बहुत अच्छी जगह है वहाँ से तो काफ़ी दूर दूर से लोग आते हैं यहाँ पर एक जामसारी मंदिर भी है यहाँ से वह यहाँ से थोड़ा कास्ट होया दूरी पर पड़ता है साठ से पैंचर किलोमीटर की दूरी पर जी बस आस पास भी और काफ़ी टेम्पल हैं छोटे मोटे जैसा आप वहाँ जाता है हाँ जी हाँ जी बिल्कुल बिल्कुल सच है ये ये यहाँ अच्छा इस्यूनी रोड पर है चोरी के थोड़ा आगे पड़ता है आप वहाँ पर भी बहुत आसानी से घूम सकते हो यदि आपको जाना है तो आप मुझे बता दीजिए मैं हाँ नवरात्रि में जी यहाँ नवरात्रि में लक्ष्मी नौदिन बहुत महला रहता है वहाँ पर आपको जब भी जाना हो आप मुझे कॉल कर सकते हैं मैं आपके लिए गाड़ी भी अवेलेबल करवा सकती हूँ हाँ यहाँ से एक छोटा माहौल भी पड़ता है तामिया यहाँ से तामिया है चालीस से पैं चालीस किलोमीटर की दूरी पर तो आप वहाँ पर भी जा सकते हो हाँ हाँ बिल्कुल वहाँ शिवरात्रि में बहुत अच्छा मिला लगता है आप वहाँ पर भी आसानी से घूम सकते हो यदि आपको जाना है तो आप बता दीजिएगा हमारे यहाँ कि गाड़ियाँ वहाँ जाती है सभी लोगों को लेकर तो आप मुझे कॉल कर सकते हैं अपने गाड़ी बुक करवा सकते हैं आपको जाना पर भी घूमने जाना हो हाँ हाँ बिल्कुल सच है ये पर आपको घूमने के लिए थोड़ा वक़्त निकालना होगा कम से कम एक हफ़्ते का सात आठ दिन का तो फिर आप सभी जगह आराम से घूम सकते हैं जी हाँ थोड़ा दूर दूर पर है जी तो आप आप कॉन्फ़़र्म करके मुझे बता दीजिए तो आप गाड़ी बुक करवा लेना हम आपको हर जगह घूमा सकते हैं आप देवगीला सौकर में मेरे मोबाइल नंबर को दो आठ जीरो पाँच एक नौ नौ आठ नौ नौ पर अपडेट करने में मेरी सहायता कर सकते हैं ओकर में तो काफ़ी ज़्यादा चीज़ है उससे बड़ा लेगा नहीं आइए कौन सी देख लीजिए अच्छी है आपको कम्पनी पसंद है आप ले लें",
+  "offline_text": "यहाँ पर एक छिंदवाड़ा से से फिर दो किलोमीटर की दूरी पर अटल बार्टिका पार्क है धरम टेकरी में आप वहाँ पर भी घूम सकते हो उस पार्क में टेकरी में बहुत बहुत अच्छा पार्क बना हुआ है वहाँ मंदिर भी है मस्जिद की मजार भी है आप वहाँ पर भी घूम सकते हो जी हाँ और यहाँ से कुछ चालीस से पचास किलोमीटर की दूरी पर एक हिंगलाच मंदिर है आप वहाँ पर भी घूम सकते हो बहुत अच्छी जगह है वहाँ से तो काफी दूर दूर से लोग आते हैं यहाँ पर एक जामसारी मंदिर भी है यहाँ से वह यहाँ से थोड़ा कास्ट होया दूरी पर पड़ता है साठ से पैसठ किलोमीटर की दूरी पर जी बस आस पास भी और काफी टेम्पल है छोटे मोटे जैसे आप वहाँ जा सा हाँ हाँ जी हाँ जी बिल्कुल बिल्कुल से अच्छे हैं यह यहाँ से यह सीनी रोड पर है चोरी के थोड़ा आगे पड़ता है आप वहाँ पर भी बहुत आसानी से घूम सकते हो यदि आपको जाना है तो आप मुझे बता दीजिए मैं हाँ नवरात्री में जी हाँ नवरात्री में लगती है नौ दिन बहुत महिला रहता है वहाँ पर आपको जब भी जाना हो आप मुझे कॉल कर सकते हैं मैं आपके लिए गाड़ी भी एवेलेबल करवा सकती हूँ हाँ यहाँ से एक छोटा माहा देवी पड़ता है तामिया यहाँ से तामिया है चालीस से तो चालीस किलोमीटर की दूरी पर तो आप वहाँ पर भी जा सकते हो हाँ हाँ बिल्कुल वहाँ शुभ रात्री में बहुत अच्छ",
+  "events": [
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.57,
+      "latency_ms": 65.7,
+      "decode_ms": 65.7
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.63,
+      "latency_ms": 128.5,
+      "decode_ms": 62.8
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.71,
+      "latency_ms": 210.2,
+      "decode_ms": 81.7
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.78,
+      "latency_ms": 280.5,
+      "decode_ms": 70.3
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.86,
+      "latency_ms": 359.6,
+      "decode_ms": 79.1
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.92,
+      "latency_ms": 421.4,
+      "decode_ms": 61.7
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 0.99,
+      "latency_ms": 492.4,
+      "decode_ms": 71.0
+    },
+    {
+      "audio_s": 0.5,
+      "done_at_s": 1.08,
+      "latency_ms": 579.6,
+      "decode_ms": 87.2
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.2,
+      "latency_ms": 196.1,
+      "decode_ms": 116.4
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.31,
+      "latency_ms": 305.6,
+      "decode_ms": 109.6
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.42,
+      "latency_ms": 421.2,
+      "decode_ms": 115.5
+    },
+    {
+      "audio_s": 1.0,
+      "done_at_s": 1.55,
+      "latency_ms": 552.3,
+      "decode_ms": 131.1
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.67,
+      "latency_ms": 172.7,
+      "decode_ms": 120.4
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.8,
+      "latency_ms": 297.3,
+      "decode_ms": 124.6
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 1.93,
+      "latency_ms": 428.5,
+      "decode_ms": 131.2
+    },
+    {
+      "audio_s": 1.5,
+      "done_at_s": 2.06,
+      "latency_ms": 555.9,
+      "decode_ms": 127.4
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.21,
+      "latency_ms": 213.4,
+      "decode_ms": 157.5
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.38,
+      "latency_ms": 382.2,
+      "decode_ms": 168.8
+    },
+    {
+      "audio_s": 2.0,
+      "done_at_s": 2.54,
+      "latency_ms": 535.3,
+      "decode_ms": 153.1
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 2.72,
+      "latency_ms": 223.2,
+      "decode_ms": 187.9
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 2.9,
+      "latency_ms": 396.1,
+      "decode_ms": 172.9
+    },
+    {
+      "audio_s": 2.5,
+      "done_at_s": 3.07,
+      "latency_ms": 571.1,
+      "decode_ms": 175.1
+    },
+    {
+      "audio_s": 3.0,
+      "done_at_s": 3.31,
+      "latency_ms": 309.4,
+      "decode_ms": 238.3
+    },
+    {
+      "audio_s": 3.0,
+      "done_at_s": 3.54,
+      "latency_ms": 539.1,
+      "decode_ms": 229.6
+    },
+    {
+      "audio_s": 3.5,
+      "done_at_s": 3.78,
+      "latency_ms": 281.5,
+      "decode_ms": 242.4
+    },
+    {
+      "audio_s": 3.5,
+      "done_at_s": 4.05,
+      "latency_ms": 547.3,
+      "decode_ms": 265.8
+    },
+    {
+      "audio_s": 4.0,
+      "done_at_s": 4.34,
+      "latency_ms": 340.8,
+      "decode_ms": 293.5
+    },
+    {
+      "audio_s": 4.0,
+      "done_at_s": 4.62,
+      "latency_ms": 616.2,
+      "decode_ms": 275.3
+    },
+    {
+      "audio_s": 4.5,
+      "done_at_s": 4.93,
+      "latency_ms": 427.8,
+      "decode_ms": 311.6
+    },
+    {
+      "audio_s": 4.5,
+      "done_at_s": 5.22,
+      "latency_ms": 719.9,
+      "decode_ms": 292.1
+    },
+    {
+      "audio_s": 5.0,
+      "done_at_s": 5.56,
+      "latency_ms": 557.2,
+      "decode_ms": 337.3
+    },
+    {
+      "audio_s": 5.5,
+      "done_at_s": 5.89,
+      "latency_ms": 389.1,
+      "decode_ms": 331.9
+    },
+    {
+      "audio_s": 5.5,
+      "done_at_s": 6.2,
+      "latency_ms": 699.6,
+      "decode_ms": 310.5
+    },
+    {
+      "audio_s": 6.0,
+      "done_at_s": 6.52,
+      "latency_ms": 524.0,
+      "decode_ms": 324.4
+    },
+    {
+      "audio_s": 6.5,
+      "done_at_s": 6.91,
+      "latency_ms": 408.1,
+      "decode_ms": 384.0
+    },
+    {
+      "audio_s": 6.5,
+      "done_at_s": 7.29,
+      "latency_ms": 791.6,
+      "decode_ms": 383.5
+    },
+    {
+      "audio_s": 7.0,
+      "done_at_s": 7.71,
+      "latency_ms": 712.9,
+      "decode_ms": 421.3
+    },
+    {
+      "audio_s": 7.5,
+      "done_at_s": 8.13,
+      "latency_ms": 627.6,
+      "decode_ms": 414.7
+    },
+    {
+      "audio_s": 8.0,
+      "done_at_s": 8.58,
+      "latency_ms": 579.0,
+      "decode_ms": 451.4
+    },
+    {
+      "audio_s": 8.5,
+      "done_at_s": 9.05,
+      "latency_ms": 550.7,
+      "decode_ms": 471.7
+    },
+    {
+      "audio_s": 9.0,
+      "done_at_s": 9.56,
+      "latency_ms": 556.2,
+      "decode_ms": 505.5
+    },
+    {
+      "audio_s": 9.5,
+      "done_at_s": 10.09,
+      "latency_ms": 587.5,
+      "decode_ms": 531.3
+    },
+    {
+      "audio_s": 10.0,
+      "done_at_s": 10.66,
+      "latency_ms": 657.3,
+      "decode_ms": 569.8
+    },
+    {
+      "audio_s": 10.5,
+      "done_at_s": 11.24,
+      "latency_ms": 741.5,
+      "decode_ms": 584.2
+    },
+    {
+      "audio_s": 11.0,
+      "done_at_s": 11.85,
+      "latency_ms": 853.9,
+      "decode_ms": 612.4
+    },
+    {
+      "audio_s": 11.5,
+      "done_at_s": 12.49,
+      "latency_ms": 993.5,
+      "decode_ms": 639.5
+    },
+    {
+      "audio_s": 12.0,
+      "done_at_s": 13.13,
+      "latency_ms": 1133.8,
+      "decode_ms": 640.4
+    },
+    {
+      "audio_s": 13.0,
+      "done_at_s": 13.83,
+      "latency_ms": 826.7,
+      "decode_ms": 692.9
+    },
+    {
+      "audio_s": 13.5,
+      "done_at_s": 14.5,
+      "latency_ms": 998.0,
+      "decode_ms": 671.3
+    },
+    {
+      "audio_s": 14.0,
+      "done_at_s": 15.19,
+      "latency_ms": 1194.8,
+      "decode_ms": 696.8
+    },
+    {
+      "audio_s": 15.0,
+      "done_at_s": 15.97,
+      "latency_ms": 973.5,
+      "decode_ms": 778.7
+    },
+    {
+      "audio_s": 15.5,
+      "done_at_s": 16.74,
+      "latency_ms": 1242.2,
+      "decode_ms": 768.7
+    },
+    {
+      "audio_s": 16.5,
+      "done_at_s": 17.56,
+      "latency_ms": 1064.9,
+      "decode_ms": 822.7
+    },
+    {
+      "audio_s": 17.5,
+      "done_at_s": 18.43,
+      "latency_ms": 933.4,
+      "decode_ms": 868.5
+    },
+    {
+      "audio_s": 18.0,
+      "done_at_s": 19.33,
+      "latency_ms": 1331.9,
+      "decode_ms": 898.6
+    },
+    {
+      "audio_s": 19.0,
+      "done_at_s": 20.27,
+      "latency_ms": 1269.9,
+      "decode_ms": 937.9
+    },
+    {
+      "audio_s": 20.0,
+      "done_at_s": 21.27,
+      "latency_ms": 1272.9,
+      "decode_ms": 1003.0
+    },
+    {
+      "audio_s": 21.0,
+      "done_at_s": 22.33,
+      "latency_ms": 1330.1,
+      "decode_ms": 1057.2
+    },
+    {
+      "audio_s": 22.0,
+      "done_at_s": 23.44,
+      "latency_ms": 1436.9,
+      "decode_ms": 1106.8
+    },
+    {
+      "audio_s": 23.0,
+      "done_at_s": 24.58,
+      "latency_ms": 1578.4,
+      "decode_ms": 1141.6
+    },
+    {
+      "audio_s": 24.5,
+      "done_at_s": 25.88,
+      "latency_ms": 1376.2,
+      "decode_ms": 1297.7
+    },
+    {
+      "audio_s": 25.5,
+      "done_at_s": 27.19,
+      "latency_ms": 1689.3,
+      "decode_ms": 1313.1
+    },
+    {
+      "audio_s": 28.0,
+      "done_at_s": 28.7,
+      "latency_ms": 699.6,
+      "decode_ms": 493.8
+    },
+    {
+      "audio_s": 28.5,
+      "done_at_s": 29.19,
+      "latency_ms": 685.7,
+      "decode_ms": 486.2
+    },
+    {
+      "audio_s": 29.0,
+      "done_at_s": 29.75,
+      "latency_ms": 747.5,
+      "decode_ms": 561.8
+    },
+    {
+      "audio_s": 29.5,
+      "done_at_s": 30.29,
+      "latency_ms": 786.3,
+      "decode_ms": 538.8
+    },
+    {
+      "audio_s": 30.0,
+      "done_at_s": 30.85,
+      "latency_ms": 849.9,
+      "decode_ms": 563.7
+    },
+    {
+      "audio_s": 30.5,
+      "done_at_s": 31.45,
+      "latency_ms": 949.4,
+      "decode_ms": 599.5
+    },
+    {
+      "audio_s": 31.0,
+      "done_at_s": 32.05,
+      "latency_ms": 1050.8,
+      "decode_ms": 601.4
+    },
+    {
+      "audio_s": 32.0,
+      "done_at_s": 32.73,
+      "latency_ms": 728.8,
+      "decode_ms": 677.9
+    },
+    {
+      "audio_s": 32.5,
+      "done_at_s": 33.45,
+      "latency_ms": 945.5,
+      "decode_ms": 716.7
+    },
+    {
+      "audio_s": 33.0,
+      "done_at_s": 34.19,
+      "latency_ms": 1185.3,
+      "decode_ms": 739.8
+    },
+    {
+      "audio_s": 34.0,
+      "done_at_s": 34.97,
+      "latency_ms": 975.0,
+      "decode_ms": 789.7
+    },
+    {
+      "audio_s": 34.5,
+      "done_at_s": 35.77,
+      "latency_ms": 1274.0,
+      "decode_ms": 799.0
+    },
+    {
+      "audio_s": 35.5,
+      "done_at_s": 36.66,
+      "latency_ms": 1158.9,
+      "decode_ms": 884.9
+    },
+    {
+      "audio_s": 36.5,
+      "done_at_s": 37.59,
+      "latency_ms": 1087.5,
+      "decode_ms": 928.7
+    },
+    {
+      "audio_s": 37.5,
+      "done_at_s": 38.6,
+      "latency_ms": 1098.0,
+      "decode_ms": 1010.5
+    },
+    {
+      "audio_s": 38.5,
+      "done_at_s": 39.68,
+      "latency_ms": 1182.0,
+      "decode_ms": 1084.1
+    },
+    {
+      "audio_s": 39.5,
+      "done_at_s": 40.8,
+      "latency_ms": 1299.4,
+      "decode_ms": 1117.3
+    },
+    {
+      "audio_s": 40.5,
+      "done_at_s": 41.93,
+      "latency_ms": 1434.3,
+      "decode_ms": 1134.9
+    },
+    {
+      "audio_s": 41.5,
+      "done_at_s": 43.12,
+      "latency_ms": 1623.7,
+      "decode_ms": 1189.4
+    },
+    {
+      "audio_s": 43.0,
+      "done_at_s": 44.44,
+      "latency_ms": 1435.6,
+      "decode_ms": 1311.8
+    },
+    {
+      "audio_s": 44.0,
+      "done_at_s": 45.81,
+      "latency_ms": 1807.4,
+      "decode_ms": 1371.8
+    },
+    {
+      "audio_s": 45.5,
+      "done_at_s": 47.22,
+      "latency_ms": 1716.4,
+      "decode_ms": 1409.0
+    },
+    {
+      "audio_s": 48.0,
+      "done_at_s": 48.82,
+      "latency_ms": 815.3,
+      "decode_ms": 463.6
+    },
+    {
+      "audio_s": 48.5,
+      "done_at_s": 49.33,
+      "latency_ms": 825.7,
+      "decode_ms": 510.4
+    },
+    {
+      "audio_s": 49.0,
+      "done_at_s": 49.91,
+      "latency_ms": 905.7,
+      "decode_ms": 580.0
+    },
+    {
+      "audio_s": 49.5,
+      "done_at_s": 50.48,
+      "latency_ms": 979.5,
+      "decode_ms": 573.8
+    },
+    {
+      "audio_s": 50.0,
+      "done_at_s": 51.03,
+      "latency_ms": 1033.0,
+      "decode_ms": 553.5
+    },
+    {
+      "audio_s": 51.0,
+      "done_at_s": 51.64,
+      "latency_ms": 641.0,
+      "decode_ms": 608.0
+    },
+    {
+      "audio_s": 51.5,
+      "done_at_s": 52.28,
+      "latency_ms": 778.4,
+      "decode_ms": 637.4
+    },
+    {
+      "audio_s": 52.0,
+      "done_at_s": 52.92,
+      "latency_ms": 924.6,
+      "decode_ms": 646.2
+    },
+    {
+      "audio_s": 52.5,
+      "done_at_s": 53.68,
+      "latency_ms": 1179.5,
+      "decode_ms": 754.9
+    },
+    {
+      "audio_s": 53.5,
+      "done_at_s": 54.47,
+      "latency_ms": 970.9,
+      "decode_ms": 791.5
+    },
+    {
+      "audio_s": 54.0,
+      "done_at_s": 55.28,
+      "latency_ms": 1276.3,
+      "decode_ms": 805.3
+    },
+    {
+      "audio_s": 55.0,
+      "done_at_s": 56.14,
+      "latency_ms": 1138.0,
+      "decode_ms": 861.7
+    },
+    {
+      "audio_s": 56.0,
+      "done_at_s": 57.08,
+      "latency_ms": 1080.9,
+      "decode_ms": 942.9
+    },
+    {
+      "audio_s": 57.0,
+      "done_at_s": 58.11,
+      "latency_ms": 1112.0,
+      "decode_ms": 1031.1
+    },
+    {
+      "audio_s": 58.0,
+      "done_at_s": 59.24,
+      "latency_ms": 1240.6,
+      "decode_ms": 1128.7
+    },
+    {
+      "audio_s": 59.0,
+      "done_at_s": 60.37,
+      "latency_ms": 1366.7,
+      "decode_ms": 1126.1
+    },
+    {
+      "audio_s": 60.0,
+      "done_at_s": 61.54,
+      "latency_ms": 1542.3,
+      "decode_ms": 1175.6
+    },
+    {
+      "audio_s": 61.5,
+      "done_at_s": 62.73,
+      "latency_ms": 1229.9,
+      "decode_ms": 1187.6
+    },
+    {
+      "audio_s": 62.5,
+      "done_at_s": 63.97,
+      "latency_ms": 1472.5,
+      "decode_ms": 1242.7
+    },
+    {
+      "audio_s": 63.5,
+      "done_at_s": 65.33,
+      "latency_ms": 1825.5,
+      "decode_ms": 1353.0
+    },
+    {
+      "audio_s": 65.0,
+      "done_at_s": 66.67,
+      "latency_ms": 1670.4,
+      "decode_ms": 1344.9
+    },
+    {
+      "audio_s": 66.5,
+      "done_at_s": 68.11,
+      "latency_ms": 1607.0,
+      "decode_ms": 1436.6
+    },
+    {
+      "audio_s": 69.0,
+      "done_at_s": 69.76,
+      "latency_ms": 763.8,
+      "decode_ms": 437.2
+    },
+    {
+      "audio_s": 69.5,
+      "done_at_s": 70.22,
+      "latency_ms": 723.8,
+      "decode_ms": 460.0
+    },
+    {
+      "audio_s": 70.0,
+      "done_at_s": 70.73,
+      "latency_ms": 725.9,
+      "decode_ms": 502.1
+    },
+    {
+      "audio_s": 70.5,
+      "done_at_s": 71.21,
+      "latency_ms": 710.3,
+      "decode_ms": 484.5
+    },
+    {
+      "audio_s": 71.0,
+      "done_at_s": 71.75,
+      "latency_ms": 748.4,
+      "decode_ms": 538.0
+    },
+    {
+      "audio_s": 71.5,
+      "done_at_s": 72.27,
+      "latency_ms": 767.1,
+      "decode_ms": 518.7
+    },
+    {
+      "audio_s": 72.0,
+      "done_at_s": 72.83,
+      "latency_ms": 833.9,
+      "decode_ms": 566.8
+    },
+    {
+      "audio_s": 72.5,
+      "done_at_s": 73.4,
+      "latency_ms": 898.3,
+      "decode_ms": 564.3
+    },
+    {
+      "audio_s": 73.0,
+      "done_at_s": 74.0,
+      "latency_ms": 1001.0,
+      "decode_ms": 602.7
+    },
+    {
+      "audio_s": 74.0,
+      "done_at_s": 74.69,
+      "latency_ms": 689.4,
+      "decode_ms": 688.4
+    },
+    {
+      "audio_s": 74.5,
+      "done_at_s": 75.41,
+      "latency_ms": 911.5,
+      "decode_ms": 722.0
+    },
+    {
+      "audio_s": 75.0,
+      "done_at_s": 76.15,
+      "latency_ms": 1145.0,
+      "decode_ms": 733.6
+    },
+    {
+      "audio_s": 76.0,
+      "done_at_s": 76.98,
+      "latency_ms": 977.6,
+      "decode_ms": 832.6
+    },
+    {
+      "audio_s": 76.5,
+      "done_at_s": 77.83,
+      "latency_ms": 1328.1,
+      "decode_ms": 850.5
+    },
+    {
+      "audio_s": 77.5,
+      "done_at_s": 78.73,
+      "latency_ms": 1225.3,
+      "decode_ms": 897.2
+    },
+    {
+      "audio_s": 78.5,
+      "done_at_s": 79.72,
+      "latency_ms": 1224.8,
+      "decode_ms": 999.5
+    },
+    {
+      "audio_s": 79.5,
+      "done_at_s": 80.72,
+      "latency_ms": 1217.2,
+      "decode_ms": 992.4
+    },
+    {
+      "audio_s": 80.5,
+      "done_at_s": 81.79,
+      "latency_ms": 1288.7,
+      "decode_ms": 1071.5
+    },
+    {
+      "audio_s": 81.5,
+      "done_at_s": 82.95,
+      "latency_ms": 1452.1,
+      "decode_ms": 1163.4
+    },
+    {
+      "audio_s": 82.5,
+      "done_at_s": 84.13,
+      "latency_ms": 1632.9,
+      "decode_ms": 1180.8
+    },
+    {
+      "audio_s": 84.0,
+      "done_at_s": 85.39,
+      "latency_ms": 1387.1,
+      "decode_ms": 1254.2
+    },
+    {
+      "audio_s": 85.0,
+      "done_at_s": 86.69,
+      "latency_ms": 1693.1,
+      "decode_ms": 1306.0
+    },
+    {
+      "audio_s": 86.5,
+      "done_at_s": 88.14,
+      "latency_ms": 1639.7,
+      "decode_ms": 1446.7
+    },
+    {
+      "audio_s": 89.0,
+      "done_at_s": 89.76,
+      "latency_ms": 761.2,
+      "decode_ms": 489.7
+    },
+    {
+      "audio_s": 89.5,
+      "done_at_s": 90.32,
+      "latency_ms": 816.7,
+      "decode_ms": 555.6
+    },
+    {
+      "audio_s": 90.0,
+      "done_at_s": 90.91,
+      "latency_ms": 912.5,
+      "decode_ms": 595.8
+    },
+    {
+      "audio_s": 90.5,
+      "done_at_s": 91.49,
+      "latency_ms": 988.9,
+      "decode_ms": 576.4
+    },
+    {
+      "audio_s": 91.0,
+      "done_at_s": 92.07,
+      "latency_ms": 1073.9,
+      "decode_ms": 585.0
+    },
+    {
+      "audio_s": 92.0,
+      "done_at_s": 92.74,
+      "latency_ms": 736.3,
+      "decode_ms": 662.4
+    },
+    {
+      "audio_s": 92.5,
+      "done_at_s": 93.41,
+      "latency_ms": 912.9,
+      "decode_ms": 676.6
+    },
+    {
+      "audio_s": 93.0,
+      "done_at_s": 94.14,
+      "latency_ms": 1135.9,
+      "decode_ms": 723.0
+    },
+    {
+      "audio_s": 94.0,
+      "done_at_s": 94.83,
+      "latency_ms": 832.3,
+      "decode_ms": 696.5
+    },
+    {
+      "audio_s": 94.5,
+      "done_at_s": 95.56,
+      "latency_ms": 1057.2,
+      "decode_ms": 724.9
+    },
+    {
+      "audio_s": 95.5,
+      "done_at_s": 96.33,
+      "latency_ms": 830.0,
+      "decode_ms": 772.8
+    },
+    {
+      "audio_s": 96.0,
+      "done_at_s": 97.09,
+      "latency_ms": 1095.0,
+      "decode_ms": 765.0
+    },
+    {
+      "audio_s": 97.0,
+      "done_at_s": 97.98,
+      "latency_ms": 982.8,
+      "decode_ms": 887.8
+    },
+    {
+      "audio_s": 97.5,
+      "done_at_s": 98.9,
+      "latency_ms": 1398.7,
+      "decode_ms": 915.9
+    },
+    {
+      "audio_s": 98.5,
+      "done_at_s": 99.88,
+      "latency_ms": 1377.8,
+      "decode_ms": 979.2
+    },
+    {
+      "audio_s": 99.5,
+      "done_at_s": 100.91,
+      "latency_ms": 1405.1,
+      "decode_ms": 1027.2
+    },
+    {
+      "audio_s": 100.5,
+      "done_at_s": 101.94,
+      "latency_ms": 1440.8,
+      "decode_ms": 1035.7
+    },
+    {
+      "audio_s": 101.5,
+      "done_at_s": 103.01,
+      "latency_ms": 1512.3,
+      "decode_ms": 1071.6
+    },
+    {
+      "audio_s": 103.0,
+      "done_at_s": 104.16,
+      "latency_ms": 1160.6,
+      "decode_ms": 1148.3
+    },
+    {
+      "audio_s": 104.0,
+      "done_at_s": 105.31,
+      "latency_ms": 1312.4,
+      "decode_ms": 1151.8
+    },
+    {
+      "audio_s": 105.0,
+      "done_at_s": 106.51,
+      "latency_ms": 1514.8,
+      "decode_ms": 1202.4
+    },
+    {
+      "audio_s": 106.5,
+      "done_at_s": 107.77,
+      "latency_ms": 1271.2,
+      "decode_ms": 1256.4
+    },
+    {
+      "audio_s": 108.5,
+      "done_at_s": 109.14,
+      "latency_ms": 640.7,
+      "decode_ms": 317.8
+    },
+    {
+      "audio_s": 109.0,
+      "done_at_s": 109.47,
+      "latency_ms": 468.0,
+      "decode_ms": 327.3
+    },
+    {
+      "audio_s": 109.0,
+      "done_at_s": 109.77,
+      "latency_ms": 774.7,
+      "decode_ms": 306.7
+    },
+    {
+      "audio_s": 109.5,
+      "done_at_s": 110.14,
+      "latency_ms": 639.1,
+      "decode_ms": 364.4
+    },
+    {
+      "audio_s": 110.0,
+      "done_at_s": 110.52,
+      "latency_ms": 523.9,
+      "decode_ms": 384.8
+    },
+    {
+      "audio_s": 110.5,
+      "done_at_s": 110.91,
+      "latency_ms": 412.6,
+      "decode_ms": 388.7
+    },
+    {
+      "audio_s": 110.5,
+      "done_at_s": 111.34,
+      "latency_ms": 835.8,
+      "decode_ms": 423.2
+    },
+    {
+      "audio_s": 111.0,
+      "done_at_s": 111.75,
+      "latency_ms": 749.4,
+      "decode_ms": 413.6
+    },
+    {
+      "audio_s": 111.5,
+      "done_at_s": 112.15,
+      "latency_ms": 650.4,
+      "decode_ms": 401.0
+    },
+    {
+      "audio_s": 112.0,
+      "done_at_s": 112.62,
+      "latency_ms": 616.8,
+      "decode_ms": 466.4
+    },
+    {
+      "audio_s": 112.5,
+      "done_at_s": 113.13,
+      "latency_ms": 626.9,
+      "decode_ms": 510.1
+    },
+    {
+      "audio_s": 113.0,
+      "done_at_s": 113.63,
+      "latency_ms": 632.2,
+      "decode_ms": 505.3
+    },
+    {
+      "audio_s": 113.5,
+      "done_at_s": 114.13,
+      "latency_ms": 628.2,
+      "decode_ms": 496.0
+    },
+    {
+      "audio_s": 114.0,
+      "done_at_s": 114.66,
+      "latency_ms": 661.2,
+      "decode_ms": 533.0
+    },
+    {
+      "audio_s": 114.5,
+      "done_at_s": 115.22,
+      "latency_ms": 715.1,
+      "decode_ms": 553.9
+    },
+    {
+      "audio_s": 115.0,
+      "done_at_s": 115.78,
+      "latency_ms": 775.5,
+      "decode_ms": 560.4
+    },
+    {
+      "audio_s": 115.5,
+      "done_at_s": 116.34,
+      "latency_ms": 839.6,
+      "decode_ms": 564.2
+    },
+    {
+      "audio_s": 116.0,
+      "done_at_s": 116.94,
+      "latency_ms": 938.0,
+      "decode_ms": 598.3
+    },
+    {
+      "audio_s": 116.5,
+      "done_at_s": 117.53,
+      "latency_ms": 1032.2,
+      "decode_ms": 594.2
+    },
+    {
+      "audio_s": 117.5,
+      "done_at_s": 118.19,
+      "latency_ms": 691.8,
+      "decode_ms": 659.6
+    },
+    {
+      "audio_s": 118.0,
+      "done_at_s": 118.9,
+      "latency_ms": 895.4,
+      "decode_ms": 703.6
+    },
+    {
+      "audio_s": 118.5,
+      "done_at_s": 119.6,
+      "latency_ms": 1100.5,
+      "decode_ms": 705.1
+    },
+    {
+      "audio_s": 119.5,
+      "done_at_s": 120.36,
+      "latency_ms": 864.9,
+      "decode_ms": 764.4
+    },
+    {
+      "audio_s": 120.0,
+      "done_at_s": 121.1,
+      "latency_ms": 1103.6,
+      "decode_ms": 738.8
+    },
+    {
+      "audio_s": 121.0,
+      "done_at_s": 121.93,
+      "latency_ms": 931.9,
+      "decode_ms": 828.3
+    },
+    {
+      "audio_s": 121.52,
+      "done_at_s": 122.73,
+      "latency_ms": 1217.2,
+      "decode_ms": 802.2
+    }
+  ]
+}

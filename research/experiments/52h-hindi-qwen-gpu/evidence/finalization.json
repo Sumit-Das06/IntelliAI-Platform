@@ -1,0 +1,10 @@
+{
+  "definition": "latency of the last decode after all audio arrived (sim upper bound; an end-triggered final in a product session starts immediately)",
+  "sessions": {
+    "real30s_growing": 1668.4,
+    "real2min_rolling": 1217.2,
+    "real5min_rolling": 1060.0,
+    "real10min_rolling": 1146.3
+  },
+  "proposed_gate": "<=1000 ms"
+}

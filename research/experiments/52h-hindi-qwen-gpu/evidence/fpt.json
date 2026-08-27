@@ -1,0 +1,22 @@
+{
+  "definition": "first non-empty partial, measured from VAD speech start",
+  "sessions": {
+    "real30s_growing": {
+      "fpt_ms_from_speech_start": 520.0,
+      "fpt_ms_from_session_start": 550.0
+    },
+    "real2min_rolling": {
+      "fpt_ms_from_speech_start": 540.0,
+      "fpt_ms_from_session_start": 570.0
+    },
+    "real5min_rolling": {
+      "fpt_ms_from_speech_start": 660.0,
+      "fpt_ms_from_session_start": 690.0
+    },
+    "real10min_rolling": {
+      "fpt_ms_from_speech_start": 490.0,
+      "fpt_ms_from_session_start": 760.0
+    }
+  },
+  "proposed_gate": "<=1000 ms acceptable"
+}

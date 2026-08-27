@@ -1,0 +1,25 @@
+{
+  "status": "OPEN FINDING — discovered during M52H, NOT fixed here (out of scope); needs its own investigation",
+  "symptom": "the production stt-runtime SERVICE path returned unstable, truncated Hindi transcripts on a 31.8 s real multi-speaker clip (real30s.wav) while every DIRECT call to the very same llama-server child was stable and complete",
+  "isolation_matrix_real30s": {
+    "service_/v1/transcribe_x7": "77 / 33 / 71 / 31 / 96 / 2 / 65 words, inference 20.7-45.3 s, WER vs truth 0.60-1.00 — UNSTABLE run to run at temperature 0.0 (also reproduced after a fresh container restart)",
+    "direct_child_same_container_x3_file_wav": "117 words each, 6.5-8.4 s — stable",
+    "direct_child_same_container_x3_ffmpeg_decoded_and_engine_RIFF_wrapped": "117 words each, 6.7-9.1 s — stable (rules out the audio path: ffmpeg decode + wav_bytes wrap are byte-innocent)",
+    "pinned_windows_cpu_build_direct": "117 words, 8.5 s, WER 0.1092",
+    "gpu_build_direct": "117 words, WER 0.1092",
+    "child_slots_probe_after_service_call": "n_prompt_tokens 899 — the FULL audio reaches the child through the service too"
+  },
+  "what_is_ruled_out": [
+    "backend/build (Windows CPU, Linux CPU, CUDA all stable-full on direct calls)",
+    "model weights (hash-verified, identical everywhere)",
+    "audio decode path (replicated byte-for-byte, stable)",
+    "payload shape (engine payload mirrored exactly in the stable direct tests)",
+    "child crash/restart (runtime logs clean, same child pid across good and bad results)",
+    "max_tokens (2048 in engine; truncations far below it)"
+  ],
+  "hypothesis_UNCONFIRMED": "CPU contention inside the runtime process (uvicorn + worker pool + resident whisper) changes llama.cpp's thread work-splitting, whose floating-point reduction order is not deterministic under load; on knife-edge audio the greedy path diverges — sometimes into early stop. Consistent with: service inference 2-5x slower than direct on the same clip, instability appearing only via the service, and this morning's short single-speaker prefix ladder through the SAME service being stable.",
+  "why_it_never_showed_before": "every prior Hindi battery used short single-clip audio (FLEURS/IndicVoices single utterances, <=20 s, one speaker); real30s is the first 30 s multi-speaker concat pushed through the service",
+  "impact_on_m52h": "none on the GPU verdict (GPU + all direct paths stable); CPU-vs-GPU quality was therefore scored with DIRECT child calls on both sides",
+  "impact_on_production": "potentially real for long multi-speaker uploads on CPU-contended boxes — recommend a dedicated investigation milestone (repro on the production-shaped box, llama.cpp --threads pinning, batch-order determinism)",
+  "date": "2026-08-27"
+}

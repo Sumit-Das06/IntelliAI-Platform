@@ -1,0 +1,18 @@
+{
+  "detector": "production EnergyVad (annotation-only, deterministic)",
+  "verdicts": {
+    "hi-silence-10s.wav": {
+      "vad_has_speech": false,
+      "bare_model_output": ""
+    },
+    "silence5.wav": {
+      "vad_has_speech": false,
+      "bare_model_output": ""
+    },
+    "noise5.wav": {
+      "vad_has_speech": false,
+      "bare_model_output": ""
+    }
+  },
+  "law": "every realtime window decode is VAD-gated; silence never reaches the model"
+}

@@ -1,0 +1,34 @@
+{
+  "real30s_growing": {
+    "update_latency_ms": {
+      "p50": 524.2,
+      "p95": 1556.9
+    },
+    "cadence_s_p50": 0.25,
+    "updates": 75
+  },
+  "real2min_rolling": {
+    "update_latency_ms": {
+      "p50": 880.1,
+      "p95": 1607.0
+    },
+    "cadence_s_p50": 0.64,
+    "updates": 177
+  },
+  "real5min_rolling": {
+    "update_latency_ms": {
+      "p50": 1185.7,
+      "p95": 1992.9
+    },
+    "cadence_s_p50": 0.96,
+    "updates": 293
+  },
+  "real10min_rolling": {
+    "update_latency_ms": {
+      "p50": 1801.1,
+      "p95": 3113.6
+    },
+    "cadence_s_p50": 1.71,
+    "updates": 327
+  }
+}

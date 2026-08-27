@@ -1,0 +1,27 @@
+{
+  "note": "each constituent real clip decoded INDIVIDUALLY on GPU (E3's ideal serving shape), texts joined, scored vs ground truth — the honest offline baseline for the same long-session material",
+  "real2min": {
+    "clips": 17,
+    "per_clip_offline_vs_truth": {
+      "wer": 0.1588,
+      "cer": 0.0811
+    },
+    "decode_ms_total": 15032.0
+  },
+  "real5min": {
+    "clips": 46,
+    "per_clip_offline_vs_truth": {
+      "wer": 0.2317,
+      "cer": 0.1271
+    },
+    "decode_ms_total": 29500.8
+  },
+  "real10min": {
+    "clips": 70,
+    "per_clip_offline_vs_truth": {
+      "wer": 0.1553,
+      "cer": 0.0692
+    },
+    "decode_ms_total": 62897.5
+  }
+}

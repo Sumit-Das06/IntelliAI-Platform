@@ -1,0 +1,42 @@
+{
+  "real30s_growing": {
+    "stable_token_ratio_mean": 0.803,
+    "rewrite_events": 29,
+    "partials": 75,
+    "la2": {
+      "monotonic": true,
+      "lag_words_mean": 4.0,
+      "live_coverage_of_final": 0.889
+    }
+  },
+  "real2min_rolling": {
+    "stable_token_ratio_mean": 0.843,
+    "rewrite_events": 107,
+    "partials": 177,
+    "la2": {
+      "monotonic": true,
+      "lag_words_mean": 7.5,
+      "live_coverage_of_final": 0.986
+    }
+  },
+  "real5min_rolling": {
+    "stable_token_ratio_mean": 0.867,
+    "rewrite_events": 224,
+    "partials": 293,
+    "la2": {
+      "monotonic": true,
+      "lag_words_mean": 10.5,
+      "live_coverage_of_final": 0.994
+    }
+  },
+  "real10min_rolling": {
+    "stable_token_ratio_mean": 0.965,
+    "rewrite_events": 206,
+    "partials": 327,
+    "la2": {
+      "monotonic": true,
+      "lag_words_mean": 11.7,
+      "live_coverage_of_final": 0.985
+    }
+  }
+}
