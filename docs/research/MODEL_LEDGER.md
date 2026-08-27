@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | LIVING LEDGER — append-only (law: [RESEARCH_FRAMEWORK.md §3](RESEARCH_FRAMEWORK.md)) |
-| **Last entry** | 2026-08-28 (Milestone 49: English punctuation model selection on the new frozen en-punct-eval@v1 — decision A: kredor/punctuate-all (MIT) selected with boundary F1 0.827, spontaneous 0.639/0.727, 0.83 s per 10-min transcript, word-copy invariant 0 failures; fullstop-large = quality ceiling backup; felflare rejected; recommended M50 = English punctuation runtime stage (int8 ONNX, M30 discipline, flag OFF). Production untouched) |
+| **Last entry** | 2026-08-27 (Milestone 50: English punctuation runtime — kredor/punctuate-all converted to INT8 ONNX (`punct-en-kredor@v1`, peak RSS 568.5 MiB ≤ 700 gate) and shipped as a flag-OFF stage in the STT runtime on the M30 word-copy core; classification A — STAGING CANDIDATE, production stays OFF) |
 | **Role of this document** | The status of record for every foundation model IntelliAI has researched, and the complete dated history of every status decision. The **decision history is the source of truth**; the current-status table is a derived convenience view, regenerated whenever an entry is appended. |
 | **The law** | A status change never edits a prior entry — it appends a dated entry with the new status, the reason, and the evidence. The chain must always answer *when, why, and on what evidence*. Every date-stamped fact decays: re-verify before it becomes load-bearing again. |
 
@@ -1379,6 +1379,15 @@ New frozen benchmark: `en-punct-eval@v1` (120 rows; LJSpeech read speech + autho
 - **felflare/bert-restore-punctuation** (bert-base, rev `954108a1…`, MIT) — **Rejected — domain mismatch** — [MEASURED] micro 0.420 / boundary 0.422 despite being English-only (Yelp training does not transfer to speech transcripts).
 - **vendored punct-cap-seg-47 + EN label map** — [MEASURED, EXPERIMENTAL] clean-sentence specialist (probe boundary 0.941, question 1.0) but spontaneous 0.444 — confirms M48: the shipped Hindi v1 model is not the English answer alone; it remains the Hindi stage only.
 - **Silero TE** — **Rejected — license** (CC BY-NC-SA; not downloaded). **NVIDIA NeMo punctuation_en_\*** — REVIEW REQUIRED (NVIDIA Open Model License); deferred, not measured.
+
+---
+
+## Milestone 50 — English punctuation runtime implementation (appended 2026-08-27)
+
+Full report: [../milestones/50-english-punctuation-runtime.md](../milestones/50-english-punctuation-runtime.md).
+Evidence: [50 evidence](../../research/experiments/50-english-punctuation-runtime/).
+
+- **kredor/punctuate-all** (rev `0fe37019…`, fp32 weights sha `9aec7aa5…`, MIT) — **M49 selection → STAGING CANDIDATE (M50 classification A)** — **[MEASURED]** Converted reproducibly to **ONNX INT8** (torch 2.11 export opset 17 → `quantize_dynamic` QInt8 weight-only, no calibration; torch 2.11.0/transformers 4.57.3/onnxruntime 1.29.0/py 3.12.3): derived artifact **`punct-en-kredor@v1`** — `model.int8.onnx` sha `b0d8d68c…` (277,964,353 B), pinned xlm-roberta-base SPM sha `cfc8146a…`, provenance.json sha `bb74cc24…` (label table travels inside the hash-verified artifact). Tokenizer fairseq id law (`hf_id = spm_id + 1`) proven: 0 mismatches / 1218 eval words. Conversion control: 80/120 frozen-eval rows byte-identical to fp32. **Shipped stage** (`engines/punctuation_en.py`, M30 word-copy core imported, en/en-US/en-IN route gating, fail-open, `INTELLIAI_STT_PUNCTUATION_EN_ENABLED` default FALSE): frozen en-punct-eval@v1 through the SHIPPING wrapper — micro F1 **0.6814** (fp32 0.6745), boundary **0.8142** (fp32 0.8270), comma 0.5674, question 0.8889, invariant **0 failures**; identical to standalone INT8, i.e. integration changed nothing. **Memory gate PASS**: peak RSS 568.5 MiB ≤ 700 (fp32 was ~1489). **Latency**: 2000 words p95 0.373 s; real 102 s boss clip stage cost **45.2 ms = 0.56 %** of same-request STT inference (proposed ≤10 % gate passes ~14×). Long text 1500 w in 261 ms, zero word changes; concurrency c=1..8 no leak/fail-open; service-level proofs on real whisper-small instances: flag OFF `text` byte-identical to flag-ON `raw_text` (instant rollback), `language=hi` never runs the stage, forced-timeout instance returns 200 + raw. Sarvam remains QUALITATIVE ONLY (M48 directive) — no Sarvam metrics; the M48 "one unbroken run-on" readability gap is closed in kind on the boss clip. **Production remains OFF**; promotion (incl. live-browser E2E after the demo freeze) is the next milestone's decision, not this one's.
 
 ---
 

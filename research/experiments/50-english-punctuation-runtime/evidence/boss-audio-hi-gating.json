@@ -1,0 +1,55 @@
+{
+  "audio_sha256": "117cba69b4795fcc4b02f24e03e7993b13082a93ac1cbf8b210a5bddd05af635",
+  "audio_file": "WhatsApp Ptt 2026-08-26 at 7.58.05 PM.ogg",
+  "language": "hi",
+  "wall_seconds": 53.85,
+  "envelope": {
+    "output": {
+      "text": "aktuell granularize the text to which i generated from my speech okay and if you see it has taken the whole statement or reaching as one statement so thats where we need to add punctuations and signs where it understands where is right crochet break the after that in below I have add a star I use that filler to kind of I would say unable to understand what to speak so added the fillers of two three but it repeated the statement so it should be understanding these are filler and correct them if you give it to the chat gpt and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper drafts and then see the comparison what it gave and what it is giving so all those things should should get added",
+      "language": "hi",
+      "duration_seconds": 102.1535,
+      "segments": [
+        {
+          "start_seconds": 0.0,
+          "end_seconds": 11.02,
+          "text": "aktuell granularize the text to which i generated from my speech okay and if you see it has taken the whole statement or reaching as one statement so thats where we need to add punctuations and signs where it understands where is right crochet break the"
+        },
+        {
+          "start_seconds": 60.0,
+          "end_seconds": 85.0,
+          "text": "after that in below I have add a star I use that filler to kind of I would say unable to understand what to speak so added the fillers of two three but it repeated the statement so it should be understanding these are filler and correct them"
+        },
+        {
+          "start_seconds": 85.0,
+          "end_seconds": 102.0,
+          "text": "if you give it to the chat gpt and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper drafts and then see the comparison what it gave and what it is giving so all those things should should get added"
+        }
+      ],
+      "raw_text": null
+    },
+    "model": "whisper-small",
+    "usage": [
+      {
+        "unit": "audio_seconds",
+        "amount": 102.1535
+      }
+    ],
+    "timing": {
+      "total_ms": 53831.87040000121,
+      "stages": {
+        "validate": 0.0018999999156221747,
+        "detect": 0.0026999987312592566,
+        "decode": 123.5116999996535,
+        "normalize": 0.008199996955227107,
+        "vad": 55.414399997971486,
+        "inference": 53652.60860000126,
+        "punctuation_en": 0.0
+      }
+    },
+    "runtime": {
+      "service": "stt-runtime",
+      "service_version": "0.1.0",
+      "contract_version": 1
+    }
+  }
+}

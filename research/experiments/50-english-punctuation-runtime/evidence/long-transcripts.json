@@ -1,0 +1,42 @@
+{
+  "results": {
+    "30s_75w": {
+      "input_words": 75,
+      "output_words": 75,
+      "words_preserved_exactly": true,
+      "applied": true,
+      "latency_ms": 19.3,
+      "input_chars": 420,
+      "output_chars": 427
+    },
+    "2min_300w": {
+      "input_words": 300,
+      "output_words": 300,
+      "words_preserved_exactly": true,
+      "applied": true,
+      "latency_ms": 55.5,
+      "input_chars": 1685,
+      "output_chars": 1714
+    },
+    "5min_750w": {
+      "input_words": 750,
+      "output_words": 750,
+      "words_preserved_exactly": true,
+      "applied": true,
+      "latency_ms": 142.0,
+      "input_chars": 4210,
+      "output_chars": 4272
+    },
+    "10min_1500w": {
+      "input_words": 1500,
+      "output_words": 1500,
+      "words_preserved_exactly": true,
+      "applied": true,
+      "latency_ms": 261.4,
+      "input_chars": 8530,
+      "output_chars": 8662
+    }
+  },
+  "process_rss_mib": 418.4,
+  "process_peak_rss_mib": 568.7
+}

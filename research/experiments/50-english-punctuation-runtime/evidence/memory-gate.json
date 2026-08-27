@@ -1,0 +1,12 @@
+{
+  "gate_mib": 700,
+  "baseline_mib": 39.3,
+  "after_load_mib": 393.8,
+  "after_first_request_mib": 418.3,
+  "after_30_requests_mib": 436.8,
+  "peak_mib": 568.5,
+  "delta_from_baseline_mib": 397.5,
+  "load_ms": 748.2,
+  "cold_first_request_ms_words_300": 56.0,
+  "verdict": "PASS"
+}

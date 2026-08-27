@@ -1,0 +1,45 @@
+{
+  "input_words": 300,
+  "results": {
+    "c1": {
+      "requests": 16,
+      "p50_ms": 54.2,
+      "p95_ms": 55.1,
+      "wall_ms": 866.9,
+      "fail_open_count": 0,
+      "rss_before_mib": 417.5,
+      "rss_after_mib": 436.0,
+      "peak_rss_mib": 568.8
+    },
+    "c2": {
+      "requests": 16,
+      "p50_ms": 82.5,
+      "p95_ms": 93.2,
+      "wall_ms": 673.2,
+      "fail_open_count": 0,
+      "rss_before_mib": 436.0,
+      "rss_after_mib": 464.5,
+      "peak_rss_mib": 568.8
+    },
+    "c4": {
+      "requests": 16,
+      "p50_ms": 163.1,
+      "p95_ms": 166.3,
+      "wall_ms": 656.7,
+      "fail_open_count": 0,
+      "rss_before_mib": 464.5,
+      "rss_after_mib": 464.6,
+      "peak_rss_mib": 568.8
+    },
+    "c8": {
+      "requests": 16,
+      "p50_ms": 343.6,
+      "p95_ms": 361.7,
+      "wall_ms": 708.3,
+      "fail_open_count": 0,
+      "rss_before_mib": 464.6,
+      "rss_after_mib": 464.9,
+      "peak_rss_mib": 568.8
+    }
+  }
+}

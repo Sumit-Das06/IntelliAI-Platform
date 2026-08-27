@@ -134,7 +134,7 @@ class TestWordCopyUnderEnglishScope:
         ]
         for text in cases:
             n = len(text.split())
-            marks = [[] for _ in range(n + 1)]
+            marks: list[list[str]] = [[] for _ in range(n + 1)]
             marks[-1] = ["."]
             out = apply_marks(text, marks, allowed=EN_SUPPORTED_MARKS)
             assert invariant_holds(text, out), text

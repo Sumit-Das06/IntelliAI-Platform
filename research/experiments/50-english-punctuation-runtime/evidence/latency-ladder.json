@@ -1,0 +1,63 @@
+{
+  "timeout_ms": 3000.0,
+  "cold_first_inference_ms_words_300": 59.0,
+  "warm_iterations": 15,
+  "ladder": {
+    "sentence_1": {
+      "words": 9,
+      "p50_ms": 4.7,
+      "p95_ms": 4.9,
+      "min_ms": 4.5,
+      "max_ms": 5.1,
+      "no_stage_error": true
+    },
+    "sentence_3": {
+      "words": 40,
+      "p50_ms": 10.3,
+      "p95_ms": 12.1,
+      "min_ms": 9.6,
+      "max_ms": 12.1,
+      "no_stage_error": true
+    },
+    "words_100": {
+      "words": 100,
+      "p50_ms": 18.5,
+      "p95_ms": 19.1,
+      "min_ms": 17.5,
+      "max_ms": 19.2,
+      "no_stage_error": true
+    },
+    "words_300": {
+      "words": 300,
+      "p50_ms": 54.3,
+      "p95_ms": 55.7,
+      "min_ms": 52.8,
+      "max_ms": 56.4,
+      "no_stage_error": true
+    },
+    "words_700": {
+      "words": 700,
+      "p50_ms": 122.5,
+      "p95_ms": 126.9,
+      "min_ms": 119.8,
+      "max_ms": 128.0,
+      "no_stage_error": true
+    },
+    "words_1200": {
+      "words": 1200,
+      "p50_ms": 212.8,
+      "p95_ms": 217.4,
+      "min_ms": 205.7,
+      "max_ms": 218.8,
+      "no_stage_error": true
+    },
+    "words_2000": {
+      "words": 2000,
+      "p50_ms": 360.4,
+      "p95_ms": 373.0,
+      "min_ms": 350.0,
+      "max_ms": 380.5,
+      "no_stage_error": true
+    }
+  }
+}

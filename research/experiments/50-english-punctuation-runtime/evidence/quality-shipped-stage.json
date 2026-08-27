@@ -1,0 +1,333 @@
+{
+  "dataset": "en-punct-eval-v1.json",
+  "stage": "intelliai_stt_runtime.engines.punctuation_en (shipped)",
+  "timeout_ms": 3000.0,
+  "overall": {
+    "ruler": "punct_slots@v1",
+    "rows": 120,
+    "aligned_rows": 120,
+    "invariant_failures": 0,
+    "invariant_pass_rate": 1.0,
+    "micro": {
+      "true_positives": 246,
+      "false_positives": 79,
+      "false_negatives": 151,
+      "precision": 0.7569,
+      "recall": 0.6196,
+      "f1": 0.6814
+    },
+    "per_mark": {
+      "।": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      ",": {
+        "true_positives": 101,
+        "false_positives": 40,
+        "false_negatives": 114,
+        "precision": 0.7163,
+        "recall": 0.4698,
+        "f1": 0.5674
+      },
+      "?": {
+        "true_positives": 8,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "precision": 0.8889,
+        "recall": 0.8889,
+        "f1": 0.8889
+      },
+      "!": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      ".": {
+        "true_positives": 137,
+        "false_positives": 38,
+        "false_negatives": 33,
+        "precision": 0.7829,
+        "recall": 0.8059,
+        "f1": 0.7942
+      }
+    },
+    "sentence_boundary": {
+      "true_positives": 149,
+      "false_positives": 35,
+      "false_negatives": 33,
+      "precision": 0.8098,
+      "recall": 0.8187,
+      "f1": 0.8142
+    }
+  },
+  "per_domain": {
+    "read-single": {
+      "ruler": "punct_slots@v1",
+      "rows": 70,
+      "aligned_rows": 70,
+      "invariant_failures": 0,
+      "invariant_pass_rate": 1.0,
+      "micro": {
+        "true_positives": 106,
+        "false_positives": 17,
+        "false_negatives": 62,
+        "precision": 0.8618,
+        "recall": 0.631,
+        "f1": 0.7285
+      },
+      "per_mark": {
+        "।": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ",": {
+          "true_positives": 33,
+          "false_positives": 12,
+          "false_negatives": 49,
+          "precision": 0.7333,
+          "recall": 0.4024,
+          "f1": 0.5197
+        },
+        "?": {
+          "true_positives": 1,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "!": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ".": {
+          "true_positives": 72,
+          "false_positives": 5,
+          "false_negatives": 13,
+          "precision": 0.9351,
+          "recall": 0.8471,
+          "f1": 0.8889
+        }
+      },
+      "sentence_boundary": {
+        "true_positives": 73,
+        "false_positives": 5,
+        "false_negatives": 13,
+        "precision": 0.9359,
+        "recall": 0.8488,
+        "f1": 0.8902
+      }
+    },
+    "read-paragraph": {
+      "ruler": "punct_slots@v1",
+      "rows": 20,
+      "aligned_rows": 20,
+      "invariant_failures": 0,
+      "invariant_pass_rate": 1.0,
+      "micro": {
+        "true_positives": 84,
+        "false_positives": 45,
+        "false_negatives": 48,
+        "precision": 0.6512,
+        "recall": 0.6364,
+        "f1": 0.6437
+      },
+      "per_mark": {
+        "।": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ",": {
+          "true_positives": 48,
+          "false_positives": 25,
+          "false_negatives": 38,
+          "precision": 0.6575,
+          "recall": 0.5581,
+          "f1": 0.6038
+        },
+        "?": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "!": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ".": {
+          "true_positives": 36,
+          "false_positives": 20,
+          "false_negatives": 10,
+          "precision": 0.6429,
+          "recall": 0.7826,
+          "f1": 0.7059
+        }
+      },
+      "sentence_boundary": {
+        "true_positives": 36,
+        "false_positives": 20,
+        "false_negatives": 10,
+        "precision": 0.6429,
+        "recall": 0.7826,
+        "f1": 0.7059
+      }
+    },
+    "authored-probe": {
+      "ruler": "punct_slots@v1",
+      "rows": 27,
+      "aligned_rows": 27,
+      "invariant_failures": 0,
+      "invariant_pass_rate": 1.0,
+      "micro": {
+        "true_positives": 36,
+        "false_positives": 6,
+        "false_negatives": 24,
+        "precision": 0.8571,
+        "recall": 0.6,
+        "f1": 0.7059
+      },
+      "per_mark": {
+        "।": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ",": {
+          "true_positives": 11,
+          "false_positives": 0,
+          "false_negatives": 14,
+          "precision": 1.0,
+          "recall": 0.44,
+          "f1": 0.6111
+        },
+        "?": {
+          "true_positives": 7,
+          "false_positives": 1,
+          "false_negatives": 0,
+          "precision": 0.875,
+          "recall": 1.0,
+          "f1": 0.9333
+        },
+        "!": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ".": {
+          "true_positives": 18,
+          "false_positives": 5,
+          "false_negatives": 7,
+          "precision": 0.7826,
+          "recall": 0.72,
+          "f1": 0.75
+        }
+      },
+      "sentence_boundary": {
+        "true_positives": 29,
+        "false_positives": 2,
+        "false_negatives": 6,
+        "precision": 0.9355,
+        "recall": 0.8286,
+        "f1": 0.8788
+      }
+    },
+    "spontaneous": {
+      "ruler": "punct_slots@v1",
+      "rows": 3,
+      "aligned_rows": 3,
+      "invariant_failures": 0,
+      "invariant_pass_rate": 1.0,
+      "micro": {
+        "true_positives": 20,
+        "false_positives": 11,
+        "false_negatives": 17,
+        "precision": 0.6452,
+        "recall": 0.5405,
+        "f1": 0.5882
+      },
+      "per_mark": {
+        "।": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ",": {
+          "true_positives": 9,
+          "false_positives": 3,
+          "false_negatives": 13,
+          "precision": 0.75,
+          "recall": 0.4091,
+          "f1": 0.5294
+        },
+        "?": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "!": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        ".": {
+          "true_positives": 11,
+          "false_positives": 8,
+          "false_negatives": 3,
+          "precision": 0.5789,
+          "recall": 0.7857,
+          "f1": 0.6667
+        }
+      },
+      "sentence_boundary": {
+        "true_positives": 11,
+        "false_positives": 8,
+        "false_negatives": 4,
+        "precision": 0.5789,
+        "recall": 0.7333,
+        "f1": 0.6471
+      }
+    }
+  },
+  "stage_errors_fail_open": []
+}

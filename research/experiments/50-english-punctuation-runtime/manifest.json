@@ -1,0 +1,72 @@
+{
+  "milestone": 50,
+  "title": "English punctuation runtime implementation (kredor INT8 ONNX)",
+  "date": "2026-08-27",
+  "model_identity": {
+    "source_model": "kredor/punctuate-all",
+    "license": "MIT",
+    "source_revision": "0fe37019de3f5e4fbd83289fd94e07fa588e47df",
+    "source_weights_sha256": "9aec7aa51b4f8622be527ec668505d748932cdfb177a774f3f7fd204e01dcbae",
+    "selected_by": "M49 (docs/research/2026-08-28-english-punctuation-model-selection.md)"
+  },
+  "runtime_artifact": {
+    "name": "punct-en-kredor",
+    "version": 1,
+    "files": {
+      "model.int8.onnx": {
+        "sha256": "b0d8d68ca907012e832282920c43ce8342c7920022ec9e9c125498de9478a925",
+        "bytes": 277964353
+      },
+      "sentencepiece.bpe.model": {
+        "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+        "bytes": 5069051,
+        "provenance": "xlm-roberta-base SPM, pinned (kredor is an xlm-roberta-base fine-tune, tokenizer unchanged)"
+      },
+      "provenance.json": {
+        "sha256": "bb74cc2440f342a69e3cbec427f7627769fd39abad6f7f1b3a1fbc72402374c3"
+      }
+    },
+    "conversion": {
+      "path": "torch.onnx.export (opset 17) -> onnxruntime.quantization.quantize_dynamic (QInt8, weight-only dynamic, no calibration set)",
+      "tools": {
+        "torch": "2.11.0+cu128",
+        "transformers": "4.57.3",
+        "onnxruntime": "1.29.0",
+        "python": "3.12.3"
+      },
+      "date": "2026-08-26",
+      "script": "WSL ~/m50/convert.py (reproducible: export -> quantize -> tokenizer equivalence -> INT8 predictions -> perf -> provenance)"
+    },
+    "tokenizer_id_law": "fairseq offset: hf_id = spm_id + 1; spm-unk -> 3; <s>=0 </s>=2 <pad>=1 (0 mismatches over 1218 unique eval words)",
+    "fp32_int8_agreement": "80/120 eval rows byte-identical text; corpus metrics within noise of M49 fp32"
+  },
+  "shipped_stage": {
+    "module": "services/stt-runtime/src/intelliai_stt_runtime/engines/punctuation_en.py",
+    "flag": "INTELLIAI_STT_PUNCTUATION_EN_ENABLED (default FALSE everywhere; production stays OFF)",
+    "languages": "en,en-US,en-IN (route-resolved, never client 'auto')",
+    "timeout_ms_default": 3000,
+    "mark_scope_v1": [".", ",", "?"],
+    "word_copy_core": "M30 apply_marks/invariant_holds/redistribute_segments (imported, not duplicated)"
+  },
+  "gates": {
+    "quality": "evidence/quality-shipped-stage.json (frozen en-punct-eval@v1, ruler punct_slots@v1, invariant 0 failures)",
+    "memory": "evidence/memory-gate.json (peak 568.5 MiB <= 700 gate)",
+    "latency": "evidence/latency-ladder.json (2000 words p95 373 ms)",
+    "long_transcripts": "evidence/long-transcripts.json (up to 1500 words, zero word changes)",
+    "edge_cases": "evidence/edge-cases.json (0 invariant failures)",
+    "concurrency": "evidence/concurrency.json (c=1/2/4/8, 0 fail-open, RSS plateau)",
+    "boss_audio": {
+      "clip_sha256": "117cba69b4795fcc4b02f24e03e7993b13082a93ac1cbf8b210a5bddd05af635",
+      "note": "same 102 s founder clip as M48; audio itself never enters git",
+      "flag_on": "evidence/boss-audio-punctuated.json",
+      "flag_off": "evidence/boss-audio-flag-off.json (text byte-identical to flag-on raw_text)",
+      "hindi_gating": "evidence/boss-audio-hi-gating.json (language=hi -> punctuation_en 0.0, not applied)",
+      "fail_open": "evidence/boss-audio-failopen-timeout.json (forced 0.001 ms stage timeout -> 200 + raw)"
+    }
+  },
+  "sarvam_note": "Sarvam remains QUALITATIVE ONLY (M48 directive): no Sarvam metrics are reported anywhere in M50; the readability comparison uses the captured Sarvam output as a qualitative benchmark of 'punctuated formatting exists'.",
+  "environment": {
+    "machine": "founder dev laptop (Windows 11), CPUExecutionProvider only",
+    "service": "intelliai-stt-runtime uvicorn dev instances on ports 8791-8793 (demo docker stack untouched)"
+  }
+}

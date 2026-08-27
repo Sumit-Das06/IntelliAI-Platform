@@ -1,0 +1,109 @@
+{
+  "audio_sha256": "117cba69b4795fcc4b02f24e03e7993b13082a93ac1cbf8b210a5bddd05af635",
+  "audio_file": "WhatsApp Ptt 2026-08-26 at 7.58.05 PM.ogg",
+  "language": "en",
+  "wall_seconds": 8.32,
+  "envelope": {
+    "output": {
+      "text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly so it did not work after that in below I have add a star I use that filler to kind of I would say unable to understand what to speak so I did the fillers of 2 3 but it repeated the statement so it should be understanding these are filler and correct them if you give it to the charity and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper droughts and then see the comparison what it gave and what it is giving so all those things should should get added",
+      "language": "en",
+      "duration_seconds": 102.1535,
+      "segments": [
+        {
+          "start_seconds": 0.0,
+          "end_seconds": 11.1,
+          "text": "see this is a text to which I generated from my speech okay and if you see it"
+        },
+        {
+          "start_seconds": 11.1,
+          "end_seconds": 20.88,
+          "text": "has taken the whole statement or speech as one statement so that's where we"
+        },
+        {
+          "start_seconds": 20.88,
+          "end_seconds": 28.400000000000002,
+          "text": "need to add punctuations and signs where it understand where is the right"
+        },
+        {
+          "start_seconds": 28.400000000000002,
+          "end_seconds": 35.92,
+          "text": "fit break the statement and then start so full stops comma all of those things"
+        },
+        {
+          "start_seconds": 35.92,
+          "end_seconds": 43.32,
+          "text": "should be there so check how this can be improved secondly I have placed the stars"
+        },
+        {
+          "start_seconds": 43.32,
+          "end_seconds": 53.88,
+          "text": "on the places right like that was the one it repeated there was a is because"
+        },
+        {
+          "start_seconds": 53.88,
+          "end_seconds": 58.400000000000006,
+          "text": "it is joining the statement it was supposed to be comma so that person can"
+        },
+        {
+          "start_seconds": 58.400000000000006,
+          "end_seconds": 64.4,
+          "text": "read it properly so it did not work after that in below I have add a star I use"
+        },
+        {
+          "start_seconds": 64.4,
+          "end_seconds": 77.24000000000001,
+          "text": "that filler to kind of I would say unable to understand what to speak so I did the"
+        },
+        {
+          "start_seconds": 77.24000000000001,
+          "end_seconds": 82.4,
+          "text": "fillers of 2 3 but it repeated the statement so it should be understanding"
+        },
+        {
+          "start_seconds": 82.4,
+          "end_seconds": 88.76,
+          "text": "these are filler and correct them if you give it to the charity and ask it to"
+        },
+        {
+          "start_seconds": 88.76,
+          "end_seconds": 92.56,
+          "text": "write it properly with proper punctuation and blah blah blah it will give you a"
+        },
+        {
+          "start_seconds": 92.56,
+          "end_seconds": 98.24000000000001,
+          "text": "proper droughts and then see the comparison what it gave and what it is"
+        },
+        {
+          "start_seconds": 98.24000000000001,
+          "end_seconds": 103.24000000000001,
+          "text": "giving so all those things should should get added"
+        }
+      ],
+      "raw_text": null
+    },
+    "model": "whisper-small",
+    "usage": [
+      {
+        "unit": "audio_seconds",
+        "amount": 102.1535
+      }
+    ],
+    "timing": {
+      "total_ms": 8272.659800000838,
+      "stages": {
+        "validate": 0.0029000002541579306,
+        "detect": 0.00540000110049732,
+        "decode": 142.36760000130744,
+        "normalize": 0.009300001693191007,
+        "vad": 59.6058000010089,
+        "inference": 8069.437400001334
+      }
+    },
+    "runtime": {
+      "service": "stt-runtime",
+      "service_version": "0.1.0",
+      "contract_version": 1
+    }
+  }
+}

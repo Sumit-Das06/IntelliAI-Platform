@@ -1,0 +1,89 @@
+{
+  "rows": [
+    {
+      "input": "the M16 rifle was used in the incident",
+      "output": "the M16 rifle was used in the incident.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "the pH of the solution is 7.4 today",
+      "output": "the pH of the solution is 7.4 today.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "the meeting is at 3 pm GMT on friday",
+      "output": "the meeting is at 3 pm GMT on friday.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "TMZ reported the story first",
+      "output": "TMZ reported the story first.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "visit example.com today",
+      "output": "visit example.com today.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "email test@example.com tomorrow",
+      "output": "email test@example.com tomorrow.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "the version is 2.5 today",
+      "output": "the version is 2.5 today.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "call me at 98765 43210 tomorrow morning",
+      "output": "call me at 98765 43210 tomorrow morning.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "the price is 1499.99 rupees",
+      "output": "the price is 1499.99 rupees.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "we launched IntelliAI Console last week did you see it",
+      "output": "we launched IntelliAI Console last week. did you see it?",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "the deadline is 26 august 2026 can we make it",
+      "output": "the deadline is 26 august 2026. can we make it?",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "namaste doston welcome to the channel aaj hum baat karenge",
+      "output": "namaste doston. welcome to the channel. aaj hum baat karenge.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "run pip install numpy then import numpy as np",
+      "output": "run pip, install numpy, then import numpy as np.",
+      "invariant_holds": true,
+      "applied": true
+    },
+    {
+      "input": "the file is at C:\\Users\\demo\\report.pdf check it",
+      "output": "the file is at C:\\Users\\demo\\report.pdf. check it.",
+      "invariant_holds": true,
+      "applied": true
+    }
+  ],
+  "invariant_failures": 0
+}
