@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "boss_word_invariant_on_vs_off": true,
+    "boss_on_is_punctuated": true,
+    "flag_off_equals_failopen_byte_for_byte": true,
+    "flag_off_has_no_v1_marks": true,
+    "recovered_equals_on_run": true,
+    "recovered_is_punctuated": true,
+    "share_clipboard_equals_displayed": true,
+    "correction_started_from_displayed": true,
+    "correction_acknowledged": true,
+    "mobile_usable": true,
+    "tablet_no_horizontal_scroll": true,
+    "security_problems": [],
+    "status_page_makes_no_production_claim": true,
+    "hindi_display": "क्या आप कल ऑफिस आओगे? मुझे रिपोर्ट आज चाहिए।",
+    "hindi_has_no_latin_period_burst": true,
+    "battery_no_double_marks": true
+  },
+  "battery_displayed": {
+    "normal.wav": "Hello, my name is Sumit. How are you?",
+    "question.wav": "Can you send the report today?",
+    "names.wav": "OpenAI released the new model yesterday.",
+    "date.wav": "The meeting is on August 12, 2026.",
+    "phone.wav": "Call me at 987-654-3210.",
+    "currency.wav": "I bought it for $49.99 yesterday.",
+    "commas.wav": "We need apples, bananas, oranges and mangoes for the party tomorrow.",
+    "paragraph.wav": "The quarterly report is ready. We shipped three features this month. The team did a great job. Can we present it on Friday?",
+    "technical.wav": "The API gateway returns Json over HTTPS using OAuth tokens and TLS version 1.3.",
+    "exclaim.wav": "That is amazing. Congratulations to the whole team."
+  }
+}

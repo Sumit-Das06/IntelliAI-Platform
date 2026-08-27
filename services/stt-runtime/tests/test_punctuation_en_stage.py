@@ -8,6 +8,7 @@ behavior runs only where the seeded artifact exists (dev machines);
 CI proves the laws through the pure core and the seams.
 """
 
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -37,6 +38,7 @@ from intelliai_stt_runtime.engines.punctuation_en import (
     SPM_EN_FILENAME,
     EnPunctuationRestorer,
     EnStageOutcome,
+    engine_already_punctuated,
     load_punctuation_en,
 )
 from intelliai_stt_runtime.main import create_app
@@ -199,6 +201,21 @@ class _WordRewritingEnRestorer(_BareEnRestorer):
         return result
 
 
+class _MarkEveryEndEnRestorer(_BareEnRestorer):
+    """The REAL restore() with a stubbed prediction (always one final
+    period) — exercises the engine-punctuation stand-down seam without
+    weights."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._executor = ThreadPoolExecutor(max_workers=1)
+
+    def _predict_marks(self, words: list[str]) -> list[list[str]]:
+        marks: list[list[str]] = [[] for _ in range(len(words) + 1)]
+        marks[-1] = ["."]
+        return marks
+
+
 def _result(text: str = "hello world") -> TranscriptionResult:
     return TranscriptionResult(
         text=text,
@@ -206,6 +223,49 @@ def _result(text: str = "hello world") -> TranscriptionResult:
         duration_seconds=1.0,
         segments=(TranscriptionSegment(start_seconds=0.0, end_seconds=1.0, text=text),),
     )
+
+
+class TestEngineAlreadyPunctuated:
+    """M51 browser-E2E finding: Whisper fully punctuates clean read
+    speech, and restoring on top of it doubled marks ("Sumit..").
+    The law: when the engine already punctuated, the stage stands down —
+    it exists for the bare transcripts spontaneous speech produces."""
+
+    def test_token_final_marks_mean_engine_punctuation(self) -> None:
+        assert engine_already_punctuated(["Hello,", "my", "name", "is", "Sumit."])
+        assert engine_already_punctuated(["how", "are", "you?"])
+        assert engine_already_punctuated(["first;", "second:", "third!"])
+
+    def test_intra_word_marks_never_count(self) -> None:
+        for text in (
+            "the version is 2.5 today",
+            "visit example.com today",
+            "email test@example.com tomorrow",
+            "call 987-654-3210 now",
+            "see this is a text to which I generated from my speech okay",
+        ):
+            assert not engine_already_punctuated(text.split()), text
+
+    def test_the_stage_stands_down_for_engine_punctuated_text(self) -> None:
+        restorer = _MarkEveryEndEnRestorer()
+        try:
+            raw = "Hello, my name is Sumit. How are you?"
+            outcome = restorer.restore_safely(_result(raw), "en")
+            assert not outcome.applied
+            assert outcome.result.text == raw  # no double marks, ever
+            assert outcome.result.raw_text is None
+        finally:
+            restorer.close()
+
+    def test_bare_text_still_gets_the_stage(self) -> None:
+        restorer = _MarkEveryEndEnRestorer()
+        try:
+            outcome = restorer.restore_safely(_result("the version is 2.5 today"), "en")
+            assert outcome.applied
+            assert outcome.result.text == "the version is 2.5 today."
+            assert outcome.result.raw_text == "the version is 2.5 today"
+        finally:
+            restorer.close()
 
 
 class TestGatingAndFailOpen:

@@ -1,0 +1,108 @@
+{
+  "mode": "off",
+  "base_url": "https://localhost",
+  "runs": [
+    {
+      "clip": "WhatsApp Ptt 2026-08-26 at 7.58.05 PM.ogg",
+      "language": "en",
+      "displayed_text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly so it did not work after that in below I have add a star I use that filler to kind of I would say unable to understand what to speak so I did the fillers of 2 3 but it repeated the statement so it should be understanding these are filler and correct them if you give it to the chat gpt and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper droughts and then see the comparison what it gave and what it is giving so all those things should should get added",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_b694506469cc42a78fd42d713d5321b5",
+      "sample_id": "smp_2a1e70b1c93bffa34b04033b",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 102.1535,
+        "text": "see this is a text to which I generated from my speech okay and if you see it has taken the whole statement or speech as one statement so that's where we need to add punctuations and signs where it understand where is the right fit break the statement and then start so full stops comma all of those things should be there so check how this can be improved secondly I have placed the stars on the places right like that was the one it repeated there was a is because it is joining the statement it was supposed to be comma so that person can read it properly so it did not work after that in below I have add a star I use that filler to kind of I would say unable to understand what to speak so I did the fillers of 2 3 but it repeated the statement so it should be understanding these are filler and correct them if you give it to the chat gpt and ask it to write it properly with proper punctuation and blah blah blah it will give you a proper droughts and then see the comparison what it gave and what it is giving so all those things should should get added",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 11.1,
+            "text": "see this is a text to which I generated from my speech okay and if you see it"
+          },
+          {
+            "id": 1,
+            "start": 11.1,
+            "end": 22.1,
+            "text": "has taken the whole statement or speech as one statement so that's where we need"
+          },
+          {
+            "id": 2,
+            "start": 22.1,
+            "end": 29.3,
+            "text": "to add punctuations and signs where it understand where is the right fit break"
+          },
+          {
+            "id": 3,
+            "start": 29.3,
+            "end": 37.24,
+            "text": "the statement and then start so full stops comma all of those things should be"
+          },
+          {
+            "id": 4,
+            "start": 37.24,
+            "end": 44.480000000000004,
+            "text": "there so check how this can be improved secondly I have placed the stars on the"
+          },
+          {
+            "id": 5,
+            "start": 44.480000000000004,
+            "end": 54.120000000000005,
+            "text": "places right like that was the one it repeated there was a is because it is"
+          },
+          {
+            "id": 6,
+            "start": 54.120000000000005,
+            "end": 58.72,
+            "text": "joining the statement it was supposed to be comma so that person can read it"
+          },
+          {
+            "id": 7,
+            "start": 58.72,
+            "end": 65.8,
+            "text": "properly so it did not work after that in below I have add a star I use that filler"
+          },
+          {
+            "id": 8,
+            "start": 65.8,
+            "end": 77.24,
+            "text": "to kind of I would say unable to understand what to speak so I did the"
+          },
+          {
+            "id": 9,
+            "start": 77.24,
+            "end": 82.4,
+            "text": "fillers of 2 3 but it repeated the statement so it should be understanding"
+          },
+          {
+            "id": 10,
+            "start": 82.4,
+            "end": 88.6,
+            "text": "these are filler and correct them if you give it to the chat gpt and ask it"
+          },
+          {
+            "id": 11,
+            "start": 88.60000000000001,
+            "end": 91.96000000000001,
+            "text": "to write it properly with proper punctuation and blah blah blah it will"
+          },
+          {
+            "id": 12,
+            "start": 91.96000000000001,
+            "end": 98.08000000000001,
+            "text": "give you a proper droughts and then see the comparison what it gave and what it"
+          },
+          {
+            "id": 13,
+            "start": 98.08000000000001,
+            "end": 103.32000000000001,
+            "text": "is giving so all those things should should get added"
+          }
+        ]
+      },
+      "wall_seconds": 7.79
+    }
+  ],
+  "problems": []
+}

@@ -1,0 +1,409 @@
+{
+  "mode": "on",
+  "base_url": "https://localhost",
+  "runs": [
+    {
+      "clip": "WhatsApp Ptt 2026-08-26 at 7.58.05 PM.ogg",
+      "language": "en",
+      "displayed_text": "see this is a text to which I generated from my speech. okay, and if you see it has taken the whole statement or speech as one statement. so that's where we need to add punctuations and signs where it understand where is the right fit, break the statement and then start so full stops, comma. all of those things should be there. so check how this can be improved. secondly, I have placed the stars on the places right, like that was the one it repeated there was a is because it is joining the statement. it was supposed to be comma so that person can read it properly. so it did not work. after that, in below I have add a star. I use that filler to kind of I would say unable to understand what to speak. so I did the fillers of 2, 3, but it repeated the statement. so it should be understanding these are filler and correct them if you give it to the chat gpt and ask it to write it properly with. proper punctuation and blah blah blah, it will give you a proper droughts and then see the comparison what it gave and what it is giving. so all those things should should get added.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_9c7fecf6f7ed4f999170750ffbf73b30",
+      "sample_id": "smp_1408b9952fc170479a610a7e",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 102.1535,
+        "text": "see this is a text to which I generated from my speech. okay, and if you see it has taken the whole statement or speech as one statement. so that's where we need to add punctuations and signs where it understand where is the right fit, break the statement and then start so full stops, comma. all of those things should be there. so check how this can be improved. secondly, I have placed the stars on the places right, like that was the one it repeated there was a is because it is joining the statement. it was supposed to be comma so that person can read it properly. so it did not work. after that, in below I have add a star. I use that filler to kind of I would say unable to understand what to speak. so I did the fillers of 2, 3, but it repeated the statement. so it should be understanding these are filler and correct them if you give it to the chat gpt and ask it to write it properly with. proper punctuation and blah blah blah, it will give you a proper droughts and then see the comparison what it gave and what it is giving. so all those things should should get added.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 11.1,
+            "text": "see this is a text to which I generated from my speech. okay, and if you see it"
+          },
+          {
+            "id": 1,
+            "start": 11.1,
+            "end": 22.1,
+            "text": "has taken the whole statement or speech as one statement. so that's where we need"
+          },
+          {
+            "id": 2,
+            "start": 22.1,
+            "end": 29.3,
+            "text": "to add punctuations and signs where it understand where is the right fit, break"
+          },
+          {
+            "id": 3,
+            "start": 29.3,
+            "end": 37.24,
+            "text": "the statement and then start so full stops, comma. all of those things should be"
+          },
+          {
+            "id": 4,
+            "start": 37.24,
+            "end": 44.480000000000004,
+            "text": "there. so check how this can be improved. secondly, I have placed the stars on the"
+          },
+          {
+            "id": 5,
+            "start": 44.480000000000004,
+            "end": 54.120000000000005,
+            "text": "places right, like that was the one it repeated there was a is because it is"
+          },
+          {
+            "id": 6,
+            "start": 54.120000000000005,
+            "end": 58.72,
+            "text": "joining the statement. it was supposed to be comma so that person can read it"
+          },
+          {
+            "id": 7,
+            "start": 58.72,
+            "end": 65.8,
+            "text": "properly. so it did not work. after that, in below I have add a star. I use that filler"
+          },
+          {
+            "id": 8,
+            "start": 65.8,
+            "end": 77.24,
+            "text": "to kind of I would say unable to understand what to speak. so I did the"
+          },
+          {
+            "id": 9,
+            "start": 77.24,
+            "end": 82.4,
+            "text": "fillers of 2, 3, but it repeated the statement. so it should be understanding"
+          },
+          {
+            "id": 10,
+            "start": 82.4,
+            "end": 88.6,
+            "text": "these are filler and correct them if you give it to the chat gpt and ask it"
+          },
+          {
+            "id": 11,
+            "start": 88.60000000000001,
+            "end": 91.96000000000001,
+            "text": "to write it properly with. proper punctuation and blah blah blah, it will"
+          },
+          {
+            "id": 12,
+            "start": 91.96000000000001,
+            "end": 98.08000000000001,
+            "text": "give you a proper droughts and then see the comparison what it gave and what it"
+          },
+          {
+            "id": 13,
+            "start": 98.08000000000001,
+            "end": 103.32000000000001,
+            "text": "is giving. so all those things should should get added."
+          }
+        ]
+      },
+      "wall_seconds": 6.0
+    },
+    {
+      "clip": "normal.wav",
+      "language": "en",
+      "displayed_text": "Hello, my name is Sumit. How are you?",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_cdedf566a1ae4b86a543749da520616f",
+      "sample_id": "smp_b5552704ac0644e79fda2376",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 4.129125,
+        "text": "Hello, my name is Sumit. How are you?",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 2.8000000000000003,
+            "text": "Hello, my name is Sumit."
+          },
+          {
+            "id": 1,
+            "start": 2.8000000000000003,
+            "end": 3.3200000000000003,
+            "text": "How are you?"
+          }
+        ]
+      },
+      "wall_seconds": 1.07
+    },
+    {
+      "clip": "question.wav",
+      "language": "en",
+      "displayed_text": "Can you send the report today?",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_9abb8c44356d4294ae41e2bd59b8ba67",
+      "sample_id": "smp_2e17237acd7df9d0d87bba0a",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 2.3340625,
+        "text": "Can you send the report today?",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 2,
+            "text": "Can you send the report today?"
+          }
+        ]
+      },
+      "wall_seconds": 0.9
+    },
+    {
+      "clip": "names.wav",
+      "language": "en",
+      "displayed_text": "OpenAI released the new model yesterday.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_96573a8897ee43e390ecec4afba8999b",
+      "sample_id": "smp_7ae3d56e07f8b4f30b2da6d9",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 3.1190625,
+        "text": "OpenAI released the new model yesterday.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 2.32,
+            "text": "OpenAI released the new model yesterday."
+          }
+        ]
+      },
+      "wall_seconds": 0.95
+    },
+    {
+      "clip": "date.wav",
+      "language": "en",
+      "displayed_text": "The meeting is on August 12, 2026.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_c1dd62ddbeee4bdfaa7bd52c40a0f458",
+      "sample_id": "smp_20bbefc2c7c8081d7c69b8ce",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 4.2586875,
+        "text": "The meeting is on August 12, 2026.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 3.5,
+            "text": "The meeting is on August 12, 2026."
+          }
+        ]
+      },
+      "wall_seconds": 0.99
+    },
+    {
+      "clip": "phone.wav",
+      "language": "en",
+      "displayed_text": "Call me at 987-654-3210.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_865c374226b443dfaad8d11e9f1f1000",
+      "sample_id": "smp_c6d6c16f6d70b97cec8c6d3a",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 4.3688125,
+        "text": "Call me at 987-654-3210.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 3.6,
+            "text": "Call me at 987-654-3210."
+          }
+        ]
+      },
+      "wall_seconds": 1.0
+    },
+    {
+      "clip": "currency.wav",
+      "language": "en",
+      "displayed_text": "I bought it for $49.99 yesterday.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_aaf6ff85ec9b44c88acbe4e53ad01424",
+      "sample_id": "smp_795325c8977d20850e3a3103",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 4.43375,
+        "text": "I bought it for $49.99 yesterday.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 3.64,
+            "text": "I bought it for $49.99 yesterday."
+          }
+        ]
+      },
+      "wall_seconds": 0.99
+    },
+    {
+      "clip": "commas.wav",
+      "language": "en",
+      "displayed_text": "We need apples, bananas, oranges and mangoes for the party tomorrow.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_cc40f88fe9104346b66730687e555338",
+      "sample_id": "smp_84bcfb2ec5fc7ae9bc43e133",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 5.0688125,
+        "text": "We need apples, bananas, oranges and mangoes for the party tomorrow.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 5,
+            "text": "We need apples, bananas, oranges and mangoes for the party tomorrow."
+          }
+        ]
+      },
+      "wall_seconds": 1.04
+    },
+    {
+      "clip": "paragraph.wav",
+      "language": "en",
+      "displayed_text": "The quarterly report is ready. We shipped three features this month. The team did a great job. Can we present it on Friday?",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_1033f4f4d2b948d3a779f9f3d345056c",
+      "sample_id": "smp_e9e61df456fc7dc52edc44e4",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 9.9129375,
+        "text": "The quarterly report is ready. We shipped three features this month. The team did a great job. Can we present it on Friday?",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 2.54,
+            "text": "The quarterly report is ready."
+          },
+          {
+            "id": 1,
+            "start": 2.54,
+            "end": 5.24,
+            "text": "We shipped three features this month."
+          },
+          {
+            "id": 2,
+            "start": 5.24,
+            "end": 7.5,
+            "text": "The team did a great job."
+          },
+          {
+            "id": 3,
+            "start": 7.5,
+            "end": 9,
+            "text": "Can we present it on Friday?"
+          }
+        ]
+      },
+      "wall_seconds": 1.2
+    },
+    {
+      "clip": "technical.wav",
+      "language": "en",
+      "displayed_text": "The API gateway returns Json over HTTPS using OAuth tokens and TLS version 1.3.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_fe2aa936ec9f4d0bbf9578e3637dc73f",
+      "sample_id": "smp_d8ced14c930252f7f27771d1",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 7.91325,
+        "text": "The API gateway returns Json over HTTPS using OAuth tokens and TLS version 1.3.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 7.12,
+            "text": "The API gateway returns Json over HTTPS using OAuth tokens and TLS version 1.3."
+          }
+        ]
+      },
+      "wall_seconds": 1.2
+    },
+    {
+      "clip": "exclaim.wav",
+      "language": "en",
+      "displayed_text": "That is amazing. Congratulations to the whole team.",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_3f61e743475e439aab6ace109e39e702",
+      "sample_id": "smp_323bf7885f737e9f786e5641",
+      "response_body": {
+        "task": "transcribe",
+        "language": "en",
+        "duration": 4.5239375,
+        "text": "That is amazing. Congratulations to the whole team.",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 1.76,
+            "text": "That is amazing."
+          },
+          {
+            "id": 1,
+            "start": 1.76,
+            "end": 3.68,
+            "text": "Congratulations to the whole team."
+          }
+        ]
+      },
+      "wall_seconds": 1.03
+    },
+    {
+      "clip": "hindi.wav",
+      "language": "hi",
+      "displayed_text": "क्या आप कल ऑफिस आओगे? मुझे रिपोर्ट आज चाहिए।",
+      "status_line": "Done. Edit the text if anything is wrong.",
+      "request_id": "req_3c7e4d8db4664bf3b04a1484635c04a7",
+      "sample_id": "smp_7ea79381b657eb3cf4f5dd88",
+      "response_body": {
+        "task": "transcribe",
+        "language": "hi",
+        "duration": 4.6,
+        "text": "क्या आप कल ऑफिस आओगे? मुझे रिपोर्ट आज चाहिए।",
+        "segments": [
+          {
+            "id": 0,
+            "start": 0,
+            "end": 4.6,
+            "text": "क्या आप कल ऑफिस आओगे? मुझे रिपोर्ट आज चाहिए।"
+          }
+        ]
+      },
+      "wall_seconds": 1.14
+    }
+  ],
+  "problems": [],
+  "share": {
+    "note": "Sharing isn't supported here. Transcript copied to clipboard.",
+    "clipboard_equals_displayed": true
+  },
+  "correction": {
+    "started_from_displayed": true,
+    "edit": "droughts -> drafts (the founder-disputed M48 span)",
+    "thanks_line": "Stored with your organization's consent — this helps improve IntelliAI STT."
+  },
+  "status_page_mentions_production_claim": false,
+  "mobile": {
+    "displayed_text": "Hello, my name is Sumit. How are you?",
+    "share_visible": true,
+    "save_visible": true,
+    "transcript_visible": true,
+    "no_horizontal_scroll": true
+  },
+  "tablet_no_horizontal_scroll": true
+}

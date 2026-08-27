@@ -65,6 +65,11 @@ services:
       # battery — explicit here so a stray dev variable can never enable
       # a stage this deployment has not approved.
       INTELLIAI_STT_PUNCTUATION_ENABLED: "false"
+      # M50: the English punctuation stage is IMPLEMENTED but production
+      # stays OFF until its own promotion decision — explicit here so a
+      # stray dev variable can never enable a stage this deployment has
+      # not approved.
+      INTELLIAI_STT_PUNCTUATION_EN_ENABLED: "false"
 
   # ── Speech synthesis (M42 promotion, founder decision F-M42) ──────────
   # TTS is an APPROVED production service: English (M3→M37) and Hindi

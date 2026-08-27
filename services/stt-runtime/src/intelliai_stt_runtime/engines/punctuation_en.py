@@ -109,6 +109,20 @@ _EOS_ID: Final = 2
 _UNK_ID: Final = 3
 _FAIRSEQ_OFFSET: Final = 1
 
+#: Marks whose presence at the END of any token means the ENGINE already
+#: punctuated this transcript. Whisper emits full punctuation on clean
+#: read speech (M51 browser E2E finding: the stage then doubled marks —
+#: "Sumit.."), while spontaneous speech arrives bare — exactly the gap
+#: this stage exists for. Token-FINAL only, so intra-word marks
+#: ("2.5", "example.com", "test@example.com") never count as engine
+#: punctuation.
+_ENGINE_MARKS: Final = frozenset(".,?!;:")
+
+
+def engine_already_punctuated(words: Sequence[str]) -> bool:
+    """True when the raw transcript already carries sentence punctuation."""
+    return any(word and word[-1] in _ENGINE_MARKS for word in words)
+
 
 @dataclass(frozen=True)
 class EnStageOutcome:
@@ -231,6 +245,10 @@ class EnPunctuationRestorer:
         if not raw.strip():
             return result  # silence stays silent — nothing to punctuate
         words = raw.split()
+        if engine_already_punctuated(words):
+            # The engine's own punctuation stands; restoring on top of it
+            # would double marks. No stage effect, raw_text stays None.
+            return result
         future = self._executor.submit(self._predict_marks, words)
         try:
             marks = future.result(timeout=self._timeout_seconds)

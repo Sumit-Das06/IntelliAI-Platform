@@ -1,0 +1,56 @@
+{
+  "clip": "boss 102 s",
+  "runs": [
+    {
+      "duration_seconds": 102.2,
+      "inference_ms": 6987.0,
+      "punctuation_en_ms": 196.4,
+      "stage_applied": true,
+      "words_out": 214,
+      "invariant_holds": true,
+      "wall_seconds": 7.43
+    },
+    {
+      "duration_seconds": 102.2,
+      "inference_ms": 6835.4,
+      "punctuation_en_ms": 199.8,
+      "stage_applied": true,
+      "words_out": 214,
+      "invariant_holds": true,
+      "wall_seconds": 7.42
+    },
+    {
+      "duration_seconds": 102.2,
+      "inference_ms": 6820.0,
+      "punctuation_en_ms": 229.0,
+      "stage_applied": true,
+      "words_out": 214,
+      "invariant_holds": true,
+      "wall_seconds": 7.42
+    },
+    {
+      "duration_seconds": 102.2,
+      "inference_ms": 6877.3,
+      "punctuation_en_ms": 116.3,
+      "stage_applied": true,
+      "words_out": 214,
+      "invariant_holds": true,
+      "wall_seconds": 7.38
+    },
+    {
+      "duration_seconds": 102.2,
+      "inference_ms": 6701.5,
+      "punctuation_en_ms": 183.3,
+      "stage_applied": true,
+      "words_out": 214,
+      "invariant_holds": true,
+      "wall_seconds": 7.26
+    }
+  ],
+  "punctuation_en_ms": {
+    "p50": 196.4,
+    "max": 229.0
+  },
+  "inference_ms_p50": 6835.4,
+  "overhead_percent_of_inference_p50": 2.87
+}

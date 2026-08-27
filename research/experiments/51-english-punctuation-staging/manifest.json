@@ -1,0 +1,40 @@
+{
+  "milestone": 51,
+  "title": "English punctuation staging promotion + real web E2E validation",
+  "date": "2026-08-27",
+  "staging_configuration": {
+    "flag": "INTELLIAI_STT_PUNCTUATION_EN_ENABLED",
+    "staging": "true (infra/compose/local-prod.yml — the local production-shaped stack, ONLY committed deployment that enables it)",
+    "production": "false (infra/compose/prod.yml, pinned explicitly; guard test test_english_punctuation_ships_off_in_prod_and_on_only_in_the_local_stage)",
+    "guards": "prod-preflight.sh refuses enable-without-artifact; prod-smoke.sh requires readiness to match the declaration"
+  },
+  "stack": {
+    "shape": "docker compose base + local-prod overlay + Caddy HTTPS edge (https://localhost, internal CA)",
+    "stt_slots": "whisper + qwen3-asr E3 (staging registry)",
+    "readiness": "punctuation: ready (hi), punctuation_en: ready"
+  },
+  "finding_and_fix": {
+    "finding": "First browser battery showed DOUBLE punctuation on clean read speech (\"Sumit..\", \"today??\"): Whisper already fully punctuates clean speech, and the M50 stage appended marks on top. Spontaneous audio (the boss clip, the M48 gap) arrives bare, so M50 never saw this.",
+    "fix": "engine_already_punctuated() stand-down in EnPunctuationRestorer.restore(): when any token ENDS with a sentence mark (.,?!;:), the engine's own punctuation stands and the stage does nothing. Token-final only — intra-word marks (2.5, example.com, test@example.com, 987-654-3210) never count.",
+    "tests": "TestEngineAlreadyPunctuated (4 tests); STT suite 228 passed",
+    "complementarity": "Whisper punctuates clean read speech and leaves spontaneous speech bare — the stand-down rule applies the stage exactly where the M48 readability gap actually is."
+  },
+  "browser_e2e": {
+    "tool": "Playwright Chromium 151 (headless) against https://localhost/console/playground",
+    "boss_clip_sha256": "117cba69b4795fcc4b02f24e03e7993b13082a93ac1cbf8b210a5bddd05af635",
+    "flag_on": "evidence/browser-e2e-on.json (+ screenshots)",
+    "rollback_off": "evidence/browser-off.json",
+    "forced_timeout_failopen": "evidence/browser-failopen.json",
+    "recovery": "evidence/browser-recovered.json",
+    "cross_checks": "evidence/verification.json — every check green",
+    "share_note": "headless Chromium has no navigator.share, so the M46 clipboard fallback path executed; clipboard verified equal to the displayed transcript",
+    "battery_clips": "10 English clips generated with Windows SAPI + 1 Hindi clip generated through the staging TTS itself; audio lives in scratchpad only, never in git"
+  },
+  "measured": {
+    "latency_staging_container": "boss 102 s: punctuation_en p50 196.4 ms / max 229 ms over 5 runs = 2.87% of inference p50 (~6.8 s); gate <= 10% passes (container CPU is slower than the M50 host measurement of 45.2 ms — recorded honestly)",
+    "long_audio": "30s/2min/5min/10min(595s): stage 36/166/404/611 ms, invariant true on every run, zero truncation (words 48/241/622/1223)",
+    "rollback": "flag OFF output byte-identical to forced-timeout raw output; ON<->OFF word streams depunct-equal"
+  },
+  "sarvam_note": "Sarvam remains QUALITATIVE ONLY (M48 directive); no Sarvam metrics anywhere in M51.",
+  "production_safety": "No production deployment exists yet (Hostinger untouched); prod overlay change is ONE line pinning the flag false + guard tests. Demo stack (this laptop) restarted with rebuilt images as part of the founder-ordered staging promotion."
+}

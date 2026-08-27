@@ -64,6 +64,11 @@ services:
       # before any production enable is even proposed.
       INTELLIAI_STT_PUNCTUATION_ENABLED: "true"
       INTELLIAI_STT_PUNCTUATION_LANGUAGES: hi,hi-IN
+      # M51 staging battery: the ENGLISH punctuation stage (M50) runs
+      # here (and only here) so the production-shaped stack proves it
+      # end to end before any production enable is even proposed.
+      INTELLIAI_STT_PUNCTUATION_EN_ENABLED: "true"
+      INTELLIAI_STT_PUNCTUATION_EN_LANGUAGES: en,en-US,en-IN
 
   tts-runtime:
     # M35: served in the production-shaped LOCAL stack (the Makefile's

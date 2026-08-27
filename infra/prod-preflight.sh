@@ -104,6 +104,21 @@ else
   note "punctuation stage disabled (INTELLIAI_STT_PUNCTUATION_ENABLED=$PUNCT_ENABLED)"
 fi
 
+# ── 4d. English punctuation artifacts must be seedable when ENABLED (M50) ──
+# Same law as 4c for the English stage: production ships OFF; an enabled
+# deployment refuses to start without the seeded, hash-verified files.
+PUNCT_EN_ENABLED="${INTELLIAI_STT_PUNCTUATION_EN_ENABLED:-false}"
+if [ "$PUNCT_EN_ENABLED" = "true" ]; then
+  PUNCT_EN_ONNX="models/punct-en-kredor/v1/model.int8.onnx"
+  if [ -f "$PUNCT_EN_ONNX" ]; then
+    note "english punctuation artifacts present for seeding ($PUNCT_EN_ONNX)"
+  else
+    fail "english punctuation is ENABLED but its artifact is missing: $PUNCT_EN_ONNX — seed models/punct-en-kredor/v1/ then 'make staging-seed-models'"
+  fi
+else
+  note "english punctuation stage disabled (INTELLIAI_STT_PUNCTUATION_EN_ENABLED=$PUNCT_EN_ENABLED)"
+fi
+
 # ── 4d. The promoted TTS artifact must be seedable (M42) ────────────────
 # Production serves English AND Hindi speech synthesis from one pinned
 # artifact (v2: base weights + config + 2 English + 2 Hindi voice packs).

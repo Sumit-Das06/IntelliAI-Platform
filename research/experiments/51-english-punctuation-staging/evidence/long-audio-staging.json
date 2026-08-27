@@ -1,0 +1,38 @@
+{
+  "30s": {
+    "duration_seconds": 30.0,
+    "inference_ms": 2689.2,
+    "punctuation_en_ms": 36.2,
+    "stage_applied": true,
+    "words_out": 48,
+    "invariant_holds": true,
+    "wall_seconds": 2.84
+  },
+  "2min": {
+    "duration_seconds": 120.0,
+    "inference_ms": 8186.3,
+    "punctuation_en_ms": 166.3,
+    "stage_applied": true,
+    "words_out": 241,
+    "invariant_holds": true,
+    "wall_seconds": 8.71
+  },
+  "5min": {
+    "duration_seconds": 300.0,
+    "inference_ms": 24063.7,
+    "punctuation_en_ms": 403.9,
+    "stage_applied": true,
+    "words_out": 622,
+    "invariant_holds": true,
+    "wall_seconds": 25.07
+  },
+  "10min": {
+    "duration_seconds": 594.9,
+    "inference_ms": 49300.6,
+    "punctuation_en_ms": 611.4,
+    "stage_applied": true,
+    "words_out": 1223,
+    "invariant_holds": true,
+    "wall_seconds": 51.0
+  }
+}

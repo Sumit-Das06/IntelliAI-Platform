@@ -299,6 +299,24 @@ def test_punctuation_ships_off_in_prod_and_on_only_in_the_local_stage() -> None:
     assert "PUNCTUATION" not in COMPOSE
 
 
+def test_english_punctuation_ships_off_in_prod_and_on_only_in_the_local_stage() -> None:
+    # M50/M51: the English punctuation stage follows the SAME law as the
+    # Hindi one — implemented, staged in the local production-shaped stack
+    # only, and pinned OFF in production until its own promotion decision.
+    assert 'INTELLIAI_STT_PUNCTUATION_EN_ENABLED: "false"' in PROD_OVERLAY
+    local_prod = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    assert 'INTELLIAI_STT_PUNCTUATION_EN_ENABLED: "true"' in local_prod
+    assert "INTELLIAI_STT_PUNCTUATION_EN_LANGUAGES: en,en-US,en-IN" in local_prod
+    # The guard scripts watch the English stage the same way they watch
+    # the Hindi one — enable-without-artifact refuses at preflight, and
+    # readiness must match the declaration at smoke time.
+    preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
+    assert "INTELLIAI_STT_PUNCTUATION_EN_ENABLED" in preflight
+    assert "punct-en-kredor" in preflight
+    smoke = (REPO / "infra/prod-smoke.sh").read_text(encoding="utf-8")
+    assert '"punctuation_en"' in smoke
+
+
 def test_preflight_refuses_an_enabled_stage_without_seeded_artifacts() -> None:
     preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
     assert "INTELLIAI_STT_PUNCTUATION_ENABLED" in preflight

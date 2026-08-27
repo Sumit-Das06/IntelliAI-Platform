@@ -89,6 +89,20 @@ else
   echo "$runtime_ready" | grep -q '"punctuation"[[:space:]]*:[[:space:]]*"ready"'     && fail "punctuation reports ready but the deployment declares it OFF"     || note "punctuation stage disabled (as declared)"
 fi
 
+# ── English punctuation stage (M50/M51): readiness must match the declaration ──
+PUNCT_EN_ENABLED="${INTELLIAI_STT_PUNCTUATION_EN_ENABLED:-false}"
+if grep -q 'INTELLIAI_STT_PUNCTUATION_EN_ENABLED: "true"' "$OVERLAY" 2>/dev/null; then
+  PUNCT_EN_ENABLED=true
+elif grep -q 'INTELLIAI_STT_PUNCTUATION_EN_ENABLED: "false"' "$OVERLAY" 2>/dev/null; then
+  PUNCT_EN_ENABLED=false
+fi
+if [ "$PUNCT_EN_ENABLED" = "true" ]; then
+  echo "$runtime_ready" | grep -q '"punctuation_en"[[:space:]]*:[[:space:]]*"ready"'     || fail "english punctuation is ENABLED but the runtime does not report it ready: $runtime_ready"
+  note "english punctuation stage ready"
+else
+  echo "$runtime_ready" | grep -q '"punctuation_en"[[:space:]]*:[[:space:]]*"ready"'     && fail "english punctuation reports ready but the deployment declares it OFF"     || note "english punctuation stage disabled (as declared)"
+fi
+
 # ── 5. Migrations are at head ───────────────────────────────────────────
 current="$($COMPOSE run --rm --no-deps api alembic -c apps/api/alembic.ini current 2>/dev/null | grep -oE '^[0-9a-f]+' | head -1 || true)"
 head_rev="$($COMPOSE run --rm --no-deps api alembic -c apps/api/alembic.ini heads 2>/dev/null | grep -oE '^[0-9a-f]+' | head -1 || true)"
