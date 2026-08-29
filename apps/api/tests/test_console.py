@@ -973,6 +973,10 @@ def test_realtime_mode_ships_in_the_playground_as_designed() -> None:
     # sample id so the EXISTING correction flow works unchanged.
     assert "transcript.final" in studio
     assert "sample_id" in studio
+    # A finished session is replayable exactly like Record: the buffered
+    # session audio becomes a WAV in the SAME player.
+    assert "pcmToWavBlob" in studio
+    assert "realtime-session.wav" in studio
     # Friendly refusals keep batch working when realtime is off/unsupported.
     assert "4404" in studio
     assert "Upload still works" in studio

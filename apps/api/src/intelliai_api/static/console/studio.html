@@ -435,6 +435,27 @@ document.addEventListener("DOMContentLoaded", function () {
     return Math.max(shownCount, agreed);
   }
 
+  function pcmToWavBlob(chunks) {
+    /* PCM16 mono 16 kHz frames -> a playable WAV, so a realtime session
+       ends exactly like Record: the user can hear their own audio. */
+    var total = 0;
+    for (var i = 0; i < chunks.length; i++) total += chunks[i].length;
+    var buffer = new ArrayBuffer(44 + total * 2);
+    var view = new DataView(buffer);
+    function str(offset, text) {
+      for (var j = 0; j < text.length; j++) view.setUint8(offset + j, text.charCodeAt(j));
+    }
+    str(0, "RIFF"); view.setUint32(4, 36 + total * 2, true); str(8, "WAVE");
+    str(12, "fmt "); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true); view.setUint32(24, 16000, true);
+    view.setUint32(28, 32000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    str(36, "data"); view.setUint32(40, total * 2, true);
+    var out = new Int16Array(buffer, 44);
+    var position = 0;
+    for (var k = 0; k < chunks.length; k++) { out.set(chunks[k], position); position += chunks[k].length; }
+    return new Blob([buffer], { type: "audio/wav" });
+  }
+
   function rtCleanup(message, kind) {
     if (!rt) return;
     var session = rt;
@@ -473,7 +494,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     var protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
     var ws = new WebSocket(protocol + window.location.host + "/v1/audio/realtime");
-    var session = { ws: ws, ctx: null, node: null, stream: null, prevWords: [], shownCount: 0 };
+    var session = { ws: ws, ctx: null, node: null, stream: null, prevWords: [], shownCount: 0, pcm: [] };
     rt = session;
     sampleId = null;
     saveBtn.classList.add("hidden");
@@ -525,9 +546,13 @@ document.addEventListener("DOMContentLoaded", function () {
               ints[i] = v < 0 ? v * 32768 : v * 32767;
             }
             ws.send(ints.buffer);
+            /* Keep a local copy so the finished session is replayable in
+               the SAME player Record uses (WebSocket.send copies the
+               bytes synchronously, so retaining `ints` is safe). */
+            session.pcm.push(ints);
           };
           source.connect(node);
-          setStatus("\U0001f399 Listening\u2026 speak now, press Stop to finish.");
+          setStatus("\u{1F399} Listening\u2026 speak now, press Stop to finish.");
         }).catch(function () {
           rtCleanup("Realtime audio setup failed \u2014 Upload still works.", "err");
         });
@@ -554,6 +579,15 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (data.event === "transcript.final") {
         transcript.value = data.text || "";
       } else if (data.event === "session.completed") {
+        var finalTranscript = transcript.value;
+        if (session.pcm.length) {
+          /* Same player as Record: the session audio becomes replayable
+             (and even re-transcribable through the batch flow). setAudio
+             resets sampleId/save, so restore the transcript and let the
+             sample block below re-establish the correction path. */
+          setAudio(pcmToWavBlob(session.pcm), "realtime-session.wav");
+          transcript.value = finalTranscript;
+        }
         if (data.sample_id) {
           sampleId = data.sample_id;
           document.getElementById("dev-sample").textContent = sampleId;
@@ -569,7 +603,7 @@ document.addEventListener("DOMContentLoaded", function () {
         summaryEl.classList.remove("hidden");
         rtCleanup("Done. Edit the text if anything is wrong.");
       } else if (data.event === "session.degraded") {
-        setStatus("\U0001f399 Listening\u2026 (network is behind, catching up)");
+        setStatus("\u{1F399} Listening\u2026 (network is behind, catching up)");
       } else if (data.event === "session.error") {
         rtCleanup(data.message || "Realtime transcription is unavailable.", "err");
       }
