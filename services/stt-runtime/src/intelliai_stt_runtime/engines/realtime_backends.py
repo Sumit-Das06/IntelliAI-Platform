@@ -54,7 +54,9 @@ def bootstrap_cuda_dlls() -> None:
     if sys.platform != "win32":
         return
     try:
-        import nvidia  # type: ignore[import-untyped]
+        # Untyped on win32 (wheels installed), absent entirely on Linux
+        # CI — the ignore must cover both worlds.
+        import nvidia  # type: ignore[import-untyped,import-not-found,unused-ignore]
     except ImportError:
         return
     dll_dirs = sorted(
