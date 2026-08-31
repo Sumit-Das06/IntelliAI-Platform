@@ -1,0 +1,32 @@
+{
+  "wav": "short_haan.wav",
+  "language": "hi",
+  "mode": "realtime",
+  "audio_seconds": 1.3,
+  "session_id": "dac347ed4571027f",
+  "events_total": 2,
+  "first_partial_at_s": null,
+  "partial_count": 0,
+  "partial_gap_p50_s": null,
+  "partial_gap_p95_s": null,
+  "partial_gap_max_s": null,
+  "sequences_monotonic": true,
+  "end_sent_at_s": 1.48,
+  "final_at_s": null,
+  "finalization_ms": null,
+  "completed_at_s": null,
+  "completion_ms": null,
+  "final_text": null,
+  "final_raw_text": null,
+  "sample_id_present": false,
+  "degraded": false,
+  "errors": [
+    {
+      "at_s": 4.997,
+      "event": "session.error",
+      "session_id": "dac347ed4571027f",
+      "code": "transcription_unavailable",
+      "message": "Transcription is temporarily unavailable."
+    }
+  ]
+}

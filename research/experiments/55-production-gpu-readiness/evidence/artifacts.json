@@ -1,0 +1,20 @@
+{
+  "what": "M55 Phases 3-4 — exact artifacts + runtime pins, VERIFIED on this box (sha256 prefixes; full pins live in code)",
+  "hindi_model": {
+    "artifact": "qwen3-asr-0.6b-hi-ft-e3 v1 (the PROMOTED production Hindi model, unchanged)",
+    "gguf_sha256_16": "e54586c4c98c2244",
+    "mmproj_sha256_16": "41a342b5e4c514e9",
+    "verification": "ArtifactStore SHA-256 on every startup; mmproj byte-identical to the official pinned artifact (tower frozen in training)"
+  },
+  "hindi_gpu_runtime": {
+    "build": "llama.cpp b10344 (7a20b417f) win-cuda-13.3 — the SAME release commit as the production CPU pin",
+    "llama_server_exe_sha256_16": "b2ace4b8aed7c60e (matches engines/qwen3_asr.py RUNTIME_BINARY_PINS win32 AND tools/realtime/launch_qwen_gpu.py PINS)",
+    "ggml_cuda_dll_sha256_16": "5ea989dcd77a3123 (matches the launcher pin)",
+    "launcher": "tools/realtime/launch_qwen_gpu.py refuses any drift before starting"
+  },
+  "english_model": "whisper-small, the existing production-approved artifact via ArtifactStore(WHISPER_SMALL_FILES) — same pins as batch",
+  "english_runtime": "faster-whisper/CTranslate2 from the locked workspace (uv.lock pins exact versions; CUDA DLLs from the declarative nvidia cu12 wheels)",
+  "no_mutable_downloads": "request-time downloads structurally impossible (.invalid URL law + verified cache); a hash mismatch refuses readiness",
+  "gpu_instances": "realtime llama-server :8797 + batch llama-server :8798 — both from the same pinned launcher; whisper realtime in-process",
+  "date": "2026-09-01"
+}

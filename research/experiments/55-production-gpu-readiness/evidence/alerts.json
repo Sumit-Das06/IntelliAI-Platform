@@ -1,0 +1,17 @@
+{
+  "what": "M55 Phases 28-29 — alerts wired into a runnable checker and PROVEN to fire",
+  "tool": "tools/ops/realtime_alerts.py — scans the runtime's structured log + probes readiness; one ALERT line per firing condition, exit 1; wire into cron/CI/any ops channel that runs commands",
+  "thresholds": {
+    "stall": "hot_decode max > 15 s (the M54 stall signature)",
+    "repetition": "any realtime_repetition_trimmed",
+    "decode_failures": ">= 5 realtime_decode_failed in the window",
+    "backend_down": "realtime_backend_degraded | qwen3_external_backend_unreachable | readiness realtime=degraded",
+    "slow_punctuation": "punctuation_ms > 5 s",
+    "not_ready": "readiness endpoint unreachable or status != ready"
+  },
+  "fire_test": "forced log with a 16.8 s stall, a trimmed repetition, a dead backend, 5 decode failures, and a 6 s punctuation: ALL FIVE alerts fired, exit 1",
+  "silence_test": "clean log with normal sessions (fast-path finals included): OK, exit 0 — and normal user cancellation writes NO signature at all, so it can never alert",
+  "live_readiness": "against the running realtime runtime: OK, exit 0; the backend-down live case is exercised in the failure drill (failure-recovery.json)",
+  "production_wiring_note": "production runs this on the GPU host on a 1-minute schedule against the runtime log + readiness URL; the ops channel is whatever runs commands (cron+mail, CI, or the future dashboard) — no new infrastructure invented here",
+  "date": "2026-09-01"
+}

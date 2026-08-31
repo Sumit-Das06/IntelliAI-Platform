@@ -1,0 +1,5 @@
+{
+  "what": "M55 Phase 26 - unchanged, re-verified",
+  "checks": "partials ephemeral (repo law); silence stores nothing + disconnect discards (M54 drills; code unchanged); one consented sample max (exactly one sample_id per contribution-on session); the batch GPU path stores nothing new - same collection pipeline",
+  "date": "2026-09-01"
+}

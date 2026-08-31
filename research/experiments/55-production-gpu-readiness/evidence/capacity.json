@@ -1,0 +1,8 @@
+{
+  "what": "M55 Phases 16/30/31 - measured safe operating envelope (5070-class laptop GPU)",
+  "recommended_safe_capacity": "2 concurrent realtime sessions per GPU (partial p50 0.67s, finals ~1s - target UX with margin); 4 = acceptable-degraded burst (p50 1.04-1.11s, finals 4-6.2s); 8 measured stable but over budget (p50 ~2.1s, finals 11-12.4s, zero errors) - the degraded event is the honest signal past capacity",
+  "batch_on_the_same_gpu": "light/queued batch coexists; a CONTINUOUS batch hammer roughly doubles realtime cadence (mixed-workload.json) - production caps batch concurrency on a realtime GPU or separates cards at scale",
+  "limits": "session 900s, buffer lag 60s -> degraded, frame 64KB, collection 30min (unchanged, guard-tested)",
+  "scaling_model": "horizontal: one more GPU host = one more realtime runtime + llama pair behind the gateway URL(s); no autoscaler built - session routing is a promotion-milestone concern; VRAM never oversubscribed (5.3/8 GiB peak fully resident)",
+  "date": "2026-09-01"
+}

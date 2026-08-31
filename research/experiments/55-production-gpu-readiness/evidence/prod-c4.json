@@ -1,0 +1,42 @@
+{
+  "c": 4,
+  "with_long_neighbor": false,
+  "sessions": [
+    {
+      "wav": "boss30.wav",
+      "language": "en",
+      "first_partial_at_s": 1.155,
+      "partial_gap_p50_s": 1.089,
+      "partial_gap_p95_s": 3.195,
+      "finalization_ms": 6036.6,
+      "degraded": false
+    },
+    {
+      "wav": "real30s.wav",
+      "language": "hi",
+      "first_partial_at_s": 0.651,
+      "partial_gap_p50_s": 1.037,
+      "partial_gap_p95_s": 4.202,
+      "finalization_ms": 5053.9,
+      "degraded": false
+    },
+    {
+      "wav": "boss30.wav",
+      "language": "en",
+      "first_partial_at_s": 1.063,
+      "partial_gap_p50_s": 1.111,
+      "partial_gap_p95_s": 3.688,
+      "finalization_ms": 6225.6,
+      "degraded": false
+    },
+    {
+      "wav": "real30s.wav",
+      "language": "hi",
+      "first_partial_at_s": 0.569,
+      "partial_gap_p50_s": 1.043,
+      "partial_gap_p95_s": 2.868,
+      "finalization_ms": 4005.2,
+      "degraded": false
+    }
+  ]
+}

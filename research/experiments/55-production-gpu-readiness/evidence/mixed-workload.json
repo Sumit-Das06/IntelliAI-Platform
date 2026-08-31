@@ -1,0 +1,26 @@
+{
+  "design": "batch on its OWN llama-server (:8798); realtime on :8797 + in-process whisper",
+  "realtime_sessions_during_batch_hammer": [
+    {
+      "language": "en",
+      "first_partial_at_s": 2.869,
+      "partial_gap_p50_s": 2.175,
+      "partial_gap_p95_s": 3.246,
+      "finalization_ms": 6802.3,
+      "degraded": false
+    },
+    {
+      "language": "hi",
+      "first_partial_at_s": 3.208,
+      "partial_gap_p50_s": 2.123,
+      "partial_gap_p95_s": 3.654,
+      "finalization_ms": 5523.0,
+      "degraded": false
+    }
+  ],
+  "batch_calls_completed": 13,
+  "batch_latency_p50_s": 2.92,
+  "batch_words": [
+    117
+  ]
+}

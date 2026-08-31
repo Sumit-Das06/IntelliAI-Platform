@@ -1,0 +1,12 @@
+{
+  "what": "M55 Phase 18 - the GPU did not move the bottleneck to CPU",
+  "host": "31.6 GB RAM; free 7.2 GB with the FULL stack up (containers + 2 GPU llama instances + realtime runtime + browser tests)",
+  "processes_mib": {
+    "llama_8797_realtime": 3059,
+    "llama_8798_batch": 1030,
+    "realtime_runtime": 430
+  },
+  "cpu_idle_pct": 3,
+  "note": "unrelated user processes (a local LLM server on 11434) share the box; excluded from accounting",
+  "date": "2026-09-01"
+}

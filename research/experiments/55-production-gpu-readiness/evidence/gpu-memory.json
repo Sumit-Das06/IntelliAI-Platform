@@ -1,0 +1,12 @@
+{
+  "what": "M55 Phase 17 — VRAM states (MEASURED)",
+  "states_mib": {
+    "en_plus_hi_realtime": 2899,
+    "en_hi_realtime_plus_batch_instance": "4888 idle / 5016-5304 under c=8 load",
+    "batch_instance_delta": "~2.1 GiB (measured by kill: 5016 -> 2899)",
+    "composition_reference": "qwen instance ~2.0-2.1 GiB each, whisper CT2 fp16 ~0.8-0.9 GiB (M52H/M53 records)"
+  },
+  "growth": "flat across ~50 sessions today (20-run stall battery + ladders + drills): 5016-5304 MiB band, no growth, no fragmentation symptoms, zero OOM",
+  "headroom": "~2.8 GiB free at full triple-resident load on 8 GiB",
+  "date": "2026-09-01"
+}

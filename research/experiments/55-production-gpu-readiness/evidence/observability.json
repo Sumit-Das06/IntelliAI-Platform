@@ -1,0 +1,8 @@
+{
+  "what": "M55 Phase 28 - metrics inventory (implemented, internal-only)",
+  "per_session": "hot queue/decode p50/p95/max, commit count, repetition detected/retries/trimmed words, fast-path flag, punctuation_ms, audio seconds, sequences",
+  "events": "realtime_session_completed/failed, realtime_decode_failed, realtime_repetition_*, realtime_backend_degraded, qwen3_external_backend_unreachable, qwen3_child_died",
+  "sampling": "GPU VRAM/util via nvidia-smi sampler during batteries; client batteries measure FPT/partial/finalization end-to-end",
+  "alert_channel": "tools/ops/realtime_alerts.py (alerts.json: fire-proof + silence-proof)",
+  "date": "2026-09-01"
+}

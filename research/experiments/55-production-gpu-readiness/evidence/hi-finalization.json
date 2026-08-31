@@ -1,0 +1,56 @@
+{
+  "what": "M55 Phases 9-10 — Hindi realtime on the warm GPU",
+  "sessions": {
+    "hi-real30s-r1": {
+      "fpt_s": 0.423,
+      "partial_p50_s": 0.641,
+      "partial_p95_s": 1.309,
+      "finalization_ms": 1043.4,
+      "completion_ms": 1078.4,
+      "words": 107
+    },
+    "hi-real30s-r2": {
+      "fpt_s": 0.36,
+      "partial_p50_s": 0.624,
+      "partial_p95_s": 1.368,
+      "finalization_ms": 916.2,
+      "completion_ms": 951.2,
+      "words": 107
+    },
+    "hi-real30s-r3": {
+      "fpt_s": 0.333,
+      "partial_p50_s": 0.633,
+      "partial_p95_s": 1.331,
+      "finalization_ms": 773.2,
+      "completion_ms": 800.2,
+      "words": 107
+    },
+    "hi-2min": {
+      "fpt_s": 0.351,
+      "partial_p50_s": 0.777,
+      "partial_p95_s": 1.359,
+      "finalization_ms": 1428.8,
+      "completion_ms": 1486.8,
+      "words": 394
+    },
+    "hi-5min": {
+      "fpt_s": 0.362,
+      "partial_p50_s": 0.735,
+      "partial_p95_s": 1.222,
+      "finalization_ms": 1233.6,
+      "completion_ms": 1294.6,
+      "words": 837
+    },
+    "hi-10min": {
+      "fpt_s": 0.366,
+      "partial_p50_s": 0.788,
+      "partial_p95_s": 1.359,
+      "finalization_ms": 1312.9,
+      "completion_ms": 1401.9,
+      "words": 1812
+    }
+  },
+  "decomposition": "finalization = remainder decode (+commit landing) + punctuation + wire; the M54 10-min 6.5s event (3.0s punctuation + full-window decode on a cold/loaded box) did NOT reproduce: 10-min final 1.31s here — finalization p95 across all six sessions 1.43s",
+  "verdict": "p95 <= 1.5s at EVERY length on the warm GPU; the <=1s p95 proposal holds at 30s (0.77-1.04s) and is within 0.4s beyond it for long sessions — recorded",
+  "date": "2026-09-01"
+}

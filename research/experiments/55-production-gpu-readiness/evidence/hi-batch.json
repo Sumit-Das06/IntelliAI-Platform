@@ -1,0 +1,139 @@
+{
+  "label": "gateway -> stt container -> EXTERNAL GPU llama-server :8798 (M55 external-server mode)",
+  "real30s_multi": {
+    "runs": [
+      {
+        "words": 117,
+        "latency_s": 2.44,
+        "sha16": "306e1e257015fe8f"
+      },
+      {
+        "words": 117,
+        "latency_s": 2.42,
+        "sha16": "306e1e257015fe8f"
+      },
+      {
+        "words": 117,
+        "latency_s": 2.36,
+        "sha16": "306e1e257015fe8f"
+      },
+      {
+        "words": 117,
+        "latency_s": 2.36,
+        "sha16": "306e1e257015fe8f"
+      },
+      {
+        "words": 117,
+        "latency_s": 2.33,
+        "sha16": "306e1e257015fe8f"
+      }
+    ],
+    "words_spread": "117-117",
+    "latency_p50_s": 2.36,
+    "deterministic": true,
+    "stable": true,
+    "wer_vs_truth": 0.1092,
+    "cer_vs_truth": 0.0512
+  },
+  "real60s_multi": {
+    "runs": [
+      {
+        "words": 225,
+        "latency_s": 5.05,
+        "sha16": "65343c66b7152070"
+      },
+      {
+        "words": 224,
+        "latency_s": 4.02,
+        "sha16": "0c18a25a8b5812ac"
+      },
+      {
+        "words": 224,
+        "latency_s": 3.47,
+        "sha16": "0c18a25a8b5812ac"
+      },
+      {
+        "words": 224,
+        "latency_s": 3.43,
+        "sha16": "0c18a25a8b5812ac"
+      },
+      {
+        "words": 224,
+        "latency_s": 3.42,
+        "sha16": "0c18a25a8b5812ac"
+      }
+    ],
+    "words_spread": "224-225",
+    "latency_p50_s": 3.47,
+    "deterministic": false,
+    "stable": true
+  },
+  "short_single": {
+    "runs": [
+      {
+        "words": 9,
+        "latency_s": 0.3,
+        "sha16": "d52c133f891eb255"
+      },
+      {
+        "words": 9,
+        "latency_s": 0.27,
+        "sha16": "d52c133f891eb255"
+      },
+      {
+        "words": 9,
+        "latency_s": 0.25,
+        "sha16": "d52c133f891eb255"
+      },
+      {
+        "words": 9,
+        "latency_s": 0.23,
+        "sha16": "d52c133f891eb255"
+      },
+      {
+        "words": 9,
+        "latency_s": 0.25,
+        "sha16": "d52c133f891eb255"
+      }
+    ],
+    "words_spread": "9-9",
+    "latency_p50_s": 0.25,
+    "deterministic": true,
+    "stable": true
+  },
+  "real2min_multi": {
+    "runs": [
+      {
+        "words": 442,
+        "latency_s": 7.36,
+        "sha16": "f43bf2890ec3de24"
+      },
+      {
+        "words": 441,
+        "latency_s": 7.81,
+        "sha16": "c583099a606afba9"
+      },
+      {
+        "words": 441,
+        "latency_s": 9.04,
+        "sha16": "18e9cce46384278c"
+      },
+      {
+        "words": 443,
+        "latency_s": 8.24,
+        "sha16": "60a4a5e5ca46923e"
+      },
+      {
+        "words": 443,
+        "latency_s": 9.82,
+        "sha16": "b20a829efdfa931b"
+      }
+    ],
+    "words_spread": "441-443",
+    "latency_p50_s": 8.24,
+    "deterministic": false,
+    "stable": true,
+    "wer_vs_truth": 0.2109,
+    "cer_vs_truth": 0.1176
+  }
+}

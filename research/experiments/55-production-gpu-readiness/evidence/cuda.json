@@ -1,0 +1,11 @@
+{
+  "what": "M55 Phase 2 — CUDA/runtime compatibility, PROVEN by inference (not by 'package installed')",
+  "driver": "591.91, CUDA driver API 13.1",
+  "llama_cpp_cuda": "b10344 win-cuda-13.3 build: two instances resident (:8797 realtime, :8798 batch), -ngl 99; model load + warm decode proven (batch container warmup decode 281 ms THROUGH the GPU server); VRAM occupied 4888 MiB with both + whisper",
+  "ctranslate2_cuda": "faster-whisper CT2 float16 on cuda via the declarative nvidia cu12 wheels + measured PATH/add_dll_directory bootstrap; startup warm-up decode passes (a broken GPU fails the deploy)",
+  "onnx_punctuation": "both punctuation stages load and serve (CPU, unchanged)",
+  "ffmpeg_audio": "batch media pipeline unchanged and serving (byte-identical double-runs)",
+  "utilization_proof": "GPU util measured up to 78% (M54) and re-sampled through the M55 ladders (gpu-c*.json)",
+  "network_rtt": "gateway HTTP RTT 10-28 ms loopback; Caddy TLS page fetch ~0.23-0.26 s (handshake incl.) — production adds real network RTT on top of every latency number in this milestone (localhost measurements)",
+  "date": "2026-09-01"
+}

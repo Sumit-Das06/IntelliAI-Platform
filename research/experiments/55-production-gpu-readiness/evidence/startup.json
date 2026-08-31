@@ -1,0 +1,16 @@
+{
+  "what": "M55 Phase 5 - startup/warmup (MEASURED)",
+  "realtime_runtime": {
+    "cold_to_ready_s": 12.4,
+    "warm_restart_s": 6.8,
+    "includes": "CT2 CUDA load + warm-up decode + hindi probe + punctuation stages (M54, same box; M55 relaunches consistent)"
+  },
+  "gpu_llama_server": "launch to /health ok in ~10-25 s observed (model load included); the pinned launcher refuses drift first",
+  "batch_container_external_mode": {
+    "engine_load_ms": 12.6,
+    "warmup_decode_ms": 281.1,
+    "note": "no child spawn - probe + a REAL GPU warm-up decode through the external server; artifact_verified logged first"
+  },
+  "no_request_time_downloads": "structurally impossible (verified cache + .invalid law)",
+  "date": "2026-09-01"
+}

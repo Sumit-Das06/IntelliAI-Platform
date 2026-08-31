@@ -1,0 +1,6 @@
+{
+  "what": "M55 Phase 23 - final-only punctuation, timed",
+  "measured": "partials raw (law, unit-pinned); finals punctuated both languages (browser); punctuation_ms stayed sub-second in every M55 session INCLUDING the 10-min Hindi (1812 words) - the M54 3.0s event did not reproduce on the warm box; the slow_punctuation alert (>5s) stays armed",
+  "no_code_change": "punctuation stages untouched this milestone",
+  "date": "2026-09-01"
+}

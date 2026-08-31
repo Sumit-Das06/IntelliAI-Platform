@@ -1442,4 +1442,16 @@ Evidence: [54 evidence](../../research/experiments/54-realtime-stt-hardening/). 
 
 ---
 
+## Milestone 55 — Production GPU serving readiness (appended 2026-09-01)
+
+Full report: [../milestones/55-production-gpu-serving-readiness.md](../milestones/55-production-gpu-serving-readiness.md).
+Evidence: [55 evidence](../../research/experiments/55-production-gpu-readiness/). Classification **PRODUCTION-LIKE-GPU-VERIFIED** (RTX 5070 Laptop 8GB — no designated production GPU box exists yet; provisioning it + re-running the ladder/stall/edge checks there is the enablement condition). Production stays OFF; committed compose stays CPU-batch.
+
+- **whisper-small (realtime serving role, GPU)** — **[MEASURED] production-like validated** — 20 consecutive boss30 sessions on the warm GPU: FPT p50 1.10 s (max 1.39), finalization p50 203 ms (max 358 — fast path landing consistently), cadence p50 0.53 s, **zero stalls (max gap 1.74 s)** — the M54 stalls are intermittent thermal-state behavior, alert-armed, production-GPU re-check required. c-ladder p50: 0.53/0.67/1.05/2.1 s at c=1/2/4/8, zero errors at every c.
+- **qwen3-asr-0.6b-hi-ft-e3 (realtime serving role, GPU)** — **[MEASURED] production-like validated** — FPT 0.33-0.42 s; cadence p50 0.62-0.79 s at every length; **finalization ≤1.43 s at every length on the warm GPU** (the M54 10-min 6.5 s event did not reproduce; punctuation sub-second incl. 1,812 words). Quality vs frozen truth inside the seam-variance band (2 min −3.6 pt BETTER, 30 s +0.9…+3.4 pt over 3 runs, no directional regression).
+- **qwen3-asr-0.6b-hi-ft-e3 (BATCH serving role, GPU) — NEW** — **[MEASURED] the M52H/M54 CPU batch anomaly is MITIGATED BY GPU SERVING**: an additive, flag-gated external-server engine mode (`INTELLIAI_STT_QWEN3_SERVER_URL`, default empty = unchanged CPU child; slot-truthful external health monitor, fail-loud load probe) through the REAL gateway route on its own pinned llama instance: real30s **117 words ×5 byte-deterministic** (WER 10.92% — direct-child quality) where the CPU service scattered 2-94; 60 s and 2 min stable; 13-call hammer under live realtime all 117. **Batch decision A: GPU batch is production-required for Hindi**; CPU remains a documented degraded fallback.
+- **The service layer** — both engines + the batch instance coexist on one 8 GiB card (VRAM 2.9→5.3 GiB flat, ~2.8 GiB headroom, zero OOM across ~50 sessions); **RECOMMENDED SAFE CAPACITY 2 realtime sessions/GPU (4 = degraded burst)**; continuous batch hammering costs realtime ~2× cadence (policy: cap batch on realtime GPUs or separate cards). Alerts became a runnable checker (five forced conditions fire, cancellation never does, two fired LIVE in failure drills); failure/recovery and every rollback leg drilled live. Decision **A — PRODUCTION GPU READY (production-like)**; next: founder-gated realtime production promotion. Nothing enabled.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

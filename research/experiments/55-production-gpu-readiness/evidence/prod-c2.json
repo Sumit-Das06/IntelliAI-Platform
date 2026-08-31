@@ -1,0 +1,24 @@
+{
+  "c": 2,
+  "with_long_neighbor": false,
+  "sessions": [
+    {
+      "wav": "boss30.wav",
+      "language": "en",
+      "first_partial_at_s": 1.101,
+      "partial_gap_p50_s": 0.671,
+      "partial_gap_p95_s": 1.447,
+      "finalization_ms": 842.6,
+      "degraded": false
+    },
+    {
+      "wav": "real30s.wav",
+      "language": "hi",
+      "first_partial_at_s": 0.57,
+      "partial_gap_p50_s": 0.676,
+      "partial_gap_p95_s": 1.396,
+      "finalization_ms": 1006.5,
+      "degraded": false
+    }
+  ]
+}

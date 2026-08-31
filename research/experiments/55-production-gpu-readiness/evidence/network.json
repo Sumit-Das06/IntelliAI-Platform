@@ -1,0 +1,8 @@
+{
+  "what": "M55 Phase 19 - latency decomposition (localhost stack)",
+  "gateway_http_rtt_ms": "10-28",
+  "caddy_tls_page_fetch_s": "0.22-0.26 (handshake incl.)",
+  "decomposition": "client FPT (HI 0.33-0.42s) = frame accumulation (0.3s first step) + queue (~0 ms) + decode (~50-150 ms warm) + gateway relay (ms-scale); browser first-VISIBLE text 2.4-3.8s adds worklet startup + LA2 agreement lag on top - UI latency, not model latency",
+  "production_note": "every number is loopback; real customers add network RTT - the production box must re-measure through its real edge",
+  "date": "2026-09-01"
+}

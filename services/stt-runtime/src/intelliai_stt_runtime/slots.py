@@ -68,6 +68,7 @@ def _load_qwen3_asr(settings: Settings) -> Callable[[Path | None], Transcription
     return partial(
         qwen3_asr.load_qwen3_asr,
         server_binary=settings.qwen3_server_binary,
+        server_url=settings.qwen3_server_url,
         context_tokens=settings.qwen3_context_tokens,
         timeout_seconds=settings.qwen3_request_timeout_seconds,
         max_audio_seconds=settings.qwen3_max_audio_seconds,

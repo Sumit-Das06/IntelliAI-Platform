@@ -1,0 +1,23 @@
+{
+  "what": "M55 Phase 8 — 20 repeated boss30 sessions on the warm GPU",
+  "runs": 20,
+  "fpt_s": {
+    "p50": 1.1045,
+    "p95": 1.146,
+    "max": 1.389
+  },
+  "finalization_ms": {
+    "p50": 203.25,
+    "max": 358.4
+  },
+  "partial_gap_max_top5_s": [
+    1.738,
+    0.73,
+    0.701,
+    0.696,
+    0.659
+  ],
+  "cadence_p50_s": 0.531,
+  "verdict": "ZERO stalls in 20 consecutive sessions (max gap 1.74s vs the M54 7.6-16.8s events); the M54 stalls are therefore INTERMITTENT and thermal/clock-state-dependent on this laptop, not structural — not claimed fixed; the 15s hot_decode alert stays armed as the tripwire, and the production GPU re-check remains in the checklist",
+  "date": "2026-09-01"
+}

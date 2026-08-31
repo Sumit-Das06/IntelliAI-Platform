@@ -55,6 +55,11 @@ class Settings(BaseSettings):
     # pins, and the build is reported by the engine's description. The
     # default points at the 15B spike's pinned b10344 CPU build.
     qwen3_server_binary: Path = Path("weights/qwen3-asr-spike/llama-cpp/llama-server.exe")
+    # M55: external-server mode for BATCH qwen serving — when set, the
+    # engine sends decodes to this operator-managed llama-server (the
+    # pinned GPU launcher) instead of spawning its own CPU child. Empty
+    # (the default) keeps today's spawn-a-child behavior everywhere.
+    qwen3_server_url: str = ""
     # KV-bounded context: the spike measured the default 32k allocation at
     # 8.2 GiB RSS vs 1.5 GiB at 4096 — configuration, not identity.
     qwen3_context_tokens: int = Field(default=4096, ge=1024)

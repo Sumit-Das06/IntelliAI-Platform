@@ -1,0 +1,8 @@
+{
+  "what": "M55 Phase 13 - the Hindi CPU batch anomaly, DISPOSITIONED",
+  "old_cpu_service": "M54 matrix (historical, unmodified): real30s 2-94 words over 5 runs; real60s 61-196; worse contended",
+  "gpu_service_now": "SAME audio, SAME model, the REAL public gateway route through the container in external-server mode: real30s 117 words x5 BYTE-DETERMINISTIC (WER 10.92%), real60s 224-225 stable, 2min 441-443 stable (WER 21.09%), short 9 x5 deterministic; latencies 0.25-8.2s vs CPU 17-128s",
+  "under_load": "13 back-to-back batch calls during live realtime sessions: ALL 117 words (mixed-workload.json)",
+  "classification": "CPU batch anomaly MITIGATED BY GPU SERVING - Phase 34 decision A: GPU batch becomes production-required for Hindi; the CPU path keeps its documented long-multi-speaker limitation as a degraded fallback only",
+  "date": "2026-09-01"
+}

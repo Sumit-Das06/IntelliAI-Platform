@@ -1,0 +1,174 @@
+{
+  "what": "M55 Phases 7/9/15 — mixed EN+HI c-ladder (detail per cell)",
+  "ladder": {
+    "c1": {
+      "sessions": [
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.081,
+          "partial_gap_p50_s": 0.525,
+          "partial_gap_p95_s": 0.617,
+          "finalization_ms": 154.1,
+          "degraded": false
+        }
+      ],
+      "gpu": {
+        "vram_mib": "5016-5080",
+        "util_max_pct": 73
+      }
+    },
+    "c2": {
+      "sessions": [
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.101,
+          "partial_gap_p50_s": 0.671,
+          "partial_gap_p95_s": 1.447,
+          "finalization_ms": 842.6,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.57,
+          "partial_gap_p50_s": 0.676,
+          "partial_gap_p95_s": 1.396,
+          "finalization_ms": 1006.5,
+          "degraded": false
+        }
+      ],
+      "gpu": {
+        "vram_mib": "5016-5080",
+        "util_max_pct": 91
+      }
+    },
+    "c4": {
+      "sessions": [
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.155,
+          "partial_gap_p50_s": 1.089,
+          "partial_gap_p95_s": 3.195,
+          "finalization_ms": 6036.6,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.651,
+          "partial_gap_p50_s": 1.037,
+          "partial_gap_p95_s": 4.202,
+          "finalization_ms": 5053.9,
+          "degraded": false
+        },
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.063,
+          "partial_gap_p50_s": 1.111,
+          "partial_gap_p95_s": 3.688,
+          "finalization_ms": 6225.6,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.569,
+          "partial_gap_p50_s": 1.043,
+          "partial_gap_p95_s": 2.868,
+          "finalization_ms": 4005.2,
+          "degraded": false
+        }
+      ],
+      "gpu": {
+        "vram_mib": "5016-5080",
+        "util_max_pct": 88
+      }
+    },
+    "c8": {
+      "sessions": [
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.259,
+          "partial_gap_p50_s": 2.13,
+          "partial_gap_p95_s": 4.629,
+          "finalization_ms": 11357.1,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.608,
+          "partial_gap_p50_s": 2.052,
+          "partial_gap_p95_s": 5.45,
+          "finalization_ms": 11700.3,
+          "degraded": false
+        },
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.295,
+          "partial_gap_p50_s": 2.151,
+          "partial_gap_p95_s": 4.711,
+          "finalization_ms": 11524.1,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.67,
+          "partial_gap_p50_s": 1.98,
+          "partial_gap_p95_s": 5.225,
+          "finalization_ms": 11368.8,
+          "degraded": false
+        },
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.353,
+          "partial_gap_p50_s": 2.168,
+          "partial_gap_p95_s": 4.785,
+          "finalization_ms": 11721.5,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.547,
+          "partial_gap_p50_s": 2.117,
+          "partial_gap_p95_s": 5.686,
+          "finalization_ms": 12377.6,
+          "degraded": false
+        },
+        {
+          "wav": "boss30.wav",
+          "language": "en",
+          "first_partial_at_s": 1.413,
+          "partial_gap_p50_s": 2.184,
+          "partial_gap_p95_s": 4.807,
+          "finalization_ms": 11865.0,
+          "degraded": false
+        },
+        {
+          "wav": "real30s.wav",
+          "language": "hi",
+          "first_partial_at_s": 0.489,
+          "partial_gap_p50_s": 1.948,
+          "partial_gap_p95_s": 5.021,
+          "finalization_ms": 10921.7,
+          "degraded": false
+        }
+      ],
+      "gpu": {
+        "vram_mib": "5016-5304",
+        "util_max_pct": 88
+      }
+    }
+  },
+  "fairness": "no starvation, zero errors, zero degraded at every c; per-session p50s within ~0.2s of each other in every cell (round-robin by construction)",
+  "date": "2026-09-01"
+}

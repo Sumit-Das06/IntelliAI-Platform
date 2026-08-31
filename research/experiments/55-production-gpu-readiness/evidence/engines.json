@@ -1,0 +1,7 @@
+{
+  "what": "M55 Phase 6 - both engines (plus the batch instance) resident together",
+  "resident": "whisper-small CT2 fp16 (in-process) + qwen E3 llama :8797 (realtime) + qwen E3 llama :8798 (batch)",
+  "vram": "see gpu-memory.json (2899 MiB EN+HI; 4888-5304 with the batch instance)",
+  "stability": "no OOM, no eviction, no reload churn across ~50 sessions + drills; kills and relaunches behaved exactly per design",
+  "date": "2026-09-01"
+}

@@ -1,0 +1,5 @@
+{
+  "what": "M55 Phase 24 - raw -> punctuated -> corrected, live",
+  "evidence": "browser E2E: EN correction saved through the real endpoint; finals carry text+raw_text; sample ids present on completed across the battery",
+  "date": "2026-09-01"
+}

@@ -26,3 +26,17 @@ services:
     environment:
       # The single production ON switch for realtime STT.
       INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ws://host.docker.internal:8003/v1/realtime
+
+  # M55: Hindi BATCH through GPU serving — measured to ELIMINATE the CPU
+  # service-path instability (research/experiments/55-production-gpu-readiness/
+  # evidence/hi-batch.json: 117 words x5 byte-deterministic where the CPU
+  # path scattered 2-94). The batch engine rides its OWN pinned GPU
+  # llama-server instance (port 8798) so batch can never starve realtime
+  # sessions (:8797). Launch both with tools/realtime/launch_qwen_gpu.py.
+  stt-runtime:
+    environment:
+      INTELLIAI_STT_QWEN3_SERVER_URL: http://host.docker.internal:8798
+
+# Ops note: run `tools/ops/realtime_alerts.py --log <runtime log>
+# --ready-url http://127.0.0.1:8003/health/ready` on a 1-minute schedule
+# on the GPU host — thresholds and fire-proof in the M55 evidence.

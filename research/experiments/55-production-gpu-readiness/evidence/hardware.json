@@ -1,0 +1,14 @@
+{
+  "what": "M55 Phase 1 — the GPU validation machine",
+  "classification": "PRODUCTION-LIKE-GPU-VERIFIED — no designated production GPU box exists yet (production today is a CPU VPS); this is the closest production-shaped GPU machine, per the milestone's own fallback rule. Nothing here claims production-box validation; provisioning the production GPU is a founder infrastructure decision recorded in the checklist.",
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU, 8151 MiB VRAM",
+  "driver": "591.91",
+  "cuda_driver_api": "13.1",
+  "os": "Windows 11 Home 10.0.26200",
+  "cpu": "Intel Core i7-14650HX",
+  "ram_gb": 31.6,
+  "storage": "D: 300 GB NVMe-class (162 GB used)",
+  "container_runtime": "Docker 29.3.1 (Desktop) — gateway/batch containers; GPU runtimes run host-side",
+  "caveat": "laptop GPU: thermal/clock variance produced the M54 whisper decode stalls; a server/desktop card of the same generation is expected (not measured) to shrink that tail — re-verify on the real production GPU before enablement",
+  "date": "2026-09-01"
+}

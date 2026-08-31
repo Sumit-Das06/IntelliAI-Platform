@@ -559,9 +559,10 @@ class Qwen3AsrEngine:
 
     def __init__(
         self,
-        process: subprocess.Popen[bytes],
+        process: subprocess.Popen[bytes] | None,
         base_url: str,
         *,
+        external_health_url: str | None = None,
         context_tokens: int,
         timeout_seconds: float,
         max_tokens: int = 2048,
@@ -599,10 +600,20 @@ class Qwen3AsrEngine:
         # wait, which kills its own child — so no window exists in which
         # interpreter exit can strand a spawned-but-unadopted process.
         self._closed = closed_event if closed_event is not None else threading.Event()
+        self._external_health_url = external_health_url
         self._monitor: threading.Thread | None = None
         if spawn is not None:
             self._monitor = threading.Thread(
                 target=self._monitor_loop, name="qwen3-asr-supervisor", daemon=True
+            )
+            self._monitor.start()
+        elif external_health_url is not None:
+            # M55 external-server mode: no child to supervise, but the
+            # slot must still tell the truth when the operator-managed
+            # backend stops answering — the same honesty the child
+            # monitor provides, expressed as a health poll.
+            self._monitor = threading.Thread(
+                target=self._external_monitor_loop, name="qwen3-asr-external", daemon=True
             )
             self._monitor.start()
 
@@ -629,6 +640,29 @@ class Qwen3AsrEngine:
                 self._restart()
             if self._state == SLOT_FAILED:
                 return  # terminal: no hidden retry loop survives it
+
+    def _external_monitor_loop(self) -> None:
+        """External-server mode (M55): poll the backend's /health and keep
+        the slot state truthful. The backend is operator-managed, so the
+        slot recovers on its own when the server comes back — there is
+        nothing for US to restart."""
+        health_url = self._external_health_url
+        assert health_url is not None  # noqa: S101 — thread exists only with a URL
+        while not self._closed.wait(self._monitor_interval * 5):
+            try:
+                with urllib.request.urlopen(  # noqa: S310 — operator-configured internal URL
+                    health_url, timeout=3
+                ) as response:
+                    healthy = response.status == 200
+            except (OSError, http.client.HTTPException):
+                healthy = False
+            with self._lock:
+                if healthy and self._state == SLOT_RESTARTING:
+                    self._state = SLOT_READY
+                    logger.info("qwen3_external_backend_recovered")
+                elif not healthy and self._state == SLOT_READY:
+                    self._state = SLOT_RESTARTING
+                    logger.warning("qwen3_external_backend_unreachable")
 
     def _restart(self) -> None:
         """Bounded, backoff-paced recovery through the loader's own path."""
@@ -908,7 +942,7 @@ class Qwen3AsrEngine:
         if self._monitor is not None:
             self._monitor.join(timeout=_TERMINATE_GRACE_SECONDS)
         with self._lock:
-            process, self._process = self._process, None  # type: ignore[assignment]
+            process, self._process = self._process, None
         if process is None:  # pragma: no cover - double close
             return
         with contextlib.suppress(OSError):
@@ -930,6 +964,7 @@ def load_qwen3_asr(
     local_dir: Path | None,
     *,
     server_binary: Path,
+    server_url: str = "",
     context_tokens: int = 4096,
     timeout_seconds: float = 300.0,
     load_timeout_seconds: float = 180.0,
@@ -949,6 +984,39 @@ def load_qwen3_asr(
     if local_dir is None:
         msg = "qwen3-asr requires a verified artifact directory"
         raise ValueError(msg)
+    if server_url:
+        # M55 external-server mode (GPU batch serving): an operator-
+        # managed llama-server (launched by the PINNED GPU launcher,
+        # which refuses binary drift) serves the SAME verified artifact.
+        # No child is spawned here; the backend must already be healthy
+        # or this deployment refuses to come up — the fail-loud law.
+        base = server_url.rstrip("/")
+        deadline = time.monotonic() + min(load_timeout_seconds, 30.0)
+        while True:
+            try:
+                with urllib.request.urlopen(  # noqa: S310 — operator-configured internal URL
+                    f"{base}/health", timeout=3
+                ) as response:
+                    if response.status == 200:
+                        break
+            except (urllib.error.URLError, TimeoutError, OSError):
+                pass
+            if time.monotonic() > deadline:
+                msg = "configured transcription backend is unreachable; refusing to serve"
+                raise RuntimeError(msg)
+            time.sleep(_HEALTH_POLL_SECONDS)
+        return Qwen3AsrEngine(
+            None,
+            base,
+            external_health_url=f"{base}/health",
+            context_tokens=context_tokens,
+            timeout_seconds=timeout_seconds,
+            max_audio_seconds=max_audio_seconds,
+            direct_audio_seconds=direct_audio_seconds,
+            chunk_window_seconds=chunk_window_seconds,
+            chunk_overlap_seconds=chunk_overlap_seconds,
+            chunk_snap_radius_seconds=chunk_snap_radius_seconds,
+        )
     model = local_dir / MODEL_FILENAME
     mmproj = local_dir / MMPROJ_FILENAME
     if not server_binary.exists():

@@ -1,0 +1,29 @@
+{
+  "what": "M55 Phase 36 - production promotion checklist",
+  "items": {
+    "gpu_verified": "PASS (PRODUCTION-LIKE - no designated production GPU box exists; provisioning it is the founder infrastructure decision)",
+    "artifacts_verified": "PASS (sha-verified live; pins matched)",
+    "runtimes_verified": "PASS (binary pins matched; locked versions)",
+    "en_c_ladder": "PASS (c=1 p50 0.53s; c=2 0.67s; c=4 ~1.05s; c=8 stable-degraded)",
+    "hi_c_ladder": "PASS (FPT 0.33-0.42s; p50 0.62-0.79s all lengths)",
+    "stall_check": "PASS-WITH-CAVEAT (0 stalls in 20 runs today; M54 stalls intermittent/thermal on this laptop - re-check on the production GPU; alert armed)",
+    "hi_batch_anomaly_disposition": "PASS (mitigated by GPU serving; decision A - GPU batch production-required for Hindi)",
+    "mixed_workload": "PASS-WITH-POLICY (continuous batch hammer doubles realtime cadence; cap batch concurrency on realtime GPUs or separate cards)",
+    "capacity_defined": "PASS (2 safe / 4 burst / degraded beyond)",
+    "alerts_wired": "PASS (runnable checker; production schedules it on the GPU host)",
+    "alert_tests": "PASS (5 forced conditions fire; clean+cancel silent; 2 live fires in drills)",
+    "browser_e2e": "PASS (EN+HI+mobile)",
+    "batch_regression": "PASS (byte-identical M54; M55 GPU path deterministic; CPU rollback serves)",
+    "security": "PASS",
+    "privacy": "PASS",
+    "rollback": "PASS (flag-off + backend-down + batch-GPU-off all drilled)",
+    "monitoring": "PASS",
+    "documentation": "PASS (M55 report + ledger)"
+  },
+  "open_before_enablement": [
+    "provision the production GPU box and re-run: c-ladder, stall check, network-edge latency (the only PRODUCTION-LIKE caveats)",
+    "founder product call on recorded latencies (EN FPT ~1.1-1.2s; HI long finals <=1.5s warm)",
+    "schedule the alert checker on the GPU host"
+  ],
+  "date": "2026-09-01"
+}

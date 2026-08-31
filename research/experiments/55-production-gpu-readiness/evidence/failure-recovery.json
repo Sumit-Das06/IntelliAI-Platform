@@ -1,0 +1,7 @@
+{
+  "what": "M55 Phase 32 - GPU failure drills, LIVE",
+  "batch_instance_killed": "slot flips to restarting via the NEW external health monitor, readiness degraded, requests answer an honest 503 model-is-starting-up (no silent corruption), alert fires (not_ready: degraded); relaunch -> slot self-recovers to ready",
+  "realtime_backend_killed": "runtime readiness realtime=degraded (M54 health), alert fires (backend_down), live HI session gets explicit session.error transcription_unavailable (no sample, no hang); relaunch -> ready, HI session works (fpt 0.98s, final 132ms, sample stored)",
+  "recovery_smoke": "failure-hi-recovered.json",
+  "date": "2026-09-01"
+}

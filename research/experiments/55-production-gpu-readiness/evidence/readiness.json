@@ -1,0 +1,7 @@
+{
+  "what": "M55 Phase 27 - readiness truth on both services",
+  "realtime_runtime": "disabled | ready | degraded (dead backend) - drilled live",
+  "batch_container": "slot-truthful: external backend death -> slot restarting, status degraded, self-recovery on return - drilled live",
+  "no_leaks": "status words only; no model names/hashes/paths",
+  "date": "2026-09-01"
+}

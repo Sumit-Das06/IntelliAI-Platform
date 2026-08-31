@@ -1,0 +1,5 @@
+{
+  "what": "M55 Phase 25 - unchanged posture, re-verified on this stack",
+  "checks": "auth-before-audio (unit + battery), invalid key 4401 pre-frames, session isolation (distinct ids), 64KB frame cap / 60s lag / 900s cap (guard-tested), no token/audio/transcript logging (log inspection), DOM leak scan [] both languages, oversized/disconnect drills (M54 lifecycle + flood; code paths unchanged)",
+  "date": "2026-09-01"
+}

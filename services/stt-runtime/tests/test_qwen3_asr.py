@@ -234,6 +234,15 @@ class _StubHandler(BaseHTTPRequestHandler):
     script: ClassVar[list[str]] = []
     last_payload: dict[str, Any] | None = None
 
+    def do_GET(self) -> None:
+        # llama-server answers GET /health with 200 — the external-server
+        # loader (M55) and its slot monitor probe exactly that.
+        body = b'{"status":"ok"}'
+        self.send_response(200 if self.path == "/health" else 404)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_POST(self) -> None:
         length = int(self.headers.get("Content-Length", "0"))
         type(self).last_payload = json.loads(self.rfile.read(length) or b"{}")
@@ -1077,3 +1086,57 @@ class TestSlotTruthfulReadiness:
         # No lifespan entered: models never loaded.
         client = TestClient(app)
         assert client.get("/health/ready").status_code == 503
+
+
+class TestExternalServerMode:
+    """M55 GPU batch serving: the engine can ride an operator-managed
+    llama-server instead of spawning its own child."""
+
+    def test_loader_connects_to_a_healthy_external_server(
+        self, stub_server: str, tmp_path: Path
+    ) -> None:
+        engine = qwen3_asr.load_qwen3_asr(
+            tmp_path,
+            server_binary=tmp_path / "irrelevant-in-external-mode.exe",
+            server_url=stub_server,
+            load_timeout_seconds=5.0,
+        )
+        try:
+            assert engine.slot_state() == "ready"
+            result = engine.transcribe(_audio(), TranscriptionRequest(language="hi"))
+            assert result.text == "नमस्ते"
+        finally:
+            engine.close()
+
+    def test_unreachable_external_server_refuses_loudly(self, tmp_path: Path) -> None:
+        with pytest.raises(RuntimeError, match="unreachable"):
+            qwen3_asr.load_qwen3_asr(
+                tmp_path,
+                server_binary=tmp_path / "irrelevant.exe",
+                server_url="http://127.0.0.1:1",
+                load_timeout_seconds=1.0,
+            )
+
+    def test_external_monitor_flips_the_slot_when_the_backend_dies(self) -> None:
+        server = ThreadingHTTPServer(("127.0.0.1", 0), _StubHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        base = f"http://127.0.0.1:{server.server_port}"
+        engine = Qwen3AsrEngine(
+            None,
+            base,
+            external_health_url=f"{base}/health",
+            context_tokens=4096,
+            timeout_seconds=5.0,
+            monitor_interval_seconds=0.02,
+        )
+        try:
+            assert engine.slot_state() == "ready"
+            server.shutdown()
+            server.server_close()
+            deadline = time.monotonic() + 5.0
+            while engine.slot_state() == "ready" and time.monotonic() < deadline:
+                time.sleep(0.05)
+            assert engine.slot_state() == "restarting"
+        finally:
+            engine.close()
