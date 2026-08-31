@@ -1,0 +1,33 @@
+{
+  "first": {
+    "events": [
+      "session.started",
+      "transcript.partial",
+      "transcript.partial",
+      "transcript.final",
+      "session.completed"
+    ],
+    "session_id": "183df9cf5661d83a",
+    "final_text_present": true,
+    "sample_id": "smp_3f1af8df681862e96b6eafee"
+  },
+  "second": {
+    "events": [
+      "session.started",
+      "transcript.partial",
+      "transcript.partial",
+      "transcript.final",
+      "session.completed"
+    ],
+    "session_id": "c472f1feaa2ffcd1",
+    "final_text_present": true,
+    "sample_id": "smp_81bdfa512ae4e2293b77f691"
+  },
+  "sessions_have_distinct_ids": true,
+  "abrupt_disconnect": {
+    "aborted_after_frames": 10,
+    "events_received": []
+  },
+  "after_abort_session_works": true,
+  "after_abort_sample_id": "smp_85dffb65349699f235e6a508"
+}

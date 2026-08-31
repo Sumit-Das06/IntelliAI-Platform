@@ -87,8 +87,11 @@ async def ready(request: Request) -> JSONResponse:
     punctuation = "ready" if request.app.state.punctuator is not None else "disabled"
     punctuation_en = "ready" if request.app.state.punctuator_en is not None else "disabled"
     # M53: realtime sessions are readiness truth the same way — additive
-    # key, "disabled" the honest default everywhere.
-    realtime = "ready" if request.app.state.realtime is not None else "disabled"
+    # key, "disabled" the honest default everywhere. M54: a configured
+    # network backend that stopped answering reports "degraded" instead
+    # of a false "ready" (probe result cached; readiness stays cheap).
+    realtime_service = request.app.state.realtime
+    realtime = realtime_service.health() if realtime_service is not None else "disabled"
     return JSONResponse(
         {
             "status": "degraded" if degraded else "ready",

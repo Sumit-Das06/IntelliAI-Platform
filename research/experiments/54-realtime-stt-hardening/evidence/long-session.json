@@ -1,0 +1,8 @@
+{
+  "what": "M54 long sessions aggregate (detail: baseline-/hardened- 2min/5min/10min files + traces)",
+  "en_10min_hardened": {"partials": 1214, "partial_p50_s": 0.531, "p95_s": 1.218, "final_ms": 250.1, "degraded": false},
+  "hi_10min_hardened": {"partials_words": 1805, "partial_p50_s": 0.859, "p95_s": 1.464, "final_ms": 6496.1, "degraded": false},
+  "bounded_memory": "no degraded events, flat VRAM, bounded buffers throughout",
+  "stall_note": "EN max partial gaps 7.6-12.1s traced to individual slow whisper decodes on the laptop GPU (scheduling.json)",
+  "date": "2026-09-01"
+}

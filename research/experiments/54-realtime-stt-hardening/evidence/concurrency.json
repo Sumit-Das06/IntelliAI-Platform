@@ -1,0 +1,14 @@
+{
+  "what": "M54 Phases 9-10 — concurrency + fairness aggregate (detail: concurrency-c1/c2/c4/c4-loud.json + gpu-c*.json)",
+  "policy": "one in-flight decode per session + FIFO single hot lane = round-robin BY CONSTRUCTION; commit lane separate; degraded event at 60s lag; hard caps bound every queue",
+  "mixed_short_sessions": {
+    "c1": {"partial_p50_s": 0.55, "final_ms": 1138},
+    "c2": {"partial_p50_s": "1.54-1.65", "final_ms": "4906-5156"},
+    "c4": {"partial_p50_s": "1.98-2.37", "final_ms": "8631-14716"}
+  },
+  "loud_neighbor_probe": "4 shorts + one EN 10-minute session: shorts p50 2.5-2.7s, ALL completed with correct finals, zero degraded, zero errors — no starvation; the loud session itself: p50 0.81s, final 994ms",
+  "fairness_verdict": "equal-degradation under load (all shorts within 0.2s p50 of each other in every cell) — one loud session does not starve anyone; ABSOLUTE latency at c>=4 exceeds target UX on one laptop GPU (capacity item, not fairness item)",
+  "max_wait_guarantee": "bounded by (sessions x max hot decode) per round + 60s degraded ceiling + 900s session cap",
+  "c8_note": "not run: c=4+loud already exceeds target UX on this GPU; a c=8 laptop number would not inform the production decision (the spec forbids laptop capacity claims)",
+  "date": "2026-09-01"
+}

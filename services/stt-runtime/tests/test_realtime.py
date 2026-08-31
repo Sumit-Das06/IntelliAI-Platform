@@ -10,6 +10,7 @@ engines are exercised by the M53 staging battery, not by unit tests.
 from __future__ import annotations
 
 import asyncio
+import itertools
 import json
 import time
 from typing import TYPE_CHECKING, Any, cast
@@ -29,6 +30,7 @@ from intelliai_stt_runtime.realtime import (
     RealtimeConfig,
     RealtimeService,
     RealtimeSession,
+    diagnose_repetition,
     run_realtime_endpoint,
 )
 
@@ -103,10 +105,13 @@ class FakeEngine:
         pass
 
 
-def _service(engine: FakeEngine | None, **config: float) -> RealtimeService:
+def _service(
+    engine: FakeEngine | None, *, final_fast_path: bool = True, **config: float
+) -> RealtimeService:
     return RealtimeService(
         config=RealtimeConfig(
             languages=frozenset({"en", "en-us", "en-in", "hi", "hi-in"}),
+            final_fast_path=final_fast_path,
             **config,
         ),
         whisper=engine,
@@ -279,7 +284,8 @@ class TestSession:
         async def scenario() -> None:
             session = RealtimeSession(
                 cast("WebSocket", ws),
-                _service(engine),
+                # fast path off: this test pins the RE-DECODE race law.
+                _service(engine, final_fast_path=False),
                 language="en",
                 punctuator=None,
                 punctuator_en=None,
@@ -441,3 +447,138 @@ class TestRouting:
         assert service.engine_for("auto") is None
         assert service.engine_for("ar") is None
         service.close()
+
+
+# ── M54 hardening: readiness health ──────────────────────────────────────
+
+
+class TestReadinessHealth:
+    def test_in_process_only_service_is_always_ready(self) -> None:
+        service = _service(FakeEngine())
+        assert service.health() == "ready"
+        service.close()
+
+    def test_dead_network_backend_reports_degraded(self) -> None:
+        class DeadQwen(FakeEngine):
+            def probe(self) -> None:
+                msg = "gone"
+                raise RuntimeError(msg)
+
+        service = RealtimeService(
+            config=RealtimeConfig(languages=frozenset({"hi"})),
+            whisper=None,
+            qwen=DeadQwen(),
+        )
+        assert service.health() == "degraded"
+        service.close()
+
+
+# ── M54 hardening: repetition guard + finalization fast path ─────────────
+
+
+def _max_consecutive_run(words: list[str]) -> int:
+    best = run = 1
+    for a, b in itertools.pairwise(words):
+        run = run + 1 if a == b else 1
+        best = max(best, run)
+    return best
+
+
+class TestRepetitionGuard:
+    def test_legitimate_repeated_speech_is_never_flagged(self) -> None:
+        for text in (
+            "हाँ हाँ, बिल्कुल",
+            "नहीं नहीं, मैं नहीं गया",
+            "very very good yes yes okay",
+        ):
+            assert diagnose_repetition(text, 2.0).pathological is False
+
+    def test_runaway_single_word_loop_is_trimmed_to_two(self) -> None:
+        text = ("ठीक " * 30).strip() + " है"
+        diagnosis = diagnose_repetition(text, 20.0)
+        assert diagnosis.pathological
+        assert diagnosis.ngram == 1
+        assert diagnosis.run_length == 30
+        assert diagnosis.trimmed_text == "ठीक ठीक है"
+        assert diagnosis.removed_words == 28
+
+    def test_runaway_multiword_loop_is_detected(self) -> None:
+        text = ("मैं नहीं गया " * 10).strip()
+        diagnosis = diagnose_repetition(text, 20.0)
+        assert diagnosis.pathological
+        assert diagnosis.ngram == 3
+        assert diagnosis.trimmed_text == "मैं नहीं गया मैं नहीं गया"
+
+    def test_dense_output_lowers_the_threshold(self) -> None:
+        # 8 words in one second is loop-shaped even at a run of 4;
+        # the same run in a relaxed span stays legitimate.
+        dense = diagnose_repetition("हाँ हाँ हाँ हाँ ठीक है ना जी", 1.0)
+        assert dense.pathological
+        assert dense.trimmed_text == "हाँ हाँ ठीक है ना जी"
+        relaxed = diagnose_repetition("हाँ हाँ हाँ हाँ ठीक है ना जी", 4.0)
+        assert relaxed.pathological is False
+
+    def test_a_runaway_session_never_shows_the_loop(self) -> None:
+        # An engine stuck in a loop: the served text (partials AND the
+        # final) must carry at most two consecutive occurrences, loudly
+        # trimmed — never the runaway itself, never everything deleted.
+        class LoopyEngine(FakeEngine):
+            def decode(self, audio: np.ndarray, *, final: bool) -> str:
+                super().decode(audio, final=final)
+                return ("बस " * 40).strip()
+
+        ws = _run_paced(
+            _script(3.0, speech=True),
+            _service(LoopyEngine(), max_window_seconds=1.0, commit_margin_seconds=0.3),
+        )
+        final = ws.events("transcript.final")[0]
+        words = str(final["text"]).split()
+        assert words, "trimming must never delete everything"
+        assert _max_consecutive_run(words) <= 2
+        for event in ws.events("transcript.partial"):
+            assert _max_consecutive_run(str(event["text"]).split()) <= 2
+
+
+class TestFinalizationFastPath:
+    def test_silent_tail_final_reuses_the_last_partial_decode(self) -> None:
+        # Speech, then a second of silence, then Stop: the last hot
+        # decode already covers every spoken word — the final must NOT
+        # re-decode, and the final text still arrives.
+        engine = FakeEngine(delay=0.05)
+        frames = [
+            {"type": "websocket.receive", "bytes": frame}
+            for frame in _pcm_frames(1.5, speech=True) + _pcm_frames(1.0, speech=False)
+        ]
+        frames.append({"type": "websocket.receive", "text": json.dumps({"event": "end"})})
+        ws = _run_paced(frames, _service(engine))
+        finals = ws.events("transcript.final")
+        assert len(finals) == 1
+        assert finals[0]["text"]
+        assert ws.events("session.completed")
+        assert [call for call in engine.calls if call["final"]] == []
+
+    def test_flag_off_restores_the_full_final_redecode(self) -> None:
+        engine = FakeEngine(delay=0.05)
+        frames = [
+            {"type": "websocket.receive", "bytes": frame}
+            for frame in _pcm_frames(1.5, speech=True) + _pcm_frames(1.0, speech=False)
+        ]
+        frames.append({"type": "websocket.receive", "text": json.dumps({"event": "end"})})
+        ws = _run_paced(frames, _service(engine, final_fast_path=False))
+        assert len([call for call in engine.calls if call["final"]]) == 1
+        assert ws.events("transcript.final")
+
+    def test_an_inflight_commit_lands_before_the_final_decode(self) -> None:
+        # The measured EN ~4 s outlier law: `end` during an in-flight
+        # commit must LAND that commit and final-decode only the
+        # remainder — never re-decode the whole session again.
+        engine = FakeEngine(delay=0.4)
+        ws = _run_paced(
+            _script(6.0, speech=True),
+            _service(engine, max_window_seconds=2.0, commit_margin_seconds=0.5),
+        )
+        finals = ws.events("transcript.final")
+        assert len(finals) == 1
+        final_call_spans = [call["seconds"] for call in engine.calls if call["final"]]
+        assert final_call_spans, "commits must have run"
+        assert max(final_call_spans) < 5.5  # never the whole 6 s again

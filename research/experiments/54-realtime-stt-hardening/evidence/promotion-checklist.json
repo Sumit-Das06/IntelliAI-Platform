@@ -1,0 +1,20 @@
+{
+  "what": "M54 Phase 32 — production promotion checklist (the gate for the NEXT, founder-approved milestone)",
+  "items": {
+    "1_staging_quality_gates": "PASS — no material regression vs baseline on frozen rulers (quality.json); EN 2.08% vs batch (one run byte-equal), HI vs truth within ±1.8pt of baseline at every length",
+    "2_staging_browser_e2e": "PASS — EN+HI fake-mic Chromium: monotonic display, Share==final, correction saved, zero leaks (browser-*.json)",
+    "3_gpu_resource_budget": "DOCUMENTED — 3.2 GiB VRAM both engines resident, util <=78% at c=4+loud; 12.4s cold start (gpu-capacity.json)",
+    "4_concurrency_fairness": "MEASURED — round-robin by construction, no starvation with a 10-min loud neighbor; c<=2 per 5070-class GPU for target UX; laptop numbers, re-run required on the production GPU (concurrency-*.json)",
+    "5_rollback": "PROVEN — flag-off (pre-accept refusal), runtime-down, and restore all drilled live; batch answered during every leg (rollback.json)",
+    "6_monitoring": "READY (staging) — per-session telemetry + alert thresholds defined (milestone doc §17); wiring thresholds into the ops alarm channel is a promotion-milestone task",
+    "7_security": "PASS — auth-before-audio, isolation, caps, no token/audio/transcript logging, zero DOM leaks (security.json)",
+    "8_privacy": "PASS — partials ephemeral, one consented sample max, silence/disconnect store nothing (privacy.json)",
+    "9_batch_regression": "ZERO — byte-identical double-runs incl. punctuation and long-audio (batch-regression.json)",
+    "10_hindi_service_anomaly": "FOUNDER DECISION REQUIRED — the CPU BATCH path (existing product, predates realtime) is unstable on long multi-speaker Hindi and GPU serving eliminates it (service-anomaly.json); realtime does not share the path. Options: (a) promote GPU batch serving as its own milestone, (b) accept/defer with the limitation documented, (c) dedicated CPU investigation",
+    "11_production_config": "PREPARED — infra/compose/prod-realtime.yml, wired nowhere, ops-guard-pinned",
+    "12_artifact_hashes": "PINNED — ArtifactStore SHA-256 + pinned llama launcher refusing drift (unchanged laws)",
+    "13_production_flag": "OFF — prod.yml pins the URL empty; guard test green"
+  },
+  "open_for_promotion": ["item 4 re-run on production GPU", "item 6 alarm wiring", "item 10 founder decision", "EN FPT ~1.2s and HI long-final latency (recorded misses; product call on acceptability)"],
+  "date": "2026-09-01"
+}

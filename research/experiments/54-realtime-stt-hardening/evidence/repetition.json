@@ -1,0 +1,10 @@
+{
+  "what": "M54 Phases 3-4 — qwen repetition guard",
+  "mechanism": "diagnose_repetition: consecutive identical n-gram blocks (n=1..4); pathological at run >= 6, or >= 4 when the span decodes denser than 6 words/s; commit lane RETRIES once (the CPU service path is measurably nondeterministic — service-anomaly.json), then TRIMS the run to two occurrences; seam-collapse prevents trimmed spans re-assembling a loop across commits; hot-lane partials trimmed for display",
+  "legitimate_repetition_law": "'हाँ हाँ, बिल्कुल' and 'नहीं नहीं, मैं नहीं गया' are runs of 2 and are unit-pinned untouchable; relaxed spans allow runs up to 5",
+  "never_silent": "every detection and trim logs loudly (realtime_repetition_detected / realtime_repetition_trimmed) and counts in the session summary (repetition_detected, repetition_retries, trimmed_words)",
+  "unit_laws": "8 dedicated tests incl. a deliberately loopy engine: partials AND finals carry runs <= 2, text never emptied; duration-scaled max_tokens (M53) stays as the outer bound",
+  "in_the_wild": "repetition_detected = 0 across the entire M54 battery and drills — the M53 event did not recur; the guard is the seatbelt",
+  "ui_exposure": "none — telemetry names are internal-only; no event field or UI copy carries them",
+  "date": "2026-09-01"
+}

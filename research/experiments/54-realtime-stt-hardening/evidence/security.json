@@ -1,0 +1,12 @@
+{
+  "what": "M54 Phase 28 — security posture re-run (unit + live)",
+  "auth_before_audio": "gateway authenticates the FIRST WS message via the existing AuthService before opening any runtime session; bad key → session.error invalid_api_key + close 4401 before a single frame is processed (test_realtime_ws.py, unchanged and green)",
+  "session_isolation": "two sessions never share identity (unit-pinned); lifecycle drill: back-to-back sessions carry distinct session ids; abrupt disconnect leaves the next session unaffected (lifecycle.json)",
+  "buffer_limits": "64KB frame cap and 30-min collection cap at the gateway; 60s lag ceiling -> degraded, 900s session cap -> explicit error (unit + flood drill)",
+  "timeouts": "10s start-message timeout at the runtime; qwen HTTP timeout 30s; gateway downlink drain 60s",
+  "no_token_logging": "api key never logged (battery clients read the key from scratchpad and never print; runtime logs carry session ids and metrics only — inspected)",
+  "no_audio_or_transcript_logging": "runtime session logs carry counts/latencies, never text or audio; inspected in rt-runtime.log across the battery",
+  "no_model_internals_on_public_surfaces": "browser E2E leak scan: [] for kredor/whisper/qwen/llama/cuda in the served DOM (browser-en-boss30.json, browser-hi-real30s.json); readiness exposes only disabled/ready/degraded",
+  "rate_limits": "realtime WS rides the same gateway auth; per-request HTTP limits unchanged for batch; realtime session caps bound abuse per connection (documented; dedicated WS rate limiting named for the promotion milestone if needed)",
+  "date": "2026-09-01"
+}

@@ -1,0 +1,51 @@
+{
+  "c": 4,
+  "with_long_neighbor": true,
+  "sessions": [
+    {
+      "wav": "boss30.wav",
+      "language": "en",
+      "first_partial_at_s": 1.7,
+      "partial_gap_p50_s": 2.587,
+      "partial_gap_p95_s": 6.701,
+      "finalization_ms": 11053.6,
+      "degraded": false
+    },
+    {
+      "wav": "real30s.wav",
+      "language": "hi",
+      "first_partial_at_s": 0.691,
+      "partial_gap_p50_s": 2.646,
+      "partial_gap_p95_s": 6.322,
+      "finalization_ms": 15594.4,
+      "degraded": false
+    },
+    {
+      "wav": "boss30.wav",
+      "language": "en",
+      "first_partial_at_s": 1.843,
+      "partial_gap_p50_s": 2.678,
+      "partial_gap_p95_s": 6.739,
+      "finalization_ms": 12559.5,
+      "degraded": false
+    },
+    {
+      "wav": "real30s.wav",
+      "language": "hi",
+      "first_partial_at_s": 0.555,
+      "partial_gap_p50_s": 2.475,
+      "partial_gap_p95_s": 5.997,
+      "finalization_ms": 14386.8,
+      "degraded": false
+    },
+    {
+      "wav": "10min.wav",
+      "language": "en",
+      "first_partial_at_s": 4.343,
+      "partial_gap_p50_s": 0.808,
+      "partial_gap_p95_s": 2.289,
+      "finalization_ms": 994.0,
+      "degraded": false
+    }
+  ]
+}

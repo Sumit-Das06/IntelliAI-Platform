@@ -1,0 +1,15 @@
+{
+  "what": "M54 Phase 5 — long-session scheduling (MEASURED via new per-session telemetry)",
+  "queue_wait": "hot-lane queue p50 0.1-0.3ms, p95 <= 0.7ms, max 4.4ms in EVERY session — skip-to-latest + one-in-flight-per-session leaves the queue empty; scheduling is NOT the bottleneck on this stack",
+  "decode_time_is_cadence": {"en_hot_decode_ms": {"p50": "147-461", "p95": "277-1561", "max_stall": "2240-12025"}, "hi_hot_decode_ms": {"p50": "526-780", "p95": "1147-1350", "max": "1464-2113"}},
+  "hindi_partial_p50_s": {"baseline": {"30s": "0.88-1.03", "2min": 1.506, "5min": 0.992, "10min": 0.798}, "hardened": {"30s": "0.60-0.62", "2min": 0.78, "5min": 0.736, "10min": 0.859}},
+  "hindi_partial_p95_s": {"baseline": {"30s": "2.36-2.80", "2min": 2.823, "5min": 1.996, "10min": 1.349}, "hardened": {"30s": "1.30-1.32", "2min": 1.41, "5min": 1.225, "10min": 1.464}},
+  "target_verdict": "partial p50 <= 1s: MET at every length on the hardened battery; p95 materially reduced (2.4-2.8s -> 1.2-1.5s)",
+  "window_counterfactual_12s_3s": {
+    "hi_real30s_final_ms": [1712.7, 2854.9], "hi_2min_final_ms": 2620.8,
+    "hi_partial_p50_s": "0.75-0.77", "en_boss30_final_ms": [1174.5, 1130.0],
+    "verdict": "REJECTED on measurement — cadence unchanged (qwen fixed per-call overhead dominates small windows) and Hindi finalization WORSE (more in-flight commits at Stop); the 25s/5s defaults stand"
+  },
+  "en_stall_finding": "the baseline 16.8s partial gap reproduced smaller (7.6-12.1s max); telemetry attributes stalls to individual slow whisper decodes (hot_decode max up to 12s) on the shared laptop GPU, not to queueing — production GPU sizing item + alert threshold",
+  "date": "2026-09-01"
+}

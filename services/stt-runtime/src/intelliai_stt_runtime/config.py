@@ -126,10 +126,17 @@ class Settings(BaseSettings):
     realtime_qwen_url: str = ""
     # Session policy, all M52/M52H-measured defaults.
     realtime_min_step_seconds: float = Field(default=0.5, gt=0)
+    # M54: the first decode may run earlier than the steady-state step —
+    # first-partial time is perceived responsiveness.
+    realtime_first_step_seconds: float = Field(default=0.3, gt=0)
     realtime_max_window_seconds: float = Field(default=25.0, gt=0)
     realtime_commit_margin_seconds: float = Field(default=5.0, gt=0)
     realtime_max_buffer_seconds: float = Field(default=60.0, gt=0)
     realtime_max_session_seconds: float = Field(default=900.0, gt=0)
+    # M54: reuse the last hot decode as the final when only silence
+    # follows it (measured finalization fast path). Own flag so the
+    # behavior is rollback-able independently of the feature.
+    realtime_final_fast_path: bool = True
 
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be

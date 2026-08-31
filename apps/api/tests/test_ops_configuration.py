@@ -335,6 +335,21 @@ def test_realtime_stt_ships_off_in_prod_and_on_only_in_the_local_stage() -> None
     assert "INTELLIAI_STT_REALTIME_ENABLED" not in PROD_OVERLAY
 
 
+def test_the_prepared_production_realtime_overlay_is_never_wired_in() -> None:
+    # M54: the production realtime configuration exists as a REVIEWED
+    # overlay, but enabling it must be a deliberate promotion-milestone
+    # edit — nothing committed ever composes it in, and prod.yml still
+    # pins the URL empty on its own.
+    overlay = (REPO / "infra/compose/prod-realtime.yml").read_text(encoding="utf-8")
+    assert "PREPARED, NOT ENABLED" in overlay
+    assert "INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ws://" in overlay
+    makefile = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert "prod-realtime" not in makefile
+    preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
+    assert "prod-realtime" not in preflight
+    assert 'INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ""' in PROD_OVERLAY
+
+
 def test_preflight_refuses_an_enabled_stage_without_seeded_artifacts() -> None:
     preflight = (REPO / "infra/prod-preflight.sh").read_text(encoding="utf-8")
     assert "INTELLIAI_STT_PUNCTUATION_ENABLED" in preflight

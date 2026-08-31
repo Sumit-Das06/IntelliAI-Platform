@@ -1,0 +1,10 @@
+{
+  "what": "M54 Phases 11-13 — GPU capacity, sharing, startup (MEASURED on RTX 5070 Laptop 8GB)",
+  "resident_set": "whisper-small CT2 float16 realtime instance + E3 GGUF llama-server (-ngl 99, ctx 4096) COEXIST on one GPU: VRAM 2899-3219 MiB total across the whole battery incl. c=4 + loud-neighbor (gpu-c*.json) — no growth, no OOM, ~4.9 GiB headroom on 8 GiB",
+  "utilization": {"c1": "max 40%", "c2": "max 75%", "c4": "max 74%", "c4_plus_10min_loud": "max 78%"},
+  "startup": {"cold_to_ready_s": 12.4, "warm_restart_s": 6.8, "includes": "CT2 CUDA load + warm-up decode (ADR-0019) + hindi backend probe + both punctuation stages; artifacts SHA-verified; request-time downloads impossible"},
+  "capacity_verdict": "one 5070-class GPU serves BOTH languages: c=1 comfortable (EN p50 0.55s), c=2 acceptable (p50 ~1.6s), c=4 usable-but-slow (p50 2.0-2.7s, finals 8-16s) — the single hot lane serializes decodes by design; capacity scales by adding runtime+GPU instances, not by oversubscribing one",
+  "gpu_production_decision": "A: RTX 5070-class (8GB) is the MINIMUM for EN+HI realtime at low concurrency; target UX holds to ~2 concurrent sessions per GPU; sizing beyond that = horizontal instances. VRAM is NOT the constraint (3.2/8 GiB); serial decode throughput is. Laptop-GPU thermal variance produced 2-12s whisper decode stalls — a desktop/server-class card of the same generation is expected to remove the tail, TO BE VERIFIED on the actual production box before enablement",
+  "caveat": "laptop-only results; NOT a production capacity claim (the spec's own rule) — the promotion milestone must re-run the c-ladder on the production GPU",
+  "date": "2026-09-01"
+}

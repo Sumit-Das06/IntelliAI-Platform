@@ -40,6 +40,8 @@ import asyncio
 import contextlib
 import json
 import secrets
+import statistics
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Final
@@ -79,10 +81,110 @@ _HINDI: Final = frozenset({"hi", "hi-in"})
 class RealtimeConfig:
     languages: frozenset[str]
     min_step_seconds: float = 0.5
+    #: M54: the FIRST decode may run on less audio than the steady-state
+    #: step — first-partial time is user-perceived responsiveness, and a
+    #: 0.3 s opening window is cheap.
+    first_step_seconds: float = 0.3
     max_window_seconds: float = 25.0
     commit_margin_seconds: float = 5.0
     max_buffer_seconds: float = 60.0
     max_session_seconds: float = 900.0
+    #: M54 finalization fast path: when the audio after the last hot
+    #: decode is silence, the final reuses that decode instead of
+    #: re-decoding the whole window. Independently rollback-able.
+    final_fast_path: bool = True
+
+
+# ── repetition guard (M54) ───────────────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class RepetitionDiagnosis:
+    """Verdict on one decoded span: pathological decoder repetition vs
+    legitimate repeated speech ("हाँ हाँ, बिल्कुल" is a run of 2 and
+    NEVER trips this)."""
+
+    pathological: bool
+    ngram: int = 0
+    run_length: int = 0
+    trimmed_text: str = ""
+    removed_words: int = 0
+    #: The repeated block itself (space-joined) — merge seams collapse
+    #: further runs of THIS block so trimmed spans can't re-assemble a
+    #: loop across commit boundaries.
+    block: str = ""
+
+
+#: A block repeated this many times consecutively is decoder pathology —
+#: real speech repeats words 2-3 times; loops repeat dozens.
+_REPEAT_RUN_LIMIT: Final = 6
+#: Real Hindi/English speech in our corpora runs ~2-4 words/second; a
+#: span decoding to more than this is loop-shaped even at shorter runs.
+_SUSPECT_WORDS_PER_SECOND: Final = 6.0
+_SUSPECT_RUN_LIMIT: Final = 4
+
+
+def diagnose_repetition(text: str, span_seconds: float) -> RepetitionDiagnosis:
+    """Detect runaway decoder repetition in one span's text.
+
+    Checks consecutive identical n-gram blocks (n=1..4). Trimming keeps
+    the FIRST TWO occurrences of the runaway block and everything
+    around it — legitimate text is never deleted."""
+    words = text.split()
+    if len(words) < _SUSPECT_RUN_LIMIT:
+        return RepetitionDiagnosis(pathological=False)
+    dense = len(words) / max(span_seconds, 0.1) > _SUSPECT_WORDS_PER_SECOND
+    best_n, best_run, best_at = 0, 1, 0
+    for n in (1, 2, 3, 4):
+        run, run_start = 1, 0
+        for i in range(n, len(words) - n + 1, n):
+            if words[i : i + n] == words[i - n : i]:
+                run += 1
+            else:
+                if run > best_run:
+                    best_n, best_run, best_at = n, run, run_start
+                run, run_start = 1, i
+        if run > best_run:
+            best_n, best_run, best_at = n, run, run_start
+    limit = _SUSPECT_RUN_LIMIT if dense else _REPEAT_RUN_LIMIT
+    if best_run < limit:
+        return RepetitionDiagnosis(pathological=False)
+    keep_until = best_at + 2 * best_n
+    resume_from = best_at + best_run * best_n
+    trimmed = words[:keep_until] + words[resume_from:]
+    return RepetitionDiagnosis(
+        pathological=True,
+        ngram=best_n,
+        run_length=best_run,
+        trimmed_text=" ".join(trimmed),
+        removed_words=len(words) - len(trimmed),
+        block=" ".join(words[best_at : best_at + best_n]),
+    )
+
+
+def collapse_block_runs(text: str, block: str, *, keep: int = 2) -> str:
+    """Collapse consecutive repeats of one known-pathological block to
+    ``keep`` occurrences — the seam half of the guard: two trimmed spans
+    ("बस बस" + "बस बस") must not re-assemble a longer loop."""
+    block_words = block.split()
+    if not block_words:
+        return text
+    words = text.split()
+    n = len(block_words)
+    out: list[str] = []
+    run = 0
+    i = 0
+    while i < len(words):
+        if words[i : i + n] == block_words:
+            run += 1
+            if run <= keep:
+                out.extend(block_words)
+            i += n
+        else:
+            run = 0
+            out.append(words[i])
+            i += 1
+    return " ".join(out)
 
 
 class RealtimeService:
@@ -104,6 +206,28 @@ class RealtimeService:
         # predictable under concurrent sessions.
         self.hot_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="rt-hot")
         self.commit_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="rt-commit")
+        self._probe_at = -1e9
+        self._probe_verdict = "ready"
+
+    def health(self) -> str:
+        """``ready`` | ``degraded`` — degraded when a configured NETWORK
+        backend stopped answering (the in-process engine cannot vanish
+        silently). Probes are cached so readiness stays cheap."""
+        qwen = self._qwen
+        probe = getattr(qwen, "probe", None)
+        if probe is None:
+            return "ready"
+        now = time.monotonic()
+        if now - self._probe_at < 15.0:
+            return self._probe_verdict
+        self._probe_at = now
+        try:
+            probe()
+            self._probe_verdict = "ready"
+        except Exception:
+            logger.warning("realtime_backend_degraded")
+            self._probe_verdict = "degraded"
+        return self._probe_verdict
 
     def engine_for(self, language: str) -> RealtimeEngine | None:
         tag = language.strip().casefold()
@@ -155,10 +279,12 @@ def build_realtime_service(settings: object, model_dir: Path) -> RealtimeService
     config = RealtimeConfig(
         languages=languages,
         min_step_seconds=float(getattr(settings, "realtime_min_step_seconds", 0.5)),
+        first_step_seconds=float(getattr(settings, "realtime_first_step_seconds", 0.3)),
         max_window_seconds=float(getattr(settings, "realtime_max_window_seconds", 25.0)),
         commit_margin_seconds=float(getattr(settings, "realtime_commit_margin_seconds", 5.0)),
         max_buffer_seconds=float(getattr(settings, "realtime_max_buffer_seconds", 60.0)),
         max_session_seconds=float(getattr(settings, "realtime_max_session_seconds", 900.0)),
+        final_fast_path=bool(getattr(settings, "realtime_final_fast_path", True)),
     )
     return RealtimeService(config=config, whisper=whisper, qwen=qwen)
 
@@ -177,6 +303,46 @@ class _SessionState:
     gone: bool = False
     degraded: bool = False
     commit_pending: bool = False
+    #: Last successful hot decode: (window_start it ran from, audio
+    #: position it covered, decoded text) — the finalization fast path.
+    last_hot: tuple[float, float, str] | None = None
+
+
+@dataclass
+class _SessionMetrics:
+    """Internal-only per-session telemetry (M54 observability). Logged
+    as a structured summary at completion; never sent to clients."""
+
+    hot_queue_ms: list[float] = field(default_factory=list)
+    hot_decode_ms: list[float] = field(default_factory=list)
+    commit_count: int = 0
+    repetition_detected: int = 0
+    repetition_retries: int = 0
+    trimmed_words: int = 0
+    fast_path_final: bool = False
+    punctuation_ms: float = 0.0
+
+    def summary(self) -> dict[str, object]:
+        def stats(values: list[float]) -> dict[str, float]:
+            if not values:
+                return {}
+            ordered = sorted(values)
+            return {
+                "p50_ms": round(statistics.median(ordered), 1),
+                "p95_ms": round(ordered[min(len(ordered) - 1, int(0.95 * len(ordered)))], 1),
+                "max_ms": round(ordered[-1], 1),
+            }
+
+        return {
+            "hot_queue": stats(self.hot_queue_ms),
+            "hot_decode": stats(self.hot_decode_ms),
+            "commit_count": self.commit_count,
+            "repetition_detected": self.repetition_detected,
+            "repetition_retries": self.repetition_retries,
+            "trimmed_words": self.trimmed_words,
+            "fast_path_final": self.fast_path_final,
+            "punctuation_ms": round(self.punctuation_ms, 1),
+        }
 
 
 class RealtimeSession:
@@ -200,7 +366,12 @@ class RealtimeSession:
         self._punctuator = punctuator
         self._punctuator_en = punctuator_en
         self._state = _SessionState()
+        self._metrics = _SessionMetrics()
         self._engine = service.engine_for(language)
+        #: Once a loop block is flagged, every text assembly collapses
+        #: runs of that block — trimmed spans must not re-assemble a
+        #: loop across seams.
+        self._guard_block = ""
 
     # -- helpers -----------------------------------------------------------
 
@@ -243,11 +414,13 @@ class RealtimeSession:
                 ),
             ),
         )
+        punct_started = time.perf_counter()
         for stage in (self._punctuator, self._punctuator_en):
             if stage is None:
                 continue
             outcome = stage.restore_safely(result, self.language)
             result = outcome.result
+        self._metrics.punctuation_ms = (time.perf_counter() - punct_started) * 1000.0
         return result.text, result.raw_text if result.raw_text is not None else raw
 
     async def _emit_final(self, raw: str, available: float) -> None:
@@ -263,6 +436,70 @@ class RealtimeSession:
             duration_seconds=round(available, 3),
             is_final=True,
         )
+
+    async def _land_commit(
+        self, landed: tuple[str, float], loop: asyncio.AbstractEventLoop
+    ) -> None:
+        """Merge one finished commit decode — with the M54 repetition
+        guard: detect → retry once (the service path CAN be
+        nondeterministic under load) → trim the runaway run to two
+        occurrences. Legitimate repeated speech is never touched, and
+        nothing is ever removed silently."""
+        state, metrics = self._state, self._metrics
+        committed_text, cut = landed
+        span_seconds = max(cut - state.window_start, 0.1)
+        diagnosis = diagnose_repetition(committed_text, span_seconds)
+        if diagnosis.pathological:
+            metrics.repetition_detected += 1
+            logger.warning(
+                "realtime_repetition_detected",
+                lane="commit",
+                session=self.session_id,
+                ngram=diagnosis.ngram,
+                run_length=diagnosis.run_length,
+                words=len(committed_text.split()),
+                span_seconds=round(span_seconds, 1),
+            )
+            engine = self._engine
+            span = self._buffer()[int(state.window_start * SAMPLE_RATE) : int(cut * SAMPLE_RATE)]
+            retried: str | None = None
+            if engine is not None and len(span):
+                metrics.repetition_retries += 1
+
+                def retry_decode(a: np.ndarray = span) -> str:
+                    return engine.decode(a, final=True)
+
+                with contextlib.suppress(Exception):
+                    retried = await loop.run_in_executor(self.service.commit_executor, retry_decode)
+            if retried is not None:
+                rediagnosis = diagnose_repetition(retried, span_seconds)
+                if rediagnosis.pathological:
+                    metrics.trimmed_words += rediagnosis.removed_words
+                    logger.warning(
+                        "realtime_repetition_trimmed",
+                        session=self.session_id,
+                        removed_words=rediagnosis.removed_words,
+                    )
+                    committed_text = rediagnosis.trimmed_text
+                    self._guard_block = rediagnosis.block
+                else:
+                    committed_text = retried
+            else:
+                metrics.trimmed_words += diagnosis.removed_words
+                logger.warning(
+                    "realtime_repetition_trimmed",
+                    session=self.session_id,
+                    removed_words=diagnosis.removed_words,
+                )
+                committed_text = diagnosis.trimmed_text
+                self._guard_block = diagnosis.block
+        merged = (state.committed + " " + committed_text).strip()
+        if self._guard_block:
+            merged = collapse_block_runs(merged, self._guard_block)
+        state.committed = merged
+        state.window_start = cut
+        state.commit_pending = False
+        metrics.commit_count += 1
 
     # -- the loop ----------------------------------------------------------
 
@@ -318,26 +555,37 @@ class RealtimeSession:
 
                 # Land a finished off-path commit before the next decode.
                 if commit_future is not None and commit_future.done():
-                    committed_text, cut = commit_future.result()
-                    words = committed_text.split()
-                    span_seconds = max(cut - state.window_start, 0.1)
-                    if len(words) > span_seconds * 6:
-                        # Loop-shaped output (M53 battery finding): loud
-                        # observability; the token cap bounds the damage.
-                        logger.warning(
-                            "realtime_commit_suspect_repetition",
-                            words=len(words),
-                            span_seconds=round(span_seconds, 1),
-                        )
-                    state.committed = (state.committed + " " + committed_text).strip()
-                    state.window_start = cut
-                    state.commit_pending = False
+                    await self._land_commit(commit_future.result(), loop)
                     commit_future = None
 
                 # `ended` can flip DURING a decode (the executor await
                 # yields to the receiver): finality is captured NOW.
                 is_final_pass = state.ended
-                if is_final_pass or (available - state.decoded_to >= config.min_step_seconds):
+                if is_final_pass and commit_future is not None:
+                    # An in-flight commit is already computing on the GPU.
+                    # Discarding it forced the final to re-decode that whole
+                    # span again — the measured EN ~4 s finalization outlier
+                    # (M53). Land it, then final-decode only the remainder.
+                    with contextlib.suppress(Exception):
+                        await asyncio.wait_for(asyncio.shield(commit_future), timeout=30.0)
+                    if commit_future.done() and commit_future.exception() is None:
+                        await self._land_commit(commit_future.result(), loop)
+                    commit_future = None
+                    buffer = self._buffer()
+                    available = len(buffer) / SAMPLE_RATE
+                # M54 MEASURED: the Hindi backend produces words from a
+                # 300 ms opening window (client FPT 0.33-0.41 s vs
+                # 0.64-1.06 s baseline); whisper-small returns EMPTY on
+                # windows that short, so an early first decode only
+                # wastes the lane and WORSENS English FPT. The early
+                # first step is therefore Hindi-only.
+                first_step = (
+                    min(config.first_step_seconds, config.min_step_seconds)
+                    if self.language.strip().casefold() in _HINDI
+                    else config.min_step_seconds
+                )
+                step = config.min_step_seconds if state.decoded_to > 0 else first_step
+                if is_final_pass or (available - state.decoded_to >= step):
                     window = buffer[int(state.window_start * SAMPLE_RATE) :]
                     # Skip-to-latest: whatever arrived while the previous
                     # decode ran is covered by THIS window; stale
@@ -346,12 +594,47 @@ class RealtimeSession:
                     analysis = self._analysis(window) if len(window) else None
                     has_speech = analysis is not None and analysis.has_speech
                     if has_speech and engine is not None and analysis is not None:
+                        # M54 finalization fast path: when nothing but
+                        # silence arrived after the last hot decode, that
+                        # decode IS the final's raw text — no re-decode.
+                        fast_text: str | None = None
+                        if (
+                            is_final_pass
+                            and config.final_fast_path
+                            and state.last_hot is not None
+                            and state.last_hot[0] == state.window_start
+                            and not state.commit_pending
+                        ):
+                            covered = state.last_hot[1]
+                            tail = buffer[int(covered * SAMPLE_RATE) :]
+                            if len(tail) == 0 or not self._analysis(tail).has_speech:
+                                fast_text = state.last_hot[2]
+                                self._metrics.fast_path_final = True
+                                logger.info(
+                                    "realtime_final_fast_path",
+                                    session=self.session_id,
+                                    tail_seconds=round(len(tail) / SAMPLE_RATE, 2),
+                                )
 
                         def hot_decode(w: np.ndarray = window, f: bool = is_final_pass) -> str:
                             return engine.decode(w, final=f)
 
                         try:
-                            text = await loop.run_in_executor(self.service.hot_executor, hot_decode)
+                            if fast_text is not None:
+                                text = fast_text
+                            else:
+                                submitted = time.perf_counter()
+
+                                def timed_decode() -> tuple[str, float, float]:
+                                    began = time.perf_counter()
+                                    out = hot_decode()
+                                    return out, began, time.perf_counter()
+
+                                text, began, done_at = await loop.run_in_executor(
+                                    self.service.hot_executor, timed_decode
+                                )
+                                self._metrics.hot_queue_ms.append((began - submitted) * 1000.0)
+                                self._metrics.hot_decode_ms.append((done_at - began) * 1000.0)
                         except Exception as exc:
                             decode_failures += 1
                             logger.warning(
@@ -370,7 +653,27 @@ class RealtimeSession:
                                 return
                             await asyncio.sleep(0.05)
                             continue
+                        span_seconds = max(available - state.window_start, 0.1)
+                        diagnosis = diagnose_repetition(text, span_seconds)
+                        if diagnosis.pathological:
+                            # Hot-lane runaway: trim for display/final; the
+                            # commit lane owns retry (it persists text).
+                            self._metrics.repetition_detected += 1
+                            self._metrics.trimmed_words += diagnosis.removed_words
+                            logger.warning(
+                                "realtime_repetition_detected",
+                                lane="hot",
+                                session=self.session_id,
+                                ngram=diagnosis.ngram,
+                                run_length=diagnosis.run_length,
+                                removed_words=diagnosis.removed_words,
+                            )
+                            text = diagnosis.trimmed_text
+                            self._guard_block = diagnosis.block
+                        state.last_hot = (state.window_start, available, text)
                         partial = (state.committed + " " + text).strip()
+                        if self._guard_block:
+                            partial = collapse_block_runs(partial, self._guard_block)
                         if is_final_pass:
                             await self._emit_final(partial, available)
                         else:
@@ -421,6 +724,7 @@ class RealtimeSession:
                         session=self.session_id,
                         audio_seconds=round(available, 3),
                         sequences=state.sequence,
+                        metrics=self._metrics.summary(),
                     )
                     await self._emit("session.completed", audio_seconds=round(available, 3))
                     # Ordered shutdown: the CLIENT closes after it has the

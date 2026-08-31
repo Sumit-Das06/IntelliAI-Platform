@@ -1,0 +1,10 @@
+{
+  "what": "M54 Phase 19 — provenance + privacy re-verified",
+  "partials_ephemeral": "partials exist only on the wire; nothing in the runtime persists them (REPO-VERIFIED; unchanged from M53)",
+  "final_chain": "raw -> punctuated (existing stages, final-only) -> user correction through the existing endpoint (browser E2E: correction saved live, EN)",
+  "one_sample_per_session": "gateway collects AT MOST one batch-equivalent sample per session; contribution=off honored (unit-pinned, unchanged); battery sessions with contribution on stored exactly one sample each (sample_id_present true)",
+  "silence_stores_nothing": "silence drill: 0 partials, empty final, sample_id_present FALSE, both languages (hardened-en-silence5.json, hardened-hi-silence5.json)",
+  "disconnect_persists_nothing": "abrupt-disconnect drill: no completed event, no sample; the next session is clean (lifecycle.json)",
+  "retention": "unchanged from batch (M53 privacy.json still authoritative)",
+  "date": "2026-09-01"
+}

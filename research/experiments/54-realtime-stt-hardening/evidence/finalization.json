@@ -1,0 +1,15 @@
+{
+  "what": "M54 Phase 2 — finalization latency, baseline vs hardened (MEASURED, gateway client)",
+  "mechanisms": "commit-landing at final (in-flight commit merged instead of discarded) + silence-tail fast path (final reuses the last hot decode) + remainder-only final decode",
+  "hindi_real30s_ms": {"baseline": [3540.5, 3329.7, 3990.8], "hardened": [901.2, 893.8, 671.4], "cold_server_rerun": 3550.6},
+  "hindi_long_ms": {"baseline": {"2min": 3738.2, "5min": 960.2, "10min": 1860.9}, "hardened": {"2min": 635.3, "5min": 1402.2, "10min": 6496.1}},
+  "hindi_10min_decomposition": "6.5s = full-window final decode (fast path missed; speech to the cut) + ~3.0s hindi punctuation on 1795-1805 words (session telemetry punctuation_ms=3002)",
+  "english_boss30_ms": {"baseline": [1001.1, 980.2, 1250.8, 1854.8, 1278.5], "hardened_first_battery": [320.5, 1327.4, 1277.7, 222.8, 190.1], "hardened_final_config": [1334.5, 1229.5, 1230.1, 1150.4, 1224.4]},
+  "english_long_ms_hardened": {"2min": 283.5, "5min": 287.5, "10min": 250.1},
+  "shorts_final_ms_median": {"en": 41.0, "hi": 109.3},
+  "silence_final_ms": {"en": 42.0, "hi": 48.0},
+  "outlier_class": "the EN ~4s outlier (commit discarded at end, full re-decode) is structurally removed; 5 hardened boss30 runs: max 1.33s",
+  "fast_path_law": "fires when only silence follows the last hot decode (pause-then-Stop, shorts, silence) — hello 181ms -> 52-60ms; does NOT fire when speech runs to the cut (battery clips), where the final is a bounded remainder decode",
+  "target_verdict": "p95 <= 1s: MET for HI <= 2min and for EN long sessions and all shorts; MISSED (recorded, not relaxed) for EN boss30 (~1.2s) and HI 5-10min (1.4s / 6.5s, punctuation-dominated)",
+  "date": "2026-09-01"
+}

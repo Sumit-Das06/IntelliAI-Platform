@@ -1,0 +1,20 @@
+{
+  "what": "M54 Phase 31 — rollback drilled LIVE, all three legs",
+  "leg_on_works": "entire hardened battery + browser E2E + smoke (fpt 0.59-0.87s, final 52-60ms on hello)",
+  "leg_runtime_down": {
+    "action": "realtime runtime process killed while the gateway stayed up",
+    "ws_result": "session refused cleanly (safe error path; no hang, no partial state)",
+    "batch_result": "POST /v1/audio/transcriptions answered normally: text 'Hello.'"
+  },
+  "leg_flag_off": {
+    "action": "gateway INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL set to empty, api container restarted",
+    "ws_result": "handshake refused PRE-ACCEPT (HTTP 403 rejection — the M53 law over real HTTP; unit tests pin close code 4404)",
+    "batch_result": "POST /v1/audio/transcriptions answered normally: text 'Hello.'"
+  },
+  "leg_restore": {
+    "action": "URL restored (compose file byte-identical to committed state), api restarted, runtime relaunched",
+    "smoke": {"first_partial_at_s": 0.873, "finalization_ms": 53.0, "sample_id_present": true}
+  },
+  "runtime_flag_independence": "readiness reports realtime: disabled when the runtime flag is off; degraded when the hindi backend dies (unit-pinned, M54)",
+  "date": "2026-09-01"
+}

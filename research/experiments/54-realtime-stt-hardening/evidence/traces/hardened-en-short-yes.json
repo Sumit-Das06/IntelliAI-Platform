@@ -1,0 +1,1 @@
+[{"at_s": 0.067, "event": "session.started"}, {"at_s": 0.668, "event": "transcript.partial", "sequence": 1}, {"at_s": 1.278, "event": "transcript.partial", "sequence": 2}, {"at_s": 1.51, "event": "transcript.final", "sequence": 3}, {"at_s": 1.529, "event": "session.completed"}]

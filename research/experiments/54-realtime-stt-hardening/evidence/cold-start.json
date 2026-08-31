@@ -1,0 +1,15 @@
+{
+  "what": "M54 Phase 13 — realtime runtime startup, MEASURED on the staging host",
+  "cold_start_to_ready_s": 12.4,
+  "includes": [
+    "uv env resolution + uvicorn boot",
+    "whisper-small CT2 CUDA load + the ADR-0019 warm-up decode (a broken GPU fails startup, never a session)",
+    "hindi backend reachability probe (an enabled deployment with a dead llama-server refuses to start)",
+    "both punctuation stages loading (SHA-verified artifacts)"
+  ],
+  "artifact_verification": "SHA-256 pinned via ArtifactStore + pinned llama launcher (refuses binary drift); request-time downloads structurally impossible",
+  "qwen_llama_server_note": "operator-managed process; M52H measured its model load separately (seconds-scale); the runtime probe gates readiness on it",
+  "prewarm_requirement": "none beyond the built-in startup warm-up — 12.4 s is within any reasonable deploy window",
+  "method": "timed from process launch to /health/ready status=ready, 0.5 s polling; n=1 on the staging host with the GPU already serving the hindi llama-server",
+  "date": "2026-08-31"
+}

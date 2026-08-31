@@ -1,0 +1,20 @@
+{
+  "en_boss30_punctuated": {
+    "sha256_run1": "3b66b1fe2591724c86edd414aa08b3b2060756ce4aafef6822599ec8624c3085",
+    "sha256_run2": "3b66b1fe2591724c86edd414aa08b3b2060756ce4aafef6822599ec8624c3085",
+    "byte_identical": true,
+    "words": 48
+  },
+  "hi_short": {
+    "sha256_run1": "d52c133f891eb255669c0f123747ec01c6631695ccfb2120f603015d45fb5955",
+    "sha256_run2": "d52c133f891eb255669c0f123747ec01c6631695ccfb2120f603015d45fb5955",
+    "byte_identical": true,
+    "words": 9
+  },
+  "en_2min_long_audio": {
+    "sha256_run1": "0875741c6d8fc5f0d6ff5d63d2862f0c1f2f3fc7c38b7d1f5c18eb33a9d22d50",
+    "sha256_run2": "0875741c6d8fc5f0d6ff5d63d2862f0c1f2f3fc7c38b7d1f5c18eb33a9d22d50",
+    "byte_identical": true,
+    "words": 241
+  }
+}

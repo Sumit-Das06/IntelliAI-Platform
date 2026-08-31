@@ -1,0 +1,14 @@
+{
+  "what": "M54 Phase 1 — M53 baseline REPRODUCED same-day, same machine, same clips (detail: baseline-*.json + traces/)",
+  "note": "environment measurably slower than the M53 recording — the reason the spec forbids comparing against memory; every M54 delta is against THESE numbers",
+  "en": {
+    "boss30_n5": {"fpt_s": "1.20-2.08 (p50 1.24)", "partial_p50_s": "0.60-0.64", "finalization_ms": "980-1855 (p50 1251)"},
+    "long": {"2min": {"p50_s": 0.792, "final_ms": 1704}, "5min": {"p50_s": 0.884, "final_ms": 2744}, "10min": {"p50_s": 0.901, "p95_s": 2.244, "max_gap_s": 16.78, "final_ms": 2045}}
+  },
+  "hi": {
+    "real30s_n3": {"fpt_s": "0.75-1.06", "partial_p50_s": "0.88-1.03", "finalization_ms": "3330-3991"},
+    "long": {"2min": {"p50_s": 1.506, "final_ms": 3738}, "5min": {"p50_s": 0.992, "final_ms": 960}, "10min": {"p50_s": 0.798, "final_ms": 1861}}
+  },
+  "stall_finding": "16.8s and 13.2s partial gaps in the EN 10-min baseline DURING speech (trace-verified; clip has speech at those offsets) — later attributed by M54 telemetry to individual slow whisper decodes",
+  "date": "2026-08-31"
+}

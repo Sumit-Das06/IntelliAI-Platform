@@ -1,0 +1,7 @@
+{
+  "what": "M54 Phase 12 — EN whisper + HI qwen on ONE GPU (detail in gpu-capacity.json)",
+  "coexistence": "both resident the whole milestone: VRAM 2899-3219 MiB flat, util <=78% under c=4+loud, zero OOM, zero failures across ~60 sessions",
+  "cross_language_interference": "mixed EN+HI concurrent sessions share the single hot lane — latency grows with c (see concurrency.json) but no language-specific degradation or instability",
+  "verdict": "one 8GB 5070-class GPU safely hosts BOTH realtime engines; multi-GPU is a capacity choice, not a correctness requirement",
+  "date": "2026-09-01"
+}

@@ -1,0 +1,8 @@
+{
+  "what": "M54 Phases 24-25 — real-browser E2E aggregate (detail: browser-en-boss30.json, browser-hi-real30s.json, mobile-ui.json, screenshots/)",
+  "en": {"first_visible_text_s": 2.45, "display_monotonic": true, "share_equals_final": true, "correction_saved": "Your correction helps improve IntelliAI STT.", "leaks": []},
+  "hi": {"first_visible_text_s": 2.38, "display_monotonic": true, "share_equals_final": true, "leaks": []},
+  "mobile": {"390px": "button visible, no horizontal scroll", "820px": "same", "desktop": "same"},
+  "path": "fake-microphone Chromium through getUserMedia -> AudioWorklet -> wss -> full stack (the true mic path)",
+  "date": "2026-09-01"
+}

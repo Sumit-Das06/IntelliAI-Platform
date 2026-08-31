@@ -1,0 +1,80 @@
+{
+  "rulers": "unicode_generic@v2 + frozen wer.py (unchanged)",
+  "hindi_vs_ground_truth": {
+    "real30s": {
+      "ref_words": 119,
+      "baseline": {
+        "wer": 0.1681,
+        "cer": 0.1122,
+        "words": 109
+      },
+      "hardened": {
+        "wer": 0.1681,
+        "cer": 0.1063,
+        "words": 108
+      }
+    },
+    "real2min": {
+      "ref_words": 422,
+      "baseline": {
+        "wer": 0.218,
+        "cer": 0.1453,
+        "words": 395
+      },
+      "hardened": {
+        "wer": 0.2322,
+        "cer": 0.1404,
+        "words": 396
+      }
+    },
+    "real5min": {
+      "ref_words": 833,
+      "baseline": {
+        "wer": 0.2785,
+        "cer": 0.1647,
+        "words": 825
+      },
+      "hardened": {
+        "wer": 0.2605,
+        "cer": 0.1506,
+        "words": 842
+      }
+    },
+    "real10min": {
+      "ref_words": 1835,
+      "baseline": {
+        "wer": 0.1826,
+        "cer": 0.0885,
+        "words": 1795
+      },
+      "hardened": {
+        "wer": 0.1815,
+        "cer": 0.089,
+        "words": 1805
+      }
+    }
+  },
+  "english_boss30": {
+    "reference": "batch pipeline text, same stack, same clip",
+    "baseline": {
+      "runs": 5,
+      "wer_vs_batch": [
+        0.0208,
+        0.0208,
+        0.0208,
+        0.0208,
+        0.0208
+      ]
+    },
+    "hardened": {
+      "runs": 5,
+      "wer_vs_batch": [
+        0.0208,
+        0.0208,
+        0.0208,
+        0.0208,
+        0.0
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "what": "M54 Phase 27 — readiness truth",
+  "states": "realtime: disabled (flag off) | ready | degraded (M54: configured hindi backend stopped answering; cached probe, unit-pinned)",
+  "gpu_ready_semantics": "ready only after: whisper CT2 loaded + warm-up decode succeeded, hindi backend probe answered, punctuation artifacts verified — all at startup, all fail-loud (ADR-0019)",
+  "no_leaks": "readiness carries no model names, hashes, or paths — status words only",
+  "live_check": "{'status':'ready','slots':{'reference':'ready'},'punctuation':'ready','punctuation_en':'ready','realtime':'ready'}",
+  "date": "2026-09-01"
+}

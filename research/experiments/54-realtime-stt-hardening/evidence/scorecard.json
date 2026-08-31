@@ -1,0 +1,32 @@
+{
+  "what": "M54 Phase 33 — final scorecard (hardened stack; hardened battery + hardened2 EN-FPT reruns; frozen rulers)",
+  "table": {
+    "fpt_s": {"en": "p50 1.22 (1.15-1.27, n=5, final config)", "hi": "0.33-0.41 battery / 0.63-0.82 across variants (clip- and warmth-dependent)"},
+    "partial_p50_s": {"en": "0.51-0.59 at every length", "hi": "0.60-0.86 at every length"},
+    "partial_p95_s": {"en": "0.55-1.62 (stall tail: max 7.6-12.1s, laptop-GPU decode stalls)", "hi": "1.23-1.46"},
+    "finalization_p50_ms": {"en": "1230 (30s clip) / 250-288 (long, fast path)", "hi": "894 (30s) / 635-1402 (2-5min)"},
+    "finalization_p95_worst_ms": {"en": "1334", "hi": "6496 (10min; ~3.0s is punctuation on 1800 words)"},
+    "wer": {"en": "2.08% vs batch (one run 0.0%)", "hi": "16.8% (30s) / 23.2% / 26.1% / 18.2% vs GROUND TRUTH (2/5/10min)"},
+    "cer": {"en": "not scored (word-stream ruler vs batch)", "hi": "10.6% / 14.0% / 15.1% / 8.9%"},
+    "long_session_wer_delta_vs_baseline": {"en": "unchanged (2.08%)", "hi": "+0.0 / +1.4 / -1.8 / -0.1 pt — no material regression"},
+    "repetition": {"en": "n/a", "hi": "0 events across the milestone; guard unit-proven"},
+    "stability": {"en": "monotonic display TRUE (browser)", "hi": "monotonic TRUE; words 107-108 across every run"},
+    "vram_mib": "2899-3219 both engines resident, flat",
+    "ram": "realtime runtime RSS ~1.29 GiB",
+    "c1": "EN p50 0.55s, final 1.1s",
+    "c2": "p50 1.5-1.65s, finals 4.9-5.2s",
+    "c4": "p50 2.0-2.4s, finals 8.6-14.7s (plus loud-neighbor cell: no starvation, all complete)"
+  },
+  "laws": {
+    "batch_regression": "ZERO (byte-identical x3 clip classes)",
+    "browser_e2e": "PASS EN+HI (+mobile 390/820)",
+    "punctuation": "final-only, existing stages; 15-170ms typical, 3.0s @1800 words (recorded)",
+    "provenance": "one consented sample max; silence/disconnect store nothing",
+    "share": "clipboard == final (both languages)",
+    "correction": "saved through the real endpoint (browser)",
+    "rollback": "drilled: flag-off, runtime-down, restore",
+    "security": "auth-first, caps, no leaks (security.json)",
+    "privacy": "unchanged retention; partials ephemeral"
+  },
+  "date": "2026-09-01"
+}

@@ -1,0 +1,28 @@
+# ── PREPARED, NOT ENABLED — realtime STT production overlay (M54) ────────
+#
+# This file is the REVIEWED production configuration for realtime STT.
+# It is NOT referenced by any deploy command: enabling realtime in
+# production means a founder-gated promotion milestone deliberately
+# adding `-f infra/compose/prod-realtime.yml` to the production compose
+# invocation. prod.yml keeps the URL pinned empty; an ops guard test
+# pins both facts.
+#
+# Architecture (the staging-proven M53/M54 shape):
+#   * The gateway bridges wss → a REALTIME RUNTIME reachable at the URL
+#     below. The runtime is a GPU host service (like staging), started
+#     by the operator with `make realtime-qwen` + `make realtime-stt`
+#     (pinned launcher refuses binary drift; startup warm-up decode and
+#     backend probe make a broken GPU fail the deploy, not a customer).
+#   * Resource budget and minimum GPU class: see
+#     docs/milestones/54-realtime-stt-hardening.md (GPU production
+#     decision) before sizing the box.
+#
+# Rollback drill (proven in M53 and re-proven in M54): emptying the URL
+# below and restarting the api container closes the WebSocket surface
+# pre-accept; batch STT continues untouched.
+
+services:
+  api:
+    environment:
+      # The single production ON switch for realtime STT.
+      INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ws://host.docker.internal:8003/v1/realtime
