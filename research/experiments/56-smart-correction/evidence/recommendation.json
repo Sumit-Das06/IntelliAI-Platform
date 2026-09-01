@@ -1,0 +1,42 @@
+{
+  "what": "M56 Phase 27/38 — model selection",
+  "scorecard": [
+    {
+      "model": "qwen3-4b-instruct-2507 Q4_K_M (Apache-2.0)",
+      "en": "PASS all hard gates",
+      "hi": "traps 100%, flips 0, violations 1 format case; over-correction 23% on correct rows; 2 human-eval failure classes",
+      "hinglish": "good",
+      "latency": "EN 0.3-0.7s / HI 0.9-2.2s typical (GPU)",
+      "ram_vram": "~3 GB VRAM",
+      "license": "CLEAR",
+      "decision": "PRIMARY"
+    },
+    {
+      "model": "qwen3-1.7b Q8 (Apache-2.0)",
+      "en": "perfectly safe, weak corrector",
+      "hi": "safe, weak",
+      "latency": "fastest; CPU EN marginal",
+      "decision": "FALLBACK (safety-first tier)"
+    },
+    {
+      "model": "qwen2.5-1.5b (Apache-2.0)",
+      "decision": "REJECT — HI weak (WER 37% subset, additions 35%)"
+    },
+    {
+      "model": "coedit/vennify T5 GEC",
+      "decision": "REJECT — non-commercial licenses"
+    },
+    {
+      "model": "gemma-3-4b-it",
+      "decision": "NOT MEASURED — custom license + gated; no merit case vs an Apache winner"
+    },
+    {
+      "model": "IndicXlit + rules hybrid",
+      "decision": "COMPONENT ONLY — transliteration without grammar"
+    }
+  ],
+  "primary": "qwen3-4b-instruct-2507 (Q4_K_M GGUF) on the pinned llama.cpp GPU runtime, language-scoped v3 prompts",
+  "fallback": "qwen3-1.7b (same runtime) where VRAM is tight — safety holds, correction power drops",
+  "decision": "A — ENGLISH + HINDI CORRECTION MODEL FOUND (with recorded Hindi edges: over-correction 23% on correct sentences, homograph/loanword risks, latency beyond ~50 words) ",
+  "next_milestone": "Smart Correction Runtime (staging only): flag-gated post-final stage, raw->punctuated->AI-corrected->user-corrected provenance chain, review-flag UX for ambiguity, HI latency strategy (async apply on long finals)"
+}

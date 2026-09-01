@@ -1,0 +1,10 @@
+{
+  "what": "M56 Phase 17",
+  "gpu": "4B Q4_K_M server ~3.0-3.2 GB VRAM footprint (5581 MiB total with the 1.7B server + realtime qwen also resident); 1.7B Q8 ~2.3-2.5 GB",
+  "host_rss_mib": {
+    "gpu_4b_server": 3043,
+    "gpu_17b_server": 2702,
+    "cpu_17b_server": 2829
+  },
+  "deployment_read": "the 4B corrector CAN share the existing 8GB realtime GPU only if realtime is idle-light; a promoted runtime would prefer its own instance or the batch-GPU card"
+}

@@ -1,0 +1,300 @@
+{"id": "en-001", "model": "baseline-rules", "output": "He don't know where it is.", "latency_ms": 0.0}
+{"id": "en-002", "model": "baseline-rules", "output": "She have three brothers.", "latency_ms": 0.0}
+{"id": "en-003", "model": "baseline-rules", "output": "The results was very good this quarter.", "latency_ms": 0.0}
+{"id": "en-004", "model": "baseline-rules", "output": "My manager want the report today.", "latency_ms": 0.0}
+{"id": "en-005", "model": "baseline-rules", "output": "There is many people in the meeting.", "latency_ms": 0.0}
+{"id": "en-006", "model": "baseline-rules", "output": "Everyone were asking about the update.", "latency_ms": 0.0}
+{"id": "en-007", "model": "baseline-rules", "output": "The team are ready he said.", "latency_ms": 0.0}
+{"id": "en-008", "model": "baseline-rules", "output": "It don't matter what time you come.", "latency_ms": 0.0}
+{"id": "en-009", "model": "baseline-rules", "output": "These kind of errors is common.", "latency_ms": 0.0}
+{"id": "en-010", "model": "baseline-rules", "output": "Neither of them are available.", "latency_ms": 0.0}
+{"id": "en-011", "model": "baseline-rules", "output": "The data show that users likes the feature.", "latency_ms": 0.0}
+{"id": "en-012", "model": "baseline-rules", "output": "Each of the servers have its own key.", "latency_ms": 0.0}
+{"id": "en-013", "model": "baseline-rules", "output": "I going office yesterday.", "latency_ms": 0.0}
+{"id": "en-014", "model": "baseline-rules", "output": "I have went there yesterday.", "latency_ms": 0.0}
+{"id": "en-015", "model": "baseline-rules", "output": "She will came tomorrow morning.", "latency_ms": 0.0}
+{"id": "en-016", "model": "baseline-rules", "output": "We are work on this since monday.", "latency_ms": 0.0}
+{"id": "en-017", "model": "baseline-rules", "output": "He did not came to the standup today.", "latency_ms": 0.0}
+{"id": "en-018", "model": "baseline-rules", "output": "They has finished the testing last week.", "latency_ms": 0.0}
+{"id": "en-019", "model": "baseline-rules", "output": "I am knowing the answer already.", "latency_ms": 0.0}
+{"id": "en-020", "model": "baseline-rules", "output": "By next month we will completed the project.", "latency_ms": 0.0}
+{"id": "en-021", "model": "baseline-rules", "output": "When I reached he already left.", "latency_ms": 0.0}
+{"id": "en-022", "model": "baseline-rules", "output": "I am here since two hours.", "latency_ms": 0.0}
+{"id": "en-023", "model": "baseline-rules", "output": "Did you finished the deployment.", "latency_ms": 0.0}
+{"id": "en-024", "model": "baseline-rules", "output": "She teached me how to use the console.", "latency_ms": 0.0}
+{"id": "en-025", "model": "baseline-rules", "output": "We was waiting for the approval.", "latency_ms": 0.0}
+{"id": "en-026", "model": "baseline-rules", "output": "I will call you when I will reach.", "latency_ms": 0.0}
+{"id": "en-027", "model": "baseline-rules", "output": "I want to know what is status of my order.", "latency_ms": 0.0}
+{"id": "en-028", "model": "baseline-rules", "output": "Can you send me invoice for last month.", "latency_ms": 0.0}
+{"id": "en-029", "model": "baseline-rules", "output": "He is best engineer in our team.", "latency_ms": 0.0}
+{"id": "en-030", "model": "baseline-rules", "output": "I saw accident on highway today.", "latency_ms": 0.0}
+{"id": "en-031", "model": "baseline-rules", "output": "She gave me apple and banana.", "latency_ms": 0.0}
+{"id": "en-032", "model": "baseline-rules", "output": "This is important meeting please join on time.", "latency_ms": 0.0}
+{"id": "en-033", "model": "baseline-rules", "output": "We need urgent solution for this problem.", "latency_ms": 0.0}
+{"id": "en-034", "model": "baseline-rules", "output": "Meeting is at office near station.", "latency_ms": 0.0}
+{"id": "en-035", "model": "baseline-rules", "output": "I bought new laptop last week.", "latency_ms": 0.0}
+{"id": "en-036", "model": "baseline-rules", "output": "Give me example of good design.", "latency_ms": 0.0}
+{"id": "en-037", "model": "baseline-rules", "output": "I will meet you in monday.", "latency_ms": 0.0}
+{"id": "en-038", "model": "baseline-rules", "output": "She is good in mathematics.", "latency_ms": 0.0}
+{"id": "en-039", "model": "baseline-rules", "output": "We discussed about the plan.", "latency_ms": 0.0}
+{"id": "en-040", "model": "baseline-rules", "output": "He is married with my cousin.", "latency_ms": 0.0}
+{"id": "en-041", "model": "baseline-rules", "output": "I am waiting since ten minutes.", "latency_ms": 0.0}
+{"id": "en-042", "model": "baseline-rules", "output": "The train arrives on five o clock.", "latency_ms": 0.0}
+{"id": "en-043", "model": "baseline-rules", "output": "She entered into the room quietly.", "latency_ms": 0.0}
+{"id": "en-044", "model": "baseline-rules", "output": "I prefer tea more than coffee.", "latency_ms": 0.0}
+{"id": "en-045", "model": "baseline-rules", "output": "He was angry on me for no reason.", "latency_ms": 0.0}
+{"id": "en-046", "model": "baseline-rules", "output": "Let us focus in the main issue.", "latency_ms": 0.0}
+{"id": "en-047", "model": "baseline-rules", "output": "I am sumit.", "latency_ms": 0.0}
+{"id": "en-048", "model": "baseline-rules", "output": "We visited delhi and mumbai in january.", "latency_ms": 0.0}
+{"id": "en-049", "model": "baseline-rules", "output": "My friend rahul works at infosys.", "latency_ms": 0.0}
+{"id": "en-050", "model": "baseline-rules", "output": "The meeting is on friday after diwali.", "latency_ms": 0.0}
+{"id": "en-051", "model": "baseline-rules", "output": "I speak english and hindi.", "latency_ms": 0.0}
+{"id": "en-052", "model": "baseline-rules", "output": "Our ceo announced the results.", "latency_ms": 0.0}
+{"id": "en-053", "model": "baseline-rules", "output": "Please email the pdf to priya.", "latency_ms": 0.0}
+{"id": "en-054", "model": "baseline-rules", "output": "The api uses json over http.", "latency_ms": 0.0}
+{"id": "en-055", "model": "baseline-rules", "output": "I cant find the file youre talking about.", "latency_ms": 0.0}
+{"id": "en-056", "model": "baseline-rules", "output": "Its not working and I dont know why.", "latency_ms": 0.0}
+{"id": "en-057", "model": "baseline-rules", "output": "Theyre coming but shes running late.", "latency_ms": 0.0}
+{"id": "en-058", "model": "baseline-rules", "output": "Well see whats possible tomorrow.", "latency_ms": 0.0}
+{"id": "en-059", "model": "baseline-rules", "output": "Ive been trying but it wont start.", "latency_ms": 0.0}
+{"id": "en-060", "model": "baseline-rules", "output": "Actually I was trying to say that.", "latency_ms": 0.0}
+{"id": "en-061", "model": "baseline-rules", "output": "Um so basically the server crashed again.", "latency_ms": 0.0}
+{"id": "en-062", "model": "baseline-rules", "output": "You know the thing is we need more time.", "latency_ms": 0.0}
+{"id": "en-063", "model": "baseline-rules", "output": "Uh can you like send it today itself.", "latency_ms": 0.0}
+{"id": "en-064", "model": "baseline-rules", "output": "So yeah thats the whole story.", "latency_ms": 0.0}
+{"id": "en-065", "model": "baseline-rules", "output": "I mean it works but slowly.", "latency_ms": 0.0}
+{"id": "en-066", "model": "baseline-rules", "output": "Okay so first we login then we upload.", "latency_ms": 0.0}
+{"id": "en-067", "model": "baseline-rules", "output": "Basically what happened was the disk got full.", "latency_ms": 0.0}
+{"id": "en-068", "model": "baseline-rules", "output": "Right so lets start with the demo.", "latency_ms": 0.0}
+{"id": "en-069", "model": "baseline-rules", "output": "No I meant the other file.", "latency_ms": 0.0}
+{"id": "en-070", "model": "baseline-rules", "output": "Wait let me check once.", "latency_ms": 0.0}
+{"id": "en-071", "model": "baseline-rules", "output": "Hmm I think we should ask the client first.", "latency_ms": 0.0}
+{"id": "en-072", "model": "baseline-rules", "output": "I want to go home now.", "latency_ms": 0.0}
+{"id": "en-073", "model": "baseline-rules", "output": "The meeting is at four pm.", "latency_ms": 0.0}
+{"id": "en-074", "model": "baseline-rules", "output": "Can you can you repeat that please.", "latency_ms": 0.0}
+{"id": "en-075", "model": "baseline-rules", "output": "We need we need more testing before launch.", "latency_ms": 0.0}
+{"id": "en-076", "model": "baseline-rules", "output": "It is very important for us.", "latency_ms": 0.0}
+{"id": "en-077", "model": "baseline-rules", "output": "Send the report to everyone.", "latency_ms": 0.0}
+{"id": "en-078", "model": "baseline-rules", "output": "She said she will join later.", "latency_ms": 0.0}
+{"id": "en-079", "model": "baseline-rules", "output": "We finished the build we started the tests everything passed.", "latency_ms": 0.0}
+{"id": "en-080", "model": "baseline-rules", "output": "He came late the meeting was over he went back.", "latency_ms": 0.0}
+{"id": "en-081", "model": "baseline-rules", "output": "First check the logs then restart the service then tell me.", "latency_ms": 0.0}
+{"id": "en-082", "model": "baseline-rules", "output": "I tried calling you no answer so I sent a message.", "latency_ms": 0.0}
+{"id": "en-083", "model": "baseline-rules", "output": "The demo went well boss was happy we got approval.", "latency_ms": 0.0}
+{"id": "en-084", "model": "baseline-rules", "output": "Download the file open it check the numbers.", "latency_ms": 0.0}
+{"id": "en-085", "model": "baseline-rules", "output": "Its raining take an umbrella dont get wet.", "latency_ms": 0.0}
+{"id": "en-086", "model": "baseline-rules", "output": "She asked a question nobody answered it was awkward.", "latency_ms": 0.0}
+{"id": "en-087", "model": "baseline-rules", "output": "Please visit intelliai dot com slash docs for details.", "latency_ms": 0.0}
+{"id": "en-088", "model": "baseline-rules", "output": "Send it to support at intelliai dot com.", "latency_ms": 0.0}
+{"id": "en-089", "model": "baseline-rules", "output": "The error code is E R 4 0 4 on that page.", "latency_ms": 0.0}
+{"id": "en-090", "model": "baseline-rules", "output": "My username is sumit underscore das.", "latency_ms": 0.0}
+{"id": "en-091", "model": "baseline-rules", "output": "The wifi password is alpha nine two.", "latency_ms": 0.0}
+{"id": "en-092", "model": "baseline-rules", "output": "We use postgres and redis in production.", "latency_ms": 0.0}
+{"id": "en-093", "model": "baseline-rules", "output": "Open the file called report final dot pdf.", "latency_ms": 0.0}
+{"id": "en-094", "model": "baseline-rules", "output": "The build version is two point three point one.", "latency_ms": 0.0}
+{"id": "en-095", "model": "baseline-rules", "output": "Check the pull request number forty two.", "latency_ms": 0.0}
+{"id": "en-096", "model": "baseline-rules", "output": "Please tell priya and rajesh about the change.", "latency_ms": 0.0}
+{"id": "en-097", "model": "baseline-rules", "output": "Mr sharma will join from the bangalore office.", "latency_ms": 0.0}
+{"id": "en-098", "model": "baseline-rules", "output": "I met dr gupta at the conference.", "latency_ms": 0.0}
+{"id": "en-099", "model": "baseline-rules", "output": "Ask ananya she handled the migration.", "latency_ms": 0.0}
+{"id": "en-100", "model": "baseline-rules", "output": "The client name is qwikcart technologies.", "latency_ms": 0.0}
+{"id": "en-101", "model": "baseline-rules", "output": "Sumit and amit are different people.", "latency_ms": 0.0}
+{"id": "en-102", "model": "baseline-rules", "output": "I need five tickets for tomorrow.", "latency_ms": 0.0}
+{"id": "en-103", "model": "baseline-rules", "output": "The amount is twelve thousand five hundred rupees.", "latency_ms": 0.0}
+{"id": "en-104", "model": "baseline-rules", "output": "Call me at nine eight seven six five four three two one zero.", "latency_ms": 0.0}
+{"id": "en-105", "model": "baseline-rules", "output": "The meeting is on first september at ten thirty am.", "latency_ms": 0.0}
+{"id": "en-106", "model": "baseline-rules", "output": "We got two hundred and fifty signups this week.", "latency_ms": 0.0}
+{"id": "en-107", "model": "baseline-rules", "output": "The invoice of four dollars ninety nine is due on twelve august.", "latency_ms": 0.0}
+{"id": "en-108", "model": "baseline-rules", "output": "Delivery takes seven to ten working days.", "latency_ms": 0.0}
+{"id": "en-109", "model": "baseline-rules", "output": "My flight is at six forty five in the morning.", "latency_ms": 0.0}
+{"id": "en-110", "model": "baseline-rules", "output": "The discount is fifteen percent not fifty.", "latency_ms": 0.0}
+{"id": "en-111", "model": "baseline-rules", "output": "Room number three zero four on the third floor.", "latency_ms": 0.0}
+{"id": "en-112", "model": "baseline-rules", "output": "The total came to one lakh twenty thousand.", "latency_ms": 0.0}
+{"id": "en-113", "model": "baseline-rules", "output": "Send one hundred units by friday.", "latency_ms": 0.0}
+{"id": "en-114", "model": "baseline-rules", "output": "The eta is asap according to the pm.", "latency_ms": 0.0}
+{"id": "en-115", "model": "baseline-rules", "output": "Fyi the qa team found a bug.", "latency_ms": 0.0}
+{"id": "en-116", "model": "baseline-rules", "output": "We need the mvp before the poc review.", "latency_ms": 0.0}
+{"id": "en-117", "model": "baseline-rules", "output": "The sla says twenty four hour response.", "latency_ms": 0.0}
+{"id": "en-118", "model": "baseline-rules", "output": "I am going to the office tomorrow.", "latency_ms": 0.0}
+{"id": "en-119", "model": "baseline-rules", "output": "The deployment finished successfully at 5 PM.", "latency_ms": 0.0}
+{"id": "en-120", "model": "baseline-rules", "output": "Please review the document and share your feedback.", "latency_ms": 0.0}
+{"id": "en-121", "model": "baseline-rules", "output": "She has already submitted the assignment.", "latency_ms": 0.0}
+{"id": "en-122", "model": "baseline-rules", "output": "We will meet at the coffee shop near the station.", "latency_ms": 0.0}
+{"id": "en-123", "model": "baseline-rules", "output": "The server restarted twice last night.", "latency_ms": 0.0}
+{"id": "en-124", "model": "baseline-rules", "output": "Sumit joined the call from Nagpur.", "latency_ms": 0.0}
+{"id": "en-125", "model": "baseline-rules", "output": "Can you send me the updated file?", "latency_ms": 0.0}
+{"id": "en-126", "model": "baseline-rules", "output": "I don't think that's the right approach.", "latency_ms": 0.0}
+{"id": "en-127", "model": "baseline-rules", "output": "Our customers love the new realtime feature.", "latency_ms": 0.0}
+{"id": "en-128", "model": "baseline-rules", "output": "The invoice amount is ₹12,500.", "latency_ms": 0.0}
+{"id": "en-129", "model": "baseline-rules", "output": "Haan haan, I understood the point.", "latency_ms": 0.0}
+{"id": "en-130", "model": "baseline-rules", "output": "The train leaves at 6:45 AM sharp.", "latency_ms": 0.0}
+{"id": "en-131", "model": "baseline-rules", "output": "Let me know if Thursday works for you.", "latency_ms": 0.0}
+{"id": "en-132", "model": "baseline-rules", "output": "Call sumit at nine eight seven six five four three two one zero not amit.", "latency_ms": 0.0}
+{"id": "en-133", "model": "baseline-rules", "output": "The password is capital b small a nine four.", "latency_ms": 0.0}
+{"id": "en-134", "model": "baseline-rules", "output": "We lost the deal because price was too high.", "latency_ms": 0.0}
+{"id": "en-135", "model": "baseline-rules", "output": "She said no to the proposal.", "latency_ms": 0.0}
+{"id": "en-136", "model": "baseline-rules", "output": "Ship it to the mumbai office not the delhi office.", "latency_ms": 0.0}
+{"id": "en-137", "model": "baseline-rules", "output": "The demo is at three not four.", "latency_ms": 0.0}
+{"id": "en-138", "model": "baseline-rules", "output": "Gonna finish this by tonight promise.", "latency_ms": 0.0}
+{"id": "en-139", "model": "baseline-rules", "output": "Wanna grab lunch after the call.", "latency_ms": 0.0}
+{"id": "en-140", "model": "baseline-rules", "output": "Lemme check and get back to you.", "latency_ms": 0.0}
+{"id": "en-141", "model": "baseline-rules", "output": "Kinda stuck on this bug since morning.", "latency_ms": 0.0}
+{"id": "en-142", "model": "baseline-rules", "output": "Gotta leave early today doctor appointment.", "latency_ms": 0.0}
+{"id": "en-143", "model": "baseline-rules", "output": "Dunno maybe we should just ask him.", "latency_ms": 0.0}
+{"id": "en-144", "model": "baseline-rules", "output": "Me and him finished the work.", "latency_ms": 0.0}
+{"id": "en-145", "model": "baseline-rules", "output": "She suggested me to take a break.", "latency_ms": 0.0}
+{"id": "en-146", "model": "baseline-rules", "output": "Please explain me the process again.", "latency_ms": 0.0}
+{"id": "en-147", "model": "baseline-rules", "output": "One of my friend is visiting next week.", "latency_ms": 0.0}
+{"id": "en-148", "model": "baseline-rules", "output": "I need to meat tomorrow.", "latency_ms": 0.0}
+{"id": "en-149", "model": "baseline-rules", "output": "The sail is on friday.", "latency_ms": 0.0}
+{"id": "en-150", "model": "baseline-rules", "output": "He works on the bass system.", "latency_ms": 0.0}
+{"id": "hi-001", "model": "baseline-rules", "output": "मेरा बहन कल आएगा।", "latency_ms": 0.0}
+{"id": "hi-002", "model": "baseline-rules", "output": "वह लड़की अच्छा गाता है।", "latency_ms": 0.0}
+{"id": "hi-003", "model": "baseline-rules", "output": "मुझे एक रिपोर्ट बनाना है।", "latency_ms": 0.0}
+{"id": "hi-004", "model": "baseline-rules", "output": "सब लोग आ गया है।", "latency_ms": 0.0}
+{"id": "hi-005", "model": "baseline-rules", "output": "यह किताब बहुत अच्छा है।", "latency_ms": 0.0}
+{"id": "hi-006", "model": "baseline-rules", "output": "मेरी भाई ऑफिस में काम करता है।", "latency_ms": 0.0}
+{"id": "hi-007", "model": "baseline-rules", "output": "बच्चे खेल रहा है बाहर।", "latency_ms": 0.0}
+{"id": "hi-008", "model": "baseline-rules", "output": "उसकी गाड़ी नया है।", "latency_ms": 0.0}
+{"id": "hi-009", "model": "baseline-rules", "output": "हम कल दिल्ली जाएगा।", "latency_ms": 0.0}
+{"id": "hi-010", "model": "baseline-rules", "output": "टीम ने अच्छा काम किए।", "latency_ms": 0.0}
+{"id": "hi-011", "model": "baseline-rules", "output": "मेरे पास दो भाई है।", "latency_ms": 0.0}
+{"id": "hi-012", "model": "baseline-rules", "output": "वह अपने बेटी के साथ आई।", "latency_ms": 0.0}
+{"id": "hi-013", "model": "baseline-rules", "output": "सारी फाइलें डिलीट हो गया।", "latency_ms": 0.0}
+{"id": "hi-014", "model": "baseline-rules", "output": "आपका बात सही है।", "latency_ms": 0.0}
+{"id": "hi-015", "model": "baseline-rules", "output": "दोनों लड़कियाँ स्कूल गया।", "latency_ms": 0.0}
+{"id": "hi-016", "model": "baseline-rules", "output": "मैं कल बाजार जाता था और सामान खरीदा।", "latency_ms": 0.0}
+{"id": "hi-017", "model": "baseline-rules", "output": "वह अभी खाना खाया है।", "latency_ms": 0.0}
+{"id": "hi-018", "model": "baseline-rules", "output": "हम कल फिल्म देखेगा था।", "latency_ms": 0.0}
+{"id": "hi-019", "model": "baseline-rules", "output": "मैं यह काम कल तक खत्म करता हूँ।", "latency_ms": 0.0}
+{"id": "hi-020", "model": "baseline-rules", "output": "जब मैं पहुँचा वह जा चुका होगा।", "latency_ms": 0.0}
+{"id": "hi-021", "model": "baseline-rules", "output": "वे अगले हफ्ते आया।", "latency_ms": 0.0}
+{"id": "hi-022", "model": "baseline-rules", "output": "मैंने कल से कुछ नहीं खाता।", "latency_ms": 0.0}
+{"id": "hi-023", "model": "baseline-rules", "output": "वह रोज सुबह दौड़ा।", "latency_ms": 0.0}
+{"id": "hi-024", "model": "baseline-rules", "output": "मैं दो साल से यहाँ रहा।", "latency_ms": 0.0}
+{"id": "hi-025", "model": "baseline-rules", "output": "बारिश हो रही थी इसलिए मैं घर पर रहूँगा।", "latency_ms": 0.0}
+{"id": "hi-026", "model": "baseline-rules", "output": "Mujhe kal office jana tha but main nahi ja saka.", "latency_ms": 0.0}
+{"id": "hi-027", "model": "baseline-rules", "output": "Aap kaise hain sir.", "latency_ms": 0.0}
+{"id": "hi-028", "model": "baseline-rules", "output": "Mujhe ek report banana hai jo kal submit karni hai.", "latency_ms": 0.0}
+{"id": "hi-029", "model": "baseline-rules", "output": "Kya aap kal office aaoge mujhe report chahiye.", "latency_ms": 0.0}
+{"id": "hi-030", "model": "baseline-rules", "output": "Main abhi ghar ja raha hoon shaam ko baat karte hain.", "latency_ms": 0.0}
+{"id": "hi-031", "model": "baseline-rules", "output": "Yeh kaam bahut mushkil hai lekin ho jayega.", "latency_ms": 0.0}
+{"id": "hi-032", "model": "baseline-rules", "output": "Meeting teen baje shuru hogi der mat karna.", "latency_ms": 0.0}
+{"id": "hi-033", "model": "baseline-rules", "output": "Mera phone kharab ho gaya hai naya lena padega.", "latency_ms": 0.0}
+{"id": "hi-034", "model": "baseline-rules", "output": "Khana bahut accha tha maza aa gaya.", "latency_ms": 0.0}
+{"id": "hi-035", "model": "baseline-rules", "output": "Kal chutti hai to hum ghumne jayenge.", "latency_ms": 0.0}
+{"id": "hi-036", "model": "baseline-rules", "output": "Mujhe samajh nahi aaya dobara batao.", "latency_ms": 0.0}
+{"id": "hi-037", "model": "baseline-rules", "output": "Paisa kal tak aa jayega tension mat lo.", "latency_ms": 0.0}
+{"id": "hi-038", "model": "baseline-rules", "output": "Sir main thodi der mein call karta hoon.", "latency_ms": 0.0}
+{"id": "hi-039", "model": "baseline-rules", "output": "Yeh file kahan save karni hai batao.", "latency_ms": 0.0}
+{"id": "hi-040", "model": "baseline-rules", "output": "Train late hai ek ghanta aur lagega.", "latency_ms": 0.0}
+{"id": "hi-041", "model": "baseline-rules", "output": "Mummy ne khana bana diya hai kha lena.", "latency_ms": 0.0}
+{"id": "hi-042", "model": "baseline-rules", "output": "Is baar diwali par ghar jaunga.", "latency_ms": 0.0}
+{"id": "hi-043", "model": "baseline-rules", "output": "Dukan band ho gayi thi isliye wapas aa gaya.", "latency_ms": 0.0}
+{"id": "hi-044", "model": "baseline-rules", "output": "Bhai ka birthday hai kuch gift lena hai.", "latency_ms": 0.0}
+{"id": "hi-045", "model": "baseline-rules", "output": "Internet slow chal raha hai video ruk rahi hai.", "latency_ms": 0.0}
+{"id": "hi-046", "model": "baseline-rules", "output": "Mausam accha hai chalo bahar chalte hain.", "latency_ms": 0.0}
+{"id": "hi-047", "model": "baseline-rules", "output": "Yeh raha aapka order kuch aur chahiye kya.", "latency_ms": 0.0}
+{"id": "hi-048", "model": "baseline-rules", "output": "Mere paas time nahi hai baad mein karunga.", "latency_ms": 0.0}
+{"id": "hi-049", "model": "baseline-rules", "output": "Darwaza khula mat chhodo machhar aa jayenge.", "latency_ms": 0.0}
+{"id": "hi-050", "model": "baseline-rules", "output": "Sab theek hai bas thoda busy hoon.", "latency_ms": 0.0}
+{"id": "hi-051", "model": "baseline-rules", "output": "Maine client ko email kar diya hai reply ka wait hai.", "latency_ms": 0.0}
+{"id": "hi-052", "model": "baseline-rules", "output": "Yeh feature production mein deploy karna hai friday tak.", "latency_ms": 0.0}
+{"id": "hi-053", "model": "baseline-rules", "output": "Server down hai isliye website nahi khul rahi.", "latency_ms": 0.0}
+{"id": "hi-054", "model": "baseline-rules", "output": "Meeting reschedule karni padegi boss available nahi hain.", "latency_ms": 0.0}
+{"id": "hi-055", "model": "baseline-rules", "output": "Password reset karo aur mujhe bata dena.", "latency_ms": 0.0}
+{"id": "hi-056", "model": "baseline-rules", "output": "Budget approve ho gaya ab kaam shuru karte hain.", "latency_ms": 0.0}
+{"id": "hi-057", "model": "baseline-rules", "output": "Laptop ki battery low hai charger kahan hai.", "latency_ms": 0.0}
+{"id": "hi-058", "model": "baseline-rules", "output": "Team ko update bhej do project on track hai.", "latency_ms": 0.0}
+{"id": "hi-059", "model": "baseline-rules", "output": "Customer ka complaint aaya hai refund chahiye unhe.", "latency_ms": 0.0}
+{"id": "hi-060", "model": "baseline-rules", "output": "Interview clear ho gaya offer letter aa gaya.", "latency_ms": 0.0}
+{"id": "hi-061", "model": "baseline-rules", "output": "File upload nahi ho rahi size zyada hai shayad.", "latency_ms": 0.0}
+{"id": "hi-062", "model": "baseline-rules", "output": "Demo ke liye laptop ready rakhna projector bhi check karna.", "latency_ms": 0.0}
+{"id": "hi-063", "model": "baseline-rules", "output": "Traffic bahut hai main late ho jaunga sorry.", "latency_ms": 0.0}
+{"id": "hi-064", "model": "baseline-rules", "output": "Presentation acchi thi sabko pasand aayi.", "latency_ms": 0.0}
+{"id": "hi-065", "model": "baseline-rules", "output": "Invoice bhejna mat bhoolna month end hai.", "latency_ms": 0.0}
+{"id": "hi-066", "model": "baseline-rules", "output": "Recording start kar do main bolna shuru karta hoon.", "latency_ms": 0.0}
+{"id": "hi-067", "model": "baseline-rules", "output": "Backup le liya na deploy se pehle.", "latency_ms": 0.0}
+{"id": "hi-068", "model": "baseline-rules", "output": "Wifi ka password kya hai guest ke liye.", "latency_ms": 0.0}
+{"id": "hi-069", "model": "baseline-rules", "output": "अरे हाँ वो काम तो मैं भूल ही गया।", "latency_ms": 0.0}
+{"id": "hi-070", "model": "baseline-rules", "output": "मतलब मैं कहना चाह रहा था कि समय कम है।", "latency_ms": 0.0}
+{"id": "hi-071", "model": "baseline-rules", "output": "अच्छा तो फिर कल मिलते हैं।", "latency_ms": 0.0}
+{"id": "hi-072", "model": "baseline-rules", "output": "वैसे एक बात बताऊँ यह तरीका गलत है।", "latency_ms": 0.0}
+{"id": "hi-073", "model": "baseline-rules", "output": "देखो भाई ऐसे नहीं चलेगा।", "latency_ms": 0.0}
+{"id": "hi-074", "model": "baseline-rules", "output": "हाँ बिल्कुल सही कहा आपने।", "latency_ms": 0.0}
+{"id": "hi-075", "model": "baseline-rules", "output": "नहीं मैं नहीं गया था वहाँ।", "latency_ms": 0.0}
+{"id": "hi-076", "model": "baseline-rules", "output": "सुनो ना एक मिनट रुको।", "latency_ms": 0.0}
+{"id": "hi-077", "model": "baseline-rules", "output": "ठीक है फिर बाद में बात करते हैं।", "latency_ms": 0.0}
+{"id": "hi-078", "model": "baseline-rules", "output": "क्या सच में यह इतना आसान है।", "latency_ms": 0.0}
+{"id": "hi-079", "model": "baseline-rules", "output": "चलो जी शुरू करते हैं आज का काम।", "latency_ms": 0.0}
+{"id": "hi-080", "model": "baseline-rules", "output": "भई वाह क्या बढ़िया आइडिया है।", "latency_ms": 0.0}
+{"id": "hi-081", "model": "baseline-rules", "output": "तो बात यह है कि हमें और लोग चाहिए।", "latency_ms": 0.0}
+{"id": "hi-082", "model": "baseline-rules", "output": "असल में प्रॉब्लम कहीं और है।", "latency_ms": 0.0}
+{"id": "hi-083", "model": "baseline-rules", "output": "एक सेकंड मैं चेक करके बताता हूँ।", "latency_ms": 0.0}
+{"id": "hi-084", "model": "baseline-rules", "output": "बस यही कहना था मुझे।", "latency_ms": 0.0}
+{"id": "hi-085", "model": "baseline-rules", "output": "पता नहीं क्यों ऐसा हो रहा है।", "latency_ms": 0.0}
+{"id": "hi-086", "model": "baseline-rules", "output": "मान लो अगर कल बारिश हुई तो।", "latency_ms": 0.0}
+{"id": "hi-087", "model": "baseline-rules", "output": "सीधी सी बात है पैसे पहले।", "latency_ms": 0.0}
+{"id": "hi-088", "model": "baseline-rules", "output": "और सुनाओ कैसा चल रहा है सब।", "latency_ms": 0.0}
+{"id": "hi-089", "model": "baseline-rules", "output": "मैं कल आ जाऊँगा पक्का।", "latency_ms": 0.0}
+{"id": "hi-090", "model": "baseline-rules", "output": "वो फाइल कहाँ रखी है।", "latency_ms": 0.0}
+{"id": "hi-091", "model": "baseline-rules", "output": "जल्दी करो देर हो रही है।", "latency_ms": 0.0}
+{"id": "hi-092", "model": "baseline-rules", "output": "मुझे यह वाला चाहिए।", "latency_ms": 0.0}
+{"id": "hi-093", "model": "baseline-rules", "output": "रुको मेरी बात तो सुनो।", "latency_ms": 0.0}
+{"id": "hi-094", "model": "baseline-rules", "output": "हम लोग साथ चलेंगे।", "latency_ms": 0.0}
+{"id": "hi-095", "model": "baseline-rules", "output": "बहुत धन्यवाद आपका।", "latency_ms": 0.0}
+{"id": "hi-096", "model": "baseline-rules", "output": "मैं घर गया खाना खाया सो गया।", "latency_ms": 0.0}
+{"id": "hi-097", "model": "baseline-rules", "output": "काम खत्म हुआ रिपोर्ट भेज दी छुट्टी ले ली।", "latency_ms": 0.0}
+{"id": "hi-098", "model": "baseline-rules", "output": "पहले फॉर्म भरो फिर फीस जमा करो फिर रसीद लो।", "latency_ms": 0.0}
+{"id": "hi-099", "model": "baseline-rules", "output": "बिजली चली गई थी लैपटॉप बंद हो गया काम रुक गया।", "latency_ms": 0.0}
+{"id": "hi-100", "model": "baseline-rules", "output": "उसने फोन किया मैंने नहीं उठाया बाद में बात हुई।", "latency_ms": 0.0}
+{"id": "hi-101", "model": "baseline-rules", "output": "दरवाज़ा बंद करो लाइट बुझाओ चलो निकलते हैं।", "latency_ms": 0.0}
+{"id": "hi-102", "model": "baseline-rules", "output": "बारिश शुरू हुई मैच रुक गया सब निराश हुए।", "latency_ms": 0.0}
+{"id": "hi-103", "model": "baseline-rules", "output": "मैंने पूछा उसने बताया मामला साफ हो गया।", "latency_ms": 0.0}
+{"id": "hi-104", "model": "baseline-rules", "output": "सुमित और अमित दोनों अलग लोग हैं।", "latency_ms": 0.0}
+{"id": "hi-105", "model": "baseline-rules", "output": "प्रिया को नौ बजे कॉल करना है।", "latency_ms": 0.0}
+{"id": "hi-106", "model": "baseline-rules", "output": "शर्मा जी कल नागपुर से आ रहे हैं।", "latency_ms": 0.0}
+{"id": "hi-107", "model": "baseline-rules", "output": "मुझे पाँच टिकट चाहिए कल के लिए।", "latency_ms": 0.0}
+{"id": "hi-108", "model": "baseline-rules", "output": "कुल रकम बारह हज़ार पाँच सौ रुपये है।", "latency_ms": 0.0}
+{"id": "hi-109", "model": "baseline-rules", "output": "मेरा नंबर नौ आठ सात छह पाँच चार तीन दो एक शून्य है।", "latency_ms": 0.0}
+{"id": "hi-110", "model": "baseline-rules", "output": "मीटिंग एक सितंबर को साढ़े दस बजे है।", "latency_ms": 0.0}
+{"id": "hi-111", "model": "baseline-rules", "output": "डिलीवरी सात से दस दिन में होगी।", "latency_ms": 0.0}
+{"id": "hi-112", "model": "baseline-rules", "output": "ट्रेन नंबर एक दो तीन शून्य पाँच है।", "latency_ms": 0.0}
+{"id": "hi-113", "model": "baseline-rules", "output": "छूट पंद्रह प्रतिशत है पचास नहीं।", "latency_ms": 0.0}
+{"id": "hi-114", "model": "baseline-rules", "output": "कमरा नंबर तीन सौ चार तीसरी मंज़िल पर।", "latency_ms": 0.0}
+{"id": "hi-115", "model": "baseline-rules", "output": "वेबसाइट का नाम इंटेलीएआई डॉट कॉम है।", "latency_ms": 0.0}
+{"id": "hi-116", "model": "baseline-rules", "output": "ईमेल भेजो सपोर्ट एट इंटेलीएआई डॉट कॉम पर।", "latency_ms": 0.0}
+{"id": "hi-117", "model": "baseline-rules", "output": "फाइल का नाम रिपोर्ट फाइनल पीडीएफ है।", "latency_ms": 0.0}
+{"id": "hi-118", "model": "baseline-rules", "output": "एक लाख बीस हज़ार का बिल बना है।", "latency_ms": 0.0}
+{"id": "hi-119", "model": "baseline-rules", "output": "गाड़ी का नंबर एमएच बारह एबी चार सात नौ दो है।", "latency_ms": 0.0}
+{"id": "hi-120", "model": "baseline-rules", "output": "फ्लाइट सुबह पौने सात बजे की है।", "latency_ms": 0.0}
+{"id": "hi-121", "model": "baseline-rules", "output": "ओटीपी चार अंकों का है सात तीन नौ एक।", "latency_ms": 0.0}
+{"id": "hi-122", "model": "baseline-rules", "output": "बजट में सौ यूनिट मंज़ूर हुए हैं।", "latency_ms": 0.0}
+{"id": "hi-123", "model": "baseline-rules", "output": "क्विककार्ट वाले क्लाइंट का फोन आया था।", "latency_ms": 0.0}
+{"id": "hi-124", "model": "baseline-rules", "output": "मैं कल सुबह दिल्ली जा रहा हूँ।", "latency_ms": 0.0}
+{"id": "hi-125", "model": "baseline-rules", "output": "यह रिपोर्ट कल शाम तक तैयार हो जाएगी।", "latency_ms": 0.0}
+{"id": "hi-126", "model": "baseline-rules", "output": "क्या आप मुझे वह फाइल भेज सकते हैं?", "latency_ms": 0.0}
+{"id": "hi-127", "model": "baseline-rules", "output": "बैठक ठीक तीन बजे शुरू होगी।", "latency_ms": 0.0}
+{"id": "hi-128", "model": "baseline-rules", "output": "उसने अपना काम समय पर पूरा किया।", "latency_ms": 0.0}
+{"id": "hi-129", "model": "baseline-rules", "output": "हमें ग्राहकों की बात ध्यान से सुननी चाहिए।", "latency_ms": 0.0}
+{"id": "hi-130", "model": "baseline-rules", "output": "आज मौसम बहुत सुहावना है।", "latency_ms": 0.0}
+{"id": "hi-131", "model": "baseline-rules", "output": "कृपया दरवाज़ा धीरे से बंद करें।", "latency_ms": 0.0}
+{"id": "hi-132", "model": "baseline-rules", "output": "मुझे आपकी मदद की ज़रूरत है।", "latency_ms": 0.0}
+{"id": "hi-133", "model": "baseline-rules", "output": "यह हमारा अपना बनाया हुआ मॉडल है।", "latency_ms": 0.0}
+{"id": "hi-134", "model": "baseline-rules", "output": "नई दिल्ली भारत की राजधानी है।", "latency_ms": 0.0}
+{"id": "hi-135", "model": "baseline-rules", "output": "कल छुट्टी है, इसलिए ऑफिस बंद रहेगा।", "latency_ms": 0.0}
+{"id": "hi-136", "model": "baseline-rules", "output": "सामान मुंबई ऑफिस भेजना है दिल्ली नहीं।", "latency_ms": 0.0}
+{"id": "hi-137", "model": "baseline-rules", "output": "डेमो तीन बजे है चार बजे नहीं।", "latency_ms": 0.0}
+{"id": "hi-138", "model": "baseline-rules", "output": "उसने प्रस्ताव के लिए मना कर दिया।", "latency_ms": 0.0}
+{"id": "hi-139", "model": "baseline-rules", "output": "पेमेंट कैश में नहीं ऑनलाइन करना है।", "latency_ms": 0.0}
+{"id": "hi-140", "model": "baseline-rules", "output": "दवा खाने के बाद लेनी है पहले नहीं।", "latency_ms": 0.0}
+{"id": "hi-141", "model": "baseline-rules", "output": "Abhi nikal raha hoon aadhe ghante mein pahunch jaunga.", "latency_ms": 0.0}
+{"id": "hi-142", "model": "baseline-rules", "output": "Bijli ka bill bharna hai aaj last date hai.", "latency_ms": 0.0}
+{"id": "hi-143", "model": "baseline-rules", "output": "Doctor ne aaram karne ko bola hai do din.", "latency_ms": 0.0}
+{"id": "hi-144", "model": "baseline-rules", "output": "Chai piyoge ya coffee laun.", "latency_ms": 0.0}
+{"id": "hi-145", "model": "baseline-rules", "output": "Login nahi ho raha password galat bata raha hai.", "latency_ms": 0.0}
+{"id": "hi-146", "model": "baseline-rules", "output": "Update install karke system restart kar do.", "latency_ms": 0.0}
+{"id": "hi-147", "model": "baseline-rules", "output": "Screen share karo sabko dikhana hai output.", "latency_ms": 0.0}
+{"id": "hi-148", "model": "baseline-rules", "output": "कल हम बाग गए थे।", "latency_ms": 0.0}
+{"id": "hi-149", "model": "baseline-rules", "output": "उसने कहा की वो आएगा।", "latency_ms": 0.0}
+{"id": "hi-150", "model": "baseline-rules", "output": "मुझे वह सोना पसंद है।", "latency_ms": 0.0}

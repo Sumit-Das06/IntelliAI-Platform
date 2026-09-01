@@ -1,0 +1,40 @@
+{"id": "en-001", "model": "qwen25-15b-v3", "output": "He doesn't know where it is.", "latency_ms": 329.2}
+{"id": "en-002", "model": "qwen25-15b-v3", "output": "She has three brothers.", "latency_ms": 134.5}
+{"id": "en-003", "model": "qwen25-15b-v3", "output": "The results were very good this quarter.", "latency_ms": 129.3}
+{"id": "en-004", "model": "qwen25-15b-v3", "output": "My manager wants the report today.", "latency_ms": 142.8}
+{"id": "en-005", "model": "qwen25-15b-v3", "output": "There are many people in the meeting.", "latency_ms": 148.9}
+{"id": "en-006", "model": "qwen25-15b-v3", "output": "Everyone was asking about the update.", "latency_ms": 136.2}
+{"id": "en-007", "model": "qwen25-15b-v3", "output": "The team is ready. He said.", "latency_ms": 137.2}
+{"id": "en-008", "model": "qwen25-15b-v3", "output": "It doesn't matter what time you arrive.", "latency_ms": 161.9}
+{"id": "en-009", "model": "qwen25-15b-v3", "output": "These kinds of errors are common.", "latency_ms": 118.8}
+{"id": "en-010", "model": "qwen25-15b-v3", "output": "Neither of them is available.", "latency_ms": 125.2}
+{"id": "en-011", "model": "qwen25-15b-v3", "output": "The data show that users like the feature.", "latency_ms": 161.7}
+{"id": "en-012", "model": "qwen25-15b-v3", "output": "Each server has its own key.", "latency_ms": 127.8}
+{"id": "en-013", "model": "qwen25-15b-v3", "output": "I am going to the office yesterday.", "latency_ms": 119.3}
+{"id": "en-014", "model": "qwen25-15b-v3", "output": "I went there yesterday.", "latency_ms": 100.7}
+{"id": "en-015", "model": "qwen25-15b-v3", "output": "She will come tomorrow morning.", "latency_ms": 129.3}
+{"id": "en-016", "model": "qwen25-15b-v3", "output": "We have been working on this since Monday.", "latency_ms": 155.2}
+{"id": "en-017", "model": "qwen25-15b-v3", "output": "He did not come to the standup today.", "latency_ms": 165.9}
+{"id": "en-018", "model": "qwen25-15b-v3", "output": "They finished the testing last week.", "latency_ms": 130.3}
+{"id": "en-019", "model": "qwen25-15b-v3", "output": "I already know the answer.", "latency_ms": 121.9}
+{"id": "en-020", "model": "qwen25-15b-v3", "output": "By next month, we will complete the project.", "latency_ms": 155.7}
+{"id": "en-021", "model": "qwen25-15b-v3", "output": "When I arrived, he had already left.", "latency_ms": 124.3}
+{"id": "en-022", "model": "qwen25-15b-v3", "output": "I have been here for two hours.", "latency_ms": 120.8}
+{"id": "en-023", "model": "qwen25-15b-v3", "output": "Did you finish the deployment?", "latency_ms": 108.1}
+{"id": "en-024", "model": "qwen25-15b-v3", "output": "She taught me how to use the console.", "latency_ms": 127.5}
+{"id": "en-025", "model": "qwen25-15b-v3", "output": "We were waiting for the approval.", "latency_ms": 133.7}
+{"id": "en-026", "model": "qwen25-15b-v3", "output": "I will call you when I reach.", "latency_ms": 141.6}
+{"id": "en-027", "model": "qwen25-15b-v3", "output": "I want to know the status of my order.", "latency_ms": 137.9}
+{"id": "en-028", "model": "qwen25-15b-v3", "output": "Can you send me the invoice for last month?", "latency_ms": 143.7}
+{"id": "en-029", "model": "qwen25-15b-v3", "output": "He is the best engineer in our team.", "latency_ms": 161.0}
+{"id": "en-030", "model": "qwen25-15b-v3", "output": "I saw an accident on the highway today.", "latency_ms": 127.0}
+{"id": "en-031", "model": "qwen25-15b-v3", "output": "She gave me an apple and a banana.", "latency_ms": 135.5}
+{"id": "en-032", "model": "qwen25-15b-v3", "output": "This is an important meeting. Please join on time.", "latency_ms": 137.1}
+{"id": "en-033", "model": "qwen25-15b-v3", "output": "We urgently need a solution for this problem.", "latency_ms": 120.5}
+{"id": "en-034", "model": "qwen25-15b-v3", "output": "The meeting is at the office near the station.", "latency_ms": 126.6}
+{"id": "en-035", "model": "qwen25-15b-v3", "output": "I bought a new laptop last week.", "latency_ms": 129.5}
+{"id": "en-036", "model": "qwen25-15b-v3", "output": "Sure, here's an example of good design:\n\nA well-designed website has a clean, intuitive layout that makes it easy for users to find what they're looking for. The colors and fonts are chosen thoughtfully to create a pleasant visual experience. Navigation is clear and consistent, so users can easily move around the site. The content is organized logically, with headings and subheadings that help users understand the structure of the information. Overall, a good design enhances the user experience and", "latency_ms": 722.2}
+{"id": "en-037", "model": "qwen25-15b-v3", "output": "I will meet you on Monday.", "latency_ms": 130.0}
+{"id": "en-038", "model": "qwen25-15b-v3", "output": "She is good at mathematics.", "latency_ms": 104.1}
+{"id": "en-039", "model": "qwen25-15b-v3", "output": "We discussed the plan.", "latency_ms": 98.9}
+{"id": "en-040", "model": "qwen25-15b-v3", "output": "He is married to my cousin.", "latency_ms": 125.8}

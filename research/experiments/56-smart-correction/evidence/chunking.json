@@ -1,0 +1,30 @@
+{
+  "what": "whole-transcript vs blind-chunk correction (context-dependency probe)",
+  "cases": [
+    {
+      "language": "en",
+      "input": "yesterday priya joined the project she dont have access yet so i shared my screen she will got her own login by friday then she can work independent",
+      "whole": "Yesterday, Priya joined the project. She doesn't have access yet, so I shared my screen. She will get her own login by Friday, then she can work independently.",
+      "chunked_merged": "Yesterday Priya joined the project; she doesn't have access. Yet, so I shared my screen, she will got. Her own login by Friday, then she can work independently."
+    },
+    {
+      "language": "en",
+      "input": "the server crashed at nine we restart it twice it keep crashing finally we found the disk were full we clean the logs and it run fine since then",
+      "whole": "The server crashed at nine. We restarted it twice; it kept crashing. Finally, we found the disk was full. We cleaned the logs, and it ran fine since then.",
+      "chunked_merged": "The server crashed at nine; we restarted it twice. It keeps crashing. Finally, we found the disk. We fully cleaned the logs, and it ran fine since then."
+    },
+    {
+      "language": "hi",
+      "input": "kal humne naya feature launch kiya tha users ko bahut pasand aaya lekin raat ko server slow ho gaya phir humne use restart kiya ab sab theek chal raha hai",
+      "whole": "कल हमने नया फीचर लॉन्च किया था, यूजर्स को बहुत पसंद आया लेकिन रात को सर्वर स्लो हो गया, फिर हमने उसे रीस्टार्ट किया, अब सब ठीक चल रहा है।",
+      "chunked_merged": "कल हमने नया फीचर लॉन्च किया था, यूजर्स को बहुत अच्छा लगा। पसंद आया लेकिन रात को सर्वर स्लो हो गया फिर। हमने उसे रीस्टार्ट किया, अब सब ठीक चल रहा है।"
+    },
+    {
+      "language": "hi",
+      "input": "mera bhai dilli mein rehta hai wo engineer hai usne mujhe laptop gift kiya main usse roz baat karta hoon",
+      "whole": "मेरा भाई दिल्ली में रहता है, वह इंजीनियर है, उन्होंने मुझे लैपटॉप के रूप में दान किया है, मैं उनसे रोज बात करता हूँ।",
+      "chunked_merged": "मेरा भाई दिल्ली में रहता है। वो इंजीनियर है, उसने मुझे लैपटॉप दिया। मुझे उससे रोज बात करता हूँ, मैं उसे गिफ्ट देता हूँ।"
+    }
+  ],
+  "note": "read whole vs chunked_merged: blind chunking loses cross-sentence context (pronouns/tense) — quoted verbatim for the milestone doc verdict"
+}

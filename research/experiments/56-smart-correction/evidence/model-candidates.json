@@ -1,0 +1,17 @@
+{
+  "what": "M56 Phase 4 — candidate inventory (WEB-RESEARCHED via HF API/model cards, 2026-09-01; MEASURED where noted)",
+  "candidates": [
+    {"model": "Qwen3-4B-Instruct-2507", "source": "Qwen (HF) / GGUF: unsloth mirror Q4_K_M", "size": "4B (Q4_K_M 2.5 GB file)", "languages": "multilingual incl. strong EN+HI", "task": "instruction LLM (non-thinking variant)", "license": "Apache-2.0 (verified via HF API)", "runtime": "our PINNED llama.cpp b10344 CUDA", "cpu": "possible but slow at 4B", "gpu": "MEASURED ~3.2 GB VRAM incl. ctx", "status": "MEASURED — primary candidate"},
+    {"model": "Qwen3-1.7B (hybrid thinking)", "source": "Qwen official GGUF Q8_0", "size": "1.7B (Q8 1.8 GB)", "languages": "multilingual", "task": "instruction LLM", "license": "Apache-2.0 (verified)", "runtime": "same", "cpu": "feasible tier", "gpu": "yes", "status": "MEASURED — small/CPU tier"},
+    {"model": "Qwen2.5-1.5B-Instruct", "source": "Qwen official GGUF Q8_0", "size": "1.5B", "languages": "multilingual (weaker HI than Qwen3)", "task": "instruction LLM", "license": "Apache-2.0 (verified)", "runtime": "same", "status": "MEASURED (subset) — older-gen reference"},
+    {"model": "Qwen2.5-3B-Instruct", "license": "Qwen RESEARCH license ('other' on HF — verified)", "status": "REJECTED for commercial serving (license); note: only 3B and 72B of Qwen2.5 carry this restriction"},
+    {"model": "grammarly/coedit-large (FLAN-T5 770M)", "task": "instruction-based text editing / GEC specialist", "license": "CC-BY-NC-4.0 (verified via model card)", "status": "REJECTED — non-commercial; recorded as the reference GEC specialist"},
+    {"model": "vennify/t5-base-grammar-correction", "task": "EN GEC", "license": "CC-BY-NC-SA-4.0 (verified)", "status": "REJECTED — non-commercial"},
+    {"model": "google/gemma-3-4b-it", "task": "instruction LLM", "license": "Gemma Terms (custom, gated=manual; commercial use permitted with use restrictions + flow-down obligations)", "status": "NOT MEASURED — gated download + custom-license friction; documented fallback-tier only"},
+    {"model": "google/mt5-base", "license": "Apache-2.0", "status": "NOT a direct candidate — raw pretrained model, needs task fine-tuning before it can correct anything"},
+    {"model": "ai4bharat/IndicXlit", "task": "Roman->Indic transliteration (incl. Hindi)", "license": "MIT (verified via model card)", "status": "HYBRID COMPONENT candidate — transliteration only, no grammar; paired with rules it cannot fix tense/agreement"},
+    {"model": "sarvamai/sarvam-2b", "status": "UNVERIFIED — HF API returned no model at the checked id; not evaluated"}
+  ],
+  "note": "Every GEC SPECIALIST with usable out-of-box quality we found carries a non-commercial license; every permissive specialist path (mT5/IndicBART) requires training we have not done. The permissive, out-of-box, EN+HI+Hinglish-capable class is instruction LLMs — hence the measured set is the Qwen family on our already-pinned runtime.",
+  "date": "2026-09-01"
+}

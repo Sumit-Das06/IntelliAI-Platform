@@ -1,0 +1,150 @@
+{"id": "en-001", "model": "qwen3-4b-v3", "output": "He doesn't know where it is.", "latency_ms": 711.5}
+{"id": "en-002", "model": "qwen3-4b-v3", "output": "She has three brothers.", "latency_ms": 153.7}
+{"id": "en-003", "model": "qwen3-4b-v3", "output": "The results were very good this quarter.", "latency_ms": 192.0}
+{"id": "en-004", "model": "qwen3-4b-v3", "output": "My manager wants the report today.", "latency_ms": 185.1}
+{"id": "en-005", "model": "qwen3-4b-v3", "output": "There are many people in the meeting.", "latency_ms": 227.7}
+{"id": "en-006", "model": "qwen3-4b-v3", "output": "Everyone was asking about the update.", "latency_ms": 167.0}
+{"id": "en-007", "model": "qwen3-4b-v3", "output": "The team is ready, he said.", "latency_ms": 182.4}
+{"id": "en-008", "model": "qwen3-4b-v3", "output": "It doesn't matter what time you come.", "latency_ms": 218.9}
+{"id": "en-009", "model": "qwen3-4b-v3", "output": "These kinds of errors are common.", "latency_ms": 174.0}
+{"id": "en-010", "model": "qwen3-4b-v3", "output": "Neither of them are available.", "latency_ms": 170.3}
+{"id": "en-011", "model": "qwen3-4b-v3", "output": "The data show that users like the feature.", "latency_ms": 227.1}
+{"id": "en-012", "model": "qwen3-4b-v3", "output": "Each of the servers has its own key.", "latency_ms": 220.8}
+{"id": "en-013", "model": "qwen3-4b-v3", "output": "I went to the office yesterday.", "latency_ms": 192.5}
+{"id": "en-014", "model": "qwen3-4b-v3", "output": "I went there yesterday.", "latency_ms": 146.1}
+{"id": "en-015", "model": "qwen3-4b-v3", "output": "She will come tomorrow morning.", "latency_ms": 178.6}
+{"id": "en-016", "model": "qwen3-4b-v3", "output": "We have been working on this since Monday.", "latency_ms": 206.8}
+{"id": "en-017", "model": "qwen3-4b-v3", "output": "He did not come to the standup today.", "latency_ms": 218.6}
+{"id": "en-018", "model": "qwen3-4b-v3", "output": "They have finished the testing last week.", "latency_ms": 217.6}
+{"id": "en-019", "model": "qwen3-4b-v3", "output": "I already know the answer.", "latency_ms": 183.2}
+{"id": "en-020", "model": "qwen3-4b-v3", "output": "By next month, we will have completed the project.", "latency_ms": 258.6}
+{"id": "en-021", "model": "qwen3-4b-v3", "output": "When I reached, he had already left.", "latency_ms": 222.1}
+{"id": "en-022", "model": "qwen3-4b-v3", "output": "I am here since two hours.", "latency_ms": 185.5}
+{"id": "en-023", "model": "qwen3-4b-v3", "output": "Did you finish the deployment?", "latency_ms": 185.3}
+{"id": "en-024", "model": "qwen3-4b-v3", "output": "She taught me how to use the console.", "latency_ms": 224.7}
+{"id": "en-025", "model": "qwen3-4b-v3", "output": "We were waiting for the approval.", "latency_ms": 184.6}
+{"id": "en-026", "model": "qwen3-4b-v3", "output": "I will call you when I reach.", "latency_ms": 195.6}
+{"id": "en-027", "model": "qwen3-4b-v3", "output": "I want to know the status of my order.", "latency_ms": 217.7}
+{"id": "en-028", "model": "qwen3-4b-v3", "output": "Can you send me the invoice for last month?", "latency_ms": 221.5}
+{"id": "en-029", "model": "qwen3-4b-v3", "output": "He is the best engineer in our team.", "latency_ms": 229.4}
+{"id": "en-030", "model": "qwen3-4b-v3", "output": "I saw an accident on the highway today.", "latency_ms": 226.1}
+{"id": "en-031", "model": "qwen3-4b-v3", "output": "She gave me an apple and a banana.", "latency_ms": 218.2}
+{"id": "en-032", "model": "qwen3-4b-v3", "output": "This is an important meeting. Please join on time.", "latency_ms": 238.5}
+{"id": "en-033", "model": "qwen3-4b-v3", "output": "We need an urgent solution for this problem.", "latency_ms": 211.4}
+{"id": "en-034", "model": "qwen3-4b-v3", "output": "The meeting is at the office near the station.", "latency_ms": 209.9}
+{"id": "en-035", "model": "qwen3-4b-v3", "output": "I bought a new laptop last week.", "latency_ms": 193.9}
+{"id": "en-036", "model": "qwen3-4b-v3", "output": "Sure, here's an example of good design: a mobile app interface that is intuitive, visually balanced, and easy to navigate—using clear typography, consistent color schemes, and well-spaced elements so users can find features quickly without confusion. For instance, a clean login screen with a simple form, prominent call-to-action buttons, and minimal distractions helps users complete tasks efficiently. Good design also considers accessibility, ensuring text is readable and interactive elements are easy to tap or click.", "latency_ms": 1388.0}
+{"id": "en-037", "model": "qwen3-4b-v3", "output": "I will meet you on Monday.", "latency_ms": 175.2}
+{"id": "en-038", "model": "qwen3-4b-v3", "output": "She is good in mathematics.", "latency_ms": 182.2}
+{"id": "en-039", "model": "qwen3-4b-v3", "output": "We discussed the plan.", "latency_ms": 149.3}
+{"id": "en-040", "model": "qwen3-4b-v3", "output": "He is married to my cousin.", "latency_ms": 178.2}
+{"id": "en-041", "model": "qwen3-4b-v3", "output": "I have been waiting for ten minutes.", "latency_ms": 204.4}
+{"id": "en-042", "model": "qwen3-4b-v3", "output": "The train arrives at five o'clock.", "latency_ms": 201.2}
+{"id": "en-043", "model": "qwen3-4b-v3", "output": "She entered into the room quietly.", "latency_ms": 178.8}
+{"id": "en-044", "model": "qwen3-4b-v3", "output": "I prefer tea more than coffee.", "latency_ms": 176.4}
+{"id": "en-045", "model": "qwen3-4b-v3", "output": "He was angry at me for no reason.", "latency_ms": 202.3}
+{"id": "en-046", "model": "qwen3-4b-v3", "output": "Let us focus on the main issue.", "latency_ms": 206.5}
+{"id": "en-047", "model": "qwen3-4b-v3", "output": "I am Sumit.", "latency_ms": 160.5}
+{"id": "en-048", "model": "qwen3-4b-v3", "output": "We visited Delhi and Mumbai in January.", "latency_ms": 188.7}
+{"id": "en-049", "model": "qwen3-4b-v3", "output": "My friend Rahul works at Infosys.", "latency_ms": 183.9}
+{"id": "en-050", "model": "qwen3-4b-v3", "output": "The meeting is on Friday after Diwali.", "latency_ms": 211.7}
+{"id": "en-051", "model": "qwen3-4b-v3", "output": "I speak English and Hindi.", "latency_ms": 181.1}
+{"id": "en-052", "model": "qwen3-4b-v3", "output": "Our CEO announced the results.", "latency_ms": 188.5}
+{"id": "en-053", "model": "qwen3-4b-v3", "output": "Please email the PDF to Priya.", "latency_ms": 199.2}
+{"id": "en-054", "model": "qwen3-4b-v3", "output": "The API uses JSON over HTTP.", "latency_ms": 172.5}
+{"id": "en-055", "model": "qwen3-4b-v3", "output": "I can't find the file you're talking about.", "latency_ms": 224.0}
+{"id": "en-056", "model": "qwen3-4b-v3", "output": "It's not working and I don't know why.", "latency_ms": 254.6}
+{"id": "en-057", "model": "qwen3-4b-v3", "output": "They're coming, but she's running late.", "latency_ms": 218.6}
+{"id": "en-058", "model": "qwen3-4b-v3", "output": "Well, see what's possible tomorrow.", "latency_ms": 200.7}
+{"id": "en-059", "model": "qwen3-4b-v3", "output": "I've been trying, but it won't start.", "latency_ms": 231.5}
+{"id": "en-060", "model": "qwen3-4b-v3", "output": "Actually, I was trying to say that.", "latency_ms": 227.3}
+{"id": "en-061", "model": "qwen3-4b-v3", "output": "So basically, the server crashed again.", "latency_ms": 202.4}
+{"id": "en-062", "model": "qwen3-4b-v3", "output": "You know, the thing is, we need more time.", "latency_ms": 260.6}
+{"id": "en-063", "model": "qwen3-4b-v3", "output": "Can you send it today itself?", "latency_ms": 178.4}
+{"id": "en-064", "model": "qwen3-4b-v3", "output": "So yeah, that's the whole story.", "latency_ms": 219.8}
+{"id": "en-065", "model": "qwen3-4b-v3", "output": "I mean, it works but slowly.", "latency_ms": 182.8}
+{"id": "en-066", "model": "qwen3-4b-v3", "output": "Okay, so first we log in, then we upload.", "latency_ms": 250.5}
+{"id": "en-067", "model": "qwen3-4b-v3", "output": "Basically, what happened was the disk got full.", "latency_ms": 246.1}
+{"id": "en-068", "model": "qwen3-4b-v3", "output": "Right, so let's start with the demo.", "latency_ms": 237.5}
+{"id": "en-069", "model": "qwen3-4b-v3", "output": "no no i meant the other file", "latency_ms": 174.6}
+{"id": "en-070", "model": "qwen3-4b-v3", "output": "Wait, wait — let me check once.", "latency_ms": 221.0}
+{"id": "en-071", "model": "qwen3-4b-v3", "output": "Hmm, I think we should ask the client first.", "latency_ms": 231.8}
+{"id": "en-072", "model": "qwen3-4b-v3", "output": "I want to go home now.", "latency_ms": 193.2}
+{"id": "en-073", "model": "qwen3-4b-v3", "output": "The meeting is at four pm.", "latency_ms": 196.1}
+{"id": "en-074", "model": "qwen3-4b-v3", "output": "Can you repeat that please?", "latency_ms": 179.6}
+{"id": "en-075", "model": "qwen3-4b-v3", "output": "We need more testing before launch.", "latency_ms": 195.1}
+{"id": "en-076", "model": "qwen3-4b-v3", "output": "It is very, very important for us.", "latency_ms": 222.8}
+{"id": "en-077", "model": "qwen3-4b-v3", "output": "Send the report to everyone.", "latency_ms": 174.3}
+{"id": "en-078", "model": "qwen3-4b-v3", "output": "She said she will join later.", "latency_ms": 247.7}
+{"id": "en-079", "model": "qwen3-4b-v3", "output": "We finished the build; we started the tests; everything passed.", "latency_ms": 282.1}
+{"id": "en-080", "model": "qwen3-4b-v3", "output": "He came late to the meeting; it was over, and he went back.", "latency_ms": 297.0}
+{"id": "en-081", "model": "qwen3-4b-v3", "output": "First check the logs, then restart the service, then tell me.", "latency_ms": 270.7}
+{"id": "en-082", "model": "qwen3-4b-v3", "output": "I tried calling you; no answer, so I sent a message.", "latency_ms": 293.2}
+{"id": "en-083", "model": "qwen3-4b-v3", "output": "The demo went well. Boss was happy. We got approval.", "latency_ms": 260.8}
+{"id": "en-084", "model": "qwen3-4b-v3", "output": "Download the file, open it, check the numbers.", "latency_ms": 228.1}
+{"id": "en-085", "model": "qwen3-4b-v3", "output": "It's raining. Take an umbrella. Don't get wet.", "latency_ms": 258.8}
+{"id": "en-086", "model": "qwen3-4b-v3", "output": "She asked a question, nobody answered; it was awkward.", "latency_ms": 257.8}
+{"id": "en-087", "model": "qwen3-4b-v3", "output": "Please visit intelliai.com/docs for details.", "latency_ms": 240.0}
+{"id": "en-088", "model": "qwen3-4b-v3", "output": "send it to support@intelliai.com", "latency_ms": 266.9}
+{"id": "en-089", "model": "qwen3-4b-v3", "output": "The error code is ERR404 on that page.", "latency_ms": 383.3}
+{"id": "en-090", "model": "qwen3-4b-v3", "output": "my username is sumit_das", "latency_ms": 188.1}
+{"id": "en-091", "model": "qwen3-4b-v3", "output": "The WiFi password is alpha nine nine two.", "latency_ms": 205.0}
+{"id": "en-092", "model": "qwen3-4b-v3", "output": "We use PostgreSQL and Redis in production.", "latency_ms": 208.9}
+{"id": "en-093", "model": "qwen3-4b-v3", "output": "open the file called report final.pdf", "latency_ms": 178.7}
+{"id": "en-094", "model": "qwen3-4b-v3", "output": "the build version is 2.3.1", "latency_ms": 227.1}
+{"id": "en-095", "model": "qwen3-4b-v3", "output": "Check the pull request number forty two.", "latency_ms": 200.7}
+{"id": "en-096", "model": "qwen3-4b-v3", "output": "Please tell Priya and Rajesh about the change.", "latency_ms": 228.6}
+{"id": "en-097", "model": "qwen3-4b-v3", "output": "Mr. Sharma will join from the Bangalore office.", "latency_ms": 196.8}
+{"id": "en-098", "model": "qwen3-4b-v3", "output": "I met Dr. Gupta at the conference.", "latency_ms": 172.1}
+{"id": "en-099", "model": "qwen3-4b-v3", "output": "Ask Ananya; she handled the migration.", "latency_ms": 169.8}
+{"id": "en-100", "model": "qwen3-4b-v3", "output": "the client name is qwikcart technologies", "latency_ms": 163.5}
+{"id": "en-101", "model": "qwen3-4b-v3", "output": "Sumit and Amit are different people.", "latency_ms": 164.3}
+{"id": "en-102", "model": "qwen3-4b-v3", "output": "I need five tickets for tomorrow.", "latency_ms": 171.9}
+{"id": "en-103", "model": "qwen3-4b-v3", "output": "₹12,500", "latency_ms": 151.7}
+{"id": "en-104", "model": "qwen3-4b-v3", "output": "Call me at 9876543210", "latency_ms": 237.1}
+{"id": "en-105", "model": "qwen3-4b-v3", "output": "The meeting is on first September at ten thirty am.", "latency_ms": 206.0}
+{"id": "en-106", "model": "qwen3-4b-v3", "output": "We got two hundred and fifty signups this week.", "latency_ms": 210.4}
+{"id": "en-107", "model": "qwen3-4b-v3", "output": "The invoice of four dollars ninety-nine is due on twelve August.", "latency_ms": 230.2}
+{"id": "en-108", "model": "qwen3-4b-v3", "output": "Delivery takes seven to ten working days.", "latency_ms": 180.8}
+{"id": "en-109", "model": "qwen3-4b-v3", "output": "My flight is at six forty-five in the morning.", "latency_ms": 217.2}
+{"id": "en-110", "model": "qwen3-4b-v3", "output": "The discount is fifteen percent, not fifty.", "latency_ms": 162.2}
+{"id": "en-111", "model": "qwen3-4b-v3", "output": "Room number three zero four on the third floor", "latency_ms": 187.9}
+{"id": "en-112", "model": "qwen3-4b-v3", "output": "the total came to one lakh twenty thousand", "latency_ms": 163.7}
+{"id": "en-113", "model": "qwen3-4b-v3", "output": "Send one hundred units by Friday.", "latency_ms": 153.9}
+{"id": "en-114", "model": "qwen3-4b-v3", "output": "The ETA is ASAP, according to the PM.", "latency_ms": 201.4}
+{"id": "en-115", "model": "qwen3-4b-v3", "output": "FYI, the QA team found a bug.", "latency_ms": 186.3}
+{"id": "en-116", "model": "qwen3-4b-v3", "output": "We need the MVP before the PoC review.", "latency_ms": 196.5}
+{"id": "en-117", "model": "qwen3-4b-v3", "output": "The SLA says twenty-four hour response.", "latency_ms": 186.4}
+{"id": "en-118", "model": "qwen3-4b-v3", "output": "I am going to the office tomorrow.", "latency_ms": 163.6}
+{"id": "en-119", "model": "qwen3-4b-v3", "output": "The deployment finished successfully at 5 PM.", "latency_ms": 192.5}
+{"id": "en-120", "model": "qwen3-4b-v3", "output": "Please review the document and share your feedback.", "latency_ms": 198.7}
+{"id": "en-121", "model": "qwen3-4b-v3", "output": "She has already submitted the assignment.", "latency_ms": 166.8}
+{"id": "en-122", "model": "qwen3-4b-v3", "output": "We will meet at the coffee shop near the station.", "latency_ms": 195.0}
+{"id": "en-123", "model": "qwen3-4b-v3", "output": "The server restarted twice last night.", "latency_ms": 181.6}
+{"id": "en-124", "model": "qwen3-4b-v3", "output": "Sumit joined the call from Nagpur.", "latency_ms": 204.0}
+{"id": "en-125", "model": "qwen3-4b-v3", "output": "Can you send me the updated file?", "latency_ms": 168.5}
+{"id": "en-126", "model": "qwen3-4b-v3", "output": "I don't think that's the right approach.", "latency_ms": 204.6}
+{"id": "en-127", "model": "qwen3-4b-v3", "output": "Our customers love the new real-time feature.", "latency_ms": 175.6}
+{"id": "en-128", "model": "qwen3-4b-v3", "output": "The invoice amount is ₹12,500.", "latency_ms": 236.2}
+{"id": "en-129", "model": "qwen3-4b-v3", "output": "Haan, haan, I understood the point.", "latency_ms": 220.6}
+{"id": "en-130", "model": "qwen3-4b-v3", "output": "The train leaves at 6:45 AM sharp.", "latency_ms": 224.5}
+{"id": "en-131", "model": "qwen3-4b-v3", "output": "Let me know if Thursday works for you.", "latency_ms": 199.2}
+{"id": "en-132", "model": "qwen3-4b-v3", "output": "Call Sumit at 9876543210, not Amit.", "latency_ms": 289.7}
+{"id": "en-133", "model": "qwen3-4b-v3", "output": "The password is Capital B, small a, nine four.", "latency_ms": 231.3}
+{"id": "en-134", "model": "qwen3-4b-v3", "output": "We lost the deal because the price was too high.", "latency_ms": 205.2}
+{"id": "en-135", "model": "qwen3-4b-v3", "output": "She said no to the proposal.", "latency_ms": 161.5}
+{"id": "en-136", "model": "qwen3-4b-v3", "output": "Ship it to the Mumbai office, not the Delhi office.", "latency_ms": 214.1}
+{"id": "en-137", "model": "qwen3-4b-v3", "output": "The demo is at three, not four.", "latency_ms": 203.1}
+{"id": "en-138", "model": "qwen3-4b-v3", "output": "I'll finish this by tonight. Promise.", "latency_ms": 202.4}
+{"id": "en-139", "model": "qwen3-4b-v3", "output": "Wanna grab lunch after the call?", "latency_ms": 188.2}
+{"id": "en-140", "model": "qwen3-4b-v3", "output": "Let me check and get back to you.", "latency_ms": 205.6}
+{"id": "en-141", "model": "qwen3-4b-v3", "output": "I'm kinda stuck on this bug since morning.", "latency_ms": 191.9}
+{"id": "en-142", "model": "qwen3-4b-v3", "output": "Gotta leave early today for a doctor's appointment.", "latency_ms": 212.1}
+{"id": "en-143", "model": "qwen3-4b-v3", "output": "I don't know, maybe we should just ask him.", "latency_ms": 244.3}
+{"id": "en-144", "model": "qwen3-4b-v3", "output": "Me and him finished the work.", "latency_ms": 174.5}
+{"id": "en-145", "model": "qwen3-4b-v3", "output": "She suggested I take a break.", "latency_ms": 181.7}
+{"id": "en-146", "model": "qwen3-4b-v3", "output": "Please explain me the process again.", "latency_ms": 167.1}
+{"id": "en-147", "model": "qwen3-4b-v3", "output": "One of my friends is visiting next week.", "latency_ms": 211.6}
+{"id": "en-148", "model": "qwen3-4b-v3", "output": "I need to meet tomorrow.", "latency_ms": 152.9}
+{"id": "en-149", "model": "qwen3-4b-v3", "output": "The sail is on Friday.", "latency_ms": 162.0}
+{"id": "en-150", "model": "qwen3-4b-v3", "output": "He works on the bass system.", "latency_ms": 165.0}

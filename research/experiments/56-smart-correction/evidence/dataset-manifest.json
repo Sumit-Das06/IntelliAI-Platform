@@ -1,0 +1,57 @@
+{
+  "name": "smart-correction-en-hi",
+  "version": "v1",
+  "frozen": true,
+  "sha256": "e2ea6f4d72b2fedac3b0eacaab6b66aea27ff998e958a2465ba2905c2296e316",
+  "rows": 300,
+  "by_language": {
+    "en": 150,
+    "hi": 150
+  },
+  "by_category": {
+    "en:abbreviations": 4,
+    "en:already_correct": 14,
+    "en:ambiguous": 3,
+    "en:articles": 10,
+    "en:boundaries": 8,
+    "en:capitalization": 8,
+    "en:contractions": 5,
+    "en:grammar": 4,
+    "en:informal": 6,
+    "en:meaning_trap": 6,
+    "en:names": 6,
+    "en:numbers": 12,
+    "en:prepositions": 10,
+    "en:repetitions": 7,
+    "en:spoken_fragments": 12,
+    "en:sva": 12,
+    "en:technical": 9,
+    "en:tense": 14,
+    "hi:already_correct": 12,
+    "hi:ambiguous": 3,
+    "hi:boundaries": 8,
+    "hi:entities": 20,
+    "hi:gender_number": 15,
+    "hi:hinglish": 21,
+    "hi:meaning_trap": 5,
+    "hi:repetitions": 7,
+    "hi:roman_hindi": 29,
+    "hi:spoken_cleanup": 12,
+    "hi:spoken_fragments": 8,
+    "hi:tense": 10
+  },
+  "flags": {
+    "already_correct": 37,
+    "meaning_trap": 23,
+    "ambiguous": 21
+  },
+  "source_types": {
+    "AUTHORED": 300
+  },
+  "notes": [
+    "All rows AUTHORED for this benchmark in STT-noise style (lowercase, missing punctuation, spoken artifacts, spelled-out numbers); no public corpus rows in v1 (licensing review deferred to v2), no private/boss audio, no customer data.",
+    "Roman-Hindi rows carry Devanagari gold: transliteration+cleanup is its own category, per the M56 spec.",
+    "already_correct rows measure over-correction; meaning_trap rows are the protected-meaning gate; ambiguous rows prefer preservation."
+  ],
+  "date": "2026-09-01"
+}

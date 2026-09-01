@@ -1,0 +1,13 @@
+{
+  "what": "M56 Phase 9",
+  "protected_meaning_benchmark": "23 meaning-trap rows (names/numbers/negations/either-or)",
+  "qwen3_4b_v3_pass": {
+    "en": 1.0,
+    "hi": 1.0
+  },
+  "human_eval_meaning_means": {
+    "en": 4.96,
+    "hi": 4.4
+  },
+  "hi_notes": "the two sub-5 HI meaning scores are the homograph flip and the one hallucination — both named in human-eval.json"
+}

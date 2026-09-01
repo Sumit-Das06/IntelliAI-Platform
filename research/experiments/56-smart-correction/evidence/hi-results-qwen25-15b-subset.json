@@ -1,0 +1,41 @@
+{
+  "rows": 40,
+  "exact_match": 0.025,
+  "wer_vs_gold_mean": 0.3702,
+  "wer_vs_gold_median": 0.2857,
+  "cer_vs_gold_mean": 0.2732,
+  "unchanged_correct_rate": null,
+  "unnecessary_rewrite_rate": null,
+  "entity_gold_form_rate": 0.8,
+  "entity_violation_rate_HARD_GATE": 0.0,
+  "entity_violations": [],
+  "normalization_missed_meaning_safe": 1,
+  "normalization_missed_ids": [
+    "hi-032:तीन"
+  ],
+  "language_flip_ids": [],
+  "language_flip_rate": 0.0,
+  "meaning_trap_pass_rate": null,
+  "addition_proxy_rate_EXPERIMENTAL": 0.35,
+  "addition_flagged_ids": [
+    "hi-007",
+    "hi-015",
+    "hi-026",
+    "hi-028",
+    "hi-029",
+    "hi-030",
+    "hi-032",
+    "hi-033",
+    "hi-035",
+    "hi-036",
+    "hi-037",
+    "hi-038",
+    "hi-039",
+    "hi-040"
+  ],
+  "per_category_wer_mean": {
+    "hi:gender_number": 0.2402,
+    "hi:roman_hindi": 0.5255,
+    "hi:tense": 0.3324
+  }
+}

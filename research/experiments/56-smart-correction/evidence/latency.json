@@ -1,0 +1,31 @@
+{
+  "what": "M56 Phase 16/19 (MEASURED, this box)",
+  "gpu_qwen3_4b_p50_ms": {
+    "en_20w": 311,
+    "en_50w": 691,
+    "en_100w": 1373,
+    "en_250w": 2647,
+    "hi_20w": 931,
+    "hi_50w": 2155,
+    "hi_100w": 4924,
+    "hi_250w": 9161
+  },
+  "gpu_qwen3_17b_p50_ms": {
+    "en_20w": 256,
+    "en_250w": 573,
+    "hi_20w": 794,
+    "hi_250w": 8326
+  },
+  "cpu_qwen3_17b_p50_ms": {
+    "en_20w": 860,
+    "en_50w": 1734,
+    "hi_20w": 2971,
+    "hi_100w": 14998,
+    "hi_250w": 37828
+  },
+  "benchmark_row_p50_ms": {
+    "en": 201,
+    "hi": 432
+  },
+  "read": "typical utterances: EN 0.3-0.7s GPU PASS (<1s), HI ~0.9-2.2s (short PASS-ish, grows with length — Devanagari output is token-heavy); long transcripts are seconds-scale -> async/apply-on-final UX or sentence-boundary chunking; CPU: EN marginal, HI FAILS (15-38s)"
+}

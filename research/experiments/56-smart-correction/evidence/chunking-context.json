@@ -1,0 +1,8 @@
+{
+  "what": "M56 Phase 19/20 pointer",
+  "see": [
+    "chunking.json",
+    "latency.json"
+  ],
+  "verdict": "blind chunking measurably breaks tense/pronoun/boundary coherence (verbatim cases in chunking.json); whole-transcript correction is the quality path; long inputs chunk ONLY at sentence boundaries with 1-sentence overlap — PROPOSED, unmeasured"
+}

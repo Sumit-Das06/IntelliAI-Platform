@@ -1,0 +1,15 @@
+{
+  "what": "M56 Phase 5 — license audit (WEB-RESEARCHED 2026-09-01: HF API license fields + model cards)",
+  "verdicts": {
+    "Qwen3-4B-Instruct-2507": {"license": "Apache-2.0", "commercial": true, "redistribution": true, "self_host": true, "derivatives": "allowed", "attribution": "notice file", "gated": false, "verdict": "CLEAR"},
+    "Qwen3-1.7B": {"license": "Apache-2.0", "commercial": true, "verdict": "CLEAR"},
+    "Qwen2.5-1.5B-Instruct": {"license": "Apache-2.0", "commercial": true, "verdict": "CLEAR"},
+    "Qwen2.5-3B-Instruct": {"license": "Qwen Research License ('other')", "commercial": false, "verdict": "REJECT — research-only; a known trap: 3B/72B differ from the Apache members of the same family"},
+    "grammarly/coedit-large": {"license": "CC-BY-NC-4.0", "commercial": false, "verdict": "REJECT"},
+    "vennify/t5-base-grammar-correction": {"license": "CC-BY-NC-SA-4.0", "commercial": false, "verdict": "REJECT"},
+    "google/gemma-3-4b-it": {"license": "Gemma Terms of Use (custom)", "commercial": "permitted with use restrictions and flow-down terms; gated access", "verdict": "CAUTION — usable but custom-license overhead; not selected while an Apache alternative wins on merit"},
+    "ai4bharat/IndicXlit": {"license": "MIT", "commercial": true, "verdict": "CLEAR (component only)"}
+  },
+  "law_applied": "open-source label is not commercial permission — every verdict read from the actual license field/card, consistent with the platform's permissive-only policy",
+  "date": "2026-09-01"
+}

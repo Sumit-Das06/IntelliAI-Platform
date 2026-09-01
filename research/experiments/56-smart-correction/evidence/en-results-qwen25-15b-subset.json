@@ -1,0 +1,27 @@
+{
+  "rows": 40,
+  "exact_match": 0.75,
+  "wer_vs_gold_mean": 0.3143,
+  "wer_vs_gold_median": 0.0,
+  "cer_vs_gold_mean": 0.3785,
+  "unchanged_correct_rate": null,
+  "unnecessary_rewrite_rate": null,
+  "entity_gold_form_rate": null,
+  "entity_violation_rate_HARD_GATE": null,
+  "entity_violations": [],
+  "normalization_missed_meaning_safe": 0,
+  "normalization_missed_ids": [],
+  "language_flip_ids": [],
+  "language_flip_rate": 0.0,
+  "meaning_trap_pass_rate": null,
+  "addition_proxy_rate_EXPERIMENTAL": 0.025,
+  "addition_flagged_ids": [
+    "en-036"
+  ],
+  "per_category_wer_mean": {
+    "en:articles": 1.1232,
+    "en:prepositions": 0.0,
+    "en:sva": 0.0536,
+    "en:tense": 0.0499
+  }
+}

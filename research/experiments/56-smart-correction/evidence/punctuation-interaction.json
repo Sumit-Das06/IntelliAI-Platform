@@ -1,0 +1,79 @@
+{
+  "what": "correction output from RAW vs PRE-PUNCTUATED input (12 EN rows)",
+  "word_level_agreement": "11/12",
+  "verdict_input": [
+    {
+      "id": "en-001",
+      "out_from_raw": "He doesn't know where it is.",
+      "out_from_punctuated": "He doesn't know where it is.",
+      "same_words": true
+    },
+    {
+      "id": "en-002",
+      "out_from_raw": "She has three brothers.",
+      "out_from_punctuated": "She has three brothers.",
+      "same_words": true
+    },
+    {
+      "id": "en-003",
+      "out_from_raw": "The results were very good this quarter.",
+      "out_from_punctuated": "The results were very good this quarter.",
+      "same_words": true
+    },
+    {
+      "id": "en-004",
+      "out_from_raw": "My manager wants the report today.",
+      "out_from_punctuated": "My manager wants the report today.",
+      "same_words": true
+    },
+    {
+      "id": "en-005",
+      "out_from_raw": "There are many people in the meeting.",
+      "out_from_punctuated": "There are many people in the meeting.",
+      "same_words": true
+    },
+    {
+      "id": "en-006",
+      "out_from_raw": "Everyone was asking about the update.",
+      "out_from_punctuated": "Everyone was asking about the update.",
+      "same_words": true
+    },
+    {
+      "id": "en-007",
+      "out_from_raw": "The team is ready, he said.",
+      "out_from_punctuated": "The team is ready, he said.",
+      "same_words": true
+    },
+    {
+      "id": "en-008",
+      "out_from_raw": "It doesn't matter what time you come.",
+      "out_from_punctuated": "It doesn't matter what time you come.",
+      "same_words": true
+    },
+    {
+      "id": "en-009",
+      "out_from_raw": "These kinds of errors are common.",
+      "out_from_punctuated": "These kinds of errors are common.",
+      "same_words": true
+    },
+    {
+      "id": "en-010",
+      "out_from_raw": "Neither of them are available.",
+      "out_from_punctuated": "Neither of them is available.",
+      "same_words": false
+    },
+    {
+      "id": "en-011",
+      "out_from_raw": "The data show that users like the feature.",
+      "out_from_punctuated": "The data show that users like the feature.",
+      "same_words": true
+    },
+    {
+      "id": "en-012",
+      "out_from_raw": "Each of the servers has its own key.",
+      "out_from_punctuated": "Each of the servers has its own key.",
+      "same_words": true
+    }
+  ],
+  "architecture_note": "the correction model punctuates on its own either way; pre-punctuation neither helps nor harms materially — see the milestone doc for the recommended arrangement"
+}

@@ -1,0 +1,10 @@
+{
+  "what": "M56 Phase 10",
+  "hard_gate": "entity VIOLATION rate (entity present in input, altered/dropped in output)",
+  "qwen3_4b_v3": {
+    "en": 0.0,
+    "hi": 0.0233
+  },
+  "hi_case": "hi-110 एक सितंबर -> १ सितंबर (Devanagari numeral; same date)",
+  "normalization_missed_class": "meaning-safe conservative preservation (kept spelled-out forms) — counted separately, never as violations"
+}

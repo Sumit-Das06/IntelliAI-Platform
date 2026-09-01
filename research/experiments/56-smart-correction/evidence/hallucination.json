@@ -1,0 +1,10 @@
+{
+  "what": "M56 Phase 12",
+  "proxy": "addition_proxy (novel content tokens vs input+gold) — EXPERIMENTAL, inflated for Devanagari by spelling variants",
+  "qwen3_4b_v3": {
+    "en": 0.0133,
+    "hi": 0.18
+  },
+  "human_read": "1 real invented-content case in 50 reviewed rows (hi-086, ambiguous fragment)",
+  "target_read": "near-zero holds for EN; HI needs the ambiguity guard (prompt rule) plus review-flag UX at productization"
+}

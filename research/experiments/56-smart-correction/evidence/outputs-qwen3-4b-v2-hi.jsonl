@@ -1,0 +1,150 @@
+{"id": "hi-001", "model": "qwen3-4b-v2", "output": "मेरा बहन कल आएगा", "latency_ms": 274.5}
+{"id": "hi-002", "model": "qwen3-4b-v2", "output": "वह लड़की अच्छा गाती है।", "latency_ms": 358.8}
+{"id": "hi-003", "model": "qwen3-4b-v2", "output": "मुझे एक रिपोर्ट बनाना है", "latency_ms": 358.5}
+{"id": "hi-004", "model": "qwen3-4b-v2", "output": "सब लोग आ गए हैं।", "latency_ms": 315.4}
+{"id": "hi-005", "model": "qwen3-4b-v2", "output": "यह किताब बहुत अच्छी है।", "latency_ms": 342.1}
+{"id": "hi-006", "model": "qwen3-4b-v2", "output": "मेरा भाई ऑफिस में काम करता है।", "latency_ms": 409.0}
+{"id": "hi-007", "model": "qwen3-4b-v2", "output": "बच्चे खेल रहे हैं बाहर।", "latency_ms": 381.6}
+{"id": "hi-008", "model": "qwen3-4b-v2", "output": "उसकी गाड़ी नया है", "latency_ms": 317.4}
+{"id": "hi-009", "model": "qwen3-4b-v2", "output": "हम कल दिल्ली जाएंगे।", "latency_ms": 332.9}
+{"id": "hi-010", "model": "qwen3-4b-v2", "output": "टीम ने अच्छा काम किया है।", "latency_ms": 357.8}
+{"id": "hi-011", "model": "qwen3-4b-v2", "output": "मेरे पास दो भाई हैं।", "latency_ms": 324.8}
+{"id": "hi-012", "model": "qwen3-4b-v2", "output": "वह अपने बेटी के साथ आई।", "latency_ms": 324.8}
+{"id": "hi-013", "model": "qwen3-4b-v2", "output": "सारी फाइलें डिलीट हो गईं।", "latency_ms": 352.2}
+{"id": "hi-014", "model": "qwen3-4b-v2", "output": "आपका बात सही है", "latency_ms": 263.5}
+{"id": "hi-015", "model": "qwen3-4b-v2", "output": "दोनों लड़कियाँ स्कूल गई।", "latency_ms": 357.1}
+{"id": "hi-016", "model": "qwen3-4b-v2", "output": "मैं कल बाजार गया था और सामान खरीदा था।", "latency_ms": 482.1}
+{"id": "hi-017", "model": "qwen3-4b-v2", "output": "वह अभी खाना खाता है", "latency_ms": 316.7}
+{"id": "hi-018", "model": "qwen3-4b-v2", "output": "हम कल फिल्म देखेंगे था", "latency_ms": 330.0}
+{"id": "hi-019", "model": "qwen3-4b-v2", "output": "मैं यह काम कल तक खत्म करता हूँ।", "latency_ms": 407.5}
+{"id": "hi-020", "model": "qwen3-4b-v2", "output": "जब मैं पहुँचा तो वह चला चुका होगा।", "latency_ms": 464.6}
+{"id": "hi-021", "model": "qwen3-4b-v2", "output": "वे अगले हफ्ते आएगे।", "latency_ms": 319.5}
+{"id": "hi-022", "model": "qwen3-4b-v2", "output": "मैंने कल से कुछ नहीं खाया।", "latency_ms": 360.1}
+{"id": "hi-023", "model": "qwen3-4b-v2", "output": "वह रोज सुबह दौड़ता था।", "latency_ms": 377.0}
+{"id": "hi-024", "model": "qwen3-4b-v2", "output": "मैं दो साल से यहाँ रहा हूँ।", "latency_ms": 393.4}
+{"id": "hi-025", "model": "qwen3-4b-v2", "output": "बारिश हो रही थी, इसलिए मैं घर पर रहूँगा।", "latency_ms": 515.7}
+{"id": "hi-026", "model": "qwen3-4b-v2", "output": "मुझे कल ऑफिस जाना था लेकिन मैं नहीं जा सका।", "latency_ms": 560.8}
+{"id": "hi-027", "model": "qwen3-4b-v2", "output": "आप कैसे हैं सर", "latency_ms": 232.0}
+{"id": "hi-028", "model": "qwen3-4b-v2", "output": "मुझे एक रिपोर्ट बनानी है जो कल सबमिट करनी है।", "latency_ms": 532.4}
+{"id": "hi-029", "model": "qwen3-4b-v2", "output": "क्या आप कल ऑफिस आओगे, मुझे रिपोर्ट चाहिए?", "latency_ms": 492.9}
+{"id": "hi-030", "model": "qwen3-4b-v2", "output": "मैं अब घर जा रहा हूँ, शाम को बात करेंगे।", "latency_ms": 503.3}
+{"id": "hi-031", "model": "qwen3-4b-v2", "output": "यह काम बहुत मुश्किल है लेकिन हो जाएगा।", "latency_ms": 467.7}
+{"id": "hi-032", "model": "qwen3-4b-v2", "output": "मेटिंग तीन बजे शुरू होगी, डर मत करना", "latency_ms": 472.6}
+{"id": "hi-033", "model": "qwen3-4b-v2", "output": "मेरा फोन खराब हो गया है, नया लेना पड़ेगा।", "latency_ms": 542.8}
+{"id": "hi-034", "model": "qwen3-4b-v2", "output": "खाना बहुत अच्छा था, मजा आया।", "latency_ms": 370.4}
+{"id": "hi-035", "model": "qwen3-4b-v2", "output": "कल छुट्टी है तो हम घूमने जाएंगे।", "latency_ms": 422.6}
+{"id": "hi-036", "model": "qwen3-4b-v2", "output": "मुझे समझ नहीं आया, दोबारा बताओ।", "latency_ms": 400.4}
+{"id": "hi-037", "model": "qwen3-4b-v2", "output": "Paisa kal tak aayega, tension mat lo.", "latency_ms": 258.5}
+{"id": "hi-038", "model": "qwen3-4b-v2", "output": "Sir, main thodi der mein call karta hoon।", "latency_ms": 228.3}
+{"id": "hi-039", "model": "qwen3-4b-v2", "output": "यह फाइल कहाँ सेव करनी है, बताओ।", "latency_ms": 414.1}
+{"id": "hi-040", "model": "qwen3-4b-v2", "output": "Train late hai, ek ghanta lagega.", "latency_ms": 214.1}
+{"id": "hi-041", "model": "qwen3-4b-v2", "output": "मम्मी ने खाना बना दिया है, कھाना लेना।", "latency_ms": 491.8}
+{"id": "hi-042", "model": "qwen3-4b-v2", "output": "यह बार दिवाली पर घर जाऊंगा।", "latency_ms": 395.0}
+{"id": "hi-043", "model": "qwen3-4b-v2", "output": "दुकान बंद हो गई थी, इसलिए वापस आया।", "latency_ms": 449.3}
+{"id": "hi-044", "model": "qwen3-4b-v2", "output": "बhai के बर्थडे है, कुछ गिफ्ट लेना है।", "latency_ms": 454.4}
+{"id": "hi-045", "model": "qwen3-4b-v2", "output": "Internet slow chal raha hai, video ruk rahi hai.", "latency_ms": 302.0}
+{"id": "hi-046", "model": "qwen3-4b-v2", "output": "मौसम अच्छा है, चलो बाहर चलते हैं।", "latency_ms": 478.8}
+{"id": "hi-047", "model": "qwen3-4b-v2", "output": "यह आपका ऑर्डर है, कुछ और चाहिए कि ना?", "latency_ms": 454.6}
+{"id": "hi-048", "model": "qwen3-4b-v2", "output": "मेरे पास समय नहीं है, बाद में करूंगा।", "latency_ms": 451.0}
+{"id": "hi-049", "model": "qwen3-4b-v2", "output": "दरवाज़ा खुला मत छोड़ो, मच्छर आ जाएंगे।", "latency_ms": 477.8}
+{"id": "hi-050", "model": "qwen3-4b-v2", "output": "सब ठीक है, बस थोड़ा बसी हूँ।", "latency_ms": 404.2}
+{"id": "hi-051", "model": "qwen3-4b-v2", "output": "मैंने क्लाइंट को ईमेल कर दिया है, रिप्लाई का इंतजार है।", "latency_ms": 598.2}
+{"id": "hi-052", "model": "qwen3-4b-v2", "output": "यह फीचर प्रोडक्शन में डिप्लॉय करना है फ्राइडे तक।", "latency_ms": 557.9}
+{"id": "hi-053", "model": "qwen3-4b-v2", "output": "सर्वर डाउन है इसलिए वेबसाइट नहीं खुल रही है", "latency_ms": 546.1}
+{"id": "hi-054", "model": "qwen3-4b-v2", "output": "मीटिंग रिस्केड करनी पड़ेगी, बॉस उपलब्ध नहीं हैं।", "latency_ms": 582.7}
+{"id": "hi-055", "model": "qwen3-4b-v2", "output": "पासवर्ड रीसेट करो और मुझे बताएं", "latency_ms": 384.9}
+{"id": "hi-056", "model": "qwen3-4b-v2", "output": "बजट अनुमोदित हो गया है, अब काम शुरू कर रहे हैं।", "latency_ms": 557.3}
+{"id": "hi-057", "model": "qwen3-4b-v2", "output": "लैपटॉप की बैटरी लो एह चार्जर कहाँ है", "latency_ms": 477.9}
+{"id": "hi-058", "model": "qwen3-4b-v2", "output": "भेज दो टीम को अपडेट, प्रोजेक्ट ऑन ट्रैक है।", "latency_ms": 509.2}
+{"id": "hi-059", "model": "qwen3-4b-v2", "output": "Customer ka complaint aaya hai, refund chahiye unhe।", "latency_ms": 245.2}
+{"id": "hi-060", "model": "qwen3-4b-v2", "output": "Interview cleared, offer letter received.", "latency_ms": 185.1}
+{"id": "hi-061", "model": "qwen3-4b-v2", "output": "फाइल अपलोड नहीं हो रही, साइज़ ज्यादा है, शायद।", "latency_ms": 549.6}
+{"id": "hi-062", "model": "qwen3-4b-v2", "output": "देमो के लिए लैपटॉप तैयार रखना, प्रोजेक्टर भी चेक करना।", "latency_ms": 658.0}
+{"id": "hi-063", "model": "qwen3-4b-v2", "output": "Traffic is heavy, I will be late, sorry.", "latency_ms": 212.1}
+{"id": "hi-064", "model": "qwen3-4b-v2", "output": "प्रेजेंटेशन अच्छी थी, सभको पसंद आयी।", "latency_ms": 455.9}
+{"id": "hi-065", "model": "qwen3-4b-v2", "output": "Invoice bhejna mat bhoolna, month end hai।", "latency_ms": 243.5}
+{"id": "hi-066", "model": "qwen3-4b-v2", "output": "Recording started. I will begin speaking.", "latency_ms": 182.2}
+{"id": "hi-067", "model": "qwen3-4b-v2", "output": "backup le liya na, deploy se pehle", "latency_ms": 207.0}
+{"id": "hi-068", "model": "qwen3-4b-v2", "output": "वाई-फाई का पासवर्ड गेस्ट के लिए क्या है?", "latency_ms": 477.3}
+{"id": "hi-069", "model": "qwen3-4b-v2", "output": "अरे हाँ, वो काम तो मैं भूल ही गया।", "latency_ms": 425.6}
+{"id": "hi-070", "model": "qwen3-4b-v2", "output": "मतलब मैं कहना चाह रहा था कि समय कम है।", "latency_ms": 444.1}
+{"id": "hi-071", "model": "qwen3-4b-v2", "output": "अच्छा, तो फिर कल मिलते हैं।", "latency_ms": 340.3}
+{"id": "hi-072", "model": "qwen3-4b-v2", "output": "वैसे एक बात बताऊँ, यह तरीका गलत है।", "latency_ms": 478.7}
+{"id": "hi-073", "model": "qwen3-4b-v2", "output": "देखो भाई, ऐसे नहीं चलेगा", "latency_ms": 347.1}
+{"id": "hi-074", "model": "qwen3-4b-v2", "output": "हाँ हाँ, बिल्कुल सही कहा आपने।", "latency_ms": 368.6}
+{"id": "hi-075", "model": "qwen3-4b-v2", "output": "नहीं, नहीं, मैं नहीं गया था वहाँ।", "latency_ms": 427.9}
+{"id": "hi-076", "model": "qwen3-4b-v2", "output": "सुनो ना, एक मिनट रुको।", "latency_ms": 339.9}
+{"id": "hi-077", "model": "qwen3-4b-v2", "output": "ठीक है, फिर बाद में बात करते हैं।", "latency_ms": 411.9}
+{"id": "hi-078", "model": "qwen3-4b-v2", "output": "क्या सच में यह इतना आसान है?", "latency_ms": 362.2}
+{"id": "hi-079", "model": "qwen3-4b-v2", "output": "चलो जी, शुरू करते हैं आज का काम।", "latency_ms": 409.4}
+{"id": "hi-080", "model": "qwen3-4b-v2", "output": "भाई वाह क्या बढ़िया आइडिया है", "latency_ms": 418.1}
+{"id": "hi-081", "model": "qwen3-4b-v2", "output": "तो बात यह है कि हमें और लोगों के चाहिए।", "latency_ms": 485.2}
+{"id": "hi-082", "model": "qwen3-4b-v2", "output": "असल में प्रॉब्लम कहीं और है", "latency_ms": 361.1}
+{"id": "hi-083", "model": "qwen3-4b-v2", "output": "एक सेकंड में मैं चेक करके बताता हूँ", "latency_ms": 463.1}
+{"id": "hi-084", "model": "qwen3-4b-v2", "output": "बस यही कहना था, मुझे।", "latency_ms": 324.6}
+{"id": "hi-085", "model": "qwen3-4b-v2", "output": "नहीं पता क्यों ऐसा हो रहा है", "latency_ms": 354.8}
+{"id": "hi-086", "model": "qwen3-4b-v2", "output": "मान लो अगर कल बारिश हुई तो", "latency_ms": 344.5}
+{"id": "hi-087", "model": "qwen3-4b-v2", "output": "सीधी सी बात है, पैसे पहले।", "latency_ms": 353.5}
+{"id": "hi-088", "model": "qwen3-4b-v2", "output": "और सुनाओ, कैसा चल रहा है, सब?", "latency_ms": 386.1}
+{"id": "hi-089", "model": "qwen3-4b-v2", "output": "मैं कल आ जाऊंगा, पक्का।", "latency_ms": 322.6}
+{"id": "hi-090", "model": "qwen3-4b-v2", "output": "वो फाइल कहाँ रखी है", "latency_ms": 297.5}
+{"id": "hi-091", "model": "qwen3-4b-v2", "output": "जल्दी जल्दी करो, देर हो रही है।", "latency_ms": 411.9}
+{"id": "hi-092", "model": "qwen3-4b-v2", "output": "मुझे यह वाला चाहिए।", "latency_ms": 306.1}
+{"id": "hi-093", "model": "qwen3-4b-v2", "output": "रुको, रुको, मेरी बात सुनो।", "latency_ms": 357.5}
+{"id": "hi-094", "model": "qwen3-4b-v2", "output": "हम लोग साथ चलेंगे।", "latency_ms": 303.9}
+{"id": "hi-095", "model": "qwen3-4b-v2", "output": "बहुत बहुत धन्यवाद आपका", "latency_ms": 339.1}
+{"id": "hi-096", "model": "qwen3-4b-v2", "output": "मैं घर गया, खाना खाया, सो गया।", "latency_ms": 447.9}
+{"id": "hi-097", "model": "qwen3-4b-v2", "output": "काम खत्म हुआ, रिपोर्ट भेज दी, छुट्टी ले ली।", "latency_ms": 546.4}
+{"id": "hi-098", "model": "qwen3-4b-v2", "output": "पहले फॉर्म भरो, फिर फीस जमा करो, फिर रसीद लो।", "latency_ms": 553.2}
+{"id": "hi-099", "model": "qwen3-4b-v2", "output": "बिजली चली गई थी, लैपटॉप बंद हो गया, काम रुक गया।", "latency_ms": 582.5}
+{"id": "hi-100", "model": "qwen3-4b-v2", "output": "उसने फोन किया, मैंने नहीं उठाया, बाद में बात हुई।", "latency_ms": 564.2}
+{"id": "hi-101", "model": "qwen3-4b-v2", "output": "दरवाज़ा बंद करो, लाइट बुझाओ, चलो निकलते हैं", "latency_ms": 553.6}
+{"id": "hi-102", "model": "qwen3-4b-v2", "output": "बारिश शुरू हुई, मैच रुक गया, सब निराश हुए।", "latency_ms": 507.9}
+{"id": "hi-103", "model": "qwen3-4b-v2", "output": "मैंने पूछा, उसने बताया, मामला साफ हो गया।", "latency_ms": 488.5}
+{"id": "hi-104", "model": "qwen3-4b-v2", "output": "सुमित और अमित दोनों अलग लोग हैं", "latency_ms": 427.7}
+{"id": "hi-105", "model": "qwen3-4b-v2", "output": "प्रिया को नौ बजे कॉल करना है", "latency_ms": 390.0}
+{"id": "hi-106", "model": "qwen3-4b-v2", "output": "शर्मा जी कल नागपुर से आएंगे हैं।", "latency_ms": 436.0}
+{"id": "hi-107", "model": "qwen3-4b-v2", "output": "मुझे पाँच टिकट चाहिए कल के लिए", "latency_ms": 389.2}
+{"id": "hi-108", "model": "qwen3-4b-v2", "output": "कुल रकम बारह हजार पाँच सौ रुपये है।", "latency_ms": 458.3}
+{"id": "hi-109", "model": "qwen3-4b-v2", "output": "मेरा नंबर नौ आठ सात छह पाँच चार तीन दो एक शून्य है", "latency_ms": 634.1}
+{"id": "hi-110", "model": "qwen3-4b-v2", "output": "मीटिंग १ सितंबर को साढ़े दस बजे है।", "latency_ms": 465.0}
+{"id": "hi-111", "model": "qwen3-4b-v2", "output": "दिलीवरी सात से दस दिन में होगी।", "latency_ms": 394.3}
+{"id": "hi-112", "model": "qwen3-4b-v2", "output": "ट्रेन नंबर एक दो तीन शून्य पाँच है", "latency_ms": 468.9}
+{"id": "hi-113", "model": "qwen3-4b-v2", "output": "छूट पंद्रह प्रतिशत है, पचास नहीं।", "latency_ms": 402.6}
+{"id": "hi-114", "model": "qwen3-4b-v2", "output": "कमरा नंबर 304, तीसरी मंजिल पर", "latency_ms": 404.5}
+{"id": "hi-115", "model": "qwen3-4b-v2", "output": "वेबसाइट का नाम इंटेलीएआई डॉट कॉम है", "latency_ms": 468.1}
+{"id": "hi-116", "model": "qwen3-4b-v2", "output": "ईमेल भेजो सपोर्ट एट इंटेलीएआई डॉट कॉम पर", "latency_ms": 499.4}
+{"id": "hi-117", "model": "qwen3-4b-v2", "output": "फाइल का नाम रिपोर्ट फाइनल पीडीएफ है", "latency_ms": 428.4}
+{"id": "hi-118", "model": "qwen3-4b-v2", "output": "एक लाख बीस हज़ार का बिल बना है", "latency_ms": 382.5}
+{"id": "hi-119", "model": "qwen3-4b-v2", "output": "गाड़ी का नंबर एमएच बारह एबी चार सात नौ दो है", "latency_ms": 530.3}
+{"id": "hi-120", "model": "qwen3-4b-v2", "output": "फ्लाइट सुबह पौने सात बजे की है।", "latency_ms": 374.8}
+{"id": "hi-121", "model": "qwen3-4b-v2", "output": "ओटीपी चार अंकों का है, सात तीन नौ एक", "latency_ms": 470.7}
+{"id": "hi-122", "model": "qwen3-4b-v2", "output": "बजट में सौ यूनिट मंजूर हुए हैं", "latency_ms": 396.7}
+{"id": "hi-123", "model": "qwen3-4b-v2", "output": "क्विककार्ट वाले क्लाइंट का फोन आया था", "latency_ms": 468.4}
+{"id": "hi-124", "model": "qwen3-4b-v2", "output": "मैं कल सुबह दिल्ली जा रहा हूँ।", "latency_ms": 394.4}
+{"id": "hi-125", "model": "qwen3-4b-v2", "output": "यह रिपोर्ट कल शाम तक तैयार हो जाएगी।", "latency_ms": 451.6}
+{"id": "hi-126", "model": "qwen3-4b-v2", "output": "क्या आप मुझे वह फाइल भेज सकते हैं?", "latency_ms": 422.8}
+{"id": "hi-127", "model": "qwen3-4b-v2", "output": "बैठक ठीक तीन बजे शुरू होगी।", "latency_ms": 381.2}
+{"id": "hi-128", "model": "qwen3-4b-v2", "output": "उसने अपना काम समय पर पूरा किया।", "latency_ms": 394.5}
+{"id": "hi-129", "model": "qwen3-4b-v2", "output": "हमें ग्राहकों की बात ध्यान से सुननी चाहिए।", "latency_ms": 523.6}
+{"id": "hi-130", "model": "qwen3-4b-v2", "output": "आज मौसम बहुत सुहावना है।", "latency_ms": 332.5}
+{"id": "hi-131", "model": "qwen3-4b-v2", "output": "कृपया दरवाज़ा धीरे से बंद करें।", "latency_ms": 436.1}
+{"id": "hi-132", "model": "qwen3-4b-v2", "output": "मुझे आपकी मदद की ज़रूरत है।", "latency_ms": 391.3}
+{"id": "hi-133", "model": "qwen3-4b-v2", "output": "यह हमारा अपना बनाया हुआ मॉडल है।", "latency_ms": 421.0}
+{"id": "hi-134", "model": "qwen3-4b-v2", "output": "नई दिल्ली भारत की राजधानी है।", "latency_ms": 401.5}
+{"id": "hi-135", "model": "qwen3-4b-v2", "output": "कल छुट्टी है, इसलिए ऑफिस बंद रहेगा।", "latency_ms": 416.1}
+{"id": "hi-136", "model": "qwen3-4b-v2", "output": "सामान मुंबई ऑफिस भेजना है, दिल्ली नहीं।", "latency_ms": 494.2}
+{"id": "hi-137", "model": "qwen3-4b-v2", "output": "डेमो तीन बजे है, चार बजे नहीं।", "latency_ms": 415.5}
+{"id": "hi-138", "model": "qwen3-4b-v2", "output": "उसने प्रस्ताव के लिए मना कर दिया", "latency_ms": 393.4}
+{"id": "hi-139", "model": "qwen3-4b-v2", "output": "पेमेंट कैश में नहीं, ऑनलाइन करना है।", "latency_ms": 449.4}
+{"id": "hi-140", "model": "qwen3-4b-v2", "output": "दवा खाने के बाद लेनी है, पहले नहीं।", "latency_ms": 438.5}
+{"id": "hi-141", "model": "qwen3-4b-v2", "output": "Abhi nikal raha hoon, aadhe ghante mein pahunch jaunga.", "latency_ms": 339.6}
+{"id": "hi-142", "model": "qwen3-4b-v2", "output": "बिजली के बिल का भरना है, आज अंतिम तारीख है।", "latency_ms": 547.2}
+{"id": "hi-143", "model": "qwen3-4b-v2", "output": "दौरे के बाद डॉक्टर ने आराम करने को कहा है दो दिन।", "latency_ms": 614.5}
+{"id": "hi-144", "model": "qwen3-4b-v2", "output": "chai piyoge ya coffee laun", "latency_ms": 180.2}
+{"id": "hi-145", "model": "qwen3-4b-v2", "output": "login nahi ho raha, password galat bata raha hai", "latency_ms": 272.4}
+{"id": "hi-146", "model": "qwen3-4b-v2", "output": "Update install karke system restart kar do", "latency_ms": 184.7}
+{"id": "hi-147", "model": "qwen3-4b-v2", "output": "Screen share karo sabko dikhana hai output", "latency_ms": 202.5}
+{"id": "hi-148", "model": "qwen3-4b-v2", "output": "कल हम बाग गए थे", "latency_ms": 269.0}
+{"id": "hi-149", "model": "qwen3-4b-v2", "output": "उसने कहा कि वो आएगा", "latency_ms": 300.9}
+{"id": "hi-150", "model": "qwen3-4b-v2", "output": "मुझे वह सोना पसंद है", "latency_ms": 299.7}

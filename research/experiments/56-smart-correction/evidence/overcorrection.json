@@ -1,0 +1,10 @@
+{
+  "what": "M56 Phase 11",
+  "unchanged_correct_rate": {
+    "qwen3_4b_v3_en": 1.0,
+    "qwen3_4b_v3_hi": 0.7727,
+    "qwen3_17b_v3_en": 1.0,
+    "qwen3_17b_v3_hi": 0.9545
+  },
+  "note": "HI 4B rewrites ~1 in 4 already-correct sentences (mostly benign aspect/word-order tweaks + number-format changes); the 1.7B is stricter but corrects far less — the classic capability/restraint trade"
+}

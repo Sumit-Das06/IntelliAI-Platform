@@ -1,0 +1,40 @@
+{"id": "hi-001", "model": "qwen25-15b-v3", "output": "मेरा बहन कल आएगा", "latency_ms": 236.8}
+{"id": "hi-002", "model": "qwen25-15b-v3", "output": "वह लड़की अच्छा गाती है।", "latency_ms": 247.6}
+{"id": "hi-003", "model": "qwen25-15b-v3", "output": "मुझे एक रिपोर्ट बनाना है।", "latency_ms": 253.1}
+{"id": "hi-004", "model": "qwen25-15b-v3", "output": "सब लोग आ गए हैं", "latency_ms": 187.0}
+{"id": "hi-005", "model": "qwen25-15b-v3", "output": "यह किताब बहुत अच्छा है", "latency_ms": 230.7}
+{"id": "hi-006", "model": "qwen25-15b-v3", "output": "मेरी भाई ऑफिस में खुशी करता है।", "latency_ms": 289.1}
+{"id": "hi-007", "model": "qwen25-15b-v3", "output": "का बच्चे खेल रहे हैं बाहर।", "latency_ms": 252.1}
+{"id": "hi-008", "model": "qwen25-15b-v3", "output": "उसकी गाड़ी नया है।", "latency_ms": 209.1}
+{"id": "hi-009", "model": "qwen25-15b-v3", "output": "हम कल दिल्ली जाएंगे", "latency_ms": 197.9}
+{"id": "hi-010", "model": "qwen25-15b-v3", "output": "टीम ने अच्छा काम किए", "latency_ms": 213.1}
+{"id": "hi-011", "model": "qwen25-15b-v3", "output": "मेरे पास दो भाई हैं", "latency_ms": 184.5}
+{"id": "hi-012", "model": "qwen25-15b-v3", "output": "वह अपने बेटी के साथ आई।", "latency_ms": 227.1}
+{"id": "hi-013", "model": "qwen25-15b-v3", "output": "सारी फाइलें डिलीट हो गया", "latency_ms": 252.1}
+{"id": "hi-014", "model": "qwen25-15b-v3", "output": "आपका बात सही है।", "latency_ms": 169.0}
+{"id": "hi-015", "model": "qwen25-15b-v3", "output": "दोनों लड़कियाँ स्कूल में गयीं।", "latency_ms": 281.1}
+{"id": "hi-016", "model": "qwen25-15b-v3", "output": "मैं कल बाजार जाता था और सामान खरीदा।", "latency_ms": 330.3}
+{"id": "hi-017", "model": "qwen25-15b-v3", "output": "वह अभी खाना खाया है।", "latency_ms": 226.3}
+{"id": "hi-018", "model": "qwen25-15b-v3", "output": "हम कल फिल्म देखेंगे।", "latency_ms": 200.1}
+{"id": "hi-019", "model": "qwen25-15b-v3", "output": "मैं यह काम खत्म करता हूँ तक कल।", "latency_ms": 300.9}
+{"id": "hi-020", "model": "qwen25-15b-v3", "output": "जब मैं पहुँचा होगा, वह जा चुका होगा।", "latency_ms": 313.3}
+{"id": "hi-021", "model": "qwen25-15b-v3", "output": "वे अगले हफ्ते आया है।", "latency_ms": 207.6}
+{"id": "hi-022", "model": "qwen25-15b-v3", "output": "मैंने कल से कुछ नहीं खाता", "latency_ms": 231.0}
+{"id": "hi-023", "model": "qwen25-15b-v3", "output": "वह रोज सुबह दौड़ा", "latency_ms": 194.1}
+{"id": "hi-024", "model": "qwen25-15b-v3", "output": "मैं दो साल से यहाँ रहा।", "latency_ms": 223.5}
+{"id": "hi-025", "model": "qwen25-15b-v3", "output": "बारिश हो रही थी, इसलिए मैं घर पर रहूँगा।", "latency_ms": 353.6}
+{"id": "hi-026", "model": "qwen25-15b-v3", "output": "मैं कल कोवेल जाना था, लेकिन मैं नहीं जाना जा सकता।", "latency_ms": 438.4}
+{"id": "hi-027", "model": "qwen25-15b-v3", "output": "आप कैसे हैं, साथी?", "latency_ms": 184.5}
+{"id": "hi-028", "model": "qwen25-15b-v3", "output": "मुझे एक रिपोर्ट बनाना है जो कि कल फ़ॉल्ट करना है", "latency_ms": 415.1}
+{"id": "hi-029", "model": "qwen25-15b-v3", "output": "क्या आप आज को कॉन्ट्रोल मैन्यु को आपको रिपोर्ट दे देंगे?", "latency_ms": 435.5}
+{"id": "hi-030", "model": "qwen25-15b-v3", "output": "मैं अब घर जाना है, शाम को कहाने कर रहा हूं।", "latency_ms": 358.2}
+{"id": "hi-031", "model": "qwen25-15b-v3", "output": "यह काम बहुत मुश्किल है, लेकिन हो जाएगा.", "latency_ms": 315.0}
+{"id": "hi-032", "model": "qwen25-15b-v3", "output": "मैं एक मैटी ट्रेडिशन एक्सेस्टिव डेटा विश्लेषण या एक्सेस्टिव डेटा विश्लेषण या एक्सेस्टिव डेटा विश", "latency_ms": 702.4}
+{"id": "hi-033", "model": "qwen25-15b-v3", "output": "मेरा पायथन खराब हो गया है, नया लेना पड़ेगा.", "latency_ms": 371.9}
+{"id": "hi-034", "model": "qwen25-15b-v3", "output": "खाना बहुत अच्छा था, मज़ा आ गया", "latency_ms": 280.8}
+{"id": "hi-035", "model": "qwen25-15b-v3", "output": "कल चुटियां है तो हम गुम्मे जाएगे", "latency_ms": 299.6}
+{"id": "hi-036", "model": "qwen25-15b-v3", "output": "मुझे दोबारा समझ नहीं आया, तो बताओ.", "latency_ms": 299.3}
+{"id": "hi-037", "model": "qwen25-15b-v3", "output": "पैसे कल तक आएगा तांत्रिक नहीं लो.", "latency_ms": 279.5}
+{"id": "hi-038", "model": "qwen25-15b-v3", "output": "मैं दोस्तों में कल कर रहा हूं।", "latency_ms": 259.4}
+{"id": "hi-039", "model": "qwen25-15b-v3", "output": "यह फ़िल्टर कहाँ रखना चाहिए? तो बताओ.", "latency_ms": 324.4}
+{"id": "hi-040", "model": "qwen25-15b-v3", "output": "तैनामता है, एक घंटा और लगेगा.", "latency_ms": 332.4}

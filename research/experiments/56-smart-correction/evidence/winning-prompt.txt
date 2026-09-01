@@ -1,0 +1,6 @@
+M56 winning prompt contract = LANGUAGE-SCOPED pair (the single biggest measured lever:
+one combined prompt caused cross-language flips — EN->HI translation on Indian names, and
+Roman-Hindi answered in Latin; scoping by the pipeline's known session language removed
+flips entirely on both sides).
+
+See winning-prompt-en.txt and winning-prompt-hi.txt.

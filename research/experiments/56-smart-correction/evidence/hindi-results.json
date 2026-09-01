@@ -1,0 +1,96 @@
+{
+  "what": "M56 Phase 8 — HINDI, canonical result (same model, prompt v3 HI-scoped, GPU; full 150 rows)",
+  "canonical": {
+    "rows": 150,
+    "exact_match": 0.32,
+    "wer_vs_gold_mean": 0.212,
+    "wer_vs_gold_median": 0.125,
+    "cer_vs_gold_mean": 0.1552,
+    "unchanged_correct_rate": 0.7727,
+    "unnecessary_rewrite_rate": 0.2273,
+    "entity_gold_form_rate": 0.6977,
+    "entity_violation_rate_HARD_GATE": 0.0233,
+    "entity_violations": [
+      "hi-110:एक सितंबर"
+    ],
+    "normalization_missed_meaning_safe": 12,
+    "normalization_missed_ids": [
+      "hi-052:फ्राइडे",
+      "hi-108:12,500",
+      "hi-109:9876543210",
+      "hi-112:12305",
+      "hi-113:15%",
+      "hi-113:50%",
+      "hi-115:intelliai.com",
+      "hi-116:support@intelliai.com",
+      "hi-117:report_final.pdf",
+      "hi-118:1,20,000",
+      "hi-119:MH12AB4792",
+      "hi-121:7391"
+    ],
+    "language_flip_ids": [],
+    "language_flip_rate": 0.0,
+    "meaning_trap_pass_rate": 1.0,
+    "addition_proxy_rate_EXPERIMENTAL": 0.18,
+    "addition_flagged_ids": [
+      "hi-007",
+      "hi-018",
+      "hi-029",
+      "hi-030",
+      "hi-034",
+      "hi-037",
+      "hi-038",
+      "hi-040",
+      "hi-049",
+      "hi-050",
+      "hi-052",
+      "hi-053",
+      "hi-054",
+      "hi-056",
+      "hi-059",
+      "hi-060",
+      "hi-061",
+      "hi-063",
+      "hi-064",
+      "hi-065",
+      "hi-067",
+      "hi-086",
+      "hi-097",
+      "hi-141",
+      "hi-142"
+    ],
+    "per_category_wer_mean": {
+      "hi:already_correct": 0.0446,
+      "hi:ambiguous": 0.0667,
+      "hi:boundaries": 0.0734,
+      "hi:entities": 0.5152,
+      "hi:gender_number": 0.1311,
+      "hi:hinglish": 0.3135,
+      "hi:meaning_trap": 0.0286,
+      "hi:repetitions": 0.0238,
+      "hi:roman_hindi": 0.2017,
+      "hi:spoken_cleanup": 0.1329,
+      "hi:spoken_fragments": 0.1736,
+      "hi:tense": 0.2483
+    }
+  },
+  "capability_split": {
+    "roman_to_devanagari": "strong — flips eliminated by the language-scoped prompt (12% -> 0%)",
+    "grammar_gender_number": "strong (human-eval 4.48)",
+    "punctuation_danda": "strong",
+    "hinglish": "good; loanword transliteration is the weak edge (busy -> बसी class)"
+  },
+  "known_failure_classes_from_human_eval": [
+    "Roman homographs (der/देर vs डर) can flip meaning",
+    "loanword mangling",
+    "one hallucination on an ambiguous fragment",
+    "occasional tense breaks"
+  ],
+  "gate_reads": {
+    "entity_violation": "0.023 (1 case: date-format digitization एक->१ — meaning-same, format changed)",
+    "language_flip": "0.0 PASS",
+    "meaning_traps": "1.0 PASS",
+    "unchanged_correct": "0.77 — genuine over-correction edge (recorded)",
+    "additions_proxy": "0.18 EXPERIMENTAL — inflated by Devanagari spelling variants; human read found 1 real hallucination in 25"
+  }
+}
