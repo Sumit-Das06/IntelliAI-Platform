@@ -133,6 +133,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             app.state.realtime = await asyncio.to_thread(
                 build_realtime_service, settings, settings.model_dir
             )
+        if settings.smart_correction_enabled:
+            # M57 smart correction: same startup law — an ENABLED stage
+            # with an unreachable pinned backend refuses to serve.
+            from intelliai_stt_runtime.correction import build_smart_correction
+
+            app.state.smart_correction = await asyncio.to_thread(build_smart_correction, settings)
         yield
         realtime_service = app.state.realtime
         if realtime_service is not None:
@@ -154,6 +160,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.punctuator = None  # set by the lifespan when the stage is enabled
     app.state.punctuator_en = None  # M50: same law, separate flag/artifact
     app.state.realtime = None  # M53: realtime session service, flag-gated
+    app.state.smart_correction = None  # M57: post-final correction, flag-gated
 
     @app.middleware("http")
     async def request_context(

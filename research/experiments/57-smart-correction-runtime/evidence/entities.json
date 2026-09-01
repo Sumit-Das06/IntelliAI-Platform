@@ -1,0 +1,4 @@
+{
+  "see": "live-battery.json entities[]",
+  "verdict": "Sumit, QwikCart, ₹12,500, 12 August 2026, +91-9876543210, test@example.com, example.com, version 2.5, Kubernetes — ALL preserved live; plus the digit/email/URL validation gate rejects any altered protected content before it is ever served (unit-tested)"
+}

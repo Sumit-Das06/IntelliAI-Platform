@@ -1,0 +1,4 @@
+{
+  "m56": "1 real case in 50 human-read rows",
+  "m57_defenses": "validation gate (length ratio, digit/entity preservation, repetition, prompt leakage) + user-triggered flow + Original always retained"
+}

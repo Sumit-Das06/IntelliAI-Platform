@@ -19,6 +19,7 @@ HEADER_CONTRACT_VERSION: Final = "X-Runtime-Contract-Version"
 
 ROUTE_TRANSCRIBE: Final = "/v1/transcribe"
 ROUTE_REALTIME: Final = "/v1/realtime"  # WebSocket sessions (M53), flag-gated
+ROUTE_CORRECT: Final = "/v1/correct"  # smart correction (M57), flag-gated
 PART_FILE: Final = "file"  # multipart part: the audio bytes
 PART_PARAMS: Final = "params"  # multipart part: TranscriptionRequest as JSON
 

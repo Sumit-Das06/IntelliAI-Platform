@@ -63,6 +63,11 @@ services:
   stt-runtime:
     environment:
       INTELLIAI_STT_SLOTS: whisper,qwen3-asr:qwen3-asr-0.6b-hi-ft-e3
+      # M57 staging battery: Smart Correction runs here (and only here)
+      # behind its flag, riding the operator-managed pinned correction
+      # llama-server on the host (its own port - never the realtime one).
+      INTELLIAI_STT_SMART_CORRECTION_ENABLED: "true"
+      INTELLIAI_STT_SMART_CORRECTION_URL: http://host.docker.internal:8802
       # M30 staging battery: the punctuation stage runs here (and only
       # here) so the production-shaped stack can prove it end to end
       # before any production enable is even proposed.

@@ -139,6 +139,7 @@ class TestOperationalSurface:
             "punctuation_en": "disabled",
             # M53: realtime sessions report under the same law.
             "realtime": "disabled",
+            "smart_correction": "disabled",
         }
 
     def test_info_is_operational_identity_only(self, client: TestClient) -> None:

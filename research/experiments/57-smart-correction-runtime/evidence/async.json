@@ -1,0 +1,3 @@
+{
+  "design": "gateway call is synchronous HTTP; the BROWSER is the async layer — final transcript shows immediately, ✨ Improve runs in the background with an 'Improving…' state, result applies only if the transcript is untouched (Phase 10 UX satisfied; long HI ~9 s never blocks reading/editing)"
+}

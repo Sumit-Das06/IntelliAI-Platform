@@ -1466,4 +1466,13 @@ Evidence: [56 evidence](../../research/experiments/56-smart-correction/). RESEAR
 
 ---
 
+## Milestone 57 — Smart Correction Runtime, staging (appended 2026-09-02)
+
+Full report: [../milestones/57-smart-correction-runtime.md](../milestones/57-smart-correction-runtime.md).
+Evidence: [57 evidence](../../research/experiments/57-smart-correction-runtime/). **STAGING IMPLEMENTED — PRODUCTION OFF** (flag pinned false + empty URL in prod.yml, ops-guard-tested; flag-off batch double-run byte-identical).
+
+- **Qwen3-4B-Instruct-2507 Q4_K_M (Apache-2.0) — task: Smart Transcript Correction, EN+HI — STAGING SERVING ROLE** — GGUF sha-pinned (`3605803b…`) behind a drift-refusing launcher on the pinned llama.cpp b10344 CUDA build, its OWN instance (:8802). Product shape: POST-FINAL and USER-TRIGGERED (✨ Improve in the Playground; partials never corrected), language-scoped M56 prompts in code, and a mechanical OUTPUT VALIDATION gate (length ratio, script/flip rejection both ways, digit/email/URL survival, repetition guard reuse, prompt-leak rejection) — a failed validation serves the punctuated transcript, never the LLM. Provenance: `ai_correction_suggested` is its own append-only sample event; `current_transcript` moves only on a HUMAN save — machine and human corrections permanently distinguishable (DB-integration-tested). [MEASURED live through the real gateway] every spec EN case correct incl. unchanged already-correct and unchanged hallucination-bait (145-400 ms); HI Roman→Devanagari verbatim on the spec's own example, Hinglish natural, ONE recorded under-correction (gender case); all ten protected entities preserved; full-stack p50 EN 0.32-2.4 s / HI 0.97-8.9 s (20→250 words); VRAM 5.9 GB total with the realtime stack on the 8 GB card; worst-case continuous-correction hammer degrades realtime ~1.7× (policy proposed: cap concurrent corrections). Browser E2E EN+HI: improve/toggle/Share-carries-displayed/STALE-EDIT-drill (user's edit always wins) all green, leak scan clean, mobile clean. Fail-open + backend-kill + flag-off rollback drilled live (readiness `disabled|ready|degraded` all observed). Decision **A — ready for staging**; next: staging hardening + founder review. Nothing promoted, production untouched.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

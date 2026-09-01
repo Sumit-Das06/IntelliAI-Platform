@@ -1,0 +1,4 @@
+{
+  "off_flag": "flag false + empty URL via override -> readiness 'disabled', endpoint friendly 503, no model loaded, batch byte-identical; committed staging config restored after the drill",
+  "backend_down": "see fail-open.json"
+}

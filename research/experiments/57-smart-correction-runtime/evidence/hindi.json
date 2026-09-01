@@ -1,0 +1,5 @@
+{
+  "see": "live-battery.json hindi[]",
+  "highlights": "roman->Devanagari exact (spec's own example verbatim), hinglish natural, already-correct unchanged",
+  "recorded_miss": "the gender-agreement case (मेरा बहन कल आएगा) got danda only, not मेरी/आएगी — a live under-correction; M56 measured this class as usually corrected; recorded, not hidden"
+}

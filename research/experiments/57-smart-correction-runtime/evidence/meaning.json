@@ -1,0 +1,4 @@
+{
+  "m56_gates": "meaning-traps 100% both languages (frozen benchmark)",
+  "m57_live": "hallucination-bait unchanged; validation rejects length expansion, digit changes, entity drops (unit-tested)"
+}

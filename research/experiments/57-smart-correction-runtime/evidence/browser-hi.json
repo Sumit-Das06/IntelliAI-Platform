@@ -1,0 +1,14 @@
+{
+  "language": "hi",
+  "final_words": 30,
+  "improve_visible": true,
+  "improved_words": 29,
+  "improved_differs": true,
+  "toggle_visible": true,
+  "toggle_back_to_original": true,
+  "toggle_to_improved": true,
+  "share_carries_displayed_improved": true,
+  "stale_note": "You edited the transcript, so the AI suggestion was discarded.",
+  "user_edit_preserved": true,
+  "leaks": []
+}

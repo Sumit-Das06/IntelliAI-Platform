@@ -1,0 +1,27 @@
+{
+  "en_idle": {
+    "first_partial_at_s": 3.521,
+    "partial_gap_p50_s": 0.606,
+    "partial_gap_p95_s": 1.041,
+    "finalization_ms": 2158.3
+  },
+  "hi_idle": {
+    "first_partial_at_s": 0.835,
+    "partial_gap_p50_s": 0.869,
+    "partial_gap_p95_s": 1.994,
+    "finalization_ms": 1699.4
+  },
+  "en_under_correction": {
+    "first_partial_at_s": 1.483,
+    "partial_gap_p50_s": 1.037,
+    "partial_gap_p95_s": 2.918,
+    "finalization_ms": 1537.1
+  },
+  "hi_under_correction": {
+    "first_partial_at_s": 0.78,
+    "partial_gap_p50_s": 1.13,
+    "partial_gap_p95_s": 3.288,
+    "finalization_ms": 5073.8
+  },
+  "correction_jobs_completed_during_sessions": 7
+}

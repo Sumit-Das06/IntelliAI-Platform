@@ -1,0 +1,5 @@
+{
+  "design": "realtime lane (:8797 + in-process whisper) vs correction lane (:8802) — separate processes; correction is user-triggered and singular",
+  "worst_case_measured": "a CONTINUOUS 250-word HI correction hammer degrades realtime cadence ~1.7x (EN p50 0.61->1.04s, HI 0.87->1.13s, HI final 1.7->5.1s) — same GPU-compute-sharing shape as the M55 mixed-workload finding",
+  "policy": "PROPOSED for production: cap concurrent corrections per GPU (1) and/or schedule long corrections off realtime GPUs; real product usage (one click, one job) does not resemble the hammer"
+}

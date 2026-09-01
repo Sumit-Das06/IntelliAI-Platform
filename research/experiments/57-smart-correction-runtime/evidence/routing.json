@@ -1,0 +1,5 @@
+{
+  "law": "language-scoped prompts (M56: a combined prompt caused EN->HI translation flips; scoping removed them entirely)",
+  "invariant": "EN->EN Latin, HI->Devanagari — enforced twice: by the prompt AND by output validation (language_flip rejection, unit-tested)",
+  "live": "live-battery.json: 8/8 EN outputs Latin-only, 4/4 HI outputs Devanagari"
+}

@@ -957,6 +957,23 @@ class TestTtsAudioShare:
         assert 'id="share-audio-note" role="status"' in page
 
 
+def test_smart_correction_ships_in_the_playground_as_designed() -> None:
+    # M57: Smart Correction is ADDITIVE UI — a user action, never
+    # automatic; versioned so a stale AI result can never overwrite the
+    # user's newer text; fail-open with the transcript untouched.
+    studio = (files("intelliai_api") / "static" / "console" / "studio.html").read_text(
+        encoding="utf-8"
+    )
+    assert 'id="smart-correct"' in studio
+    assert "/v1/text/corrections" in studio
+    # The stale-result law and the fail-open law, pinned as copy.
+    assert "discarded" in studio
+    assert "your transcript is unchanged" in studio
+    # Original vs AI toggle — the human always keeps both.
+    assert 'id="sc-original"' in studio
+    assert 'id="sc-improved"' in studio
+
+
 def test_realtime_mode_ships_in_the_playground_as_designed() -> None:
     # M53: realtime is ADDITIVE UI inside the existing Playground — one
     # button, the LocalAgreement-2 display law, friendly refusals, and

@@ -1,0 +1,162 @@
+{
+  "english": [
+    {
+      "category": "grammar",
+      "in": "i going office yesterday",
+      "out": "I went to the office yesterday.",
+      "ms": 399.1,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "grammar",
+      "in": "he don't know where it is",
+      "out": "He doesn't know where it is.",
+      "ms": 180.8,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "tense",
+      "in": "i have went there yesterday",
+      "out": "I went there yesterday.",
+      "ms": 158.0,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "articles",
+      "in": "i want to know what is status of my order",
+      "out": "I want to know the status of my order.",
+      "ms": 197.3,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "repetition",
+      "in": "i i want to to go home now",
+      "out": "I want to go home now.",
+      "ms": 144.6,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "already_correct",
+      "in": "I am going to the office tomorrow.",
+      "out": "I am going to the office tomorrow.",
+      "ms": 191.2,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "hallucination_bait",
+      "in": "I went to the office.",
+      "out": "I went to the office.",
+      "ms": 157.6,
+      "status": 200,
+      "latin_only": true
+    },
+    {
+      "category": "ambiguous",
+      "in": "i need to meat tomorrow",
+      "out": "I need to meet tomorrow.",
+      "ms": 182.7,
+      "status": 200,
+      "latin_only": true
+    }
+  ],
+  "hindi": [
+    {
+      "category": "roman_hindi",
+      "in": "mujhe kal office jana tha but main nahi ja saka",
+      "out": "मुझे कल ऑफिस जाना था लेकिन मैं नहीं जा सका।",
+      "ms": 614.5,
+      "status": 200,
+      "devanagari": true
+    },
+    {
+      "category": "gender",
+      "in": "मेरा बहन कल आएगा",
+      "out": "मेरा बहन कल आएगा।",
+      "ms": 280.3,
+      "status": 200,
+      "devanagari": true
+    },
+    {
+      "category": "hinglish",
+      "in": "maine client ko email kar diya hai reply ka wait hai",
+      "out": "मैंने क्लाइंट को ईमेल कर दिया है, रिप्लाई का इंतजार है।",
+      "ms": 663.4,
+      "status": 200,
+      "devanagari": true
+    },
+    {
+      "category": "already_correct",
+      "in": "मैं कल सुबह दिल्ली जा रहा हूँ।",
+      "out": "मैं कल सुबह दिल्ली जा रहा हूँ।",
+      "ms": 429.8,
+      "status": 200,
+      "devanagari": true
+    }
+  ],
+  "entities": [
+    {
+      "in": "please tell sumit from intelliai about the qwikcart deal",
+      "out": "Please tell Sumit from intelliai about the Qwikcart deal.",
+      "ms": 356.8,
+      "status": 200
+    },
+    {
+      "in": "the amount is ₹12,500 due on 12 August 2026",
+      "out": "The amount is ₹12,500 due on 12 August 2026.",
+      "ms": 355.8,
+      "status": 200
+    },
+    {
+      "in": "call me at +91-9876543210 or mail test@example.com",
+      "out": "Call me at +91-9876543210 or mail test@example.com",
+      "ms": 340.7,
+      "status": 200
+    },
+    {
+      "in": "we deploy version 2.5 on kubernetes at example.com",
+      "out": "We deploy version 2.5 on Kubernetes at example.com",
+      "ms": 233.8,
+      "status": 200
+    }
+  ],
+  "latency_by_length_full_stack": {
+    "en_20w": {
+      "p50_ms": 322.5,
+      "max_ms": 363.8
+    },
+    "en_50w": {
+      "p50_ms": 658.7,
+      "max_ms": 660.1
+    },
+    "en_100w": {
+      "p50_ms": 646.6,
+      "max_ms": 680.7
+    },
+    "en_250w": {
+      "p50_ms": 2362.7,
+      "max_ms": 2428.5
+    },
+    "hi_20w": {
+      "p50_ms": 972.6,
+      "max_ms": 1871.5
+    },
+    "hi_50w": {
+      "p50_ms": 2157.2,
+      "max_ms": 2522.9
+    },
+    "hi_100w": {
+      "p50_ms": 4781.4,
+      "max_ms": 4812.5
+    },
+    "hi_250w": {
+      "p50_ms": 8901.2,
+      "max_ms": 9212.2
+    }
+  }
+}

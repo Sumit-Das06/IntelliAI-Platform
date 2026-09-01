@@ -335,6 +335,19 @@ def test_realtime_stt_ships_off_in_prod_and_on_only_in_the_local_stage() -> None
     assert "INTELLIAI_STT_REALTIME_ENABLED" not in PROD_OVERLAY
 
 
+def test_smart_correction_ships_off_in_prod_and_on_only_in_the_local_stage() -> None:
+    # M57: the same staged-feature law — the local production-shaped
+    # stack is the ONLY committed deployment that enables the correction
+    # stage; production pins the flag FALSE and the URL empty; the base
+    # compose never mentions it.
+    assert 'INTELLIAI_STT_SMART_CORRECTION_ENABLED: "false"' in PROD_OVERLAY
+    assert 'INTELLIAI_STT_SMART_CORRECTION_URL: ""' in PROD_OVERLAY
+    local_prod = (REPO / "infra/compose/local-prod.yml").read_text(encoding="utf-8")
+    assert 'INTELLIAI_STT_SMART_CORRECTION_ENABLED: "true"' in local_prod
+    assert "INTELLIAI_STT_SMART_CORRECTION_URL: http://" in local_prod
+    assert "SMART_CORRECTION" not in COMPOSE
+
+
 def test_the_prepared_production_realtime_overlay_is_never_wired_in() -> None:
     # M54: the production realtime configuration exists as a REVIEWED
     # overlay, but enabling it must be a deliberate promotion-milestone

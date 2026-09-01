@@ -1,0 +1,7 @@
+{
+  "see": [
+    "memory.json",
+    "realtime-regression.json"
+  ],
+  "isolation": "separate instance isolates queues; GPU compute is still shared — see scheduling.json"
+}

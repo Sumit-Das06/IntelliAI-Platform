@@ -285,6 +285,35 @@ class DataCollectionService:
         )
         return sample
 
+    async def record_ai_suggestion(
+        self,
+        *,
+        auth: AuthContext,
+        sample_public_id: str,
+        suggested_text: str,
+    ) -> None:
+        """M57: an AI-suggested correction joins the sample's append-only
+        history as its OWN event kind — `current_transcript` does NOT
+        move (only a human's save moves it), so machine suggestions stay
+        forever distinguishable from human corrections."""
+        sample = await self._samples.get_for_organization(auth.organization_id, sample_public_id)
+        if sample is None:
+            raise ResourceNotFoundError(
+                f"No speech sample {sample_public_id!r} exists in this organization.",
+                code="sample_not_found",
+                param="sample_id",
+            )
+        await self._samples.record_event(
+            sample.id,
+            "ai_correction_suggested",
+            detail={"text": suggested_text},
+        )
+        logger.info(
+            "collection.ai_correction_suggested",
+            sample_id=sample.public_id,
+            organization_id=auth.organization_public_id,
+        )
+
 
 def _version_of(lineage: dict[str, Any]) -> str | None:
     version = lineage.get("artifact_version")

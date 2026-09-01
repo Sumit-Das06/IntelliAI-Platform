@@ -1,0 +1,4 @@
+{
+  "internal": "smart_correction_completed (input/output words, model_ms, total_ms), smart_correction_validation_failed(reason), smart_correction_backend_degraded, gateway smart_correction_served/refused/unreachable + suggestion-recording logs; none exposed publicly",
+  "alerts_proposed": "failure rate, p95, validation failures, language flips (validation reason), backend degraded — the M55 alert checker pattern extends here"
+}

@@ -1,0 +1,3 @@
+{
+  "behavior": "prompt prefers preserving uncertain wording (M56 rule 8); live: 'i need to meat tomorrow' -> 'meet' (context-supported); UI keeps Original/AI toggle so the human always sees both — the M57 review mechanism (Phase 47)"
+}

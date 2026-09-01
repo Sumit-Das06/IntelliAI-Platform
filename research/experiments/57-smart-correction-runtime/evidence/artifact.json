@@ -1,0 +1,7 @@
+{
+  "model": "Qwen3-4B-Instruct-2507 Q4_K_M (Apache-2.0)",
+  "gguf_sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+  "runtime": "pinned llama.cpp b10344 CUDA (the platform's existing pins)",
+  "fallback_documented": "Qwen3-1.7B (Apache-2.0) where VRAM is tight — safety holds, correction power drops (M56)",
+  "no_request_time_downloads": "structurally impossible; a corrupt/missing artifact refuses launch"
+}

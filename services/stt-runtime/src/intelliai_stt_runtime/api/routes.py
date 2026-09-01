@@ -1,5 +1,6 @@
 """The runtime's endpoints: one capability route plus operational surface."""
 
+import asyncio
 import time
 from functools import partial
 from typing import Annotated, Any, Final
@@ -7,7 +8,7 @@ from typing import Annotated, Any, Final
 import structlog
 from fastapi import APIRouter, File, Form, Request, Response, UploadFile, WebSocket
 from fastapi.responses import JSONResponse
-from pydantic import ValidationError
+from pydantic import BaseModel, Field, ValidationError
 
 from intelliai_runtime_contract import (
     CONTRACT_VERSION,
@@ -32,6 +33,7 @@ from intelliai_runtime_core import (
 from intelliai_stt_runtime import __version__
 from intelliai_stt_runtime.api.binding import (
     HEADER_CONTRACT_VERSION,
+    ROUTE_CORRECT,
     ROUTE_REALTIME,
     ROUTE_TRANSCRIBE,
 )
@@ -92,6 +94,11 @@ async def ready(request: Request) -> JSONResponse:
     # of a false "ready" (probe result cached; readiness stays cheap).
     realtime_service = request.app.state.realtime
     realtime = realtime_service.health() if realtime_service is not None else "disabled"
+    # M57: smart correction is readiness truth the same way — additive
+    # key, "disabled" the honest default, "degraded" when the pinned
+    # backend stops answering.
+    correction_service = request.app.state.smart_correction
+    smart_correction = correction_service.health() if correction_service is not None else "disabled"
     return JSONResponse(
         {
             "status": "degraded" if degraded else "ready",
@@ -99,6 +106,7 @@ async def ready(request: Request) -> JSONResponse:
             "punctuation": punctuation,
             "punctuation_en": punctuation_en,
             "realtime": realtime,
+            "smart_correction": smart_correction,
         }
     )
 
@@ -320,4 +328,43 @@ async def realtime(websocket: WebSocket) -> None:
         service=websocket.app.state.realtime,
         punctuator=websocket.app.state.punctuator,
         punctuator_en=websocket.app.state.punctuator_en,
+    )
+
+
+class CorrectionBody(BaseModel):
+    """M57 smart-correction request — plain JSON, deliberately outside
+    the frozen runtime contract (the M53 realtime precedent: additive
+    service routes carry their own minimal shapes)."""
+
+    text: str = Field(min_length=1, max_length=20_000)
+    language: str = Field(min_length=2, max_length=8)
+
+
+@router.post(ROUTE_CORRECT)
+async def correct(request: Request, body: CorrectionBody) -> JSONResponse:
+    """POST-FINAL smart correction (M57), flag-gated, fail-open at the
+    caller: a refusal here must never break a transcript."""
+    service = request.app.state.smart_correction
+    if service is None:
+        raise RuntimeServiceError(
+            RuntimeErrorType.NOT_READY, "smart correction is not enabled on this deployment"
+        )
+    started = time.perf_counter()
+    result = await asyncio.to_thread(service.correct, body.text, body.language)
+    total_ms = (time.perf_counter() - started) * 1000.0
+    logger.info(
+        "smart_correction_completed",
+        language=body.language,
+        input_words=len(body.text.split()),
+        output_words=len(result.corrected_text.split()),
+        model_ms=result.model_ms,
+        total_ms=round(total_ms, 1),
+    )
+    return JSONResponse(
+        {
+            "corrected_text": result.corrected_text,
+            "model_ms": result.model_ms,
+            "total_ms": round(total_ms, 1),
+        },
+        headers=_CONTRACT_HEADERS,
     )

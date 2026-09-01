@@ -1,0 +1,3 @@
+{
+  "drills": "8802 killed live -> friendly 503 'AI correction is not available right now. Your transcript is unaffected.' + readiness degraded + batch answering; relaunch -> ready + working; UI catch shows the friendly note and leaves the textarea untouched"
+}

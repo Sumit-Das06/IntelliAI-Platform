@@ -1,0 +1,4 @@
+{
+  "mechanism": "client-side transcript version counter — every user edit bumps it; an Improve result carrying an older version is DISCARDED as stale with a visible note",
+  "proof": "browser-en/hi.json: user_edit_preserved true, stale note shown; unit-level covered by the UI guard test"
+}

@@ -1,0 +1,7 @@
+{
+  "what": "M57 — startup + artifact governance (MEASURED/REPO-VERIFIED)",
+  "launcher": "tools/correction/launch_correction_gpu.py — refuses drift on llama-server.exe (b2ace4b8…), ggml-cuda.dll (5ea989dc…) AND the GGUF (3605803b…); port 8802, own instance",
+  "runtime_flag": "INTELLIAI_STT_SMART_CORRECTION_ENABLED default FALSE; staging local-prod true + URL; prod.yml pins false + empty URL (ops-guard-tested)",
+  "fail_loud": "enabled without URL refuses startup; unreachable backend refuses startup (unit-tested); readiness smart_correction: disabled|ready|degraded (drilled live)",
+  "date": "2026-09-02"
+}

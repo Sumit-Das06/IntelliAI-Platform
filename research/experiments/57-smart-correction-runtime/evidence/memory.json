@@ -1,0 +1,5 @@
+{
+  "vram_mib_total": 5873,
+  "composition": "realtime stack ~2.9 GB + correction 4B ~3.0 GB on the 8 GB card, ~2.3 GB headroom",
+  "note": "correction rides its OWN llama instance — never the realtime one"
+}

@@ -73,7 +73,14 @@
           <div class="btn-row" style="margin-top: 10px;">
             <button class="btn hidden" id="share" type="button"
                     aria-label="Share transcript">📤 Share</button>
+            <button class="btn hidden" id="smart-correct" type="button"
+                    aria-label="Improve transcript with AI">✨ Improve</button>
+            <button class="btn hidden" id="sc-original" type="button"
+                    aria-label="Show original transcript">Original</button>
+            <button class="btn hidden" id="sc-improved" type="button"
+                    aria-label="Show improved transcript">AI improved</button>
           </div>
+          <div class="status-line" id="sc-note" role="status"></div>
           <div class="status-line" id="share-note" role="status"></div>
           <button class="btn btn-primary hidden" id="save" type="button"
                   style="width: 100%; margin-top: 10px;">Save correction</button>
@@ -211,6 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var busy = transcribeBtn.disabled;
     var hasText = transcript.value.trim().length > 0;
     shareBtn.classList.toggle("hidden", busy || !hasText);
+    scBtn.classList.toggle("hidden", busy || !hasText || scBusy);
   }
 
   function shareFallbackCopy(shareText, wasError) {
@@ -376,6 +384,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("dev-response").textContent = JSON.stringify(body, null, 2);
         if (!response.ok) throw new Error(apiError(body, "Transcription failed."));
         transcript.value = body.text || "";
+        scVersion += 1;
+        scReset();
         showSummary(body, elapsedMs);
         if (sampleId) {
           saveBtn.classList.remove("hidden");
@@ -395,6 +405,92 @@ document.addEventListener("DOMContentLoaded", function () {
       refreshShareButton();
     });
   });
+
+  /* ── Smart Correction (M57, staging preview) ─────────────────────────
+     POST-FINAL and user-triggered: the displayed transcript goes to the
+     authenticated endpoint, the improved text comes back, and the user
+     can flip between Original and AI improved. Versioned: any edit to
+     the textarea makes an in-flight result STALE — a stale result never
+     overwrites what the user typed. Fail-open: any failure leaves the
+     transcript untouched with a friendly note. */
+  var scBtn = document.getElementById("smart-correct");
+  var scOriginalBtn = document.getElementById("sc-original");
+  var scImprovedBtn = document.getElementById("sc-improved");
+  var scNote = document.getElementById("sc-note");
+  var scBusy = false;
+  var scVersion = 0;          /* bumps on every user edit */
+  var scOriginalText = null;  /* the text Improve was clicked on */
+  var scImprovedText = null;
+
+  function setScNote(text, kind) {
+    scNote.textContent = text || "";
+    scNote.className = "status-line" + (kind ? " " + kind : "");
+  }
+
+  function scReset() {
+    scOriginalText = null;
+    scImprovedText = null;
+    scOriginalBtn.classList.add("hidden");
+    scImprovedBtn.classList.add("hidden");
+    setScNote("");
+  }
+
+  transcript.addEventListener("input", function () {
+    scVersion += 1;  /* the user's newer text always wins over AI */
+  });
+
+  scBtn.addEventListener("click", function () {
+    var text = transcript.value.trim();
+    if (!text || scBusy) { return; }
+    var key = IntelliAI.getKey();
+    if (!key) { setScNote("Add your API key above to use AI improve.", "err"); return; }
+    scBusy = true;
+    var startedVersion = scVersion;
+    scBtn.disabled = true;
+    scBtn.textContent = "✨ Improving…";
+    setScNote("");
+    fetch("/v1/text/corrections", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+      body: JSON.stringify({
+        text: text,
+        language: langSelect.value,
+        sample_id: sampleId || undefined
+      })
+    }).then(function (response) {
+      if (!response.ok) { throw new Error("unavailable"); }
+      return response.json();
+    }).then(function (data) {
+      if (scVersion !== startedVersion) {
+        /* The user kept editing: their text is newer — discard as stale. */
+        setScNote("You edited the transcript, so the AI suggestion was discarded.");
+        return;
+      }
+      scOriginalText = text;
+      scImprovedText = String(data.corrected_text || "").trim();
+      if (!scImprovedText) { throw new Error("empty"); }
+      transcript.value = scImprovedText;
+      scVersion += 1;
+      scOriginalBtn.classList.remove("hidden");
+      scImprovedBtn.classList.remove("hidden");
+      setScNote("AI improved the transcript. You can still edit it or switch back.", "ok");
+    }).catch(function () {
+      setScNote("AI improve isn't available right now — your transcript is unchanged.", "err");
+    }).finally(function () {
+      scBusy = false;
+      scBtn.disabled = false;
+      scBtn.textContent = "✨ Improve";
+      refreshShareButton();
+    });
+  });
+
+  scOriginalBtn.addEventListener("click", function () {
+    if (scOriginalText !== null) { transcript.value = scOriginalText; scVersion += 1; }
+  });
+  scImprovedBtn.addEventListener("click", function () {
+    if (scImprovedText !== null) { transcript.value = scImprovedText; scVersion += 1; }
+  });
+
 
   saveBtn.addEventListener("click", function () {
     if (!sampleId) return;
@@ -501,6 +597,8 @@ document.addEventListener("DOMContentLoaded", function () {
     setThanks("");
     setShareNote("");
     transcript.value = "";
+    scVersion += 1;
+    scReset();
     transcript.readOnly = true;
     transcribeBtn.disabled = true;
     refreshShareButton();
@@ -578,6 +676,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       } else if (data.event === "transcript.final") {
         transcript.value = data.text || "";
+        scVersion += 1;
+        scReset();
       } else if (data.event === "session.completed") {
         var finalTranscript = transcript.value;
         if (session.pcm.length) {

@@ -55,8 +55,15 @@ services:
       # never open a WebSocket surface this deployment has not approved.
       INTELLIAI_RUNTIMES_STT_REALTIME_WS_URL: ""
 
+
   stt-runtime:
     environment:
+      # M57: smart correction is IMPLEMENTED but production stays OFF
+      # until its own promotion decision - pinned false so a stray
+      # variable can never load a correction model this deployment has
+      # not approved.
+      INTELLIAI_STT_SMART_CORRECTION_ENABLED: "false"
+      INTELLIAI_STT_SMART_CORRECTION_URL: ""
       # Explicit in prod, never inherited from a stray dev variable: this
       # deployment hosts the incumbent AND the promoted Hindi specialist
       # (M26 founder decision — the catalog routes hi to E3). The E3

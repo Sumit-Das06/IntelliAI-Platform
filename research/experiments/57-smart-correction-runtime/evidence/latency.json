@@ -1,0 +1,14 @@
+{
+  "full_stack_gateway_p50_ms": {
+    "en_20w": 322,
+    "en_50w": 659,
+    "en_100w": 647,
+    "en_250w": 2363,
+    "hi_20w": 973,
+    "hi_50w": 2157,
+    "hi_100w": 4781,
+    "hi_250w": 8901
+  },
+  "vs_m56_benchmark": "integration overhead minimal (EN 20w 322 vs 311 direct)",
+  "spec_cases_ms": "EN 145-400, HI 280-663"
+}

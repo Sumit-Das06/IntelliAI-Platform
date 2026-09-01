@@ -1,0 +1,3 @@
+{
+  "states": "smart_correction: disabled | ready | degraded — all three observed live; no model names/hashes/paths exposed"
+}

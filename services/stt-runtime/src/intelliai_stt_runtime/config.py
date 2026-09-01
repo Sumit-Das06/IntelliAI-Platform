@@ -143,6 +143,15 @@ class Settings(BaseSettings):
     # behavior is rollback-able independently of the feature.
     realtime_final_fast_path: bool = True
 
+    # ── smart transcript correction (Milestone 57, STAGING ONLY) ────────
+    # POST-FINAL, flag-gated, fail-open. OFF everywhere by default;
+    # production overlays pin it off explicitly. The URL names the
+    # operator-managed pinned correction llama-server (its own port —
+    # correction never queues behind realtime decoding).
+    smart_correction_enabled: bool = False
+    smart_correction_url: str = ""
+    smart_correction_timeout_seconds: float = Field(default=60.0, gt=0)
+
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be
     # ignored silently and a deployment meant to serve whisper would
