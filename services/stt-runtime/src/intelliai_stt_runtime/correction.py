@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 import unicodedata
 import urllib.error
@@ -51,6 +52,8 @@ _ENGLISH: Final = frozenset({"en", "en-us", "en-in"})
 _HINDI: Final = frozenset({"hi", "hi-in"})
 _DEVANAGARI: Final = re.compile(r"[ऀ-ॿ]")
 _DIGIT_RUN: Final = re.compile(r"\d{2,}")
+_DECIMAL: Final = re.compile(r"\d+\.\d+")
+_DEVANAGARI_DIGIT: Final = re.compile("[०-९]")  # noqa: RUF001 — Devanagari digit range, deliberate
 _EMAIL_OR_URL: Final = re.compile(
     r"\b[\w.+-]+@[\w-]+\.[\w.]+\b|\bhttps?://\S+|\b[\w-]+\.(?:com|org|net|io|in)\b"
 )
@@ -72,7 +75,7 @@ STRICT RULES:
 5. Fix grammar, tense, articles, prepositions, capitalization, and punctuation. Split run-on speech into proper sentences. Do NOT replace the speaker's words with synonyms; keep their word choices.
 6. Spoken formats become written formats: "support at intelliai dot com" -> "support@intelliai.com", spelled-out phone numbers/OTPs/codes/versions -> digits, currency amounts with a currency word -> symbol+digits.
 7. Other numbers stay as the speaker said them (words stay words).
-8. If a word is unclear or ambiguous and context does not clearly resolve it, KEEP the original wording.
+8. If a word is unclear or ambiguous and context does not clearly resolve it, KEEP the original wording. NEVER swap who did what to whom: keep the speaker's perspective and the direction of every action ("the file i sended you" means the speaker SENT it — it stays "the file I sent you", never "the file I received from you").
 9. If the input is already correct, return it EXACTLY unchanged.
 10. Output ONLY the corrected transcript text. No explanations, no quotes, no labels."""
 
@@ -80,13 +83,13 @@ PROMPT_HI: Final = """You are a transcript-correction engine for HINDI speech-to
 
 STRICT RULES:
 1. NEVER change the meaning. Fix only language, never content. NEVER translate to English.
-2. The output must be Hindi in Devanagari with proper danda (।) and question-mark punctuation. Hindi written in English letters ("mujhe kal office jana tha") IS Hindi: convert it to Devanagari — never answer in Latin script and never translate it to English. Mixed Hindi-English speech stays natural mixed Hindi in Devanagari (loanwords like office/meeting/report/email as their common Devanagari transliterations).
-3. PRESERVE exactly: names of people/companies/products, numbers, amounts, dates, times, phone numbers, emails, URLs, and technical terms. Never turn a name into a different name or a number into a different number.
-4. Do NOT add any information that is not in the input. Do NOT drop any information.
-5. Remove speech artifacts: stutters/duplicated words, fillers — but keep intentional repetition ("हाँ हाँ", "जल्दी जल्दी").
-6. Fix grammar (gender/number agreement, tense), word forms, and punctuation. Split run-on speech into proper sentences. Do NOT replace the speaker's words with synonyms; keep loanwords as spoken (बर्थडे stays बर्थडे, not जन्मदिन).
+2. The output must be Hindi in Devanagari with proper danda (।) and question-mark punctuation. Hindi written in English letters ("mujhe kal office jana tha") IS Hindi: convert it to Devanagari — never answer in Latin script and never translate it to English. Mixed Hindi-English speech stays natural mixed Hindi in Devanagari (common loanwords like office/meeting/report/email as their usual Devanagari transliterations). EXCEPTION — technical terms, product names, brand names and acronyms (API, FastAPI, Python, Redis, PostgreSQL, CUDA, GPU, RAG, STT, TTS, version numbers, app names) stay in LATIN letters exactly as written; never transliterate or spell them out.
+3. If the input is already correct Devanagari, return it EXACTLY unchanged — same words, same forms. When in doubt whether something needs fixing, DO NOT touch it. Change as FEW words as possible; never restyle (उसने stays उसने, never उन्होंने; ठीक तीन बजे keeps ठीक).
+4. PRESERVE exactly: names of people/companies/products, numbers, amounts, dates, times, phone numbers, emails, URLs, and technical terms. Never turn a name into a different name or a number into a different number.
+5. Do NOT add any information that is not in the input. Do NOT drop any information or qualifier words.
+6. Remove speech artifacts: stutters/duplicated words, fillers — but keep intentional repetition ("हाँ हाँ", "जल्दी जल्दी"). Fix real grammar errors (gender/number agreement, tense), word forms, and punctuation. Split run-on speech into proper sentences. Do NOT replace the speaker's words with synonyms; keep loanwords as spoken (बर्थडे stays बर्थडे, not जन्मदिन).
 7. Spoken formats become written formats ONLY for phone numbers, OTPs, codes, vehicle numbers, and currency amounts with a currency word; emails/URLs spoken as words become their written form. ALL other numbers stay exactly as the speaker said them, in words.
-8. If a word is unclear or ambiguous and context does not clearly resolve it, KEEP the original wording.
+8. If a word is unclear or ambiguous and context does not clearly resolve it, KEEP the original wording. Read Roman-Hindi words by CONTEXT, not sound-alikes: "der" about time is देर (late), never डर (fear); "mat" as prohibition is मत. English words inside Roman Hindi (busy, free, late, call) are ENGLISH loanwords — keep them as their standard loanword form (बिज़ी, फ्री, लेट, कॉल, बर्थडे, गिफ्ट), never re-read them as Hindi words (busy is NEVER बसी) and never translate them (birthday stays बर्थडे, not जन्मदिन).
 9. If the input is already correct Devanagari, return it EXACTLY unchanged.
 10. Output ONLY the corrected transcript text. No explanations, no quotes, no labels."""
 
@@ -102,11 +105,18 @@ class SmartCorrectionService:
     """HTTP client to the pinned correction llama-server + the output
     validation gate. No foundation-model library is imported here."""
 
-    def __init__(self, url: str, *, timeout_seconds: float = 60.0) -> None:
+    def __init__(
+        self, url: str, *, timeout_seconds: float = 60.0, max_concurrency: int = 1
+    ) -> None:
         self._url = url.rstrip("/")
         self._timeout = timeout_seconds
         self._probe_at = -1e9
         self._probe_verdict = "ready"
+        # M58 concurrency cap: correction is a background convenience and
+        # REALTIME STT OUTRANKS IT — excess jobs are refused loudly
+        # (OVERLOADED -> a friendly retry upstream), never queued into an
+        # invisible backlog that would hold the GPU hostage.
+        self._slots = threading.Semaphore(max(1, max_concurrency))
 
     # -- health --------------------------------------------------------
 
@@ -170,6 +180,12 @@ class SmartCorrectionService:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
+        if not self._slots.acquire(blocking=False):
+            logger.info("smart_correction_overloaded")
+            raise RuntimeServiceError(
+                RuntimeErrorType.OVERLOADED,
+                "a correction is already running; try again in a moment",
+            )
         started = time.perf_counter()
         try:
             with urllib.request.urlopen(request, timeout=self._timeout) as response:  # noqa: S310
@@ -180,6 +196,8 @@ class SmartCorrectionService:
             raise RuntimeServiceError(
                 RuntimeErrorType.INTERNAL, "the correction backend did not answer in time"
             ) from exc
+        finally:
+            self._slots.release()
         model_ms = (time.perf_counter() - started) * 1000.0
         if "</think>" in output:
             output = output.rsplit("</think>", 1)[1].strip()
@@ -200,8 +218,16 @@ class SmartCorrectionService:
         if not output.strip():
             fail("empty_output")
         out_words = output.split()
-        if len(out_words) > max(8.0, len(source.split()) * MAX_OUTPUT_RATIO):
+        source_words = len(source.split())
+        if len(out_words) > max(8.0, source_words * MAX_OUTPUT_RATIO):
             fail("length_expansion")
+        # M58: the mirror guard — catastrophic content COLLAPSE (the model
+        # summarizing or deduplicating a long transcript down to a stub)
+        # is dropped information, never served. The floor is deliberately
+        # low (30%) so legitimate filler/stutter removal always passes;
+        # short utterances are exempt ("हाँ हाँ हाँ" -> "हाँ" is fine).
+        if source_words >= 20 and len(out_words) < source_words * 0.3:
+            fail("content_collapsed")
         # Language contract: EN stays Latin; HI comes back in Devanagari.
         has_devanagari = bool(_DEVANAGARI.search(output))
         if tag in _ENGLISH and has_devanagari:
@@ -214,9 +240,17 @@ class SmartCorrectionService:
         for run in _DIGIT_RUN.findall(source):
             if run not in re.sub(r"[,\s]", "", squashed) and run not in squashed:
                 fail("digits_changed")
+        for decimal in _DECIMAL.findall(source):
+            if decimal not in squashed:
+                fail("decimal_changed")
         for token in _EMAIL_OR_URL.findall(source):
             if token.casefold() not in squashed.casefold():
                 fail("entity_dropped")
+        # The M56 entity-violation class: converting spoken/ASCII numbers
+        # into Devanagari numerals (एक -> १) is a formatting mutation the
+        # contract forbids — reject rather than serve.
+        if _DEVANAGARI_DIGIT.search(output) and not _DEVANAGARI_DIGIT.search(source):
+            fail("devanagari_digits_introduced")
         # Runaway repetition is never served (reuses the realtime guard).
         span_seconds = max(len(source.split()) / 3.0, 1.0)  # spoken-rate proxy
         if diagnose_repetition(output, span_seconds).pathological:
@@ -232,7 +266,9 @@ def build_smart_correction(settings: object) -> SmartCorrectionService:
         msg = "smart correction enabled but INTELLIAI_STT_SMART_CORRECTION_URL is empty"
         raise RuntimeServiceError(RuntimeErrorType.NOT_READY, msg)
     service = SmartCorrectionService(
-        url, timeout_seconds=float(getattr(settings, "smart_correction_timeout_seconds", 60.0))
+        url,
+        timeout_seconds=float(getattr(settings, "smart_correction_timeout_seconds", 60.0)),
+        max_concurrency=int(getattr(settings, "smart_correction_max_concurrency", 1)),
     )
     service.probe()
     return service

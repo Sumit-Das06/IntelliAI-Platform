@@ -458,6 +458,14 @@ document.addEventListener("DOMContentLoaded", function () {
         sample_id: sampleId || undefined
       })
     }).then(function (response) {
+      if (response.status === 400) {
+        /* A clear refusal (e.g. transcript too long) carries an
+           actionable message — surface it instead of a generic error. */
+        return response.json().then(function (body) {
+          var message = (body && body.error && body.error.message) || "";
+          throw new Error(message || "unavailable");
+        });
+      }
       if (!response.ok) { throw new Error("unavailable"); }
       return response.json();
     }).then(function (data) {
@@ -474,8 +482,11 @@ document.addEventListener("DOMContentLoaded", function () {
       scOriginalBtn.classList.remove("hidden");
       scImprovedBtn.classList.remove("hidden");
       setScNote("AI improved the transcript. You can still edit it or switch back.", "ok");
-    }).catch(function () {
-      setScNote("AI improve isn't available right now — your transcript is unchanged.", "err");
+    }).catch(function (err) {
+      var detail = err && err.message && err.message !== "unavailable" && err.message !== "empty"
+        ? err.message + " Your transcript is unchanged."
+        : "AI improve isn't available right now — your transcript is unchanged.";
+      setScNote(detail, "err");
     }).finally(function () {
       scBusy = false;
       scBtn.disabled = false;

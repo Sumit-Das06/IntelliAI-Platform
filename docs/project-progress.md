@@ -15,11 +15,11 @@
 
 ## What We Built
 
-**BUILT** · English + Hindi STT (incl. **our own fine-tuned Hindi model**) · live Realtime STT · English + Hindi TTS (4 voices, streaming) · auto-punctuation · correction workflow · transcript & audio sharing · self-serve console + metered API
+**BUILT** · English + Hindi STT (incl. **our own fine-tuned Hindi model**) · live Realtime STT · English + Hindi TTS (4 voices, streaming) · auto-punctuation · **AI transcript improve (staging)** · correction workflow · transcript & audio sharing · self-serve console + metered API
 
 **IMPROVED** · realtime latency (live text in 0.3–1.1 s) · GPU inference (15–20× CPU headroom) · transcript readability (punctuation, words never altered) · **Hindi stability** (byte-identical GPU results where CPU scattered) · production safeguards (rollback, alerts, honest health)
 
-**NEXT** · production GPU infrastructure → final on-box verification → realtime production promotion → grammar/broken-speech correction
+**NEXT** · production GPU infrastructure → final on-box verification → realtime production promotion → AI transcript improve founder review
 
 ## Current Metrics (measured · staging · production-like RTX 5070 GPU · M55)
 
@@ -48,7 +48,7 @@ Full diagrams: `docs/architecture/` (high-level, realtime STT, TTS).
 
 ## Current Deployment
 
-✅ **Local + staging** — everything live and demo-able today over a secure tunnel (realtime, batch, TTS, sharing, correction, mobile widths).
+✅ **Local + staging** — everything live and demo-able today over a secure tunnel (realtime, batch, TTS, sharing, correction, AI improve, mobile widths).
 ⚠️ **Production** — repository is deployment-ready and rehearsed; **no public server/GPU provisioned yet**. Realtime flags OFF everywhere; production config prepared, wired to nothing.
 
 ## Next Steps
@@ -56,6 +56,7 @@ Full diagrams: `docs/architecture/` (high-level, realtime STT, TTS).
 1. Provision production infrastructure (VPS + one 8 GB GPU)
 2. Re-run scripted verification on that box (~1 hour)
 3. Founder go/no-go → flip the prepared realtime promotion switch (+ Hindi batch to GPU)
-4. Then: scale-out, long-form Hindi polish, grammar correction
+4. Founder review of AI transcript improve (staging-hardened, awaiting sign-off)
+5. Then: scale-out, long-form Hindi polish
 
-*Every number traces to milestone evidence (M50–M55 realtime/GPU · M35–M42 TTS · M23–M26 Hindi model).*
+*Every number traces to milestone evidence (M50–M55 realtime/GPU · M56–M58 AI improve · M35–M42 TTS · M23–M26 Hindi model).*

@@ -1,0 +1,11 @@
+{
+  "language": "en",
+  "final_words": 19,
+  "duplicate_click_requests": 1,
+  "improved_differs": true,
+  "toggle_visible": true,
+  "toggle_back_to_original": true,
+  "toggle_to_improved": true,
+  "user_edit_preserved": true,
+  "leaks": []
+}

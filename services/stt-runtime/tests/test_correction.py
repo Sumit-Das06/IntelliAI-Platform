@@ -182,3 +182,60 @@ class TestReadiness:
         with TestClient(app) as client:
             body = client.get("/health/ready").json()
             assert body["smart_correction"] == "disabled"
+
+
+class TestM58Hardening:
+    def test_devanagari_digit_introduction_is_rejected(self, stub: str) -> None:
+        # The M56 entity-violation class (एक -> १): converting numbers
+        # into Devanagari numerals is a formatting mutation, rejected.
+        _StubLlama.reply = "मीटिंग १ सितंबर को है।"
+        with pytest.raises(RuntimeServiceError):
+            SmartCorrectionService(stub).correct("meeting ek september ko hai", "hi")
+
+    def test_devanagari_digits_already_in_input_pass_through(self, stub: str) -> None:
+        _StubLlama.reply = "कमरा १०४ तीसरी मंज़िल पर है।"
+        result = SmartCorrectionService(stub).correct("कमरा १०४ तीसरी मंजिल पर", "hi")
+        assert "१०४" in result.corrected_text
+
+    def test_changed_decimal_is_rejected(self, stub: str) -> None:
+        _StubLlama.reply = "We deploy version 2.6 tonight."
+        with pytest.raises(RuntimeServiceError):
+            SmartCorrectionService(stub).correct("we deploy version 2.5 tonight", "en")
+
+    def test_catastrophic_content_collapse_is_rejected(self, stub: str) -> None:
+        # A long transcript deduplicated/summarized to a stub is DROPPED
+        # information — the mirror of the runaway-length guard.
+        _StubLlama.reply = "We worked on the deployment."
+        long_input = "we was working on the new deployment yesterday morning " * 10
+        with pytest.raises(RuntimeServiceError):
+            SmartCorrectionService(stub).correct(long_input.strip(), "en")
+
+    def test_heavy_filler_removal_still_passes(self, stub: str) -> None:
+        # 24 words in, 11 out (~46%) — legitimate cleanup stays above the
+        # 30% floor and must serve.
+        _StubLlama.reply = "I think we should check the logs before the meeting tomorrow."
+        noisy = (
+            "um so uh i think we should uh you know check check the logs um "
+            "before the the meeting uh tomorrow you know"
+        )
+        result = SmartCorrectionService(stub).correct(noisy, "en")
+        assert result.validation == "passed"
+
+    def test_concurrency_cap_refuses_the_second_job_loudly(self, stub: str) -> None:
+        import threading as _threading
+        import time as _time
+
+        service = SmartCorrectionService(stub, max_concurrency=1)
+        # Hold the single slot from another thread mid-"decode".
+        service._slots.acquire()
+        try:
+            with pytest.raises(RuntimeServiceError) as excinfo:
+                service.correct("hello there friend", "en")
+            assert "already running" in str(excinfo.value)
+        finally:
+            service._slots.release()
+        # Slot released -> the next job serves normally.
+        _StubLlama.reply = "Hello there, friend."
+        result = service.correct("hello there friend", "en")
+        assert result.corrected_text
+        del _threading, _time

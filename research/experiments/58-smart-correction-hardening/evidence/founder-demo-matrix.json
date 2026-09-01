@@ -1,0 +1,194 @@
+{
+  "what": "M58 founder demo matrix — live gateway, deterministic pinned server",
+  "pass": 14,
+  "total": 17,
+  "rows": [
+    {
+      "id": "en1",
+      "language": "en",
+      "kind": "correct",
+      "input": "i has went to the office yesterday and meet the client",
+      "ai_suggestion": "I went to the office yesterday and met the client.",
+      "expected": "grammar fixed: 'I went to the office yesterday and met the client'",
+      "ms": 288.7,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "en2",
+      "language": "en",
+      "kind": "correct",
+      "input": "um so basically we uh we need to to ship the build today",
+      "ai_suggestion": "So basically, we need to ship the build today.",
+      "expected": "fillers and stutters removed, meaning intact",
+      "ms": 204.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "en3",
+      "language": "en",
+      "kind": "correct",
+      "input": "can you send me the file which i had sended you last week",
+      "ai_suggestion": "Can you send me the file that I sent you last week?",
+      "expected": "'sended' becomes 'sent' — the DIRECTION of sending must not flip",
+      "ms": 237.6,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "en4",
+      "language": "en",
+      "kind": "guard",
+      "input": "the invoice total is 45250 rupees due on 15 march",
+      "ai_suggestion": "The invoice total is 45,250 rupees, due on 15 March.",
+      "expected": "every number survives exactly",
+      "ms": 340.2,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "en5",
+      "language": "en",
+      "kind": "guard",
+      "input": "please email the report to support@intelliai.com by friday",
+      "ai_suggestion": "Please email the report to support@intelliai.com by Friday.",
+      "expected": "the email address survives byte-exact",
+      "ms": 248.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "en6",
+      "language": "en",
+      "kind": "keep",
+      "input": "The deployment finished successfully and all tests passed.",
+      "ai_suggestion": "The deployment finished successfully and all tests passed.",
+      "expected": "already-correct text returned unchanged",
+      "ms": 187.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "en7",
+      "language": "en",
+      "kind": "guard",
+      "input": "sumit will call priya after the demo tomorrow",
+      "ai_suggestion": "Sumit will call Priya after the demo tomorrow.",
+      "expected": "names survive; capitalization may improve",
+      "ms": 201.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi1",
+      "language": "hi",
+      "kind": "correct",
+      "input": "मेरी भाई कल आएगी",
+      "ai_suggestion": "मेरी भाई कल आएगी।",
+      "expected": "gender agreement fixed: मेरा भाई कल आएगा",
+      "ms": 951.4,
+      "verdict": "FAIL",
+      "reason": "under-correction (safe direction)"
+    },
+    {
+      "id": "hi2",
+      "language": "hi",
+      "kind": "correct",
+      "input": "मतलब वो वो रिपोर्ट आज ही भेज दो",
+      "ai_suggestion": "मतलब वो रिपोर्ट आज ही भेज दो।",
+      "expected": "stutter (वो वो) cleaned, instruction intact",
+      "ms": 427.7,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi3",
+      "language": "hi",
+      "kind": "correct",
+      "input": "kal office nahi aaunga kyunki tabiyat kharab hai",
+      "ai_suggestion": "कल ऑफिस नहीं आऊंगा क्योंकि तबीयत खराब है।",
+      "expected": "Roman Hindi becomes clean Devanagari",
+      "ms": 583.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi4",
+      "language": "hi",
+      "kind": "guard",
+      "input": "meeting cancel ho gayi hai",
+      "ai_suggestion": "मीटिंग रद्द हो गई है।",
+      "expected": "loanwords stay loanwords (मीटिंग कैंसिल), never translated",
+      "ms": 351.7,
+      "verdict": "FAIL",
+      "reason": "marker lost — meaning risk"
+    },
+    {
+      "id": "hi5",
+      "language": "hi",
+      "kind": "guard",
+      "input": "कुल 25000 रुपये देने हैं",
+      "ai_suggestion": "कुल 25000 रुपये देने हैं।",
+      "expected": "the amount survives exactly, no Devanagari numerals",
+      "ms": 418.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi6",
+      "language": "hi",
+      "kind": "guard",
+      "input": "mera number 9123456780 hai",
+      "ai_suggestion": "मेरा नंबर 9123456780 है।",
+      "expected": "phone number survives digit-for-digit",
+      "ms": 385.5,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi7",
+      "language": "hi",
+      "kind": "guard",
+      "input": "रोहित और मोहित दोनों आएंगे",
+      "ai_suggestion": "रोहित और मोहित दोनों आएंगे।",
+      "expected": "similar-sounding names never swapped",
+      "ms": 404.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi8",
+      "language": "hi",
+      "kind": "guard",
+      "input": "report admin@intelliai.com par bhejo",
+      "ai_suggestion": null,
+      "expected": "email survives inside Roman-Hindi input",
+      "ms": 427.1,
+      "verdict": "FAIL",
+      "reason": "http 503"
+    },
+    {
+      "id": "hi9",
+      "language": "hi",
+      "kind": "keep",
+      "input": "हम कल सुबह नौ बजे मिलेंगे।",
+      "ai_suggestion": "हम कल सुबह नौ बजे मिलेंगे।",
+      "expected": "already-correct Hindi returned unchanged",
+      "ms": 394.8,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hi10",
+      "language": "hi",
+      "kind": "correct",
+      "input": "boss ne bola ki demo acha tha lekin report late hui",
+      "ai_suggestion": "बॉस ने कहा कि डेमो अच्छा था लेकिन रिपोर्ट लेट हुई।",
+      "expected": "mixed Hinglish sentence becomes natural Hindi, every borrowed word kept",
+      "ms": 698.4,
+      "verdict": "PASS",
+      "reason": ""
+    }
+  ]
+}

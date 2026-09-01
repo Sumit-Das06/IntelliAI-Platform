@@ -1,0 +1,15 @@
+{
+  "language": "hi",
+  "final_words": 37,
+  "duplicate_click_requests": 1,
+  "improved_differs": true,
+  "toggle_visible": true,
+  "toggle_back_to_original": true,
+  "toggle_to_improved": true,
+  "user_edit_preserved": true,
+  "page_responsive_during_long_hi": true,
+  "long_hi_note": "AI improved the transcript. You can still edit it or switch back.",
+  "long_hi_seconds": 11.7,
+  "long_hi_out_words": 248,
+  "leaks": []
+}

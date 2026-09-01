@@ -1475,4 +1475,13 @@ Evidence: [57 evidence](../../research/experiments/57-smart-correction-runtime/)
 
 ---
 
+## Milestone 58 — Smart Correction staging hardening + founder review (appended 2026-09-02)
+
+Full report: [../m58-smart-correction-staging-hardening.md](../m58-smart-correction-staging-hardening.md).
+Evidence: [58 evidence](../../research/experiments/58-smart-correction-hardening/). **STAGING HARDENED — PRODUCTION OFF** (flag re-verified pinned false; flag-off drill re-run live: readiness `disabled`, friendly 503, zero model traffic).
+
+- **Qwen3-4B-Instruct-2507 Q4_K_M (Apache-2.0) — Smart Correction, staging serving role — HARDENED, decision A (READY FOR FOUNDER REVIEW; explicitly NOT a production claim)** — trust gate grew three rejections (decimals; Devanagari-digit introduction; **content collapse <30% of a ≥20-word input** — the gap was found when a repeated-seed ladder text got deduplicated 500→36 words and served) + a non-blocking concurrency cap (default 1; loud OVERLOADED refusal — realtime outranks correction). [MEASURED live] new 32-row deterministic HI edge-case suite through the real gateway: prompt ladder v1 25/32 → v4 **30/32 frozen** (tech-terms-stay-Latin, confusables der=देर-not-डर, no-restyle rule, बर्थडे/गिफ्ट loanword examples; the two remaining = one safe under-correction + one gate refusal). Founder demo matrix 17 cases: **14/17** (all 7 EN pass; misses = safe under-correction, cancel→रद्द style miss, email gate refusal). **Zero meaning corruptions served in any M58 run**; the one semantic inversion found live (EN "sended you" → "received from you") was fixed by a direction-of-action prompt rule and re-proven. Latency ladder (varied non-repeating text): EN 1.1→6.2 s, HI 1.3→17.8 s at 20→500 words; 650-word refusal in 30 ms with the actionable message reaching the browser. Realtime non-regression, the REALISTIC case (ONE correction mid-session): EN cadence p50 0.56→0.58 s, HI 0.87→0.95 s — p50 under 1 s in every cell. Browser E2E EN+HI: duplicate-click fires exactly 1 request; 250-word HI improves in 11.7 s with the page responsive; stale-edit user-wins; zero leaks. Known limitation recorded honestly: **emails inside Hindi inputs get mangled → the gate refuses → transcript kept** (safety absorbing a capability miss). Alerts: three smart-correction signatures added to the runnable checker, all fire-proven incl. `correction_down` firing LIVE in the kill→recover drill. 23 runtime unit tests + full workspace suite green. Next: founder review of the three documented open items; promotion stays founder-gated. Nothing promoted, production untouched.
+
+---
+
 *This file grows by appended entries only. Do not edit prior entries — including their mistakes.*

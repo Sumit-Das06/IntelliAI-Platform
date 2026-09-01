@@ -1,0 +1,8 @@
+{
+  "what": "M58 Phase 10 \u2014 flag-off zero-activity re-verify (staging overlay removed the flag)",
+  "readiness_with_flag_off": "disabled",
+  "gateway_status": 503,
+  "gateway_message": "AI correction is not available right now. Your transcript is unaffected.",
+  "restored_readiness": "ready",
+  "note": "no model call, no :8802 traffic on the disabled path; error body carries no engine names"
+}

@@ -35,7 +35,7 @@ readability · Hindi stability · production safeguards.
 from the staging stack (Section 8).
 
 **NEXT** — production GPU provisioning → final on-box verification →
-realtime production promotion → grammar/broken-speech correction.
+realtime production promotion → AI transcript improve founder review.
 
 ## 2. Current Performance (scan this)
 
@@ -179,6 +179,7 @@ for background/batch English work.
 | ✅ Hindi TTS (streaming) | Staging |
 | ✅ Transcript share + audio share | Staging |
 | ✅ Correction workflow | Staging |
+| ✅ AI transcript improve (EN+HI, safety-gated) | Staging |
 | ✅ GPU realtime inference (live metrics) | Staging |
 
 *Nothing is marked Production because no public server is live yet.*
@@ -241,7 +242,8 @@ NOW: staging-verified platform, GPU-ready
   ↓  Production GPU infrastructure (VPS + 8 GB GPU)
   ↓  Final production verification (scripted, ~1 hour)
   ↓  Realtime STT production promotion (prepared config switch)
-  ↓  Grammar / broken-speech correction (+ next languages)
+  ↓  AI transcript improve founder review (staging-hardened)
+  ↓  Next languages + scale-out
 ```
 
 ## 14. Key Takeaways

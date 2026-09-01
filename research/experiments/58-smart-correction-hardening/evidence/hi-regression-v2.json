@@ -1,0 +1,296 @@
+{
+  "what": "M58 Hindi edge-case regression (deterministic: temp-0 pinned server)",
+  "pass": 26,
+  "total": 32,
+  "priority_note": "meaning_guard failures outrank grammar misses — meaning first",
+  "rows": [
+    {
+      "id": "gA1",
+      "kind": "correct",
+      "in": "मेरा बहन कल आएगा",
+      "out": "मेरा बहन कल आएगी।",
+      "ms": 573.8,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gA2",
+      "kind": "correct",
+      "in": "यह किताब बहुत अच्छा है",
+      "out": "यह किताब बहुत अच्छी है।",
+      "ms": 243.7,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gA3",
+      "kind": "correct",
+      "in": "मुझे एक रिपोर्ट बनाना है",
+      "out": "मुझे एक रिपोर्ट बनाना है।",
+      "ms": 279.2,
+      "verdict": "FAIL",
+      "reason": "under-correction (safe direction, still a miss)"
+    },
+    {
+      "id": "gA4",
+      "kind": "correct",
+      "in": "उसकी गाड़ी नया है",
+      "out": "उसकी गाड़ी नई है।",
+      "ms": 212.8,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gA5",
+      "kind": "correct",
+      "in": "सारी फाइलें डिलीट हो गया",
+      "out": "सारी फ़ाइलें डिलीट हो गईं।",
+      "ms": 311.5,
+      "verdict": "FAIL",
+      "reason": "marker lost — meaning risk"
+    },
+    {
+      "id": "hB1",
+      "kind": "keep",
+      "in": "कल हम बाग गए थे।",
+      "out": "कल हम बाग गए थे।",
+      "ms": 243.5,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hB2",
+      "kind": "keep",
+      "in": "मुझे वह सोना पसंद है।",
+      "out": "मुझे वह सोना पसंद है।",
+      "ms": 293.5,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hB3",
+      "kind": "keep",
+      "in": "उसने हार मान ली।",
+      "out": "उसने हार मान ली।",
+      "ms": 229.8,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hB4",
+      "kind": "guard",
+      "in": "meeting teen baje shuru hogi der mat karna",
+      "out": "मीटिंग तीन बजे से शुरू होगी, देर मत करना।",
+      "ms": 538.1,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "cC1",
+      "kind": "guard",
+      "in": "server down hai isliye website nahi khul rahi",
+      "out": "सर्वर डाउन है इसलिए वेबसाइट नहीं खुल रही है।",
+      "ms": 604.8,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "cC2",
+      "kind": "guard",
+      "in": "bhai ka birthday hai gift lena hai",
+      "out": "भाई के बर्थडे है, गिफ्ट लेना है।",
+      "ms": 439.5,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "cC3",
+      "kind": "guard",
+      "in": "sab theek hai bas thoda busy hoon",
+      "out": "सभ कुछ ठीक है, बस थोड़ा बिजी हूँ।",
+      "ms": 476.6,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "cC4",
+      "kind": "guard",
+      "in": "password reset karke mujhe bata dena",
+      "out": "पासवर्ड रीसेट करके मुझे बताएं।",
+      "ms": 405.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "dD1",
+      "kind": "guard",
+      "in": "सुमित और अमित दोनों अलग लोग हैं",
+      "out": "सुमित और अमित दोनों अलग लोग हैं।",
+      "ms": 492.1,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "dD2",
+      "kind": "guard",
+      "in": "sharma ji kal nagpur se aa rahe hain",
+      "out": "शर्मा जी कल नागपुर से आ रहे हैं।",
+      "ms": 433.6,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "dD3",
+      "kind": "guard",
+      "in": "priya ko call karke batao",
+      "out": "प्रिया को कॉल करके बताओ।",
+      "ms": 318.5,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "eE1",
+      "kind": "guard",
+      "in": "मुझे पाँच टिकट चाहिए कल के लिए",
+      "out": "मुझे पाँच टिकट चाहिए कल के लिए।",
+      "ms": 418.7,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "eE2",
+      "kind": "guard",
+      "in": "कुल रकम 12,500 रुपये है",
+      "out": "कुल रकम 12,500 रुपये है।",
+      "ms": 361.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "eE3",
+      "kind": "guard",
+      "in": "मेरा नंबर 9876543210 है",
+      "out": "मेरा नंबर 9876543210 है।",
+      "ms": 380.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "eE4",
+      "kind": "guard",
+      "in": "छूट 15% है 50% नहीं",
+      "out": "छूट 15% है, 50% नहीं।",
+      "ms": 334.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "eE5",
+      "kind": "guard",
+      "in": "version 2.5 deploy karna hai aaj",
+      "out": "वर्शन 2.5 आज डिप्लोय करना है।",
+      "ms": 425.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "fF1",
+      "kind": "guard",
+      "in": "email bhejo support@intelliai.com par",
+      "out": null,
+      "ms": 547.7,
+      "verdict": "FAIL",
+      "reason": "http 503"
+    },
+    {
+      "id": "fF2",
+      "kind": "guard",
+      "in": "website intelliai.com par jao",
+      "out": "वेबसाइट intelliai.com पर जाओ।",
+      "ms": 312.3,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gG1",
+      "kind": "guard",
+      "in": "FastAPI aur Redis production mein use hote hain",
+      "out": "FastAPI और Redis प्रोडक्शन में इस्तेमाल होते हैं।",
+      "ms": 525.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gG2",
+      "kind": "guard",
+      "in": "CUDA wale GPU par STT aur TTS dono chalte hain",
+      "out": "CUDA वाले GPU पर STT और TTS दोनों चल रहे हैं।",
+      "ms": 489.7,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gG3",
+      "kind": "guard",
+      "in": "PostgreSQL ka backup RAG pipeline se pehle lena",
+      "out": "PostgreSQL का बैकअप RAG पाइपलाइन से पहले लेना चाहिए।",
+      "ms": 549.0,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "gG4",
+      "kind": "guard",
+      "in": "Python ka naya version install karo",
+      "out": "Python का नया वर्जन इंस्टॉल करो।",
+      "ms": 400.9,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hH1",
+      "kind": "keep",
+      "in": "मैं कल सुबह दिल्ली जा रहा हूँ।",
+      "out": "मैं कल सुबह दिल्ली जा रहा हूँ।",
+      "ms": 445.4,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hH2",
+      "kind": "keep",
+      "in": "क्या आप मुझे वह फाइल भेज सकते हैं?",
+      "out": "क्या आप मुझे वह फाइल भेज सकते हैं?",
+      "ms": 466.2,
+      "verdict": "PASS",
+      "reason": ""
+    },
+    {
+      "id": "hH3",
+      "kind": "keep",
+      "in": "बैठक ठीक तीन बजे शुरू होगी।",
+      "out": "बैठक तीन बजे शुरू होगी।",
+      "ms": 368.6,
+      "verdict": "FAIL",
+      "reason": "rewrote already-correct/ambiguous text"
+    },
+    {
+      "id": "hH4",
+      "kind": "keep",
+      "in": "हमें ग्राहकों की बात ध्यान से सुननी चाहिए।",
+      "out": "हमें ग्राहकों की बात को ध्यान से सुनना चाहिए।",
+      "ms": 566.1,
+      "verdict": "FAIL",
+      "reason": "rewrote already-correct/ambiguous text"
+    },
+    {
+      "id": "hH5",
+      "kind": "keep",
+      "in": "उसने प्रस्ताव के लिए मना कर दिया।",
+      "out": "उन्होंने प्रस्ताव के लिए मना कर दिया।",
+      "ms": 470.3,
+      "verdict": "FAIL",
+      "reason": "rewrote already-correct/ambiguous text"
+    }
+  ]
+}

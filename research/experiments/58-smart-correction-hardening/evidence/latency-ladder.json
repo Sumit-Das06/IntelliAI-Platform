@@ -1,0 +1,96 @@
+{
+  "what": "M58 correction latency ladder through the live gateway (RTX 5070 laptop)",
+  "pass": 11,
+  "total": 11,
+  "rows": [
+    {
+      "language": "en",
+      "words": 20,
+      "status": 200,
+      "ms": 1143.8,
+      "out_words": 20,
+      "verdict": "PASS"
+    },
+    {
+      "language": "en",
+      "words": 50,
+      "status": 200,
+      "ms": 804.2,
+      "out_words": 51,
+      "verdict": "PASS"
+    },
+    {
+      "language": "en",
+      "words": 100,
+      "status": 200,
+      "ms": 1451.1,
+      "out_words": 101,
+      "verdict": "PASS"
+    },
+    {
+      "language": "en",
+      "words": 250,
+      "status": 200,
+      "ms": 4096.7,
+      "out_words": 300,
+      "verdict": "PASS"
+    },
+    {
+      "language": "en",
+      "words": 500,
+      "status": 200,
+      "ms": 6165.7,
+      "out_words": 447,
+      "verdict": "PASS"
+    },
+    {
+      "language": "hi",
+      "words": 20,
+      "status": 200,
+      "ms": 1307.2,
+      "out_words": 22,
+      "verdict": "PASS"
+    },
+    {
+      "language": "hi",
+      "words": 50,
+      "status": 200,
+      "ms": 2409.0,
+      "out_words": 54,
+      "verdict": "PASS"
+    },
+    {
+      "language": "hi",
+      "words": 100,
+      "status": 200,
+      "ms": 4802.6,
+      "out_words": 101,
+      "verdict": "PASS"
+    },
+    {
+      "language": "hi",
+      "words": 250,
+      "status": 200,
+      "ms": 11611.0,
+      "out_words": 249,
+      "verdict": "PASS"
+    },
+    {
+      "language": "hi",
+      "words": 500,
+      "status": 200,
+      "ms": 17830.6,
+      "out_words": 366,
+      "verdict": "PASS"
+    },
+    {
+      "language": "en",
+      "words": 650,
+      "status": 400,
+      "ms": 31.8,
+      "message": "transcript too long for correction; try a shorter selection",
+      "verdict": "PASS",
+      "law": "no silent truncation — loud refusal with actionable message"
+    }
+  ]
+}

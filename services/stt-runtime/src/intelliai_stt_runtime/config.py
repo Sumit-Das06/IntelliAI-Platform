@@ -151,6 +151,9 @@ class Settings(BaseSettings):
     smart_correction_enabled: bool = False
     smart_correction_url: str = ""
     smart_correction_timeout_seconds: float = Field(default=60.0, gt=0)
+    # M58: bounded correction concurrency — realtime STT outranks the
+    # correction convenience; excess jobs get a loud, friendly refusal.
+    smart_correction_max_concurrency: int = Field(default=1, ge=1)
 
     # Replaced by `slots` in M5 step 2. Kept as a tripwire, not as a
     # feature: a stale INTELLIAI_STT_DEFAULT_ENGINE would otherwise be

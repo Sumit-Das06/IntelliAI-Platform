@@ -15,6 +15,16 @@ Thresholds (M54-calibrated, staging):
     backend_down     realtime_backend_degraded / qwen3_external_backend_unreachable
     slow_punctuation punctuation_ms > 5 s in any session summary
     not_ready        readiness endpoint not answering status=ready
+
+M58 smart-correction signatures (feature is fail-open — these watch the
+frequency, not single events):
+    correction_gate  >= 3 smart_correction_validation_failed in the window
+                     (occasional gate refusals are the design working;
+                     a burst means the model or a prompt drifted)
+    correction_load  >= 3 smart_correction_overloaded in the window
+    correction_down  readiness reports smart_correction=degraded (an
+                     ENABLED deployment whose backend stopped answering;
+                     "disabled" is a configuration, never an alert)
 """
 
 from __future__ import annotations
@@ -28,11 +38,15 @@ from pathlib import Path
 STALL_MS = 15_000.0
 PUNCT_MS = 5_000.0
 DECODE_FAILURE_LIMIT = 5
+CORRECTION_GATE_LIMIT = 3
+CORRECTION_OVERLOAD_LIMIT = 3
 
 
 def check_log(lines: list[str]) -> list[str]:
     alerts: list[str] = []
     decode_failures = 0
+    correction_gate = 0
+    correction_overloads = 0
     for line in lines:
         start = line.find("{")
         if start < 0:
@@ -44,6 +58,10 @@ def check_log(lines: list[str]) -> list[str]:
         event = row.get("event", "")
         if event == "realtime_decode_failed":
             decode_failures += 1
+        elif event == "smart_correction_validation_failed":
+            correction_gate += 1
+        elif event == "smart_correction_overloaded":
+            correction_overloads += 1
         elif event == "realtime_repetition_trimmed":
             alerts.append(
                 f"ALERT repetition: session {row.get('session')} trimmed "
@@ -63,6 +81,10 @@ def check_log(lines: list[str]) -> list[str]:
                 alerts.append(f"ALERT slow_punctuation: session {row.get('session')} {punct} ms")
     if decode_failures >= DECODE_FAILURE_LIMIT:
         alerts.append(f"ALERT decode_failures: {decode_failures} in window")
+    if correction_gate >= CORRECTION_GATE_LIMIT:
+        alerts.append(f"ALERT correction_gate: {correction_gate} validation refusals in window")
+    if correction_overloads >= CORRECTION_OVERLOAD_LIMIT:
+        alerts.append(f"ALERT correction_load: {correction_overloads} overload refusals in window")
     return alerts
 
 
@@ -76,6 +98,8 @@ def check_ready(url: str) -> list[str]:
         return [f"ALERT not_ready: status={payload.get('status')}"]
     if payload.get("realtime") == "degraded":
         return ["ALERT backend_down: readiness reports realtime degraded"]
+    if payload.get("smart_correction") == "degraded":
+        return ["ALERT correction_down: readiness reports smart_correction degraded"]
     return []
 
 

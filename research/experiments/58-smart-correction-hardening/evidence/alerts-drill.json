@@ -1,0 +1,19 @@
+{
+  "what": "M58 Phase 11 \u2014 smart-correction alert signatures added to tools/ops/realtime_alerts.py and fire-proven",
+  "forced_log_drill": {
+    "correction_gate": "3 synthetic validation_failed lines -> ALERT, exit 1",
+    "correction_load": "3 synthetic overloaded lines -> ALERT, exit 1",
+    "clean_log": "completed-only log + live ready readiness -> OK, exit 0"
+  },
+  "live_drill": {
+    "action": "killed the pinned correction server process (port 8802)",
+    "readiness": "smart_correction flipped to degraded within the 15 s probe window",
+    "alert": "ALERT correction_down: readiness reports smart_correction degraded (exit 1)",
+    "recovery": "relaunched via tools/correction/launch_correction_gpu.py -> ready; live correction served; checker back to OK exit 0"
+  },
+  "thresholds": {
+    "correction_gate": 3,
+    "correction_load": 3,
+    "note": "single gate refusals are the fail-open design working; bursts alert"
+  }
+}
