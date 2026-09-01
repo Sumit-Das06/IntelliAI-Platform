@@ -5,28 +5,18 @@
 2026-09-01; served today on the production-shaped staging stack (no
 public server deployed yet).*
 
-## Diagram A — Executive architecture
+## Diagram A — Executive architecture (compact)
 
 ```mermaid
-flowchart TD
-    U["User<br/>(Web console · Android/iOS keyboard · API)"] --> E["HTTPS / WSS Edge<br/>(Caddy, TLS)"]
-    E --> G["API Gateway (FastAPI)<br/>auth · metering · quotas · consent"]
-    G --> V
-
-    subgraph V["Voice Intelligence Layer"]
-        direction TB
-        S["STT (batch)<br/>EN: whisper-small · HI: own fine-tuned E3"]
-        R["STT (realtime, GPU)<br/>EN + HI · WebSocket sessions"]
-        T["TTS (streaming)<br/>EN + HI · 4 voices"]
-        P["Punctuation<br/>EN + HI · words never altered"]
-    end
-
-    V --> O["Transcript / Audio"]
-    O --> X["Share · Correction · Copy<br/>(corrections feed training data, with consent)"]
-
-    G --> D[("PostgreSQL<br/>usage · keys · samples metadata")]
-    G --> C[("Redis<br/>rate limits")]
-    G --> B[("Object storage<br/>consented audio samples only")]
+flowchart LR
+    U["User<br/>web console ·<br/>keyboard apps · API"] --> E["HTTPS/WSS edge<br/>(Caddy)"] --> G["API Gateway (FastAPI)<br/>auth · metering ·<br/>quotas · consent"]
+    G --> S["Speech-to-Text<br/>EN whisper-small · HI own E3<br/>batch + realtime (GPU)"]
+    G --> T["Text-to-Speech<br/>EN + HI · streaming (CPU)"]
+    S --> I["Intelligence layer<br/>punctuation · correction"]
+    I --> O["Final output"]
+    T --> O
+    O --> X["Share · UI/client<br/>(corrections → consented training data)"]
+    G -.-> D[("PostgreSQL · Redis ·<br/>object storage:<br/>consented samples only")]
 ```
 
 ## What each piece is
