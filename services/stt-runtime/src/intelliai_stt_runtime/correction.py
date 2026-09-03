@@ -241,7 +241,11 @@ class SmartCorrectionService:
             if run not in re.sub(r"[,\s]", "", squashed) and run not in squashed:
                 fail("digits_changed")
         for decimal in _DECIMAL.findall(source):
-            if decimal not in squashed:
+            # Dot-time normalized to colon-time ("9.30 baje" -> "9:30") is
+            # value-preserving formatting, not a changed number — the SAME
+            # digits with ":" pass; any digit change still refuses (found
+            # live: the generic-unavailable UX on every dot-time input).
+            if decimal not in squashed and decimal.replace(".", ":") not in squashed:
                 fail("decimal_changed")
         for token in _EMAIL_OR_URL.findall(source):
             if token.casefold() not in squashed.casefold():

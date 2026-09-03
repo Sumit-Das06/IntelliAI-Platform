@@ -202,6 +202,20 @@ class TestM58Hardening:
         with pytest.raises(RuntimeServiceError):
             SmartCorrectionService(stub).correct("we deploy version 2.5 tonight", "en")
 
+    def test_dot_time_normalized_to_colon_time_passes(self, stub: str) -> None:
+        # Found live: "9.30" written as "9:30" is the SAME time — the
+        # gate must not refuse value-preserving separator formatting.
+        _StubLlama.reply = "Let's meet at 9:30 tomorrow morning in the office."
+        result = SmartCorrectionService(stub).correct(
+            "lets meet at 9.30 tomorrow morning in the office", "en"
+        )
+        assert "9:30" in result.corrected_text
+
+    def test_colon_time_with_changed_digits_still_rejected(self, stub: str) -> None:
+        _StubLlama.reply = "Let's meet at 9:45 tomorrow morning."
+        with pytest.raises(RuntimeServiceError):
+            SmartCorrectionService(stub).correct("lets meet at 9.30 tomorrow morning", "en")
+
     def test_catastrophic_content_collapse_is_rejected(self, stub: str) -> None:
         # A long transcript deduplicated/summarized to a stub is DROPPED
         # information — the mirror of the runaway-length guard.
